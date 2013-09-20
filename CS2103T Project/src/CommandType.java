@@ -1,0 +1,4 @@
+
+public enum CommandType {
+	ADD_LINE, DISPLAY, DELETE, CLEAR, EXIT, SORT, SEARCH, INVALID;
+}
