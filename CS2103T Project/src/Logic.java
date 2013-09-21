@@ -19,7 +19,7 @@ public class Logic {
 
 		switch (commandType) {
 		case ADD_LINE:
-			return addLine(command);
+			return addTask(command);
 		case DISPLAY:
 			return displayFile();
 		case DELETE:
@@ -39,7 +39,7 @@ public class Logic {
 		}
 	}
 	
-	protected static addLine(Command command){
+	protected static addTask(Command command){
 		HashMap<String, String> commandAttributes = command.getCommandAttributes();
 		Task newTask = new Task(commandAttributes);
 		currentState.add(newTask);
