@@ -1,14 +1,11 @@
 import java.util.Scanner;
 
 public class WindowUI {
-	
-	private static String fileName = "fileName";
 
 	private static Scanner scanner = new Scanner(System.in);
 	private static Logic basketEngine = new Logic();
 	
 	public static void main(String[] args) {
-		checkArguments(args);
 		displayWelcomeMessage();
 		
 		while (true) {
@@ -28,15 +25,7 @@ public class WindowUI {
 		return basketEngine.executeCommand(command);
 	}
 	
-	private static void checkArguments(String[] args) {
-		if (args.length == 0) {
-			showToUser(Constants.MESSAGE_NO_FILENAME);
-			basketEngine.exitProgram();
-		}
-		fileName = args[0];
-	}
-	
-	private static void showToUser(Feedback feedback) {
+	private static void showToUser(String feedback) {
 		System.out.println(feedback);
 	}
 	

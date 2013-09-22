@@ -25,4 +25,15 @@ public class Constants {
 	protected static final String COMMAND_EXIT = "exit";
 	protected static final String COMMAND_SORT = "sort";
 	protected static final String COMMAND_SEARCH = "search";
+	
+	protected static final String TASK_ATT_NAME = "name";
+	protected static final String TASK_ATT_LOCATION = "location";
+	protected static final String TASK_ATT_STARTTIME = "startTime";
+	protected static final String TASK_ATT_ENDTIME = "endTime";
+	protected static final String TASK_ATT_DEADLINE = "deadline";
+	protected static final String TASK_ATT_TYPE = "type";
+	protected static final String TASK_ATT_TAGS = "tags";
+	protected static final String TASK_ATT_POSSIBLETIME = "possibleTime";
+	protected static final String TASK_ATT_DONE = "done";
+	
 }
