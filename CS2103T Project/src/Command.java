@@ -25,4 +25,22 @@ public class Command {
 	protected void setValue(String attribute, String value){
 		commandAttributes.put(attribute, value);
 	}
+	
+    public String toString() {
+    	StringBuilder result = new StringBuilder(type.toString() + " ");
+    	result.append("{");
+    	
+    	int entryCount = commandAttributes.keySet().size();
+    	int i=0;
+    	
+    	for (String prop : commandAttributes.keySet()) {
+    		result.append(prop + ": " + commandAttributes.get(prop));
+    		if (i < entryCount-1) result.append(", ");
+    		i++;
+    	}
+    	
+    	result.append("}");
+    	
+    	return result.toString();
+    }
 }

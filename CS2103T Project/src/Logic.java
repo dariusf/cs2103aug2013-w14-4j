@@ -10,7 +10,7 @@ public class Logic {
 	}
 	
 	static Feedback executeCommand(String userCommand) {
-		Command command = Parser.parseCommand(userCommand);
+		Command command = new Parser().parse(userCommand);
 		CommandType commandType = Command.getCommandType();
 
 		switch (commandType) {
@@ -90,7 +90,7 @@ public class Logic {
 		Task newTask = new Task(taskAttributes);
 		storage.add(newTask);
 		
-		Feedback feedback = 
+//		Feedback feedback = 
 		return null;
 	}
 

@@ -15,7 +15,7 @@ public class WindowUI {
 	}
 	
 	private static void displayWelcomeMessage() {
-		String welcome = String.format(Constants.WELCOME_MESSAGE, fileName);
+		String welcome = String.format(Constants.WELCOME_MESSAGE, "");//fileName);
 		showToUser(welcome);
 	}
 	
