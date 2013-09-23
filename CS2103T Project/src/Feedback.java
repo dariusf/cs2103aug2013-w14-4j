@@ -2,7 +2,7 @@ import java.util.HashMap;
 
 public class Feedback {
 	private static CommandType feedbackCommand = null;
-	private static Task feedbackTask = null;
+	private static HashMap<String, String> feedbackAttributes = null;
 	private static int statusCode = 0;
 	
 	protected Feedback(int status){
@@ -14,9 +14,9 @@ public class Feedback {
 		feedbackCommand = command;
 	}
 	
-	protected Feedback(int status, CommandType command, Task task){
+	protected Feedback(int status, CommandType command, HashMap<String, String> attributes){
 		statusCode = status;
-		feedbackTask = task;
+		feedbackAttributes = attributes;
 		feedbackCommand = command;
 	}
 	
@@ -36,11 +36,23 @@ public class Feedback {
 		return feedbackCommand;
 	}
 	
-	protected static void setTask(Task task){
-		feedbackTask = task;
+	protected static void setAttribute(String key, String value){
+		feedbackAttributes.put(key, value);
 	}
 	
-	protected static Task getTask(){
-		return feedbackTask;
+	protected static String getAttribute(String key){
+		return feedbackAttributes.get(key);
+	}
+	
+	protected static String getDisplayString() {
+		switch (statusCode) {
+		case 10:
+			return "";
+		case 61:
+			return Constants.MSG_LINE_NUMBER_OVERFLOW;
+		default:
+			return "";
+		}
+		
 	}
 }

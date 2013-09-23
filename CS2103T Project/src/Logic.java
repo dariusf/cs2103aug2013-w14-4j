@@ -1,5 +1,7 @@
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class Logic {
@@ -35,7 +37,7 @@ public class Logic {
 		case SORT:
 			return sortTask();
 		default:
-			throw new Error(Constants.MESSAGE_UNRECOGNISED_COMMAND);
+			throw new Error(Constants.MSG_UNRECOGNISED_COMMAND);
 		}
 	}
 	
@@ -76,8 +78,18 @@ public class Logic {
 	}
 
 	private static Feedback deleteTask(Command command) {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<String, String> commandAttributes = Command.getCommandAttributes();
+		int lineNumber = Integer.parseInt(commandAttributes.get(Constants.DELETE_ATT_LINE));
+		
+		Feedback feedback = null;
+		if(lineNumber <= storage.size()){
+			storage.remove(lineNumber);
+			feedback = new Feedback(10, CommandType.DELETE, commandAttributes);
+		} else {
+			feedback = new Feedback(61);
+		}
+		
+		return feedback;
 	}
 
 	private static Feedback displayTasks() {
@@ -90,9 +102,43 @@ public class Logic {
 		Task newTask = new Task(taskAttributes);
 		storage.add(newTask);
 		
-//		Feedback feedback = 
-		return null;
+		Feedback feedback = null;
+		if(isTaskOver(newTask)){
+			feedback = new Feedback(11, CommandType.ADD_TASK, taskAttributes);
+		} else {
+			feedback = new Feedback(10, CommandType.ADD_TASK, taskAttributes);
+		}
+		
+		return feedback;
 	}
 
-
+	private static boolean isTaskOver(Task task){
+		if(task.isDeadlineTask()){
+			Date deadline = task.getDeadline();
+			return isTimePastAlready(deadline);
+		} else if (task.isTimedTask()){
+			Date endTime = task.getEndTime();
+			return isTimePastAlready(endTime);
+		} else if (task.isUntimedTask()){
+			List<Task.Slot> possibleTime = task.getPossibleTime();
+			return isUntimedTaskOver(possibleTime);
+		} else {
+			return false;
+		}
+	}
+	
+	private static boolean isUntimedTaskOver(List<Task.Slot> possibleTime) {
+		boolean isAllSlotOver = true;
+		for(Task.Slot slot : possibleTime){
+			if(!isTimePastAlready(slot.getEndTime())){
+				isAllSlotOver = false;
+			}
+		}
+		return isAllSlotOver;
+		
+	}
+	
+	private static boolean isTimePastAlready(Date time){
+		return time.compareTo(new Date()) < 0;
+	}
 }

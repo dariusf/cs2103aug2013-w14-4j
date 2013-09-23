@@ -30,28 +30,28 @@ public class Task {
 
 	private SimpleDateFormat dateParser = new SimpleDateFormat("h:mm a");
 
-	private class Slot {
+	protected class Slot {
 		private Date startTime = null;
 		private Date endTime = null;
 
-		private Slot(Date start, Date end) {
+		protected Slot(Date start, Date end) {
 			startTime = start;
 			endTime = end;
 		}
 
-		private Date getStartTime() {
+		protected Date getStartTime() {
 			return startTime;
 		}
 
-		private Date getEndTime() {
+		protected Date getEndTime() {
 			return endTime;
 		}
 
-		private void setStartTime(Date start) {
+		protected void setStartTime(Date start) {
 			startTime = start;
 		}
 
-		private void setEndTime(Date end) {
+		protected void setEndTime(Date end) {
 			endTime = end;
 		}
 		
@@ -187,6 +187,22 @@ public class Task {
 
 	protected void markUndone() {
 		this.done = false;
+	}
+	
+	protected boolean isTimedTask(){
+		return this.type.equals(Constants.TASK_TYPE_TIMED);
+	}
+	
+	protected boolean isDeadlineTask(){
+		return this.type.equals(Constants.TASK_TYPE_DEADLINE);
+	}
+	
+	protected boolean isFloatingTask(){
+		return this.type.equals(Constants.TASK_TYPE_FLOATING);
+	}
+	
+	protected boolean isUntimedTask(){
+		return this.type.equals(Constants.TASK_TYPE_UNTIMED);
 	}
 
 }

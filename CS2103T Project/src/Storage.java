@@ -26,4 +26,12 @@ public class Storage {
 	protected void get(int index){
 		taskStorage.get(index);
 	}
+	
+	protected boolean isEmpty() {
+		return taskStorage.isEmpty();
+	}
+	
+	protected int size() {
+		return taskStorage.size();
+	}
 }
