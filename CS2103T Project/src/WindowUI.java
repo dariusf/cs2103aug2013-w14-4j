@@ -15,12 +15,12 @@ public class WindowUI {
 	}
 	
 	private static void displayWelcomeMessage() {
-		String welcome = String.format(Constants.WELCOME_MESSAGE, "");//fileName);
+		String welcome = String.format(Constants.WELCOME_MSG, "");//fileName);
 		showToUser(welcome);
 	}
 	
 	private static Feedback readCommand() {
-		System.out.print(Constants.MESSAGE_COMMAND);
+		System.out.print(Constants.MSG_COMMAND);
 		String command = scanner.nextLine();
 		return basketEngine.executeCommand(command);
 	}
