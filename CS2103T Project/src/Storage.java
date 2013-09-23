@@ -23,8 +23,12 @@ public class Storage {
 		taskStorage.clear();
 	}
 	
-	protected void get(int index){
-		taskStorage.get(index);
+	protected Task get(int index){
+		return taskStorage.get(index);
+	}
+	
+	protected ArrayList<Task> getAll() {
+		return taskStorage;
 	}
 	
 	protected boolean isEmpty() {

@@ -1,50 +1,59 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Feedback {
-	private static CommandType feedbackCommand = null;
-	private static HashMap<String, String> feedbackAttributes = null;
-	private static int statusCode = 0;
-	
-	protected Feedback(int status){
+	private CommandType feedbackCommand = null;
+	private HashMap<String, String> feedbackAttributes = null;
+	private String feedbackString = null;
+	private int statusCode = 0;
+
+	protected Feedback(int status) {
 		statusCode = status;
 	}
-	
-	protected Feedback(int status, CommandType command){
+
+	protected Feedback(int status, CommandType command) {
 		statusCode = status;
 		feedbackCommand = command;
 	}
-	
-	protected Feedback(int status, CommandType command, HashMap<String, String> attributes){
+
+	protected Feedback(int status, CommandType command,
+			HashMap<String, String> attributes) {
 		statusCode = status;
 		feedbackAttributes = attributes;
 		feedbackCommand = command;
 	}
-	
-	protected static void setStatusCode(int status){
+
+	protected Feedback(int status, CommandType command, String string) {
 		statusCode = status;
-	}
-	
-	protected static int getStatusCode(){
-		return statusCode;
-	}
-	
-	protected static void setCommand(CommandType command){
+		feedbackString = string;
 		feedbackCommand = command;
 	}
-	
-	protected static CommandType getCommand(){
+
+	protected void setStatusCode(int status) {
+		statusCode = status;
+	}
+
+	protected int getStatusCode() {
+		return statusCode;
+	}
+
+	protected void setCommand(CommandType command) {
+		feedbackCommand = command;
+	}
+
+	protected CommandType getCommand() {
 		return feedbackCommand;
 	}
-	
-	protected static void setAttribute(String key, String value){
+
+	protected void setAttribute(String key, String value) {
 		feedbackAttributes.put(key, value);
 	}
-	
-	protected static String getAttribute(String key){
+
+	protected String getAttribute(String key) {
 		return feedbackAttributes.get(key);
 	}
-	
-	protected static String getDisplayString() {
+
+	public String toString() {
 		switch (statusCode) {
 		case 10:
 			return "";
@@ -53,6 +62,6 @@ public class Feedback {
 		default:
 			return "";
 		}
-		
+
 	}
 }

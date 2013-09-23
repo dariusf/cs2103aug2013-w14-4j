@@ -6,26 +6,36 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class Task {
 	public static void main(String[] args){
-		HashMap<String, String> testMap = new HashMap<String, String>();
-		testMap.put(Constants.TASK_ATT_NAME, "Buy milk");
-		testMap.put(Constants.TASK_ATT_LOCATION, "NTUC");
-		testMap.put(Constants.TASK_ATT_TYPE, "Floating");
-		testMap.put(Constants.TASK_ATT_POSSIBLETIME, "10:00 PM;11:00 PM;8:00 PM;9:00 PM");
-		Task testTask = new Task(testMap);
-		System.out.println(testTask.getLocation());
-		System.out.println(testTask.getPossibleTime());
+		HashMap<String, String> testMap1 = new HashMap<String, String>();
+		testMap1.put(Constants.TASK_ATT_NAME, "Buy milk");
+		testMap1.put(Constants.TASK_ATT_LOCATION, "NTUC");
+		testMap1.put(Constants.TASK_ATT_TYPE, "floating");
+		testMap1.put(Constants.TASK_ATT_POSSIBLETIME, "10:00 PM;11:00 PM;8:00 PM;9:00 PM");
+		testMap1.put(Constants.TASK_ATT_TAGS, "haha hahaha hahahaha");
+		Task testTask1 = new Task(testMap1);
+		System.out.println(testTask1);
+		
+		HashMap<String, String> testMap2 = new HashMap<String, String>();
+		testMap2.put(Constants.TASK_ATT_NAME, "Buy milk");
+		testMap2.put(Constants.TASK_ATT_LOCATION, "NTUC");
+		testMap2.put(Constants.TASK_ATT_TYPE, "deadline");
+		testMap2.put(Constants.TASK_ATT_DEADLINE, "10:00 PM");
+		testMap2.put(Constants.TASK_ATT_TAGS, "haha hahaha hahahaha");
+		Task testTask2 = new Task(testMap2);
+		System.out.println(testTask2);
 	}
 	
 	private String name = "";
 	private String type = "";
 	private String location = "";
-	private List<String> tags = null;
+	private List<String> tags = new ArrayList<String>();
 	private Date startTime = null;
 	private Date endTime = null;
 	private Date deadline = null;
-	private List<Slot> possibleTime = null;
+	private List<Slot> possibleTime = new ArrayList<Slot>();
 	private boolean done = false;
 
 	private SimpleDateFormat dateParser = new SimpleDateFormat("h:mm a");
@@ -205,4 +215,41 @@ public class Task {
 		return this.type.equals(Constants.TASK_TYPE_UNTIMED);
 	}
 
+	public String toString(){
+		StringBuilder output = new StringBuilder();
+		output.append(name);
+		
+		if(!location.isEmpty()){
+			output.append(" at " + location);
+		}
+		
+		if(isDeadlineTask()){
+			output.append( " before " + deadline.toString()); 
+		} else if (isTimedTask()){
+			output.append(" from " + startTime.toString() + " to " + endTime.toString());
+		} else if (isFloatingTask()){
+			output.append( " on ");
+			int index = 1;
+			for(Slot slot : possibleTime){
+				output.append("(");
+				output.append(index);
+				output.append(") ");
+				output.append(slot.getStartTime().toLocaleString());
+				output.append(" to ");
+				output.append(slot.getEndTime().toLocaleString());
+				if(index != possibleTime.size()){
+					output.append(" or ");
+				}
+				index++;
+			}
+		}
+		
+		if(tags.size() > 0){
+			for(String tag : tags){
+				output.append(" #" + tag);
+			}
+		}
+		
+		return output.toString();
+	}
 }

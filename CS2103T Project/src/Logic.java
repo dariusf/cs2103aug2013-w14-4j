@@ -1,6 +1,7 @@
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -43,8 +44,14 @@ public class Logic {
 	
 
 	private static Feedback sortTask() {
-		// TODO Auto-generated method stub
-		return null;
+		Feedback feedback = null;
+		if(storage.size()>0){
+			storage.sort();
+			feedback = new Feedback(10, CommandType.SORT);
+		} else {
+			feedback = new Feedback(70);
+		}
+		return feedback;
 	}
 
 	private static Feedback showHelp(Command command) {
@@ -68,8 +75,7 @@ public class Logic {
 	}
 
 	private static void exitProgram() {
-		// TODO Auto-generated method stub
-		
+		System.exit(0);
 	}
 
 	private static Feedback clearTasks(Command command) {
@@ -93,8 +99,22 @@ public class Logic {
 	}
 
 	private static Feedback displayTasks() {
-		// TODO Auto-generated method stub
-		return null;
+		Feedback feedback = null;
+		if(storage.size() > 0){
+			StringBuilder output = new StringBuilder();
+			int index = 1;
+			for (Task task : storage.getAll()){
+				output.append(index+". ");
+				output.append(task.toString());
+				if(index < storage.size()){
+					output.append("/n");
+				}
+			}
+			feedback = new Feedback(10, CommandType.DISPLAY, output.toString());
+		} else {
+			feedback = new Feedback(50);
+		}
+		return feedback;
 	}
 
 	private static Feedback addTask(Command command) {
