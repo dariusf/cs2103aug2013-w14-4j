@@ -212,7 +212,7 @@ public class Parser {
 				advanceToken();
 			}
 			else if (t instanceof DateToken) {
-				command.setValue(Constants.TASK_ATT_DEADLINE, t.thing.trim());
+				command.setValue(Constants.TASK_ATT_DEADLINE, ((DateToken) t).dateString());
 				previousToken = null;
 				advanceToken();
 			}
