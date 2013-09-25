@@ -30,7 +30,7 @@ public class Parser {
 	}
 
 	private State parseState;
-	private AddState addState;
+	private NaturalState naturalState;
 	private DateTimeState dateTimeState;
 	
 	// Tokens
@@ -50,9 +50,9 @@ public class Parser {
 	
 	public Parser() {
 		
-		addState = new AddState();
+		naturalState = new NaturalState();
 		dateTimeState = new DateTimeState();
-		parseState = addState;
+		parseState = naturalState;
 		
 		tokens = new ArrayList<>();
 		tokenContent = new StringBuilder();
@@ -99,7 +99,7 @@ public class Parser {
 		} else {
 			// default to add command
 			commandType = CommandType.ADD_TASK;
-			parseState = addState;
+			parseState = naturalState;
 		}
 
 		command = new Command(commandType);
@@ -119,7 +119,7 @@ public class Parser {
 	private State determineStartingState(CommandType type) {
 		switch (type) {
 		case ADD_TASK:
-			return addState;
+			return naturalState;
 		case DELETE: // arguments
 		case EDIT_TASK:
 		case FINALISE:
@@ -138,17 +138,21 @@ public class Parser {
 	}
 
 	public CommandType determineCommandType(Token token) {
-		if (token.thing.equals("add")) {
-			return CommandType.ADD_TASK;
+		String enumString = token.thing;
+		if (enumString.equals("add") || enumString.equals("edit")) {
+			enumString = enumString.toUpperCase() + "_TASK";
 		}
-		return CommandType.EXIT; // not really
+		else {
+			enumString = enumString.toUpperCase();
+		}		
+		return CommandType.valueOf(enumString);
 	}
 
 	private boolean isCommand(Token token) {
 		return token.thing.equals("add");
 	}
 
-	private class AddState implements State {
+	private class NaturalState implements State {
 
 		private boolean shouldChangeToDateTimeState() {
 			Token currentToken = getToken();
@@ -201,7 +205,7 @@ public class Parser {
 				tokenContent.append(previousToken.thing + " ");
 				// do not advance
 			}
-			parseState = addState;
+			parseState = naturalState;
 		}
 
 		@Override
