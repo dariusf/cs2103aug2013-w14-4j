@@ -2,7 +2,10 @@ package Parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import Logic.Command;
 import Logic.CommandType;
@@ -10,6 +13,16 @@ import Logic.Constants;
 
 public class Parser {
 
+	public static void main(String[] args) {
+		
+		new Parser().parse("go home at 10:00pm");
+		
+//		DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+//		java.util.Date date = new java.util.Date();
+//		String datestring = dateFormat.format(date);
+//		System.out.println(datestring);
+	}
+	
 	// States
 	
 	// TODO: draw proper state diagram
@@ -194,7 +207,7 @@ public class Parser {
 		public void processToken(Token t) {
 			if (t instanceof TimeToken) {
 				// TODO: add to current date and get most specific match, right now it just writes over
-				command.setValue(Constants.TASK_ATT_STARTTIME, t.thing.trim());
+				command.setValue(Constants.TASK_ATT_STARTTIME, ((TimeToken) t).timeString());
 				previousToken = null;
 				advanceToken();
 			}
