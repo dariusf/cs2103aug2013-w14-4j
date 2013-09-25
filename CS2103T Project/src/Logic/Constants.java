@@ -49,16 +49,21 @@ public class Constants {
 	public static final String TASK_TYPE_DEADLINE = "deadline";
 	public static final String TASK_TYPE_UNTIMED = "untimed";
 	
-	public static final String HELP_GENERAL = "Here are the available commands:" +
-			"add: Add a new task" +
-			"edit: Edit an existing task" +
-			"done: Mark a task as done" +
-			"finalise: Finalise the timing of a floating task" +
-			"delete: Delete an existing task" +
-			"search: Search for existing task(s)" +
-			"undo: Return to the previous edit" +
-			"help: Brings up the help guide";
-	public static final String HELP_ADD_TASK = "";
+	public static final String HELP_GENERAL = "Here are the available commands:\n" +
+			"add: Add a new task\n" +
+			"edit: Edit an existing task\n" +
+			"done: Mark a task as done\n" +
+			"finalise: Finalise the timing of a floating task\n" +
+			"display: Display all tasks" +
+			"delete: Delete an existing task\n" +
+			"clear: Remove all tasks\n" +
+			"search: Search for existing task(s)\n" +
+			"sort: Sort the tasks based on dates\n" +
+			"undo: Return to the previous edit\n" +
+			"help: Brings up the help guide\n";
+	
+	public static final String HELP_ADD_TASK = "Add Task:\n" +
+			"Adds a new task into the database. You may add a timed task, untimed task, floating task or deadline task.\n\n";
 	public static final String HELP_DISPLAY = "";
 	public static final String HELP_HELP = "";
 	public static final String HELP_SORT = "";

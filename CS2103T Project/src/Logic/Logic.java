@@ -52,9 +52,9 @@ public class Logic {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
 			storage.sort();
-			feedback = new Feedback(10, CommandType.SORT);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SORT);
 		} else {
-			feedback = new Feedback(70);
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR, CommandType.SORT);
 		}
 		return feedback;
 	}
@@ -69,48 +69,48 @@ public class Logic {
 					.determineCommandType(commandString);
 			switch (commandToGetHelp) {
 			case ADD_TASK:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_ADD_TASK);
 			case EDIT_TASK:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_EDIT_TASK);
 			case SORT:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_SORT);
 			case DELETE:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_DELETE);
 			case CLEAR:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_CLEAR);
 			case UNDO:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_UNDO);
 			case SEARCH:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_SEARCH);
 			case HELP:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_HELP);
 			case DONE:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_DONE);
 			case FINALISE:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_FINALISE);
 			case DISPLAY:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_DISPLAY);
 			case EXIT:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_EXIT);
 			default:
-				feedback = new Feedback(10, CommandType.HELP,
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_GENERAL);
 				;
 			}
 		} else {
-			feedback = new Feedback(10, CommandType.HELP,
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 					Constants.HELP_GENERAL);
 		}
 		return feedback;
@@ -128,9 +128,9 @@ public class Logic {
 		storage.replace(taskIndex, taskToEdit);
 		
 		if (isTaskOver(taskToEdit)) {
-			feedback = new Feedback(11, CommandType.EDIT_TASK, taskToEdit.toString());
+			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE, CommandType.EDIT_TASK, taskToEdit.toString());
 		} else {
-			feedback = new Feedback(10, CommandType.EDIT_TASK, taskToEdit.toString());
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.EDIT_TASK, taskToEdit.toString());
 		}
 		
 		return feedback;
@@ -140,9 +140,9 @@ public class Logic {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
 			storage.sort();
-			feedback = new Feedback(10, CommandType.CLEAR);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.UNDO);
 		} else {
-			feedback = new Feedback(50);
+			feedback = new Feedback(Constants.SC_UNDO_NO_PRIOR_STATE_ERROR, CommandType.UNDO);
 		}
 		return feedback;
 	}
@@ -171,9 +171,9 @@ public class Logic {
 					output.append("/n");
 				}
 			}
-			feedback = new Feedback(10, CommandType.SEARCH, output.toString());
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH, output.toString());
 		} else {
-			feedback = new Feedback(10, CommandType.SEARCH, Constants.MSG_NO_RESULT);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH, Constants.MSG_NO_RESULT);
 		}
 		return feedback;
 	}
@@ -186,9 +186,9 @@ public class Logic {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
 			storage.clear();
-			feedback = new Feedback(10, CommandType.CLEAR);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
 		} else {
-			feedback = new Feedback(50);
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR, CommandType.CLEAR);
 		}
 		return feedback;
 	}
@@ -202,9 +202,9 @@ public class Logic {
 		Feedback feedback = null;
 		if (lineNumber <= storage.size()) {
 			storage.remove(lineNumber);
-			feedback = new Feedback(10, CommandType.DELETE);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
 		} else {
-			feedback = new Feedback(61);
+			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR, CommandType.DELETE);
 		}
 
 		return feedback;
@@ -222,9 +222,9 @@ public class Logic {
 					output.append("/n");
 				}
 			}
-			feedback = new Feedback(10, CommandType.DISPLAY, output.toString());
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY, output.toString());
 		} else {
-			feedback = new Feedback(50);
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR, CommandType.DISPLAY);
 		}
 		return feedback;
 	}
@@ -236,9 +236,9 @@ public class Logic {
 
 		Feedback feedback = null;
 		if (isTaskOver(newTask)) {
-			feedback = new Feedback(11, CommandType.ADD_TASK);
+			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE, CommandType.ADD_TASK);
 		} else {
-			feedback = new Feedback(10, CommandType.ADD_TASK);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.ADD_TASK);
 		}
 
 		return feedback;
