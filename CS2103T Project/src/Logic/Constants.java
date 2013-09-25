@@ -1,3 +1,4 @@
+package Logic;
 
 public class Constants {
 	public static String WELCOME_MSG = "Welcome to TextBuddy. %1$s is ready for use";

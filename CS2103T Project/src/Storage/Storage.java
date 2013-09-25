@@ -1,4 +1,8 @@
+package Storage;
+
 import java.util.ArrayList;
+
+import Logic.Task;
 
 public class Storage {
 	protected static ArrayList<Task> taskStorage = null;
@@ -37,5 +41,13 @@ public class Storage {
 	
 	protected int size() {
 		return taskStorage.size();
+	}
+	
+	protected void undo(){
+		
+	}
+	
+	protected boolean isUndoable(){
+		return true;
 	}
 }

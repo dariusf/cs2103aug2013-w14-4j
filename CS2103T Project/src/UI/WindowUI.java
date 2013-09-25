@@ -1,4 +1,10 @@
+package UI;
+
 import java.util.Scanner;
+
+import Logic.Constants;
+import Logic.Feedback;
+import Logic.Logic;
 
 public class WindowUI {
 

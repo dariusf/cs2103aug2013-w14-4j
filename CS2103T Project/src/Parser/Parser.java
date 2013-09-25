@@ -1,6 +1,12 @@
+package Parser;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import Logic.Command;
+import Logic.CommandType;
+import Logic.Constants;
 
 public class Parser {
 

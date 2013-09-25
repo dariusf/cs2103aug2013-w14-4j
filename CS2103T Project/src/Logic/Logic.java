@@ -1,9 +1,14 @@
+package Logic;
+
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import Logic.Task.Slot;
+import Parser.Parser;
+import Storage.Storage;
 
 public class Logic {
 	private static Storage storage = null;
@@ -65,8 +70,14 @@ public class Logic {
 	}
 
 	private static Feedback undoState() {
-		// TODO Auto-generated method stub
-		return null;
+		Feedback feedback = null;
+		if(storage.size()>0){
+			storage.sort();
+			feedback = new Feedback(10, CommandType.CLEAR);
+		} else {
+			feedback = new Feedback(50);
+		}
+		return feedback;
 	}
 
 	private static Feedback searchTasks(Command command) {
@@ -79,8 +90,14 @@ public class Logic {
 	}
 
 	private static Feedback clearTasks(Command command) {
-		// TODO Auto-generated method stub
-		return null;
+		Feedback feedback = null;
+		if(storage.size()>0){
+			storage.clear();
+			feedback = new Feedback(10, CommandType.CLEAR);
+		} else {
+			feedback = new Feedback(50);
+		}
+		return feedback;
 	}
 
 	private static Feedback deleteTask(Command command) {
