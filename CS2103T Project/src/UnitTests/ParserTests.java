@@ -81,4 +81,11 @@ public class ParserTests {
 		assertEquals(new Parser().parse("add go home at at at at at 10:00 pm"), command);
 	}
 
+	@Test
+	public void addCommandFromTests() {
+//		Command command = new Command(CommandType.ADD_TASK);
+//		command.setValue(Constants.TASK_ATT_NAME, "go home");
+//		command.setValue(Constants.TASK_ATT_STARTTIME, "10:00 pm");
+//		assertEquals(new Parser().parse("go home at 10:00 pm"), command);
+	}
 }
