@@ -18,13 +18,6 @@ public class Feedback {
 		feedbackCommand = command;
 	}
 
-	public Feedback(int status, CommandType command,
-			HashMap<String, String> attributes) {
-		statusCode = status;
-		feedbackAttributes = attributes;
-		feedbackCommand = command;
-	}
-
 	public Feedback(int status, CommandType command, String string) {
 		statusCode = status;
 		feedbackString = string;

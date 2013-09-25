@@ -106,6 +106,14 @@ public class Task {
 	private List<String> tagsParser(String tags) {
 		return Arrays.asList(tags.split(" "));
 	}
+	
+	private String tagsToString(){
+		StringBuilder output = new StringBuilder();
+		for(String tag : tags){
+			output.append("#" + tag +" ");
+		}
+		return output.toString();
+	}
 
 	private List<Slot> possibleTimeParser(String possibleTime) {
 		List<Slot> output = new ArrayList<Slot>();
@@ -125,6 +133,51 @@ public class Task {
 		return output;
 	}
 
+	public void set(String attribute, String value) {
+		try {
+			if(attribute == Constants.TASK_ATT_DEADLINE){
+				deadline = dateParser.parse(value);
+			} else if (attribute == Constants.TASK_ATT_DONE){
+				done = Boolean.parseBoolean(value);
+			} else if (attribute == Constants.TASK_ATT_LOCATION){
+				location = value;
+			} else if (attribute == Constants.TASK_ATT_NAME){
+				name = value;
+			} else if (attribute == Constants.TASK_ATT_TYPE){
+				type = value;
+			} else if (attribute == Constants.TASK_ATT_STARTTIME){
+				startTime = dateParser.parse(value);
+			} else if (attribute == Constants.TASK_ATT_POSSIBLETIME){
+				possibleTime = possibleTimeParser(value);
+			} else if (attribute == Constants.TASK_ATT_ENDTIME){
+				endTime = dateParser.parse(value);
+			} else if (attribute == Constants.TASK_ATT_TAGS){
+				tags = tagsParser(value);
+			} else {
+				// Nothing happens here!
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+//	public HashMap<String, String> getAttributes() {
+//		HashMap<String, String> output = new HashMap<>();
+//		output.put(Constants.TASK_ATT_NAME, name);
+//		output.put(Constants.TASK_ATT_DONE, String.valueOf(done));
+//		output.put(Constants.TASK_ATT_TYPE, type);
+//		output.put(Constants.TASK_ATT_TAGS, tagsToString());
+//		if(isDeadlineTask()){
+//			output.put(Constants.TASK_ATT_DEADLINE, deadline.toString());
+//		} else if (isTimedTask()){
+//			output.put(Constants.TASK_ATT_STARTTIME, startTime.toString());
+//		} else if (isFloatingTask()){
+//			output.put(key, value)
+//		}
+//		
+//	}
+	
 	public String getName() {
 		return name;
 	}

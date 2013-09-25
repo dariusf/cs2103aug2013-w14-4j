@@ -46,4 +46,26 @@ public class Constants {
 	public static final String TASK_TYPE_DEADLINE = "deadline";
 	public static final String TASK_TYPE_UNTIMED = "untimed";
 	
+	public static final String HELP_GENERAL = "Here are the available commands:" +
+			"add: Add a new task" +
+			"edit: Edit an existing task" +
+			"done: Mark a task as done" +
+			"finalise: Finalise the timing of a floating task" +
+			"delete: Delete an existing task" +
+			"search: Search for existing task(s)" +
+			"undo: Return to the previous edit" +
+			"help: Brings up the help guide";
+	public static final String HELP_ADD_TASK = "";
+	public static final String HELP_DISPLAY = "";
+	public static final String HELP_HELP = "";
+	public static final String HELP_SORT = "";
+	public static final String HELP_DELETE = "";
+	public static final String HELP_EDIT_TASK = "";
+	public static final String HELP_CLEAR = "";
+	public static final String HELP_UNDO = "";
+	public static final String HELP_DONE = "";
+	public static final String HELP_FINALISE = "";
+	public static final String HELP_SEARCH = "";
+	public static final String HELP_EXIT = "";
+	
 }
