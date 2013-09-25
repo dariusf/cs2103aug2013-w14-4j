@@ -10,7 +10,6 @@ public class Token {
 	public String toString() {
 		return thing;
 	}
-	
 }
 
 class DateToken extends Token {

@@ -13,13 +13,13 @@ import Storage.Storage;
 public class Logic {
 	private static Storage storage = null;
 	
-	protected Logic(){
+	public Logic(){
 		storage = new Storage();
 	}
 	
-	static Feedback executeCommand(String userCommand) {
+	public static Feedback executeCommand(String userCommand) {
 		Command command = new Parser().parse(userCommand);
-		CommandType commandType = Command.getCommandType();
+		CommandType commandType = command.getCommandType();
 
 		switch (commandType) {
 		case ADD_TASK:
@@ -61,15 +61,15 @@ public class Logic {
 
 	private static Feedback showHelp(Command command) {
 		// TODO Auto-generated method stub
-		return null;
-	}
+	return null;
+}
 
-	private static Feedback editTask(Command command) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+private static Feedback editTask(Command command) {
+	// TODO Auto-generated method stub
+	return null;
+}
 
-	private static Feedback undoState() {
+private static Feedback undoState() {
 		Feedback feedback = null;
 		if(storage.size()>0){
 			storage.sort();
@@ -78,18 +78,18 @@ public class Logic {
 			feedback = new Feedback(50);
 		}
 		return feedback;
-	}
+}
 
-	private static Feedback searchTasks(Command command) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+private static Feedback searchTasks(Command command) {
+	// TODO Auto-generated method stub
+	return null;
+}
 
-	private static void exitProgram() {
-		System.exit(0);
-	}
+private static void exitProgram() {
+	System.exit(0);
+}
 
-	private static Feedback clearTasks(Command command) {
+private static Feedback clearTasks(Command command) {
 		Feedback feedback = null;
 		if(storage.size()>0){
 			storage.clear();
@@ -98,33 +98,33 @@ public class Logic {
 			feedback = new Feedback(50);
 		}
 		return feedback;
-	}
+}
 
-	private static Feedback deleteTask(Command command) {
-		HashMap<String, String> commandAttributes = Command.getCommandAttributes();
-		int lineNumber = Integer.parseInt(commandAttributes.get(Constants.DELETE_ATT_LINE));
-		
-		Feedback feedback = null;
-		if(lineNumber <= storage.size()){
-			storage.remove(lineNumber);
-			feedback = new Feedback(10, CommandType.DELETE, commandAttributes);
-		} else {
-			feedback = new Feedback(61);
-		}
-		
-		return feedback;
+private static Feedback deleteTask(Command command) {
+	HashMap<String, String> commandAttributes = command.getCommandAttributes();
+	int lineNumber = Integer.parseInt(commandAttributes.get(Constants.DELETE_ATT_LINE));
+	
+	Feedback feedback = null;
+	if(lineNumber <= storage.size()){
+		storage.remove(lineNumber);
+		feedback = new Feedback(10, CommandType.DELETE, commandAttributes);
+	} else {
+		feedback = new Feedback(61);
 	}
+	
+	return feedback;
+}
 
-	private static Feedback displayTasks() {
-		Feedback feedback = null;
-		if(storage.size() > 0){
-			StringBuilder output = new StringBuilder();
-			int index = 1;
-			for (Task task : storage.getAll()){
-				output.append(index+". ");
-				output.append(task.toString());
-				if(index < storage.size()){
-					output.append("/n");
+private static Feedback displayTasks() {
+	Feedback feedback = null;
+	if(storage.size() > 0){
+		StringBuilder output = new StringBuilder();
+		int index = 1;
+		for (Task task : storage.getAll()){
+			output.append(index+". ");
+output.append(task.toString());
+if(index < storage.size()){
+	output.append("/n");
 				}
 			}
 			feedback = new Feedback(10, CommandType.DISPLAY, output.toString());
@@ -135,7 +135,7 @@ public class Logic {
 	}
 
 	private static Feedback addTask(Command command) {
-		HashMap<String, String> taskAttributes = Command.getCommandAttributes();
+		HashMap<String, String> taskAttributes = command.getCommandAttributes();
 		Task newTask = new Task(taskAttributes);
 		storage.add(newTask);
 		

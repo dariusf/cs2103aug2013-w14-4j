@@ -10,22 +10,6 @@ import Logic.Constants;
 
 public class Parser {
 
-	// Test cases
-	
-	public static void main(String[] args) {
-		System.out.println(new Parser().parse("go home at 10:00 pm"));
-		System.out.println(new Parser().parse("add 'go home at 10:00 pm'"));
-		System.out.println(new Parser().parse("add go home at 10:00 pm"));
-		System.out.println(new Parser().parse("add go home at 13:00 p"));
-		System.out.println(new Parser().parse("add go home at 13:00 on tuesday yeah!"));
-		System.out.println(new Parser().parse("add go home at 10:00pm"));
-		System.out.println(new Parser().parse("add go home on 1/1/13"));
-		System.out.println(new Parser().parse("add go home on 1/1"));
-		System.out.println(new Parser().parse("add go home at 10:00 pm on 1/2/13"));
-		System.out.println(new Parser().parse("add go home at kitchen on top at 10:00 pm on 1/2/13"));
-		System.out.println(new Parser().parse("add go home at at at at at 10:00 pm"));
-	}
-
 	// States
 	
 	// TODO: draw proper state diagram

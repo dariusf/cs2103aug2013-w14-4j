@@ -2,8 +2,8 @@ package Logic;
 import java.util.HashMap;
 
 public class Command {
-	private static CommandType type = null;
-	private static HashMap<String, String> commandAttributes = null;
+	private CommandType type = null;
+	private HashMap<String, String> commandAttributes = null;
 	
 	public Command(CommandType command, HashMap<String, String> attributes){
 		type = command;
@@ -15,11 +15,11 @@ public class Command {
 		commandAttributes = new HashMap<String, String>();
 	}
 	
-	public static CommandType getCommandType(){
+	public CommandType getCommandType(){
 		return type;
 	}
 	
-	public static HashMap<String, String> getCommandAttributes(){
+	public HashMap<String, String> getCommandAttributes(){
 		return commandAttributes;
 	}
 	
@@ -44,4 +44,37 @@ public class Command {
     	
     	return result.toString();
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((commandAttributes == null) ? 0 : commandAttributes
+						.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Command other = (Command) obj;
+		if (commandAttributes == null) {
+			if (other.commandAttributes != null)
+				return false;
+		} else if (!commandAttributes.equals(other.commandAttributes))
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
+	}
+    
+    
 }
