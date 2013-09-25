@@ -42,28 +42,28 @@ public class Task {
 
 	private SimpleDateFormat dateParser = new SimpleDateFormat("h:mm a");
 
-	protected class Slot {
+	public class Slot {
 		private Date startTime = null;
 		private Date endTime = null;
 
-		protected Slot(Date start, Date end) {
+		public Slot(Date start, Date end) {
 			startTime = start;
 			endTime = end;
 		}
 
-		protected Date getStartTime() {
+		public Date getStartTime() {
 			return startTime;
 		}
 
-		protected Date getEndTime() {
+		public Date getEndTime() {
 			return endTime;
 		}
 
-		protected void setStartTime(Date start) {
+		public void setStartTime(Date start) {
 			startTime = start;
 		}
 
-		protected void setEndTime(Date end) {
+		public void setEndTime(Date end) {
 			endTime = end;
 		}
 		
@@ -72,7 +72,7 @@ public class Task {
 		}
 	}
 
-	protected Task(HashMap<String, String> attributes) {
+	public Task(HashMap<String, String> attributes) {
 		try {
 			name = attributes.get(Constants.TASK_ATT_NAME);
 			type = attributes.get(Constants.TASK_ATT_TYPE);
@@ -125,95 +125,95 @@ public class Task {
 		return output;
 	}
 
-	protected String getName() {
+	public String getName() {
 		return name;
 	}
 
-	protected void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	protected String getType() {
+	public String getType() {
 		return type;
 	}
 
-	protected void setType(String type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
-	protected String getLocation() {
+	public String getLocation() {
 		return location;
 	}
 
-	protected void setLocation(String location) {
+	public void setLocation(String location) {
 		this.location = location;
 	}
 
-	protected List<String> getTags() {
+	public List<String> getTags() {
 		return tags;
 	}
 
-	protected void setTags(List<String> tags) {
+	public void setTags(List<String> tags) {
 		this.tags = tags;
 	}
 
-	protected Date getStartTime() {
+	public Date getStartTime() {
 		return startTime;
 	}
 
-	protected void setStartTime(Date startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 
-	protected Date getEndTime() {
+	public Date getEndTime() {
 		return endTime;
 	}
 
-	protected void setEndTime(Date endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 
-	protected Date getDeadline() {
+	public Date getDeadline() {
 		return deadline;
 	}
 
-	protected void setDeadline(Date deadline) {
+	public void setDeadline(Date deadline) {
 		this.deadline = deadline;
 	}
 
-	protected List<Slot> getPossibleTime() {
+	public List<Slot> getPossibleTime() {
 		return possibleTime;
 	}
 
-	protected void setPossibleTime(List<Slot> possibleTime) {
+	public void setPossibleTime(List<Slot> possibleTime) {
 		this.possibleTime = possibleTime;
 	}
 
-	protected boolean isDone() {
+	public boolean isDone() {
 		return done;
 	}
 
-	protected void markDone() {
+	public void markDone() {
 		this.done = true;
 	}
 
-	protected void markUndone() {
+	public void markUndone() {
 		this.done = false;
 	}
 	
-	protected boolean isTimedTask(){
+	public boolean isTimedTask(){
 		return this.type.equals(Constants.TASK_TYPE_TIMED);
 	}
 	
-	protected boolean isDeadlineTask(){
+	public boolean isDeadlineTask(){
 		return this.type.equals(Constants.TASK_TYPE_DEADLINE);
 	}
 	
-	protected boolean isFloatingTask(){
+	public boolean isFloatingTask(){
 		return this.type.equals(Constants.TASK_TYPE_FLOATING);
 	}
 	
-	protected boolean isUntimedTask(){
+	public boolean isUntimedTask(){
 		return this.type.equals(Constants.TASK_TYPE_UNTIMED);
 	}
 

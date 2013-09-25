@@ -5,49 +5,49 @@ import java.util.ArrayList;
 import Logic.Task;
 
 public class Storage {
-	protected static ArrayList<Task> taskStorage = null;
+	public static ArrayList<Task> taskStorage = null;
 	
-	protected Storage(){
+	public Storage(){
 		taskStorage = new ArrayList<Task>();
 	}
 	
-	protected void sort(){
+	public void sort(){
 		
 	}
 	
-	protected void add(Task task){
+	public void add(Task task){
 		taskStorage.add(task);
 	}
 	
-	protected void remove(int index){
+	public void remove(int index){
 		taskStorage.remove(index - 1);
 	}
 	
-	protected void clear(){
+	public void clear(){
 		taskStorage.clear();
 	}
 	
-	protected Task get(int index){
+	public Task get(int index){
 		return taskStorage.get(index);
 	}
 	
-	protected ArrayList<Task> getAll() {
+	public ArrayList<Task> getAll() {
 		return taskStorage;
 	}
 	
-	protected boolean isEmpty() {
+	public boolean isEmpty() {
 		return taskStorage.isEmpty();
 	}
 	
-	protected int size() {
+	public int size() {
 		return taskStorage.size();
 	}
 	
-	protected void undo(){
+	public void undo(){
 		
 	}
 	
-	protected boolean isUndoable(){
+	public boolean isUndoable(){
 		return true;
 	}
 }
