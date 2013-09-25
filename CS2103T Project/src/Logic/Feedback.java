@@ -1,11 +1,7 @@
 package Logic;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class Feedback {
 	private CommandType feedbackCommand = null;
-	private HashMap<String, String> feedbackAttributes = null;
 	private String feedbackString = null;
 	private int statusCode = 0;
 
@@ -38,14 +34,6 @@ public class Feedback {
 
 	public CommandType getCommand() {
 		return feedbackCommand;
-	}
-
-	public void setAttribute(String key, String value) {
-		feedbackAttributes.put(key, value);
-	}
-
-	public String getAttribute(String key) {
-		return feedbackAttributes.get(key);
 	}
 
 	public String toString() {
