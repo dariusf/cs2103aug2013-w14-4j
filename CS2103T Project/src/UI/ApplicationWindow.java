@@ -9,10 +9,10 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
+import Logic.CommandType;
 import Logic.Constants;
 import Logic.Feedback;
 import Logic.Logic;
-import org.eclipse.swt.widgets.Label;
 
 public class ApplicationWindow {
 
@@ -80,22 +80,23 @@ public class ApplicationWindow {
 		input.addKeyListener(new KeyListener() {
 			String userInput = "";
 			String output = displayWelcomeMessage();
+			
 			@Override
 			public void keyReleased(KeyEvent arg0) {}
 
 			@Override
 			public void keyPressed(KeyEvent arg0) {
-				// TODO Auto-generated method stub
 				if (arg0.character != SWT.CR) {
 					char characterEntered = arg0.character;
 					userInput = userInput + characterEntered;
 				}
 				
 				if (arg0.character == SWT.CR) {
-					//Feedback feedbackObj = Logic.executeCommand(userInput);
+					Feedback feedbackObj = Logic.executeCommand(userInput);
+					//my stub Feedback feedbackObj = new Feedback(50, CommandType.DISPLAY);
 					System.out.println(userInput);
-					//String output = convertFeedbackToString(feedbackObj);
-					String feedback = convertFeedbackToString();
+					String feedback = feedbackObj.toString();
+					//my stub String feedback = convertFeedbackToString();
 					output = output + "\n" + feedback;
 					displayFeedback.setText(output);
 					userInput = "";
@@ -105,9 +106,9 @@ public class ApplicationWindow {
 		});
 	}
 	
-	private String convertFeedbackToString() {
-		// TODO Auto-generated method stub
+	//my stub
+	/*private String convertFeedbackToString() {
 		String output = "Hello";
 		return output;
-	}
+	}*/
 }
