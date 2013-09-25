@@ -19,8 +19,6 @@ public class ApplicationWindow {
 	protected Shell shell;
 	private Text input;
 	private Text displayFeedback;
-	private Text text;
-	private Text text_1;
 	
 	/**
 	 * Launch the application.
@@ -81,7 +79,7 @@ public class ApplicationWindow {
 	private void enterDriverLoop() {
 		input.addKeyListener(new KeyListener() {
 			String userInput = "";
-			String feedbackString = displayWelcomeMessage();
+			String output = displayWelcomeMessage();
 			@Override
 			public void keyReleased(KeyEvent arg0) {}
 
@@ -97,23 +95,14 @@ public class ApplicationWindow {
 					//Feedback feedbackObj = Logic.executeCommand(userInput);
 					System.out.println(userInput);
 					//String output = convertFeedbackToString(feedbackObj);
-					String output = convertFeedbackToString();
-					feedbackString = feedbackString + "\n" + output;
-					displayFeedback.setText(feedbackString);
+					String feedback = convertFeedbackToString();
+					output = output + "\n" + feedback;
+					displayFeedback.setText(output);
 					userInput = "";
 					input.setText("");
-					
 				}
 			}
-
-			
 		});
-	}
-	
-	private String convertFeedbackToString(Feedback feedbackObj) {
-		// TODO Auto-generated method stub
-		String output = "Hello";
-		return output;
 	}
 	
 	private String convertFeedbackToString() {
