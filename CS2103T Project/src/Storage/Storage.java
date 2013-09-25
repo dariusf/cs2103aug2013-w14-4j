@@ -50,4 +50,8 @@ public class Storage {
 	public boolean isUndoable(){
 		return true;
 	}
+	
+	public void replace(int index, Task task){
+		taskStorage.set(index-1, task);
+	}
 }
