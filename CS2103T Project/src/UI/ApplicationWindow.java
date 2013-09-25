@@ -6,16 +6,21 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 
 import Logic.Constants;
 import Logic.Feedback;
 import Logic.Logic;
+import org.eclipse.swt.widgets.Label;
 
 public class ApplicationWindow {
 
 	protected Shell shell;
 	private Text input;
 	private Text displayFeedback;
+	private Text text;
+	private Text text_1;
 	
 	/**
 	 * Launch the application.
@@ -52,15 +57,19 @@ public class ApplicationWindow {
 		shell = new Shell();
 		shell.setSize(512, 300);
 		shell.setText(Constants.APP_NAME);
-
-		input = new Text(shell, SWT.BORDER);
-		input.setBounds(10, 231, 476, 21);
+		shell.setLayout(new GridLayout(1, false));
 		
 		displayFeedback = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI);
 		displayFeedback.setEnabled(false);
-		displayFeedback.setBounds(10, 10, 476, 215);
+		GridData gd_feedback = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gd_feedback.heightHint = 215;
+		displayFeedback.setLayoutData(gd_feedback);
 		
-		
+		input = new Text(shell, SWT.BORDER);
+		GridData gd_input = new GridData(SWT.FILL, SWT.FILL, true, false);
+		gd_input.heightHint = 16;
+		input.setLayoutData(gd_input);
+
 		enterDriverLoop();
 	}
 
