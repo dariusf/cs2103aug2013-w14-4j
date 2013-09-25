@@ -9,8 +9,9 @@ import Logic.Constants;
 
 public class Parser {
 
-//	public static void main(String[] args) {
-//	}
+	public static void main(String[] args) {
+//		new Parser().parse("add go home at 10:00 am");
+	}
 	
 	// States
 	
@@ -31,7 +32,8 @@ public class Parser {
 
 	private State parseState;
 	private NaturalState naturalState;
-	private DateTimeState dateTimeState;
+	private OnDateState onDateState;
+	private AtTimeState atTimeState;
 	
 	// Tokens
 	
@@ -51,7 +53,8 @@ public class Parser {
 	public Parser() {
 		
 		naturalState = new NaturalState();
-		dateTimeState = new DateTimeState();
+		onDateState = new OnDateState();
+		atTimeState = new AtTimeState();
 		parseState = naturalState;
 		
 		tokens = new ArrayList<>();
@@ -94,7 +97,7 @@ public class Parser {
 		
 		if (isCommand((firstToken = getToken()))) {
 			commandType = determineCommandType(firstToken);
-			parseState = determineStartingState(commandType);
+			parseState = getStartingState(commandType);
 			advanceToken();
 		} else {
 			// default to add command
@@ -116,7 +119,7 @@ public class Parser {
 		command.setValue(Constants.TASK_ATT_NAME, tokenContent.toString().trim());
 	}
 	
-	private State determineStartingState(CommandType type) {
+	private State getStartingState(CommandType type) {
 		switch (type) {
 		case ADD_TASK:
 			return naturalState;
@@ -139,42 +142,68 @@ public class Parser {
 
 	public CommandType determineCommandType(Token token) {
 		String enumString = token.thing;
-		if (enumString.equals("add") || enumString.equals("edit")) {
+		
+		if (enumString.equals("invalid")) {
+			return CommandType.ADD_TASK;
+		}
+		else if (enumString.equals("add") || enumString.equals("edit")) {
 			enumString = enumString.toUpperCase() + "_TASK";
 		}
 		else {
 			enumString = enumString.toUpperCase();
-		}		
-		return CommandType.valueOf(enumString);
+		}
+		
+		try {
+			return CommandType.valueOf(enumString);
+		} catch (IllegalArgumentException e) {
+			return CommandType.INVALID;
+		}
 	}
 
 	private boolean isCommand(Token token) {
-		return token.thing.equals("add");
+		return determineCommandType(token) != CommandType.INVALID;
 	}
 
 	private class NaturalState implements State {
 
-		private boolean shouldChangeToDateTimeState() {
+		// TODO: store the previous keyword token here
+		
+		private boolean shouldChangeToAtTimeState() {
 			Token currentToken = getToken();
-			return currentToken instanceof KeywordToken &&
-					(currentToken.thing.equals("at") || currentToken.thing.equals("on"));
+			return currentToken instanceof KeywordToken && currentToken.thing.equals("at");
 		}
 
-		private void changeToDateTimeState() {
-			parseState = dateTimeState;
+		private boolean shouldChangeToOnDateState() {
+			Token currentToken = getToken();
+			return currentToken instanceof KeywordToken && currentToken.thing.equals("on");
+		}
+
+		private void changeToOnDateState() {
+			parseState = onDateState;
+			previousToken = getToken();
+			advanceToken();
+		}
+
+		private void changeToAtTimeState() {
+			parseState = atTimeState;
 			previousToken = getToken();
 			advanceToken();
 		}
 		
 		@Override
 		public boolean willChangeState() {
-			return shouldChangeToDateTimeState();
+			
+			return shouldChangeToAtTimeState() || shouldChangeToOnDateState();
 		}
 
 		@Override
 		public void changeState() {
-			if (shouldChangeToDateTimeState()) {
-				changeToDateTimeState();
+			if (shouldChangeToAtTimeState()) {
+				changeToAtTimeState();
+			}
+			else {
+				assert shouldChangeToOnDateState();
+				changeToOnDateState();
 			}
 		}
 
@@ -192,12 +221,11 @@ public class Parser {
 		
 	}
 	
-	// TODO: should be 2 different states!
-	private class DateTimeState implements State {
+	private class AtTimeState implements State {
 
 		private boolean shouldChangeToNormalState() {
 			Token currentToken = getToken();
-			return !(currentToken instanceof TimeToken || currentToken instanceof DateToken);
+			return !(currentToken instanceof TimeToken);
 		}
 
 		private void changeToNormalState() {
@@ -222,17 +250,48 @@ public class Parser {
 
 		@Override
 		public void processToken(Token t) {
-			if (t instanceof TimeToken) {
-				// TODO: add to current date and get most specific match, right now it just writes over
-				command.setValue(Constants.TASK_ATT_STARTTIME, ((TimeToken) t).timeString());
-				previousToken = null;
-				advanceToken();
+			assert t instanceof TimeToken;
+			// TODO: add to current date and get most specific match, right now it just writes over
+			command.setValue(Constants.TASK_ATT_STARTTIME, ((TimeToken) t).timeString());
+			previousToken = null;
+			advanceToken();
+		}
+		
+	}
+	
+	private class OnDateState implements State {
+
+		private boolean shouldChangeToNormalState() {
+			Token currentToken = getToken();
+			return !(currentToken instanceof DateToken);
+		}
+
+		private void changeToNormalState() {
+			if (previousToken != null) {
+				tokenContent.append(previousToken.thing + " ");
+				// do not advance
 			}
-			else if (t instanceof DateToken) {
-				command.setValue(Constants.TASK_ATT_DEADLINE, ((DateToken) t).dateString());
-				previousToken = null;
-				advanceToken();
+			parseState = naturalState;
+		}
+
+		@Override
+		public boolean willChangeState() {
+			return shouldChangeToNormalState();
+		}
+
+		@Override
+		public void changeState() {
+			if (shouldChangeToNormalState()) {
+				changeToNormalState();
 			}
+		}
+
+		@Override
+		public void processToken(Token t) {
+			assert t instanceof DateToken;
+			command.setValue(Constants.TASK_ATT_DEADLINE, ((DateToken) t).dateString());
+			previousToken = null;
+			advanceToken();
 		}
 		
 	}
