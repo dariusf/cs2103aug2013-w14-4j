@@ -1,6 +1,8 @@
 package Logic;
 
 public class Constants {
+	public static final String APP_NAME = "Basket";
+	
 	public static String WELCOME_MSG = "Welcome to TextBuddy. %1$s is ready for use";
 
 	public static final String MSG_INVALID_FORMAT = "invalid command format: %1$s";
