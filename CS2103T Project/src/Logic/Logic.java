@@ -150,8 +150,32 @@ public class Logic {
 	private static Feedback searchTasks(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command.getCommandAttributes();
+		ArrayList<Task> validTasks = storage.getAll();
+		for(String attribute : commandAttributes.keySet()){
+			String keyword = commandAttributes.get(attribute);
+			for(int i = validTasks.size()-1; i >= 0; i--){
+				Task currentTask = validTasks.get(i);
+				if(!isWordInString(keyword, currentTask.get(attribute))){
+					validTasks.remove(i);
+				}
+			}
+		}
 		
-		return null;
+		if (validTasks.size() > 0) {
+			StringBuilder output = new StringBuilder();
+			int index = 1;
+			for (Task task : validTasks) {
+				output.append(index + ". ");
+				output.append(task.toString());
+				if (index < validTasks.size()) {
+					output.append("/n");
+				}
+			}
+			feedback = new Feedback(10, CommandType.SEARCH, output.toString());
+		} else {
+			feedback = new Feedback(10, CommandType.SEARCH, Constants.MSG_NO_RESULT);
+		}
+		return feedback;
 	}
 
 	private static void exitProgram() {
@@ -178,7 +202,7 @@ public class Logic {
 		Feedback feedback = null;
 		if (lineNumber <= storage.size()) {
 			storage.remove(lineNumber);
-			feedback = new Feedback(10, CommandType.DELETE, commandAttributes);
+			feedback = new Feedback(10, CommandType.DELETE);
 		} else {
 			feedback = new Feedback(61);
 		}
@@ -212,9 +236,9 @@ public class Logic {
 
 		Feedback feedback = null;
 		if (isTaskOver(newTask)) {
-			feedback = new Feedback(11, CommandType.ADD_TASK, taskAttributes);
+			feedback = new Feedback(11, CommandType.ADD_TASK);
 		} else {
-			feedback = new Feedback(10, CommandType.ADD_TASK, taskAttributes);
+			feedback = new Feedback(10, CommandType.ADD_TASK);
 		}
 
 		return feedback;
@@ -248,5 +272,11 @@ public class Logic {
 
 	private static boolean isTimePastAlready(Date time) {
 		return time.compareTo(new Date()) < 0;
+	}
+	
+	private static boolean isWordInString(String word, String string) {
+		String lowerCaseString = string.toLowerCase();
+		String lowerCaseWord = word.toLowerCase();
+		return lowerCaseString.indexOf(lowerCaseWord) != -1;
 	}
 }
