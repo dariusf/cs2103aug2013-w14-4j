@@ -9,15 +9,8 @@ import Logic.Constants;
 
 public class Parser {
 
-	public static void main(String[] args) {
-		
-		new Parser().parse("go home at 10:00pm");
-		
-//		DateFormat dateFormat = new SimpleDateFormat("h:mm a");
-//		java.util.Date date = new java.util.Date();
-//		String datestring = dateFormat.format(date);
-//		System.out.println(datestring);
-	}
+//	public static void main(String[] args) {
+//	}
 	
 	// States
 	
@@ -37,7 +30,7 @@ public class Parser {
 	}
 
 	private State parseState;
-	private NormalState normalState;
+	private AddState addState;
 	private DateTimeState dateTimeState;
 	
 	// Tokens
@@ -57,9 +50,9 @@ public class Parser {
 	
 	public Parser() {
 		
-		normalState = new NormalState();
+		addState = new AddState();
 		dateTimeState = new DateTimeState();
-		parseState = normalState;
+		parseState = addState;
 		
 		tokens = new ArrayList<>();
 		tokenContent = new StringBuilder();
@@ -96,17 +89,20 @@ public class Parser {
 		if (!hasTokensLeft()) return;
 		
 		// the first token is always a command
-		Token currentToken;
-		if (isCommand((currentToken = getToken()))) {
-			command = new Command(parseCommand(currentToken));
+		Token firstToken;
+		CommandType commandType;
+		
+		if (isCommand((firstToken = getToken()))) {
+			commandType = determineCommandType(firstToken);
+			parseState = determineStartingState(commandType);
 			advanceToken();
 		} else {
-			// return a no-op and signal to user that command is invalid
-			// alternatively, default to an add command
-			// i'm defaulting here
-			
-			command = new Command(CommandType.ADD_TASK);
+			// default to add command
+			commandType = CommandType.ADD_TASK;
+			parseState = addState;
 		}
+
+		command = new Command(commandType);
 		
 		while (hasTokensLeft()) {
 			if (parseState.willChangeState()) {
@@ -119,8 +115,29 @@ public class Parser {
 		
 		command.setValue(Constants.TASK_ATT_NAME, tokenContent.toString().trim());
 	}
+	
+	private State determineStartingState(CommandType type) {
+		switch (type) {
+		case ADD_TASK:
+			return addState;
+		case DELETE: // arguments
+		case EDIT_TASK:
+		case FINALISE:
+		case HELP:
+		case SEARCH:
+			return null;
+		case EXIT: // no arguments
+		case CLEAR:
+		case DISPLAY:
+		case SORT:
+		case UNDO:
+			return null;
+		default:
+			return null;
+		}
+	}
 
-	private CommandType parseCommand(Token token) {
+	public CommandType determineCommandType(Token token) {
 		if (token.thing.equals("add")) {
 			return CommandType.ADD_TASK;
 		}
@@ -131,7 +148,7 @@ public class Parser {
 		return token.thing.equals("add");
 	}
 
-	private class NormalState implements State {
+	private class AddState implements State {
 
 		private boolean shouldChangeToDateTimeState() {
 			Token currentToken = getToken();
@@ -184,7 +201,7 @@ public class Parser {
 				tokenContent.append(previousToken.thing + " ");
 				// do not advance
 			}
-			parseState = normalState;
+			parseState = addState;
 		}
 
 		@Override
