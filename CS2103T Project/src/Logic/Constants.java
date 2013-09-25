@@ -72,12 +72,12 @@ public class Constants {
 	public static final String HELP_EXIT = "";
 	
 	public static final int SC_SUCCESS = 10;
-	public static final int SC_SUCCESS_TASKOVERDUE = 11;
+	public static final int SC_SUCCESS_TASK_OVERDUE = 11;
 	public static final int SC_INVALID_COMMAND_ERROR = 20;
 	public static final int SC_EMPTY_DESCRIPTION_ERROR = 30;
 	public static final int SC_UNRECOGNISED_ATTRIBUTE_ERROR = 31;
 	public static final int SC_INTEGER_OUT_OF_BOUNDS_ERROR = 41;
-	public static final int SC_DISPLAY_TASK_NO_TASK_ERROR = 50;
+	public static final int SC_DISPLAY_NO_TASK_ERROR = 50;
 	public static final int SC_NO_ID_INDICATED_ERROR = 60;
 	public static final int SC_TASK_ALREADY_FINALISED_ERROR = 62;
 	public static final int SC_TASK_ALREADY_DONE_ERROR = 63;
