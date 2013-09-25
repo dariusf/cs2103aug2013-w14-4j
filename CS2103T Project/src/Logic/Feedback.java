@@ -103,7 +103,7 @@ public class Feedback {
 	private String displayFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = feedbackString;
-		} else if (statusCode == Constants.SC_DISPLAY_NO_TASK_ERROR) {
+		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "You have no tasks :)";
 		} else {
 			statusMessage = "Error: Invalid display (this should not happen!)";
@@ -127,7 +127,7 @@ public class Feedback {
 	private String clearFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = "All tasks cleared!";
-		} else if (statusCode == Constants.SC_NO_TASK_TO_CLEAR_ERROR) {
+		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to clear!";
 		} else {
 			statusMessage = "Error: Invalid clear (this should not happen!)";
@@ -136,42 +136,91 @@ public class Feedback {
 	}
 
 	private String sortFeedback() {
-		// TODO Auto-generated method stub
-		return null;
+		if (statusCode == Constants.SC_SUCCESS) {
+			statusMessage = "All tasks sorted!";
+		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
+			statusMessage = "Error: You have no tasks to sort!";
+		} else {
+			statusMessage = "Error: Invalid sort (this should not happen!)";
+		}
+		return statusMessage;
 	}
 
 	private String searchFeedback() {
-		// TODO Auto-generated method stub
-		return null;
+		if (statusCode == Constants.SC_SUCCESS) {
+			statusMessage = "Search results: \n" + feedbackString;
+		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
+			statusMessage = "Error: You have no tasks to search!";
+		} else if (statusCode == Constants.SC_SEARCH_KEYWORD_MISSING_ERROR) {
+			statusMessage = "Error: No search description was given";
+		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
+			statusMessage = "Error: Attribute is unrecognised";
+		} else {
+			statusMessage = "Error: Invalid search (this should not happen!)";
+		}
+		return statusMessage;
 	}
 
 	private String invalidFeedback() {
 		if (statusCode == Constants.SC_INVALID_COMMAND_ERROR) {
 			statusMessage = "Error: Invalid command!";
 		} else {
-			// should not happen
 			statusMessage = "Error: Invalid command (this should not happen!)";
 		}
 		return statusMessage;
 	}
 
 	private String undoFeedback() {
-		// TODO Auto-generated method stub
-		return null;
+		if (statusCode == Constants.SC_SUCCESS) {
+			statusMessage = "Undo successful!";
+		} else if (statusCode == Constants.SC_UNDO_NO_PRIOR_STATE_ERROR) {
+			statusMessage = "Error: Nothing to undo!";
+		} else {
+			statusMessage = "Error: Invalid undo (this should not happen!)";
+		}
+		return statusMessage;
 	}
 
 	private String finaliseFeedback() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		if (statusCode == Constants.SC_SUCCESS) {
+			statusMessage = "Task finalised successfully! \n" + feedbackString;
+		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
+			statusMessage = "Error: You have no tasks to finalise!";
+		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
+			statusMessage = "Error: ID is not valid";
+		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
+			statusMessage = "Error: No ID is indicated";
+		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR) {
+			statusMessage = "Error: Time ID is not valid";
+		} else if (statusCode == Constants.SC_NO_ID_INDICATED_TIME_ERROR) {
+			statusMessage = "Error: Time ID is not specified";
+		} else {
+			statusMessage = "Error: Invalid finalise (this should not happen!)";
+		}
+		return statusMessage;
+	}	
 
 	private String helpFeedback() {
-		// TODO Auto-generated method stub
-		return null;
+		if (statusCode == Constants.SC_SUCCESS) {
+			statusMessage = feedbackString;
+		} else {
+			statusMessage = "Error: Invalid help (this should not happen!)";
+		}
+		return statusMessage;
 	}
 
 	private String doneFeedback() {
-		// TODO Auto-generated method stub
-		return null;
+		if (statusCode == Constants.SC_SUCCESS) {
+			statusMessage = "Task marked as done! \n" + feedbackString;
+		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
+			statusMessage = "Error: You have no tasks to mark as done!";
+		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
+			statusMessage = "Error: ID is not valid";
+		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
+			statusMessage = "Error: No ID is indicated";
+		} else {
+			statusMessage = "Error: Invalid done (this should not happen!)";
+		}
+		return statusMessage;
 	}
 }
