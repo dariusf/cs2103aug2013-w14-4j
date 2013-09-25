@@ -51,7 +51,6 @@ public class Parser {
 	private Token previousToken = null;
 	
 	public Parser() {
-		
 		naturalState = new NaturalState();
 		onDateState = new OnDateState();
 		atTimeState = new AtTimeState();
@@ -222,7 +221,9 @@ public class Parser {
 	}
 	
 	private class AtTimeState implements State {
-
+		
+		public boolean untilEncountered = false;
+		
 		private boolean shouldChangeToNormalState() {
 			Token currentToken = getToken();
 			return !(currentToken instanceof TimeToken);
@@ -253,6 +254,7 @@ public class Parser {
 			assert t instanceof TimeToken;
 			// TODO: add to current date and get most specific match, right now it just writes over
 			command.setValue(Constants.TASK_ATT_STARTTIME, ((TimeToken) t).timeString());
+//			command.setValue(Constants.TASK_ATT_ENDTIME, null);
 			previousToken = null;
 			advanceToken();
 		}
