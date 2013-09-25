@@ -95,7 +95,7 @@ public class Parser {
 		CommandType commandType;
 		
 		if (isCommand((firstToken = getToken()))) {
-			commandType = determineCommandType(firstToken);
+			commandType = determineCommandType(firstToken.thing);
 			parseState = getStartingState(commandType);
 			advanceToken();
 		} else {
@@ -139,9 +139,7 @@ public class Parser {
 		}
 	}
 
-	public CommandType determineCommandType(Token token) {
-		String enumString = token.thing;
-		
+	public static CommandType determineCommandType(String enumString) {
 		if (enumString.equals("invalid")) {
 			return CommandType.ADD_TASK;
 		}
@@ -159,8 +157,8 @@ public class Parser {
 		}
 	}
 
-	private boolean isCommand(Token token) {
-		return determineCommandType(token) != CommandType.INVALID;
+	private static boolean isCommand(Token token) {
+		return determineCommandType(token.thing) != CommandType.INVALID;
 	}
 
 	private class NaturalState implements State {
