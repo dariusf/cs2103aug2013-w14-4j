@@ -2,11 +2,7 @@ package Parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
 import Logic.Command;
 import Logic.CommandType;
 import Logic.Constants;
@@ -226,11 +222,11 @@ public class Parser {
 		return temp != tokenPointer;
 	}
 	
-	private boolean backtrackToken() {
-		int temp = tokenPointer;
-		tokenPointer = Math.max(tokenPointer-1, 0);
-		return temp != tokenPointer;
-	}
+//	private boolean backtrackToken() {
+//		int temp = tokenPointer;
+//		tokenPointer = Math.max(tokenPointer-1, 0);
+//		return temp != tokenPointer;
+//	}
 	
 	private Token getToken() {
 		return tokens.get(tokenPointer);
