@@ -77,12 +77,12 @@ public class Constants {
 	public static final int SC_EMPTY_DESCRIPTION_ERROR = 30;
 	public static final int SC_UNRECOGNISED_ATTRIBUTE_ERROR = 31;
 	public static final int SC_INTEGER_OUT_OF_BOUNDS_ERROR = 41;
-	public static final int SC_DISPLAY_NO_TASK_ERROR = 50;
+	public static final int SC_NO_TASK_ERROR = 50;
 	public static final int SC_NO_ID_INDICATED_ERROR = 60;
 	public static final int SC_TASK_ALREADY_FINALISED_ERROR = 62;
 	public static final int SC_TASK_ALREADY_DONE_ERROR = 63;
-	public static final int SC_NO_TASK_TO_CLEAR_ERROR = 70;
+	public static final int SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR = 64;
+	public static final int SC_NO_ID_INDICATED_TIME_ERROR = 65;
 	public static final int SC_SEARCH_KEYWORD_MISSING_ERROR = 80;
-	public static final int SC_NO_TASK_TO_SORT_ERROR = 90;
 	public static final int SC_UNDO_NO_PRIOR_STATE_ERROR = 100;
 }
