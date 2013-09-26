@@ -1,13 +1,13 @@
 package Parser;
 
 public class Token {
-	String thing = "";
+	String contents = "";
 
-	public Token(String name) {
-		thing = name;
+	public Token(String contents) {
+		this.contents = contents;
 	}
 
 	public String toString() {
-		return thing;
+		return contents;
 	}
 }
