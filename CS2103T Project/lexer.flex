@@ -34,9 +34,11 @@ QuotedWords = '[a-z0-9 :/]+'
 
 %%
 
-{OnKeyword} {return new KeywordToken(yytext());}
-{AddKeyword} {return new KeywordToken(yytext());}
-{AtKeyword} {return new KeywordToken(yytext());}
+/*
+{OnKeyword} {return new WordToken(yytext());}
+{AddKeyword} {return new WordToken(yytext());}
+{AtKeyword} {return new WordToken(yytext());}
+*/
 {Time} {return new TimeToken(yytext());}
 {Date} {return new DateToken(yytext());}
 {Word} { return new WordToken(yytext()); }

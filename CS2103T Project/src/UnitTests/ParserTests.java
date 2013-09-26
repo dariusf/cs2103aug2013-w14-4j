@@ -11,6 +11,10 @@ import Parser.Parser;
 
 public class ParserTests {
 
+//	public void assertEquals(Object one, Object two) {
+//		
+//	}
+	
 	@Test
 	public void addCommandTests() {
 		// Correct format

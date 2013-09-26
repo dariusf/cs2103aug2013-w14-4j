@@ -3,37 +3,62 @@ package Parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Stack;
+
 import Logic.Command;
+import Logic.Command2;
 import Logic.CommandType;
-import Logic.Constants;
+import Logic.Interval;
+import Logic.Moment;
 
 public class Parser {
 
 	public static void main(String[] args) {
-//		new Parser().parse("add go home at 10:00 am");
+		Command2 command2 = new Parser().parse("add go home at 10:00 am");
+		command2 = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
+		command2 = new Parser().parse("add go home from 10:00 am to 11:00 am");
+
+		// should default to 1 hour interval
+		command2 = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
+		
+		command2 = new Parser().parse("add go home by 10:00 am");
+		command2 = new Parser().parse("add go home at at 10:00 am on 1/1/12");
+		
+		command2 = new Parser().parse("add go home on 10:00 am at 1/1/12");
+		
+		command2 = new Parser().parse("add go home at 10:00 am on 1/1/12 until 10:00 pm 1/2/12");
 	}
+	
+	private static final boolean PRINT_LEXER_TOKENS = false;
 	
 	// States
 	
 	// TODO: draw proper state diagram
-	private interface State {
+	public interface State {
 		
-		// This method determines if the parser will change state
-		// at all from the current state.
-		public boolean willChangeState();
+		// This method determines if the current state will be popped from
+		// the state stack
+		public boolean popCondition();
 
-		// This is called to effect the change of state.
-		public void changeState();
-
-		// This is called only if the parser will NOT change state.
-		// (in which case it always processes the current token)
+		// This is called only if the current state remains on the state stack,
+		// in which case it will processe the current token
+		// (you can assert !popCondition(); in here)
 		public void processToken(Token t);
+		
+		// These are called when the pop or push happen
+		public void onPop();
+		public void onPush();
 	}
-
-	private State parseState;
-	private NaturalState naturalState;
-	private OnDateState onDateState;
-	private AtTimeState atTimeState;
+	
+	private Stack<State> parseStates;
+	
+	void pushState(State s) {
+		s.onPush();
+		parseStates.push(s);
+	}
+	void popState() {
+		parseStates.pop().onPop();
+	}
 	
 	// Tokens
 	
@@ -41,26 +66,38 @@ public class Parser {
 	private int tokenCount = 0;
 	private int tokenPointer = 0;
 	
-	// The resulting command that will be built up gradually
-	private Command command = null;
-	private StringBuilder tokenContent;
-	
-	// A temporary field for the previous token
-	// Used when transitioning between states
-	// GLOBAL STATE: EXERCISE CAUTION
-	private Token previousToken = null;
-	
-	public Parser() {
-		naturalState = new NaturalState();
-		onDateState = new OnDateState();
-		atTimeState = new AtTimeState();
-		parseState = naturalState;
-		
-		tokens = new ArrayList<>();
-		tokenContent = new StringBuilder();
+	boolean nextToken() {
+		int temp = tokenPointer;
+		tokenPointer = Math.min(tokenPointer+1, tokenCount);
+		return temp != tokenPointer;
 	}
 	
-	public Command parse(String string) {
+	boolean previousToken() {
+		int temp = tokenPointer;
+		tokenPointer = Math.max(tokenPointer-1, 0);
+		return temp != tokenPointer;
+	}
+	
+	Token getCurrentToken() {
+		return tokens.get(tokenPointer);
+	}
+	
+	boolean hasTokensLeft() {
+		return tokenPointer < tokenCount;
+	}
+	
+	// The resulting command that will be built up gradually
+	private Command2 command = null;
+	Moment deadline = null;
+	ArrayList<Interval> intervals = new ArrayList<>();
+	String text = "";
+	
+	public Parser() {
+		parseStates = new Stack<>();
+		tokens = new ArrayList<>();
+	}
+	
+	public Command2 parse(String string) {
 		
 		// TODO: preliminary processing of string
 		tokenizeInput(string);
@@ -74,9 +111,10 @@ public class Parser {
 			Lexer lexer = new Lexer(new ByteArrayInputStream(string.getBytes("UTF-8")));
 			
 			Token next;
+			if (PRINT_LEXER_TOKENS) System.out.println("Tokens:");
 			while ((next = lexer.nextToken()) != null) {
 				tokens.add(next);
-//				System.out.println(">>>>>" + next.toString() + "<<<<<<");
+				if (PRINT_LEXER_TOKENS) System.out.println(next.toString());
 			}
 			tokenCount = tokens.size();
 
@@ -90,53 +128,46 @@ public class Parser {
 		
 		if (!hasTokensLeft()) return;
 		
-		// the first token is always a command
 		Token firstToken;
 		CommandType commandType;
 		
-		if (isCommand((firstToken = getToken()))) {
-			commandType = determineCommandType(firstToken.thing);
-			parseState = getStartingState(commandType);
-			advanceToken();
+		if (isCommand((firstToken = getCurrentToken()))) {
+			// take the first token to be a command
+			commandType = determineCommandType(firstToken.contents);
+			nextToken();
 		} else {
-			// default to add command
+			// default to the add command
 			commandType = CommandType.ADD_TASK;
-			parseState = naturalState;
 		}
-
-		command = new Command(commandType);
+		
+		// TODO: handle other commands here
+		
+		pushState(new StateDefault(this));
 		
 		while (hasTokensLeft()) {
-			if (parseState.willChangeState()) {
-				parseState.changeState();
+			State currentState = parseStates.peek();
+			
+			if (currentState.popCondition()) {
+				popState();
 			}
 			else {
-				parseState.processToken(getToken());
+				Token token = getCurrentToken();
+				currentState.processToken(token);
 			}
 		}
 		
-		command.setValue(Constants.TASK_ATT_NAME, tokenContent.toString().trim());
-	}
-	
-	private State getStartingState(CommandType type) {
-		switch (type) {
-		case ADD_TASK:
-			return naturalState;
-		case DELETE: // arguments
-		case EDIT_TASK:
-		case FINALISE:
-		case HELP:
-		case SEARCH:
-			return null;
-		case EXIT: // no arguments
-		case CLEAR:
-		case DISPLAY:
-		case SORT:
-		case UNDO:
-			return null;
-		default:
-			return null;
+		// pop the remaining states from the stack, in case we ran out of tokens
+		// before they all were done
+		while (parseStates.size() > 0) {
+			popState();
 		}
+		
+		command = new Command2(commandType);
+		command.deadline = deadline;
+		command.text = text;
+		command.intervals = intervals;
+
+//		command.setValue(Constants.TASK_ATT_NAME, tokenContent.toString().trim());
 	}
 
 	public static CommandType determineCommandType(String enumString) {
@@ -158,161 +189,6 @@ public class Parser {
 	}
 
 	private static boolean isCommand(Token token) {
-		return determineCommandType(token.thing) != CommandType.INVALID;
-	}
-
-	private class NaturalState implements State {
-
-		// TODO: store the previous keyword token here
-		
-		private boolean shouldChangeToAtTimeState() {
-			Token currentToken = getToken();
-			return currentToken instanceof KeywordToken && currentToken.thing.equals("at");
-		}
-
-		private boolean shouldChangeToOnDateState() {
-			Token currentToken = getToken();
-			return currentToken instanceof KeywordToken && currentToken.thing.equals("on");
-		}
-
-		private void changeToOnDateState() {
-			parseState = onDateState;
-			previousToken = getToken();
-			advanceToken();
-		}
-
-		private void changeToAtTimeState() {
-			parseState = atTimeState;
-			previousToken = getToken();
-			advanceToken();
-		}
-		
-		@Override
-		public boolean willChangeState() {
-			
-			return shouldChangeToAtTimeState() || shouldChangeToOnDateState();
-		}
-
-		@Override
-		public void changeState() {
-			if (shouldChangeToAtTimeState()) {
-				changeToAtTimeState();
-			}
-			else {
-				assert shouldChangeToOnDateState();
-				changeToOnDateState();
-			}
-		}
-
-		@Override
-		public void processToken(Token t) {
-			if (t instanceof WordToken) {
-				tokenContent.append(t.thing + " ");
-				advanceToken();
-			}
-			else {
-				// if we encounter a date here, it might be invalid. depends
-				System.out.println("encountered a date without preceding qualifier");
-			}
-		}
-		
-	}
-	
-	private class AtTimeState implements State {
-		
-		public boolean untilEncountered = false;
-		
-		private boolean shouldChangeToNormalState() {
-			Token currentToken = getToken();
-			return !(currentToken instanceof TimeToken);
-		}
-
-		private void changeToNormalState() {
-			if (previousToken != null) {
-				tokenContent.append(previousToken.thing + " ");
-				// do not advance
-			}
-			parseState = naturalState;
-		}
-
-		@Override
-		public boolean willChangeState() {
-			return shouldChangeToNormalState();
-		}
-
-		@Override
-		public void changeState() {
-			if (shouldChangeToNormalState()) {
-				changeToNormalState();
-			}
-		}
-
-		@Override
-		public void processToken(Token t) {
-			assert t instanceof TimeToken;
-			// TODO: add to current date and get most specific match, right now it just writes over
-			command.setValue(Constants.TASK_ATT_STARTTIME, ((TimeToken) t).timeString());
-//			command.setValue(Constants.TASK_ATT_ENDTIME, null);
-			previousToken = null;
-			advanceToken();
-		}
-		
-	}
-	
-	private class OnDateState implements State {
-
-		private boolean shouldChangeToNormalState() {
-			Token currentToken = getToken();
-			return !(currentToken instanceof DateToken);
-		}
-
-		private void changeToNormalState() {
-			if (previousToken != null) {
-				tokenContent.append(previousToken.thing + " ");
-				// do not advance
-			}
-			parseState = naturalState;
-		}
-
-		@Override
-		public boolean willChangeState() {
-			return shouldChangeToNormalState();
-		}
-
-		@Override
-		public void changeState() {
-			if (shouldChangeToNormalState()) {
-				changeToNormalState();
-			}
-		}
-
-		@Override
-		public void processToken(Token t) {
-			assert t instanceof DateToken;
-			command.setValue(Constants.TASK_ATT_DEADLINE, ((DateToken) t).dateString());
-			previousToken = null;
-			advanceToken();
-		}
-		
-	}
-
-	private boolean advanceToken() {
-		int temp = tokenPointer;
-		tokenPointer = Math.min(tokenPointer+1, tokenCount);
-		return temp != tokenPointer;
-	}
-	
-//	private boolean backtrackToken() {
-//		int temp = tokenPointer;
-//		tokenPointer = Math.max(tokenPointer-1, 0);
-//		return temp != tokenPointer;
-//	}
-	
-	private Token getToken() {
-		return tokens.get(tokenPointer);
-	}
-	
-	private boolean hasTokensLeft() {
-		return tokenPointer < tokenCount;
+		return determineCommandType(token.contents) != CommandType.INVALID;
 	}
 }

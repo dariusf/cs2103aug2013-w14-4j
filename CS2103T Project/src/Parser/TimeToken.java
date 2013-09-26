@@ -48,6 +48,6 @@ class TimeToken extends Token {
 	}
 	
 	public String toString() {
-		return "Time " + thing;
+		return "Time " + contents;
 	}
 }
