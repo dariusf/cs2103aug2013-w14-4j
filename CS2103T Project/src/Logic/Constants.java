@@ -2,7 +2,7 @@ package Logic;
 
 public class Constants {
 	public static final String APP_NAME = "Basket";
-	
+
 	public static String WELCOME_MSG = "Welcome to TextBuddy. %1$s is ready for use";
 
 	public static final String MSG_INVALID_FORMAT = "invalid command format: %1$s";
@@ -31,7 +31,7 @@ public class Constants {
 	public static final String COMMAND_HELP = "help";
 	public static final String COMMAND_FINALISE = "finalise";
 	public static final String COMMAND_EDIT = "edit";
-	
+
 	public static final String TASK_ATT_NAME = "name";
 	public static final String TASK_ATT_LOCATION = "location";
 	public static final String TASK_ATT_STARTTIME = "startTime";
@@ -41,41 +41,54 @@ public class Constants {
 	public static final String TASK_ATT_TAGS = "tags";
 	public static final String TASK_ATT_POSSIBLETIME = "possibleTime";
 	public static final String TASK_ATT_DONE = "done";
-	
-	public static final String DELETE_ATT_LINE= "lineNumber";
-	
+
+	public static final String DELETE_ATT_LINE = "lineNumber";
+
 	public static final String TASK_TYPE_FLOATING = "floating";
 	public static final String TASK_TYPE_TIMED = "timed";
 	public static final String TASK_TYPE_DEADLINE = "deadline";
 	public static final String TASK_TYPE_UNTIMED = "untimed";
-	
-	public static final String HELP_GENERAL = "Here are the available commands:\n" +
-			"add: Add a new task\n" +
-			"edit: Edit an existing task\n" +
-			"done: Mark a task as done\n" +
-			"finalise: Finalise the timing of a floating task\n" +
-			"display: Display all tasks" +
-			"delete: Delete an existing task\n" +
-			"clear: Remove all tasks\n" +
-			"search: Search for existing task(s)\n" +
-			"sort: Sort the tasks based on dates\n" +
-			"undo: Return to the previous edit\n" +
-			"help: Brings up the help guide\n";
-	
-	public static final String HELP_ADD_TASK = "Add Task:\n" +
-			"Adds a new task into the database. You may add a timed task, untimed task, floating task or deadline task.\n\n";
-	public static final String HELP_DISPLAY = "";
-	public static final String HELP_HELP = "";
-	public static final String HELP_SORT = "";
+
+	public static final String HELP_GENERAL = "Here are the available commands:\n"
+			+ "add: Add a new task\n"
+			+ "edit: Edit an existing task\n"
+			+ "done: Mark a task as done\n"
+			+ "finalise: Finalise the timing of a floating task\n"
+			+ "display: Display all tasks"
+			+ "delete: Delete an existing task\n"
+			+ "clear: Remove all tasks\n"
+			+ "search: Search for existing task(s)\n"
+			+ "sort: Sort the tasks based on dates\n"
+			+ "undo: Return to the previous edit\n"
+			+ "help: Brings up the help guide\n";
+
+	public static final String HELP_ADD_TASK = "Add Task:\n"
+			+ "Adds a new task into the database. You may add a timed task, untimed task, floating task or deadline task.\n\n"
+			+ "Command format: \n"
+			+ "add Perform April Fool's Prank in Office on 01/04 at 1200 #forfun: Adds a new timed task with the description 'Perform April Fool's Prank in Office' from 1200 to 1300 on 1/4 this year."
+			+ "";
+	public static final String HELP_DISPLAY = "Display Task:\n"
+			+ "Displays all tasks in the database. \n\n" + "Command format: \n"
+			+ "display: List all tasks from the database.";
+	public static final String HELP_HELP = "Display Help:\n"
+			+ "Displays help for specific command. Includes the description of the command as well as examples.\n\n"
+			+ "Command format: \n"
+			+ "help: Provides a description of every command\n"
+			+ "help add: Provides a description of the 'add' command and some example usage";
+	public static final String HELP_SORT = "Sort Tasks:\n"
+			+ "Sorts all the tasks in the database based on the dates of the tasks, with the earliest one listed first.\n\n"
+			+ "Command format: \n" + "sort: Sorts the database";
 	public static final String HELP_DELETE = "";
 	public static final String HELP_EDIT_TASK = "";
 	public static final String HELP_CLEAR = "";
 	public static final String HELP_UNDO = "";
-	public static final String HELP_DONE = "";
+	public static final String HELP_DONE = "Mark as Done:\n"
+			+ "Marks a completed task as done. \n\n" + "Command format: \n"
+			+ "done 2: Mark the task with id 2 as done.";
 	public static final String HELP_FINALISE = "";
 	public static final String HELP_SEARCH = "";
 	public static final String HELP_EXIT = "";
-	
+
 	public static final int SC_SUCCESS = 10;
 	public static final int SC_SUCCESS_TASK_OVERDUE = 11;
 	public static final int SC_INVALID_COMMAND_ERROR = 20;

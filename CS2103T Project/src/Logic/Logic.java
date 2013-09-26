@@ -12,6 +12,7 @@ import Parser.Parser;
 import Storage.Storage;
 
 public class Logic {
+	
 	private static Storage storage = null;
 
 	public Logic() {
@@ -136,6 +137,21 @@ public class Logic {
 		return feedback;
 	}
 
+	private static Feedback addTask(Command command) {
+		HashMap<String, String> taskAttributes = command.getCommandAttributes();
+		Task newTask = new Task(taskAttributes);
+		storage.add(newTask);
+	
+		Feedback feedback = null;
+		if (isTaskOver(newTask)) {
+			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE, CommandType.ADD_TASK, newTask.toString());
+		} else {
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.ADD_TASK, newTask.toString());
+		}
+	
+		return feedback;
+	}
+
 	private static Feedback undoState() {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
@@ -229,21 +245,6 @@ public class Logic {
 		return feedback;
 	}
 
-	private static Feedback addTask(Command command) {
-		HashMap<String, String> taskAttributes = command.getCommandAttributes();
-		Task newTask = new Task(taskAttributes);
-		storage.add(newTask);
-
-		Feedback feedback = null;
-		if (isTaskOver(newTask)) {
-			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE, CommandType.ADD_TASK);
-		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.ADD_TASK);
-		}
-
-		return feedback;
-	}
-
 	private static boolean isTaskOver(Task task) {
 		if (task.isDeadlineTask()) {
 			Date deadline = task.getDeadline();
@@ -278,5 +279,32 @@ public class Logic {
 		String lowerCaseString = string.toLowerCase();
 		String lowerCaseWord = word.toLowerCase();
 		return lowerCaseString.indexOf(lowerCaseWord) != -1;
+	}
+	
+	public static void main(String[] args) {
+		Logic logic = new Logic();
+		
+		// Display task test
+		System.out.println(logic.displayTasks());
+		
+		// Add task test 1 (timed task)
+		HashMap<String, String> testMap1 = new HashMap<String, String>();
+		testMap1.put("name", "April Fool's Prank");
+		testMap1.put("type", "timed");
+		testMap1.put("startTime", "10:00 am");
+		testMap1.put("endTime", "11:00 am");
+		testMap1.put("tags", "forfun maygetmefired");
+		Command testCommand1 = new Command(CommandType.ADD_TASK, testMap1);
+		System.out.println(logic.addTask(testCommand1));
+		
+		// Add task test 2 (deadline task)
+		HashMap<String, String> testMap2 = new HashMap<String, String>();
+		testMap2.put("name", "April Fool's Prank");
+		testMap2.put("type", "deadline");
+		testMap2.put("deadline", "10:00 am");
+		testMap2.put("tags", "forfun maygetmefired");
+		Command testCommand2 = new Command(CommandType.ADD_TASK, testMap2);
+		System.out.println(logic.addTask(testCommand2));
+		
 	}
 }
