@@ -15,6 +15,7 @@ public class Parser {
 
 	public static void main(String[] args) {
 		Command2 command2 = new Parser().parse("add go home at 10:00 am");
+		System.out.println(command2.intervals);
 		command2 = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
 		command2 = new Parser().parse("add go home from 10:00 am to 11:00 am");
 
