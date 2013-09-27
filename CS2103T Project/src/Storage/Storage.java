@@ -1,6 +1,7 @@
 package Storage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import Logic.Task;
 
@@ -23,6 +24,10 @@ public class Storage {
 		taskStorage.remove(index - 1);
 	}
 	
+	public void remove(Task t){
+		taskStorage.remove(t);
+	}
+	
 	public void clear(){
 		taskStorage.clear();
 	}
@@ -31,8 +36,8 @@ public class Storage {
 		return taskStorage.get(index);
 	}
 	
-	public ArrayList<Task> getAll() {
-		return taskStorage;
+	public Iterator<Task> iterator() { // returns shallow copy
+		return taskStorage.iterator();
 	}
 	
 	public boolean isEmpty() {
