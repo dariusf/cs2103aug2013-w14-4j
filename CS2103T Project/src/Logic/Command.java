@@ -14,6 +14,7 @@ public class Command {
 	private HashMap<String, String> commandAttributes = null;
 	
 	public Command(CommandType type){
+		commandAttributes = new HashMap<>();
 		commandType = type;
 	}
 		

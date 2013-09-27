@@ -30,6 +30,7 @@ AddKeyword = "add"
 OnKeyword = "on"
 AtKeyword = "at"
 Word = [a-z]+
+Number = [0-9]+
 QuotedWords = '[a-z0-9 :/]+'
 
 %%
@@ -42,6 +43,7 @@ QuotedWords = '[a-z0-9 :/]+'
 {Time} {return new TimeToken(yytext());}
 {Date} {return new DateToken(yytext());}
 {Word} { return new WordToken(yytext()); }
+{Number} { return new WordToken(yytext()); }
 {QuotedWords} { return new WordToken(yytext()); }
 
 .|\n {}
