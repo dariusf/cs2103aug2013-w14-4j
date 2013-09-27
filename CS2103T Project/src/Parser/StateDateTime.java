@@ -2,6 +2,8 @@ package Parser;
 
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
+
 import Logic.Interval;
 import Parser.Parser.State;
 
@@ -49,12 +51,48 @@ class StateDateTime implements Parser.State {
 		Interval that = new Interval();
 //		System.out.println("From:");
 		for (Token token : from) {
-			that.from.add(token);
+			if (token instanceof DateToken) {
+				if (that.getStart() == null) {
+					that.setStart(((DateToken) token).toDateTime());
+				}
+				else {
+					DateTime d = ((DateToken) token).toDateTime();
+					that.setStart(that.getStart().withDate(d.getYear(), d.getMonthOfYear(), d.getDayOfMonth()));
+				}
+			}
+			else if (token instanceof TimeToken) {
+				
+				if (that.getStart() == null) {
+					that.setStart(((TimeToken) token).toDateTime());
+				}
+				else {
+					DateTime t = ((TimeToken) token).toDateTime();
+					that.setStart(that.getStart().withTime(t.getHourOfDay(), t.getMinuteOfHour(), 0, 0));
+				}
+			}
 //			System.out.println(token.toString());
 		}
 //		System.out.println("To:");
 		for (Token token : to) {
-			that.to.add(token);
+			if (token instanceof DateToken) {
+				if (that.getEnd() == null) {
+					that.setEnd(((DateToken) token).toDateTime());
+				}
+				else {
+					DateTime d = ((DateToken) token).toDateTime();
+					that.setEnd(that.getEnd().withDate(d.getYear(), d.getMonthOfYear(), d.getDayOfMonth()));
+				}
+			}
+			else if (token instanceof TimeToken) {
+				
+				if (that.getEnd() == null) {
+					that.setEnd(((TimeToken) token).toDateTime());
+				}
+				else {
+					DateTime t = ((TimeToken) token).toDateTime();
+					that.setEnd(that.getEnd().withTime(t.getHourOfDay(), t.getMinuteOfHour(), 0, 0));
+				}
+			}
 //			System.out.println(token.toString());
 		}
 		parser.intervals.add(that);

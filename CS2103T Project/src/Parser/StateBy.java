@@ -2,7 +2,7 @@ package Parser;
 
 import java.util.ArrayList;
 
-import Logic.Moment;
+import org.joda.time.DateTime;
 
 class StateBy implements Parser.State {
 
@@ -36,10 +36,15 @@ class StateBy implements Parser.State {
 		}
 		else {
 //			System.out.println("By:");
-			parser.deadline = new Moment();
+			parser.deadline = new DateTime();
 			for (Token token : results) {
 //				System.out.println(token.toString());
-				parser.deadline.add(token);
+				if (token instanceof DateToken) {
+					parser.deadline = parser.deadline.withDate(((DateToken) token).year, ((DateToken) token).month, ((DateToken) token).day);
+				}
+				else {
+					parser.deadline = parser.deadline.withTime(((TimeToken) token).hour, ((TimeToken) token).minute, 0, 0);
+				}
 			}
 		}
 	}

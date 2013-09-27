@@ -2,13 +2,15 @@ package Parser;
 
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
+
 class StateOn implements Parser.State {
 
 	/**
 	 * 
 	 */
 	private final Parser parser;
-	ArrayList<Token> results;
+	ArrayList<DateToken> results;
 	StateDefault parent;
 
 	public StateOn (Parser parser, StateDefault parent) {
@@ -19,7 +21,7 @@ class StateOn implements Parser.State {
 	@Override
 	public void processToken(Token t) {
 		assert !popCondition();
-		results.add(t);
+		results.add((DateToken) t);
 		this.parser.nextToken();
 	}
 
@@ -36,9 +38,15 @@ class StateOn implements Parser.State {
 		}
 		else {
 //			System.out.println("On:");
-			for (Token token : results) {
+			for (DateToken token : results) {
 //				System.out.println(token.toString());
-				parent.tenuous.from.add(token);
+				if (parent.tenuous.getStart() == null) {
+					parent.tenuous.setStart(token.toDateTime());
+				}
+				else {
+					DateTime d = token.toDateTime();
+					parent.tenuous.setStart(parent.tenuous.getStart().withDate(d.getYear(), d.getMonthOfYear(), d.getDayOfMonth()));
+				}
 			}
 		}
 	}

@@ -2,10 +2,12 @@ package Parser;
 
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
+
 class StateAt implements Parser.State {
 
 	private final Parser parser;
-	ArrayList<Token> results;
+	ArrayList<TimeToken> results;
 	StateDefault parent;
 
 	public StateAt (Parser parser, StateDefault parent) {
@@ -16,7 +18,7 @@ class StateAt implements Parser.State {
 	@Override
 	public void processToken(Token t) {
 		assert !popCondition();
-		results.add(t);
+		results.add((TimeToken) t);
 		this.parser.nextToken();
 	}
 
@@ -33,9 +35,14 @@ class StateAt implements Parser.State {
 		}
 		else {
 //			System.out.println("At:");
-			for (Token token : results) {
-//				System.out.println(token.toString());
-				parent.tenuous.from.add(token);
+			for (TimeToken token : results) {
+				if (parent.tenuous.getStart() == null) {
+					parent.tenuous.setStart(token.toDateTime());
+				}
+				else {
+					DateTime t = token.toDateTime();
+					parent.tenuous.setStart(parent.tenuous.getStart().withTime(t.getHourOfDay(), t.getMinuteOfHour(), 0, 0));
+				}
 			}
 		}
 	}

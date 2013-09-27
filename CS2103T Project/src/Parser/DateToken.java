@@ -4,9 +4,11 @@ import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.joda.time.DateTime;
+
 class DateToken extends Token {
 
-	private static final String REGEX_DATE = "(0?[1-9]|[12][0-9]|3[01])([/-])(0?[1-9]|1[012])(\\2((19|20)?\\d\\d))?";
+	private static final String REGEX_DATE = "(0?[1-9]|[12][0-9]|3[01])([/-])(1[012]|0?[1-9])(\\2((19|20)?\\d\\d))?";
 	private static Pattern datePattern = Pattern.compile(REGEX_DATE);
 
 	int day;
@@ -45,4 +47,7 @@ class DateToken extends Token {
 		return "Date " + super.toString();
 	}
 
+	public DateTime toDateTime() {
+		return new DateTime().withDate(year, month, day);
+	}
 }

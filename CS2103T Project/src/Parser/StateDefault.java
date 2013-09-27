@@ -2,6 +2,9 @@ package Parser;
 
 import Logic.Interval;
 
+
+
+
 class StateDefault implements Parser.State {
 
 	StringBuilder words;
@@ -52,10 +55,9 @@ class StateDefault implements Parser.State {
 //		System.out.println("Words: " + words.toString().trim());
 		parser.text = words.toString().trim();
 		
-		if (!tenuous.from.isEmpty()) {
-			if (tenuous.to.isEmpty()) {
-//				tenuous.to.add();
-				// add one hour later
+		if (tenuous.hasStart()) {
+			if (!tenuous.hasEnd()) {
+				tenuous.normalizeEnd();
 			}
 			parser.intervals.add(tenuous);
 		}
