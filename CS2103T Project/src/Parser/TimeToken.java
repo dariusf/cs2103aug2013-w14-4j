@@ -3,6 +3,8 @@ package Parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.joda.time.DateTime;
+
 class TimeToken extends Token {
 
 	private static final String REGEX_TIME = "(1[012]|[1-9]):([0-5][0-9])\\s?(?i)(am|pm)|([01]?[0-9]|2[0-3]):([0-5][0-9])";
@@ -49,5 +51,20 @@ class TimeToken extends Token {
 	
 	public String toString() {
 		return "Time " + contents;
+	}
+	
+	public DateTime toDateTime() {
+		
+		// convert to 24 hour time
+		
+		int h = hour;
+		if (hour == 12 && period.equals("am")) {
+			h = 0;
+		}
+		else if (period.equals("pm") && hour != 12) {
+			h = hour + 12;
+		}
+		
+		return new DateTime().withTime(h, minute, 0, 0);
 	}
 }

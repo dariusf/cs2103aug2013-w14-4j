@@ -1,22 +1,24 @@
 package Logic;
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.joda.time.DateTime;
+
 public class Command {
-	private CommandType type = null;
+	private CommandType commandType = null;
+	
+	private String description = "";
+	private DateTime deadline = null;
+	private ArrayList<Interval> intervals = new ArrayList<>();
+
 	private HashMap<String, String> commandAttributes = null;
 	
-	public Command(CommandType command, HashMap<String, String> attributes){
-		type = command;
-		commandAttributes = attributes;
+	public Command(CommandType type){
+		commandType = type;
 	}
-	
-	public Command(CommandType command){
-		type = command;
-		commandAttributes = new HashMap<String, String>();
-	}
-	
+		
 	public CommandType getCommandType(){
-		return type;
+		return commandType;
 	}
 	
 	public HashMap<String, String> getCommandAttributes(){
@@ -27,54 +29,65 @@ public class Command {
 		commandAttributes.put(attribute, value);
 	}
 	
-    public String toString() {
-    	StringBuilder result = new StringBuilder(type.toString() + " ");
-    	result.append("{");
-    	
-    	int entryCount = commandAttributes.keySet().size();
-    	int i=0;
-    	
-    	for (String prop : commandAttributes.keySet()) {
-    		result.append(prop + ": " + commandAttributes.get(prop));
-    		if (i < entryCount-1) result.append(", ");
-    		i++;
-    	}
-    	
-    	result.append("}");
-    	
-    	return result.toString();
-    }
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime
-				* result
-				+ ((commandAttributes == null) ? 0 : commandAttributes
-						.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
+	// TODO: might want to move to a higher level,
+	// this is just here for now to illustrate how these
+	// fields alone can define the task type clearly
+	public String getTaskType() {
+		assert commandType == CommandType.ADD_TASK;
+		if (deadline != null) {
+			return Constants.TASK_TYPE_DEADLINE;
+		}
+		else if (intervals.size() == 0) {
+			return Constants.TASK_TYPE_UNTIMED;
+		}
+		else if (intervals.size() == 1) {
+			return Constants.TASK_TYPE_TIMED;
+		}
+		else {
+			return Constants.TASK_TYPE_FLOATING;
+		}
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Command other = (Command) obj;
-		if (commandAttributes == null) {
-			if (other.commandAttributes != null)
-				return false;
-		} else if (!commandAttributes.equals(other.commandAttributes))
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Command2 [commandType=");
+		builder.append(commandType);
+		builder.append(", description=");
+		builder.append(description);
+		builder.append(", deadline=");
+		builder.append(deadline);
+		builder.append(", intervals=");
+		builder.append(intervals);
+		builder.append(", commandAttributes=");
+		builder.append(commandAttributes);
+		builder.append("]");
+		return builder.toString();
 	}
-    
-    
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String text) {
+		this.description = text;
+	}
+
+	public DateTime getDeadline() {
+		return deadline;
+	}
+
+	public void setDeadline(DateTime deadline) {
+		this.deadline = deadline;
+	}
+
+	public ArrayList<Interval> getIntervals() {
+		return intervals;
+	}
+
+	public void setIntervals(ArrayList<Interval> intervals) {
+		this.intervals = intervals;
+	}
+	
+	
 }
