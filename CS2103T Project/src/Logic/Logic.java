@@ -165,7 +165,11 @@ public class Logic {
 	private static Feedback searchTasks(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command.getCommandAttributes();
-		ArrayList<Task> validTasks = storage.getAll();
+		ArrayList<Task> validTasks = new ArrayList<>();
+		Iterator<Task> storageIterator = storage.iterator();
+		while(storageIterator.hasNext()){
+			validTasks.add(storageIterator.next());
+		}
 		for(String attribute : commandAttributes.keySet()){
 			String keyword = commandAttributes.get(attribute);
 			for(int i = validTasks.size()-1; i >= 0; i--){
@@ -230,7 +234,9 @@ public class Logic {
 		if (storage.size() > 0) {
 			StringBuilder output = new StringBuilder();
 			int index = 1;
-			for (Task task : storage.getAll()) {
+			Iterator<Task> storageIterator = storage.iterator();
+			while (storageIterator.hasNext()) {
+				Task task = storageIterator.next();
 				output.append(index + ". ");
 				output.append(task.toString());
 				if (index < storage.size()) {
