@@ -16,39 +16,19 @@ import Logic.Interval;
 
 public class Parser {
 	
-	public static void main(String[] args) {
-		
-//		TimeToken timeToken = new TimeToken("12:11 am");
-//		DateTime dateTime = timeToken.toDateTime();
-//		
-//		int hour = dateTime.getHourOfDay();
-//		int min = dateTime.getMinuteOfHour();
-//		
-//		DateToken dateToken = new DateToken("1/11/12");
-//		dateTime = dateToken.toDateTime();
-//		
-//		int day = dateTime.getDayOfMonth();
-//		int month = dateTime.getMonthOfYear();
-//		int year = dateTime.getYear();
-		
-		
-		Command command = new Parser().parse("add go home at 10:00 am");
-		
-//		command2 = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
-//		command2 = new Parser().parse("add go home from 10:00 am to 11:00 am");
-
-//		command2 = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
-//
-//		command2 = new Parser().parse("add go home by 10:00 am");
-		
-		command = new Parser().parse("add go home at at 10:00 am on 1/1/12");
-		
-		command = new Parser().parse("add go home on 10:00 am at 1/1/12");
-		
-		command = new Parser().parse("add go home at 10:00 am on 1/1/12 until 10:00 pm 1/2/12");
-	}
-
 	private static final boolean PRINT_LEXER_TOKENS = false;
+
+	public static void main(String[] args) {
+		Command command = new Parser().parse("add go home at 10:00 am");		
+		command = new Parser().parse("delete 1");
+		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
+//		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
+//		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
+//		command = new Parser().parse("add go home by 10:00 am");
+//		command = new Parser().parse("add go home at at 10:00 am on 1/1/12");
+//		command = new Parser().parse("add go home on 10:00 am at 1/1/12");
+//		command = new Parser().parse("add go home at 10:00 am on 1/1/12 until 10:00 pm 1/2/12");
+	}
 
 	// States
 
@@ -107,8 +87,7 @@ public class Parser {
 		return tokenPointer < tokenCount;
 	}
 
-	// The resulting command that will be built up gradually
-	private Command command = null;
+	// Components of the command that will be built up gradually
 	DateTime deadline = null;
 	ArrayList<Interval> intervals = new ArrayList<>();
 	String text = "";
@@ -122,37 +101,30 @@ public class Parser {
 
 		// TODO: preliminary processing of string
 		tokenizeInput(string);
-		buildResult();
-
-		return command;
+		return buildResult();
 	}
 
 	private void tokenizeInput(String string) {
 		try {
-			Lexer lexer = new Lexer(new ByteArrayInputStream(
-					string.getBytes("UTF-8")));
+			Lexer lexer = new Lexer(new ByteArrayInputStream(string.getBytes("UTF-8")));
 
 			Token next;
-			if (PRINT_LEXER_TOKENS)
-				System.out.println("Tokens:");
+			if (PRINT_LEXER_TOKENS) System.out.println("Tokens:");
 			while ((next = lexer.nextToken()) != null) {
 				tokens.add(next);
-				if (PRINT_LEXER_TOKENS)
-					System.out.println(next.toString());
+				if (PRINT_LEXER_TOKENS) System.out.println(next.toString());
 			}
 			tokenCount = tokens.size();
 
 		} catch (IOException e) {
-			System.out.println("Error getting next token!\nCurrent command: "
-					+ command.toString());
+			System.out.println("Error getting next token!");
 			e.printStackTrace();
 		}
 	}
 
-	private void buildResult() {
+	private Command buildResult() {
 
-		if (!hasTokensLeft())
-			return;
+		assert hasTokensLeft() : "No tokens left, cannot build command";
 
 		Token firstToken;
 		CommandType commandType;
@@ -167,7 +139,25 @@ public class Parser {
 		}
 
 		// TODO: handle other commands here
+		switch (commandType) {
+		case ADD_TASK:
+			return createAddCommand();
+		case DELETE:
+			return createDeleteCommand();
+		}
+		return null;
+	}
+	
+	private Command createDeleteCommand() {
 
+		int deletionIndex = Integer.parseInt(getCurrentToken().contents);
+		
+		Command command = new Command(CommandType.DELETE);
+		command.setValue("deletionIndex", Integer.toString(deletionIndex));
+		return command;
+	}
+	
+	private Command createAddCommand() {
 		pushState(new StateDefault(this));
 
 		while (hasTokensLeft()) {
@@ -187,13 +177,11 @@ public class Parser {
 			popState();
 		}
 
-		command = new Command(commandType);
+		Command command = new Command(CommandType.ADD_TASK);
 		command.setDeadline(deadline);
 		command.setDescription(text);
 		command.setIntervals(intervals);
-
-		// command.setValue(Constants.TASK_ATT_NAME,
-		// tokenContent.toString().trim());
+		return command;
 	}
 
 	public static CommandType determineCommandType(String enumString) {
