@@ -7,12 +7,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import Parser.Parser;
 import Storage.Storage;
 
 public class Logic {
 	
 	private static Storage storage = null;
+	private static ArrayList<Integer> temporaryMapping = new ArrayList<Integer>();
+	private static boolean isDynamicIndex = false;
 
 	public Logic() {
 		storage = new Storage();
@@ -41,11 +45,44 @@ public class Logic {
 			return editTask(command);
 		case HELP:
 			return showHelp(command);
+		case DONE:
+			return markDone(command);
+		case FINALISE:
+			return finaliseTask(command);
 		case SORT:
 			return sortTask();
 		default:
 			throw new Error(Constants.MSG_UNRECOGNISED_COMMAND);
 		}
+	}
+	
+	// Not working yet
+	private static Feedback finaliseTask(Command command) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	// Not working yet
+	private static Feedback markDone(Command command) {
+		HashMap<String, String> commandAttributes = command
+				.getCommandAttributes();
+		int lineNumber = Integer.parseInt(commandAttributes
+				.get(Constants.DELETE_ATT_LINE));
+		if(isDynamicIndex){
+			lineNumber = temporaryMapping.get(lineNumber);
+		}
+		
+		Feedback feedback = null;
+		
+		if (lineNumber <= storage.size()) {
+			storage.remove(lineNumber);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
+			isDynamicIndex = false;
+		} else {
+			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR, CommandType.DELETE);
+		}
+		
+		return feedback;
 	}
 
 	private static Feedback sortTask() {
@@ -116,14 +153,21 @@ public class Logic {
 		return feedback;
 	}
 
+	// Incomplete, need to figure out the command format for edit
 	private static Feedback editTask(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command.getCommandAttributes();
-		int taskIndex = Integer.parseInt(commandAttributes.get("index"));
+		int inputIndex = Integer.parseInt(commandAttributes.get("index"));
+		int taskIndex = inputIndex;
+		
+		if(isDynamicIndex){
+			taskIndex = temporaryMapping.get(inputIndex);
+		}
+		
 		Task taskToEdit = storage.get(taskIndex);
 		commandAttributes.remove("index");
 		for(String key : commandAttributes.keySet()){
-			taskToEdit.set(key, commandAttributes.get(key));
+			
 		}
 		storage.replace(taskIndex, taskToEdit);
 		
@@ -137,8 +181,7 @@ public class Logic {
 	}
 
 	private static Feedback addTask(Command command) {
-		HashMap<String, String> taskAttributes = command.getCommandAttributes();
-		Task newTask = new Task(taskAttributes);
+		Task newTask = new Task(command);
 		storage.add(newTask);
 	
 		Feedback feedback = null;
@@ -165,20 +208,34 @@ public class Logic {
 	private static Feedback searchTasks(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command.getCommandAttributes();
-		ArrayList<Task> validTasks = new ArrayList<>();
+		ArrayList<Task> validTasks = new ArrayList<Task>();
+		ArrayList<Integer> validTasksAbsoluteIndices = new ArrayList<Integer>();
+		ArrayList<Task> allTasks = new ArrayList<Task>();
 		Iterator<Task> storageIterator = storage.iterator();
 		while(storageIterator.hasNext()){
-			validTasks.add(storageIterator.next());
+			allTasks.add(storageIterator.next());
 		}
-		for(String attribute : commandAttributes.keySet()){
-			String keyword = commandAttributes.get(attribute);
-			for(int i = validTasks.size()-1; i >= 0; i--){
-				Task currentTask = validTasks.get(i);
+		
+		boolean shouldAdd = true;
+		for(int i = 0; i < allTasks.size(); i++){
+			Task currentTask = allTasks.get(i);
+			for(String attribute : commandAttributes.keySet()){
+				String keyword = commandAttributes.get(attribute);
 				if(!isWordInString(keyword, currentTask.get(attribute))){
-					validTasks.remove(i);
+					shouldAdd = false;
 				}
 			}
+			if(shouldAdd){
+				validTasks.add(currentTask);
+				validTasksAbsoluteIndices.add(i+1);
+			}
+			shouldAdd = true;
 		}
+		
+		for(int i = 1; i <= validTasksAbsoluteIndices.size(); i++){
+			temporaryMapping.set(i, validTasksAbsoluteIndices.get(i-1));
+		}
+		isDynamicIndex = true;
 		
 		if (validTasks.size() > 0) {
 			StringBuilder output = new StringBuilder();
@@ -206,6 +263,7 @@ public class Logic {
 		if (storage.size() > 0) {
 			storage.clear();
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
+			isDynamicIndex = false;
 		} else {
 			feedback = new Feedback(Constants.SC_NO_TASK_ERROR, CommandType.CLEAR);
 		}
@@ -217,11 +275,15 @@ public class Logic {
 				.getCommandAttributes();
 		int lineNumber = Integer.parseInt(commandAttributes
 				.get(Constants.DELETE_ATT_LINE));
-
+		if(isDynamicIndex){
+			lineNumber = temporaryMapping.get(lineNumber);
+		}
+		
 		Feedback feedback = null;
 		if (lineNumber <= storage.size()) {
 			storage.remove(lineNumber);
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
+			isDynamicIndex = false;
 		} else {
 			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR, CommandType.DELETE);
 		}
@@ -244,6 +306,7 @@ public class Logic {
 				}
 			}
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY, output.toString());
+			isDynamicIndex = false;
 		} else {
 			feedback = new Feedback(Constants.SC_NO_TASK_ERROR, CommandType.DISPLAY);
 		}
@@ -252,23 +315,23 @@ public class Logic {
 
 	private static boolean isTaskOver(Task task) {
 		if (task.isDeadlineTask()) {
-			Date deadline = task.getDeadline();
+			DateTime deadline = task.getDeadline();
 			return isTimePastAlready(deadline);
 		} else if (task.isTimedTask()) {
-			Date endTime = task.getEndTime();
+			DateTime endTime = task.getEndTime();
 			return isTimePastAlready(endTime);
 		} else if (task.isUntimedTask()) {
-			List<Task.Slot> possibleTime = task.getPossibleTime();
+			List<Interval> possibleTime = task.getPossibleTime();
 			return isUntimedTaskOver(possibleTime);
 		} else {
 			return false;
 		}
 	}
 
-	private static boolean isUntimedTaskOver(List<Task.Slot> possibleTime) {
+	private static boolean isUntimedTaskOver(List<Interval> possibleTime) {
 		boolean isAllSlotOver = true;
-		for (Task.Slot slot : possibleTime) {
-			if (!isTimePastAlready(slot.getEndTime())) {
+		for (Interval slot : possibleTime) {
+			if (!isTimePastAlready(slot.getEnd())) {
 				isAllSlotOver = false;
 			}
 		}
@@ -276,8 +339,8 @@ public class Logic {
 
 	}
 
-	private static boolean isTimePastAlready(Date time) {
-		return time.compareTo(new Date()) < 0;
+	private static boolean isTimePastAlready(DateTime time) {
+		return time.compareTo(new DateTime()) < 0;
 	}
 	
 	private static boolean isWordInString(String word, String string) {
