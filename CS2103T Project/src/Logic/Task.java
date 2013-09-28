@@ -18,7 +18,7 @@ public class Task implements Comparable<Task>, Cloneable{
 	private String name = "";
 	private String type = "";
 	private String location = "";
-	private List<String> tags = new ArrayList<String>();
+	private ArrayList<String> tags = new ArrayList<String>();
 	private Interval interval = null;
 	private DateTime deadline = null;
 	private List<Interval> possibleIntervals = new ArrayList<Interval>();
@@ -122,11 +122,11 @@ public class Task implements Comparable<Task>, Cloneable{
 		this.location = location;
 	}
 
-	public List<String> getTags() {
+	public ArrayList<String> getTags() {
 		return tags;
 	}
 
-	public void setTags(List<String> tags) {
+	public void setTags(ArrayList<String> tags) {
 		this.tags = tags;
 	}
 
@@ -262,6 +262,10 @@ public class Task implements Comparable<Task>, Cloneable{
 
 	public void setInterval(Interval interval) {
 		this.interval = interval;
+	}
+	
+	public boolean getDone(){
+		return done;
 	}
 
 	@Override
