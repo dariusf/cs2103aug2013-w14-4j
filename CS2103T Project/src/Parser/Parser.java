@@ -2,14 +2,11 @@ package Parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Stack;
 
 import org.joda.time.DateTime;
 
-import Logic.Command;
 import Logic.Command;
 import Logic.CommandType;
 import Logic.Interval;
@@ -35,7 +32,6 @@ public class Parser {
 
 	// States
 
-	// TODO: draw proper state diagram
 	public interface State {
 
 		// This method determines if the current state will be popped from
@@ -231,17 +227,19 @@ public class Parser {
 		command.setDeadline(deadline);
 		command.setDescription(text);
 		command.setIntervals(intervals);
+		
 		// TODO: factor this out
 		if (commandType == CommandType.EDIT_TASK) {
 			command.setValue("editIndex", Integer.toString(editIndex));
 		}
+		
 		return command;
 	}
 
 	public static CommandType determineCommandType(String enumString) {
-		if (enumString.equals("invalid")) {
+		if (enumString.equalsIgnoreCase("invalid")) {
 			return CommandType.ADD_TASK;
-		} else if (enumString.equals("add") || enumString.equals("edit")) {
+		} else if (enumString.equalsIgnoreCase("add") || enumString.equalsIgnoreCase("edit")) {
 			enumString = enumString.toUpperCase() + "_TASK";
 		} else {
 			enumString = enumString.toUpperCase();
