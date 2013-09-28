@@ -24,8 +24,6 @@ public class Task implements Comparable<Task>{
 	private List<Interval> possibleIntervals = new ArrayList<Interval>();
 	private boolean done = false;
 
-	private SimpleDateFormat dateParser = new SimpleDateFormat("h:mm a");
-
 	public Task(Command command) {
 		name = command.getDescription();
 		type = command.getTaskType();
@@ -44,6 +42,10 @@ public class Task implements Comparable<Task>{
 		}
 	}
 
+	public Task() {
+
+	}
+	
 	private String tagsToString() {
 		StringBuilder output = new StringBuilder();
 		for (String tag : tags) {
@@ -234,10 +236,28 @@ public class Task implements Comparable<Task>{
 	}
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
+	public Object clone() throws CloneNotSupportedException {
 		// TODO Auto-generated method stub
-		
-		return super.clone();
+		Task newTask = new Task();
+		newTask.setName(name);
+		newTask.setTags(tags);
+		newTask.setLocation(location);
+		newTask.setDeadline(deadline);
+		newTask.setPossibleTime(possibleIntervals);
+		newTask.setInterval(interval);
+		if(done){
+			newTask.markDone();
+		}
+		newTask.setType(type);
+		return newTask;
+	}
+
+	public Interval getInterval() {
+		return interval;
+	}
+
+	public void setInterval(Interval interval) {
+		this.interval = interval;
 	}
 
 	@Override
