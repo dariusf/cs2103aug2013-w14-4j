@@ -10,28 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-public class Task {
-	public static void main(String[] args) {
-		HashMap<String, String> testMap1 = new HashMap<String, String>();
-		testMap1.put(Constants.TASK_ATT_NAME, "Buy milk");
-		testMap1.put(Constants.TASK_ATT_LOCATION, "NTUC");
-		testMap1.put(Constants.TASK_ATT_TYPE, "floating");
-		testMap1.put(Constants.TASK_ATT_POSSIBLETIME,
-				"10:00 PM;11:00 PM;8:00 PM;9:00 PM");
-		testMap1.put(Constants.TASK_ATT_TAGS, "haha hahaha hahahaha");
-		Task testTask1 = new Task(testMap1);
-		System.out.println(testTask1);
-
-		HashMap<String, String> testMap2 = new HashMap<String, String>();
-		testMap2.put(Constants.TASK_ATT_NAME, "Buy milk");
-		testMap2.put(Constants.TASK_ATT_LOCATION, "NTUC");
-		testMap2.put(Constants.TASK_ATT_TYPE, "deadline");
-		testMap2.put(Constants.TASK_ATT_DEADLINE, "10:00 PM");
-		testMap2.put(Constants.TASK_ATT_TAGS, "haha hahaha hahahaha");
-		Task testTask2 = new Task(testMap2);
-		System.out.println(testTask2);
-	}
+public class Task implements Comparable<Task>{
 
 	private String name = "";
 	private String type = "";
@@ -213,12 +195,12 @@ public class Task {
 		if (!location.isEmpty()) {
 			output.append(" at " + location);
 		}
-
+		DateTimeFormatter format = DateTimeFormat.forPattern("K:mm a 'on' E, d/M/Y");;
 		if (isDeadlineTask()) {
-			output.append(" before " + deadline.toString());
+			output.append(" before " + format.print(deadline));
 		} else if (isTimedTask()) {
-			output.append(" from " + getStartTime().toString() + " to "
-					+ getEndTime().toString());
+			output.append(" from " + format.print(getStartTime()) + " to "
+					+ format.print(getEndTime()));
 		} else if (isFloatingTask()) {
 			output.append(" on ");
 			int index = 1;
@@ -226,9 +208,9 @@ public class Task {
 				output.append("(");
 				output.append(index);
 				output.append(") ");
-				output.append(slot.getStart().toString());
+				output.append(format.print(slot.getStart()));
 				output.append(" to ");
-				output.append(slot.getEnd().toString());
+				output.append(format.print(slot.getEnd()));
 				if (index != possibleIntervals.size()) {
 					output.append(" or ");
 				}
@@ -244,4 +226,56 @@ public class Task {
 
 		return output.toString();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		return super.equals(obj);
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		
+		return super.clone();
+	}
+
+	@Override
+	public int compareTo(Task o) {
+		if(isDeadlineTask() && o.isDeadlineTask()){
+			return deadline.compareTo(o.getDeadline());
+		} else if (isDeadlineTask() && o.isTimedTask()){
+			return deadline.compareTo(o.getStartTime());
+		} else if (isDeadlineTask() && o.isFloatingTask()){
+			return deadline.compareTo(getEarliestTime(o.getPossibleTime()));
+		} else if (isTimedTask() && o.isDeadlineTask()){
+			return getStartTime().compareTo(o.getDeadline());
+		} else if (isTimedTask() && o.isTimedTask()){
+			return getStartTime().compareTo(o.getStartTime());
+		} else if (isTimedTask() && o.isFloatingTask()){
+			return getStartTime().compareTo(getEarliestTime(o.getPossibleTime()));
+		} else if (isFloatingTask() && o.isDeadlineTask()){
+			return getEarliestTime(getPossibleTime()).compareTo(o.getDeadline());
+		} else if (isTimedTask() && o.isTimedTask()){
+			return getEarliestTime(getPossibleTime()).compareTo(o.getStartTime());
+		} else if (isDeadlineTask() && o.isFloatingTask()){
+			getEarliestTime(getPossibleTime()).compareTo(getEarliestTime(o.getPossibleTime()));
+		} else if (isUntimedTask()){
+			return -1;
+		} else {
+			return 1;
+		}
+		return 0;
+	}
+	
+	public DateTime getEarliestTime (List<Interval> list){
+		DateTime earliestTime = new DateTime(9999, 12, 31, 23, 59);
+		for(Interval interval : list){
+			if(interval.getStart().compareTo(earliestTime) < 0){
+				earliestTime = interval.getStart();
+			}
+		}
+		return earliestTime;
+	}
+	
 }
