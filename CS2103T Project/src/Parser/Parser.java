@@ -2,14 +2,11 @@ package Parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Stack;
 
 import org.joda.time.DateTime;
 
-import Logic.Command;
 import Logic.Command;
 import Logic.CommandType;
 import Logic.Interval;
@@ -19,18 +16,12 @@ public class Parser {
 	private static final boolean PRINT_LEXER_TOKENS = false;
 
 	public static void main(String[] args) {
-		Command command = new Parser().parse("edit go home at 10:00 am");
-		System.out.println(command);
+		Command command = new Parser().parse("edit 1 go home at 10:00 am");
 		command = new Parser().parse("delete 1");
-		System.out.println(command);
 		command = new Parser().parse("search haha hi there");
-		System.out.println(command);
 		command = new Parser().parse("clear");
-		System.out.println(command);
 		command = new Parser().parse("help done asjdlkasd");
-		System.out.println(command);
 		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
-		System.out.println(command);
 //		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
 //		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
 //		command = new Parser().parse("add go home by 10:00 am");
@@ -41,7 +32,6 @@ public class Parser {
 
 	// States
 
-	// TODO: draw proper state diagram
 	public interface State {
 
 		// This method determines if the current state will be popped from
@@ -100,6 +90,7 @@ public class Parser {
 	DateTime deadline = null;
 	ArrayList<Interval> intervals = new ArrayList<>();
 	String text = "";
+	int editIndex = -1;
 
 	public Parser() {
 		parseStates = new Stack<>();
@@ -142,12 +133,21 @@ public class Parser {
 			// take the first token to be a command
 			commandType = determineCommandType(firstToken.contents);
 			nextToken();
+			
+			if (commandType == CommandType.EDIT_TASK) {
+				try {
+					editIndex = Integer.parseInt(getCurrentToken().contents);
+					nextToken();
+				} catch (NumberFormatException e) {
+					commandType = CommandType.INVALID;
+				}
+			}
 		} else {
 			// default to the add command
 			commandType = CommandType.ADD_TASK;
 		}
 
-		// TODO: handle other commands here
+		// TODO: factor this out
 		switch (commandType) {
 		case ADD_TASK:
 		case EDIT_TASK:
@@ -165,6 +165,7 @@ public class Parser {
 		case SORT:
 		case UNDO:
 		case DISPLAY:
+		case INVALID:
 			return createArgumentlessCommand(commandType);
 		default:
 			return null;
@@ -226,13 +227,19 @@ public class Parser {
 		command.setDeadline(deadline);
 		command.setDescription(text);
 		command.setIntervals(intervals);
+		
+		// TODO: factor this out
+		if (commandType == CommandType.EDIT_TASK) {
+			command.setValue("editIndex", Integer.toString(editIndex));
+		}
+		
 		return command;
 	}
 
 	public static CommandType determineCommandType(String enumString) {
-		if (enumString.equals("invalid")) {
+		if (enumString.equalsIgnoreCase("invalid")) {
 			return CommandType.ADD_TASK;
-		} else if (enumString.equals("add") || enumString.equals("edit")) {
+		} else if (enumString.equalsIgnoreCase("add") || enumString.equalsIgnoreCase("edit")) {
 			enumString = enumString.toUpperCase() + "_TASK";
 		} else {
 			enumString = enumString.toUpperCase();
