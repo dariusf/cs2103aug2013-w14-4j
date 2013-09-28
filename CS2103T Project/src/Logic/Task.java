@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class Task implements Comparable<Task>{
+public class Task implements Comparable<Task>, Cloneable{
 
 	private String name = "";
 	private String type = "";
@@ -225,7 +225,11 @@ public class Task implements Comparable<Task>{
 				output.append(" #" + tag);
 			}
 		}
-
+		
+		if(done){
+			output.append(" done");
+		}
+		
 		return output.toString();
 	}
 

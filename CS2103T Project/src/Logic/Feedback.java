@@ -113,7 +113,7 @@ public class Feedback {
 
 	private String deleteFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task deleted successfully! \n" + feedbackString;
+			statusMessage = "Task deleted successfully! \n" + "The task \""+feedbackString+"\" is deleted";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
 			statusMessage = "Error: ID is not valid";
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {

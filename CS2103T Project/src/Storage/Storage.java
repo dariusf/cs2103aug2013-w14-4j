@@ -33,7 +33,7 @@ public class Storage {
 	}
 	
 	public Task get(int index){
-		return taskStorage.get(index);
+		return taskStorage.get(index-1);
 	}
 	
 	public Iterator<Task> iterator() { // returns shallow copy

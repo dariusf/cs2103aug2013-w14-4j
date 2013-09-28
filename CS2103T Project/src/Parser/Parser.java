@@ -20,11 +20,17 @@ public class Parser {
 
 	public static void main(String[] args) {
 		Command command = new Parser().parse("edit go home at 10:00 am");
+		System.out.println(command);
 		command = new Parser().parse("delete 1");
+		System.out.println(command);
 		command = new Parser().parse("search haha hi there");
+		System.out.println(command);
 		command = new Parser().parse("clear");
+		System.out.println(command);
 		command = new Parser().parse("help done asjdlkasd");
+		System.out.println(command);
 		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
+		System.out.println(command);
 //		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
 //		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
 //		command = new Parser().parse("add go home by 10:00 am");

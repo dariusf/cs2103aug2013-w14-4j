@@ -69,7 +69,7 @@ public class Logic {
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
 		int lineNumber = Integer.parseInt(commandAttributes
-				.get(Constants.DELETE_ATT_LINE));
+				.get(Constants.DONE_ATT_LINE));
 		if (isDynamicIndex) {
 			lineNumber = temporaryMapping.get(lineNumber);
 		}
@@ -77,12 +77,13 @@ public class Logic {
 		Feedback feedback = null;
 
 		if (lineNumber <= storage.size()) {
-			storage.remove(lineNumber);
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
+			Task doneTask = storage.get(lineNumber);
+			doneTask.markDone();
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DONE);
 			isDynamicIndex = false;
 		} else {
 			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
-					CommandType.DELETE);
+					CommandType.DONE);
 		}
 
 		return feedback;
@@ -104,47 +105,59 @@ public class Logic {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
-		if (commandAttributes.containsKey("command")) {
-			String commandString = commandAttributes.get("command");
+		if (commandAttributes.containsKey("helpCommand")) {
+			String commandString = commandAttributes.get("helpCommand");
 			CommandType commandToGetHelp = Parser
 					.determineCommandType(commandString);
 			switch (commandToGetHelp) {
 			case ADD_TASK:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_ADD_TASK);
+				break;
 			case EDIT_TASK:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_EDIT_TASK);
+				break;
 			case SORT:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_SORT);
+				break;
 			case DELETE:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_DELETE);
+				break;
 			case CLEAR:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_CLEAR);
+				break;
 			case UNDO:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_UNDO);
+				break;
 			case SEARCH:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_SEARCH);
+				break;
 			case HELP:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_HELP);
+				break;
 			case DONE:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_DONE);
+				break;
 			case FINALISE:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_FINALISE);
+				break;
 			case DISPLAY:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_DISPLAY);
+				break;
 			case EXIT:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_EXIT);
+				break;
 			default:
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
 						Constants.HELP_GENERAL);
@@ -295,8 +308,9 @@ public class Logic {
 
 		Feedback feedback = null;
 		if (lineNumber <= storage.size()) {
+			String taskDescription = storage.get(lineNumber).getName();
 			storage.remove(lineNumber);
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE, taskDescription);
 			isDynamicIndex = false;
 		} else {
 			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
@@ -340,13 +354,13 @@ public class Logic {
 			return isTimePastAlready(endTime);
 		} else if (task.isUntimedTask()) {
 			List<Interval> possibleTime = task.getPossibleTime();
-			return isUntimedTaskOver(possibleTime);
+			return isFloatingTaskOver(possibleTime);
 		} else {
 			return false;
 		}
 	}
 
-	public static boolean isUntimedTaskOver(List<Interval> possibleTime) {
+	public static boolean isFloatingTaskOver(List<Interval> possibleTime) {
 		boolean isAllSlotOver = true;
 		for (Interval slot : possibleTime) {
 			if (!isTimePastAlready(slot.getEnd())) {
@@ -354,7 +368,6 @@ public class Logic {
 			}
 		}
 		return isAllSlotOver;
-
 	}
 
 	public static boolean isTimePastAlready(DateTime time) {
@@ -366,6 +379,7 @@ public class Logic {
 		String lowerCaseWord = word.toLowerCase();
 		return lowerCaseString.indexOf(lowerCaseWord) != -1;
 	}
+	
 
 	public static void main(String[] args) {
 		Logic logic = new Logic();
@@ -459,6 +473,32 @@ public class Logic {
 		command6.setIntervals(intervalList6);
 		command6.setDescription("An overdue floating event!");
 		System.out.println(logic.addTask(command6));
+		
+		Command command7 = new Command(CommandType.ADD_TASK);
+		DateTime date7 = new DateTime(2013, 10, 11, 22, 00, 00);
+		command7.setDeadline(date7);
+		command7.setDescription("Party");
+		ArrayList<String> tags7 = new ArrayList<String>();
+		tags7.add("TGIF");
+		tags7.add("forfun");
+		command7.setTags(tags7);
+		System.out.println(logic.addTask(command7));
+		
+		System.out.println(logic.displayTasks());
+		
+		Command command8 = new Command(CommandType.DELETE);
+		command8.setValue("deleteIndex", "1");
+		System.out.println(logic.deleteTask(command8));
+		
+		System.out.println(logic.displayTasks());
+		
+		Command command9 = new Command(CommandType.HELP);
+		command9.setValue("helpCommand", "");
+		System.out.println(logic.showHelp(command9));
+		
+		Command command10 = new Command(CommandType.DONE);
+		command10.setValue("doneIndex","1");
+		System.out.println(logic.markDone(command10));
 		
 		System.out.println(logic.displayTasks());
 	}

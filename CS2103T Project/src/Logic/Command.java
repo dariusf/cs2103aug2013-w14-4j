@@ -98,6 +98,5 @@ public class Command {
 	public void setIntervals(ArrayList<Interval> intervals) {
 		this.intervals = intervals;
 	}
-	
-	
+
 }

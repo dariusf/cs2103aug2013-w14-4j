@@ -95,5 +95,44 @@ public class LogicTest {
 		assertEquals(
 				"Task added successfully! \nA floating event! on (1) 3:00 PM on Wed, 30/10/2013 to 4:00 PM on Wed, 30/10/2013 or (2) 4:00 PM on Wed, 30/10/2013 to 5:00 PM on Wed, 30/10/2013 or (3) 5:00 PM on Wed, 30/10/2013 to 6:00 PM on Wed, 30/10/2013",
 				logic.addTask(command5).toString());
+		
+		// Add task test 5 (floating task, success but overdue)
+		Command command6 = new Command(CommandType.ADD_TASK);
+		DateTime startDate6a = new DateTime(2013, 10, 30, 15, 0, 0);
+		DateTime endDate6a = new DateTime(2013, 10, 30, 16, 0, 0);
+		Interval interval6a = new Interval();
+		interval6a.setStart(startDate6a);
+		interval6a.setEnd(endDate6a);
+		DateTime startDate6b = new DateTime(2013, 10, 30, 16, 0, 0);
+		DateTime endDate6b = new DateTime(2013, 10, 30, 17, 0, 0);
+		Interval interval6b = new Interval();
+		interval6b.setStart(startDate6b);
+		interval6b.setEnd(endDate6b);
+		DateTime startDate6c = new DateTime(2013, 10, 30, 17, 0, 0);
+		DateTime endDate6c = new DateTime(2013, 10, 30, 18, 0, 0);
+		Interval interval6c = new Interval();
+		interval6c.setStart(startDate6c);
+		interval6c.setEnd(endDate6c);
+		ArrayList<Interval> intervalList6 = new ArrayList<Interval>();
+		intervalList6.add(interval6a);
+		intervalList6.add(interval6b);
+		intervalList6.add(interval6c);
+		command6.setIntervals(intervalList6);
+		command6.setDescription("An overdue floating event!");
+		assertEquals(
+				"Task added successfully! \nAn overdue floating event! on (1) 3:00 PM on Wed, 30/10/2013 to 4:00 PM on Wed, 30/10/2013 or (2) 4:00 PM on Wed, 30/10/2013 to 5:00 PM on Wed, 30/10/2013 or (3) 5:00 PM on Wed, 30/10/2013 to 6:00 PM on Wed, 30/10/2013", logic.addTask(command6).toString());
+		
+		// Add task test 7 (task with tags)
+		Command command7 = new Command(CommandType.ADD_TASK);
+		DateTime date7 = new DateTime(2013, 10, 11, 22, 00, 00);
+		command7.setDeadline(date7);
+		command7.setDescription("Party");
+		ArrayList<String> tags7 = new ArrayList<String>();
+		tags7.add("TGIF");
+		tags7.add("forfun");
+		command7.setTags(tags7);
+		assertEquals(
+				"Task added successfully! \nParty before 10:00 PM on Fri, 11/10/2013 #TGIF #forfun",
+				logic.addTask(command7).toString());
 	}
 }

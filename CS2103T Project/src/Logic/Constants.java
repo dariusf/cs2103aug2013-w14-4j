@@ -42,7 +42,9 @@ public class Constants {
 	public static final String TASK_ATT_POSSIBLETIME = "possibleTime";
 	public static final String TASK_ATT_DONE = "done";
 
-	public static final String DELETE_ATT_LINE = "lineNumber";
+	public static final String DELETE_ATT_LINE = "deleteIndex";
+	
+	public static final String DONE_ATT_LINE = "doneIndex";
 
 	public static final String TASK_TYPE_FLOATING = "floating";
 	public static final String TASK_TYPE_TIMED = "timed";
