@@ -19,8 +19,11 @@ public class Parser {
 	private static final boolean PRINT_LEXER_TOKENS = false;
 
 	public static void main(String[] args) {
-		Command command = new Parser().parse("add go home at 10:00 am");		
+		Command command = new Parser().parse("edit go home at 10:00 am");
 		command = new Parser().parse("delete 1");
+		command = new Parser().parse("search haha hi there");
+		command = new Parser().parse("clear");
+		command = new Parser().parse("help done asjdlkasd");
 		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
 //		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
 //		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
@@ -141,23 +144,59 @@ public class Parser {
 		// TODO: handle other commands here
 		switch (commandType) {
 		case ADD_TASK:
-			return createAddCommand();
+		case EDIT_TASK:
+			return createComplexCommand(commandType);
 		case DELETE:
-			return createDeleteCommand();
+		case DONE:
+		case FINALISE:
+			return createNumericalCommand(commandType);
+		case SEARCH:
+			return createSearchStringCommand();
+		case HELP:
+			return createHelpCommand();
+		case CLEAR:
+		case EXIT:
+		case SORT:
+		case UNDO:
+		case DISPLAY:
+			return createArgumentlessCommand(commandType);
+		default:
+			return null;
 		}
-		return null;
 	}
 	
-	private Command createDeleteCommand() {
+	private Command createHelpCommand() {
+		Command command = new Command(CommandType.HELP);
+		command.setValue("helpCommand", getCurrentToken().contents);
+		return command;
+	}
 
-		int deletionIndex = Integer.parseInt(getCurrentToken().contents);
+	private Command createSearchStringCommand() {
+		StringBuilder searchString = new StringBuilder();
+		while(hasTokensLeft()) {
+			searchString.append(getCurrentToken().contents + " ");
+			nextToken();
+		}
 		
-		Command command = new Command(CommandType.DELETE);
-		command.setValue("deletionIndex", Integer.toString(deletionIndex));
+		Command command = new Command(CommandType.SEARCH);
+		command.setValue("searchString", searchString.toString().trim());
+		
+		return command;
+	}
+
+	private Command createArgumentlessCommand(CommandType type) { 
+		return new Command(type);
+	}
+
+	private Command createNumericalCommand(CommandType commandType) {
+		int index = Integer.parseInt(getCurrentToken().contents);
+		
+		Command command = new Command(commandType);
+		command.setValue(commandType.toString().toLowerCase() + "Index", Integer.toString(index));
 		return command;
 	}
 	
-	private Command createAddCommand() {
+	private Command createComplexCommand(CommandType commandType) {
 		pushState(new StateDefault(this));
 
 		while (hasTokensLeft()) {
@@ -177,7 +216,7 @@ public class Parser {
 			popState();
 		}
 
-		Command command = new Command(CommandType.ADD_TASK);
+		Command command = new Command(commandType);
 		command.setDeadline(deadline);
 		command.setDescription(text);
 		command.setIntervals(intervals);
