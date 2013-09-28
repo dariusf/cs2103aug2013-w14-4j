@@ -36,7 +36,7 @@ public class Logic {
 		case DELETE:
 			return deleteTask(command);
 		case CLEAR:
-			return clearTasks(command);
+			return clearTasks();
 		case EXIT:
 			exitProgram();
 		case SEARCH:
@@ -58,10 +58,145 @@ public class Logic {
 		}
 	}
 
+	public static Feedback addTask(Command command) {
+		Task newTask = new Task(command);
+		storage.add(newTask);
+	
+		Feedback feedback = null;
+		if (isTaskOver(newTask)) {
+			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
+					CommandType.ADD_TASK, newTask.toString());
+		} else {
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.ADD_TASK,
+					newTask.toString());
+		}
+	
+		return feedback;
+	}
+
+	// Incomplete, need to figure out the command format for edit
+	public static Feedback editTask(Command command) {
+		Feedback feedback = null;
+		HashMap<String, String> commandAttributes = command
+				.getCommandAttributes();
+		int inputIndex = Integer.parseInt(commandAttributes.get("index"));
+		int taskIndex = inputIndex;
+	
+		if (isDynamicIndex) {
+			taskIndex = temporaryMapping.get(inputIndex);
+		}
+	
+		Task taskToEdit = storage.get(taskIndex);
+		String originalType = taskToEdit.getType();
+		String finalType = command.getTaskType();
+		
+		if(finalType == Constants.TASK_TYPE_UNTIMED && originalType != Constants.TASK_TYPE_UNTIMED){
+			finalType = originalType;
+		}
+		
+		if(!command.getDescription().isEmpty()){
+			taskToEdit.setName(command.getDescription());
+		}
+		
+		if(command.getTags() != null){
+			ArrayList<String> originalTags = taskToEdit.getTags();
+			originalTags.addAll(command.getTags());
+		}
+		
+		if(finalType == Constants.TASK_TYPE_DEADLINE){
+			
+		}
+		
+		storage.replace(taskIndex, taskToEdit);
+	
+		if (isTaskOver(taskToEdit)) {
+			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
+					CommandType.EDIT_TASK, taskToEdit.toString());
+		} else {
+			feedback = new Feedback(Constants.SC_SUCCESS,
+					CommandType.EDIT_TASK, taskToEdit.toString());
+		}
+	
+		return feedback;
+	}
+
+	public static Feedback displayTasks() {
+		Feedback feedback = null;
+		if (storage.size() > 0) {
+			StringBuilder output = new StringBuilder();
+			int index = 1;
+			Iterator<Task> storageIterator = storage.iterator();
+			while (storageIterator.hasNext()) {
+				Task task = storageIterator.next();
+				output.append(index + ". ");
+				output.append(task.toString());
+				if (index < storage.size()) {
+					output.append("\n");
+				}
+				index++;
+			}
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY,
+					output.toString());
+			isDynamicIndex = false;
+		} else {
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
+					CommandType.DISPLAY);
+		}
+		return feedback;
+	}
+
+	public static Feedback deleteTask(Command command) {
+		HashMap<String, String> commandAttributes = command
+				.getCommandAttributes();
+		int lineNumber = Integer.parseInt(commandAttributes
+				.get(Constants.DELETE_ATT_LINE));
+		if (isDynamicIndex) {
+			lineNumber = temporaryMapping.get(lineNumber);
+		}
+	
+		Feedback feedback = null;
+		if (lineNumber <= storage.size()) {
+			String taskDescription = storage.get(lineNumber).getName();
+			storage.remove(lineNumber);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE, taskDescription);
+			isDynamicIndex = false;
+		} else {
+			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
+					CommandType.DELETE);
+		}
+	
+		return feedback;
+	}
+
+	public static Feedback clearTasks() {
+		Feedback feedback = null;
+		if (storage.size() > 0) {
+			storage.clear();
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
+			isDynamicIndex = false;
+		} else {
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
+					CommandType.CLEAR);
+		}
+		return feedback;
+	}
+
 	// Not working yet
 	public static Feedback finaliseTask(Command command) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public static Feedback sortTask() {
+		Feedback feedback = null;
+		if (storage.size() > 0) {
+			storage.sort();
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SORT);
+		} else {
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
+					CommandType.SORT);
+		}
+		return feedback;
 	}
 
 	// Not working yet
@@ -79,25 +214,13 @@ public class Logic {
 		if (lineNumber <= storage.size()) {
 			Task doneTask = storage.get(lineNumber);
 			doneTask.markDone();
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DONE);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DONE, doneTask.getName());
 			isDynamicIndex = false;
 		} else {
 			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
 					CommandType.DONE);
 		}
 
-		return feedback;
-	}
-
-	public static Feedback sortTask() {
-		Feedback feedback = null;
-		if (storage.size() > 0) {
-			storage.sort();
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SORT);
-		} else {
-			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
-					CommandType.SORT);
-		}
 		return feedback;
 	}
 
@@ -170,52 +293,6 @@ public class Logic {
 		return feedback;
 	}
 
-	// Incomplete, need to figure out the command format for edit
-	public static Feedback editTask(Command command) {
-		Feedback feedback = null;
-		HashMap<String, String> commandAttributes = command
-				.getCommandAttributes();
-		int inputIndex = Integer.parseInt(commandAttributes.get("index"));
-		int taskIndex = inputIndex;
-
-		if (isDynamicIndex) {
-			taskIndex = temporaryMapping.get(inputIndex);
-		}
-
-		Task taskToEdit = storage.get(taskIndex);
-		commandAttributes.remove("index");
-		for (String key : commandAttributes.keySet()) {
-
-		}
-		storage.replace(taskIndex, taskToEdit);
-
-		if (isTaskOver(taskToEdit)) {
-			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
-					CommandType.EDIT_TASK, taskToEdit.toString());
-		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS,
-					CommandType.EDIT_TASK, taskToEdit.toString());
-		}
-
-		return feedback;
-	}
-
-	public static Feedback addTask(Command command) {
-		Task newTask = new Task(command);
-		storage.add(newTask);
-
-		Feedback feedback = null;
-		if (isTaskOver(newTask)) {
-			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
-					CommandType.ADD_TASK, newTask.toString());
-		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.ADD_TASK,
-					newTask.toString());
-		}
-
-		return feedback;
-	}
-
 	public static Feedback undoState() {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
@@ -282,67 +359,6 @@ public class Logic {
 
 	public static void exitProgram() {
 		System.exit(0);
-	}
-
-	public static Feedback clearTasks(Command command) {
-		Feedback feedback = null;
-		if (storage.size() > 0) {
-			storage.clear();
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
-			isDynamicIndex = false;
-		} else {
-			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
-					CommandType.CLEAR);
-		}
-		return feedback;
-	}
-
-	public static Feedback deleteTask(Command command) {
-		HashMap<String, String> commandAttributes = command
-				.getCommandAttributes();
-		int lineNumber = Integer.parseInt(commandAttributes
-				.get(Constants.DELETE_ATT_LINE));
-		if (isDynamicIndex) {
-			lineNumber = temporaryMapping.get(lineNumber);
-		}
-
-		Feedback feedback = null;
-		if (lineNumber <= storage.size()) {
-			String taskDescription = storage.get(lineNumber).getName();
-			storage.remove(lineNumber);
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE, taskDescription);
-			isDynamicIndex = false;
-		} else {
-			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
-					CommandType.DELETE);
-		}
-
-		return feedback;
-	}
-
-	public static Feedback displayTasks() {
-		Feedback feedback = null;
-		if (storage.size() > 0) {
-			StringBuilder output = new StringBuilder();
-			int index = 1;
-			Iterator<Task> storageIterator = storage.iterator();
-			while (storageIterator.hasNext()) {
-				Task task = storageIterator.next();
-				output.append(index + ". ");
-				output.append(task.toString());
-				if (index < storage.size()) {
-					output.append("\n");
-				}
-				index++;
-			}
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY,
-					output.toString());
-			isDynamicIndex = false;
-		} else {
-			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
-					CommandType.DISPLAY);
-		}
-		return feedback;
 	}
 
 	public static boolean isTaskOver(Task task) {
@@ -499,6 +515,10 @@ public class Logic {
 		Command command10 = new Command(CommandType.DONE);
 		command10.setValue("doneIndex","1");
 		System.out.println(logic.markDone(command10));
+		
+		System.out.println(logic.displayTasks());
+
+		System.out.println(logic.clearTasks());
 		
 		System.out.println(logic.displayTasks());
 	}
