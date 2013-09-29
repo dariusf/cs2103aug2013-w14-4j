@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 
 import Logic.Command;
 import Logic.CommandType;
+import Logic.Constants;
 import Logic.Interval;
 
 public class Parser {
@@ -19,6 +20,7 @@ public class Parser {
 		Command command = new Parser().parse("edit 1 go home at 10:00 am");
 		command = new Parser().parse("delete 1");
 		command = new Parser().parse("search haha hi there");
+		System.out.println(command);
 		command = new Parser().parse("clear");
 		command = new Parser().parse("help done asjdlkasd");
 		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
@@ -186,7 +188,7 @@ public class Parser {
 		}
 		
 		Command command = new Command(CommandType.SEARCH);
-		command.setValue("searchString", searchString.toString().trim());
+		command.setValue(Constants.TASK_ATT_NAME, searchString.toString().trim());
 		
 		return command;
 	}

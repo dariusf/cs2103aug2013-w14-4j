@@ -47,6 +47,9 @@ public class Constants {
 	public static final String EDIT_ATT_LINE = "editIndex";
 	
 	public static final String DONE_ATT_LINE = "doneIndex";
+	
+	public static final String FINALISE_ATT_LINE = "finaliseIndex";
+	public static final String FINALISE_ATT_INDEX = "finaliseItem";
 
 	public static final String TASK_TYPE_FLOATING = "floating";
 	public static final String TASK_TYPE_TIMED = "timed";
@@ -106,5 +109,6 @@ public class Constants {
 	public static final int SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR = 64;
 	public static final int SC_NO_ID_INDICATED_TIME_ERROR = 65;
 	public static final int SC_SEARCH_KEYWORD_MISSING_ERROR = 80;
+	public static final int SC_FINALISE_TYPE_MISMATCH_ERROR = 90;
 	public static final int SC_UNDO_NO_PRIOR_STATE_ERROR = 100;
 }
