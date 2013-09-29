@@ -9,12 +9,13 @@ public class Command {
 	
 	private String description = "";
 	private DateTime deadline = null;
+	private ArrayList<String> tags = null;
 	private ArrayList<Interval> intervals = new ArrayList<>();
 
 	private HashMap<String, String> commandAttributes = null;
 	
 	public Command(CommandType type){
-		commandAttributes = new HashMap<>();
+		commandAttributes = new HashMap<String, String>();
 		commandType = type;
 	}
 		
@@ -26,6 +27,14 @@ public class Command {
 		return commandAttributes;
 	}
 	
+	public ArrayList<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(ArrayList<String> tags) {
+		this.tags = tags;
+	}
+
 	public void setValue(String attribute, String value){
 		commandAttributes.put(attribute, value);
 	}
@@ -89,6 +98,5 @@ public class Command {
 	public void setIntervals(ArrayList<Interval> intervals) {
 		this.intervals = intervals;
 	}
-	
-	
+
 }
