@@ -44,6 +44,8 @@ public class Constants {
 
 	public static final String DELETE_ATT_LINE = "deleteIndex";
 	
+	public static final String EDIT_ATT_LINE = "editIndex";
+	
 	public static final String DONE_ATT_LINE = "doneIndex";
 
 	public static final String TASK_TYPE_FLOATING = "floating";
