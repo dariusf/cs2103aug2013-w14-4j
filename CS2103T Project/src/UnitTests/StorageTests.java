@@ -178,7 +178,4 @@ public class StorageTests {
 		File file = new File("newtest.txt");
 		Files.delete(file.toPath());
 	}
-	
-	
-
 }
