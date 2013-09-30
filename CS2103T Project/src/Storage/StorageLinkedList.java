@@ -29,7 +29,7 @@ public class StorageLinkedList<E> implements ListIterator<E> {
 		headNode.nextNode = tailNode;
 		previousNode = headNode;
 		followingNode = tailNode;
-		int index = -1; //sentinel value representing empty list
+		index = -1; //sentinel value representing empty list
 	}
 	
 	public void add(E item) { // adds item to head of list
