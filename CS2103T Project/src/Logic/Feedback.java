@@ -1,5 +1,7 @@
 package Logic;
 
+import com.ibm.icu.util.RangeValueIterator.Element;
+
 public class Feedback {
 	private CommandType feedbackCommand = null;
 	private String feedbackString = null;
@@ -184,6 +186,8 @@ public class Feedback {
 	private String finaliseFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = "Task finalised successfully! \n" + feedbackString;
+		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
+			statusMessage = "Task finalised successfully! Task is overdue \n" + feedbackString;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to finalise!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
@@ -194,6 +198,8 @@ public class Feedback {
 			statusMessage = "Error: Time ID is not valid";
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_TIME_ERROR) {
 			statusMessage = "Error: Time ID is not specified";
+		} else if (statusCode == Constants.SC_FINALISE_TYPE_MISMATCH_ERROR) {
+			statusMessage = "Error: Task selected is not a flaoting task";
 		} else {
 			statusMessage = "Error: Invalid finalise (this should not happen!)";
 		}
