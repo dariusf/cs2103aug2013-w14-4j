@@ -22,9 +22,11 @@ public class Parser {
 		command = new Parser().parse("search haha hi there");
 		System.out.println(command);
 		command = new Parser().parse("clear");
+		command = new Parser().parse("clear done");
+		command = new Parser().parse("clear aklsjdksd");
 		command = new Parser().parse("help done asjdlkasd");
 		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
-//		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
+		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
 //		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
 //		command = new Parser().parse("add go home by 10:00 am");
 //		command = new Parser().parse("add go home at at 10:00 am on 1/1/12");
@@ -93,6 +95,7 @@ public class Parser {
 	ArrayList<Interval> intervals = new ArrayList<>();
 	String text = "";
 	int editIndex = -1;
+	boolean clearDone = false;
 
 	public Parser() {
 		parseStates = new Stack<>();
@@ -144,6 +147,16 @@ public class Parser {
 					commandType = CommandType.INVALID;
 				}
 			}
+			else if (commandType == CommandType.CLEAR) {
+				try {
+					if (hasTokensLeft()) {
+						clearDone = getCurrentToken().contents.equalsIgnoreCase("done");
+						if (clearDone) nextToken();
+					}
+				} catch (NumberFormatException e) {
+					commandType = CommandType.INVALID;
+				}
+			}
 		} else {
 			// default to the add command
 			commandType = CommandType.ADD_TASK;
@@ -163,6 +176,7 @@ public class Parser {
 		case HELP:
 			return createHelpCommand();
 		case CLEAR:
+			return createClearCommand();
 		case EXIT:
 		case SORT:
 		case UNDO:
@@ -174,6 +188,12 @@ public class Parser {
 		}
 	}
 	
+	private Command createClearCommand() {
+		Command command = createArgumentlessCommand(CommandType.CLEAR);
+		command.setValue("clearDone", Boolean.toString(clearDone));
+		return command;
+	}
+
 	private Command createHelpCommand() {
 		Command command = new Command(CommandType.HELP);
 		command.setValue("helpCommand", getCurrentToken().contents);
