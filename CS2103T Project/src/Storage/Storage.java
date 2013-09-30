@@ -1,74 +1,82 @@
 package Storage;
 
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.List;
+
+import com.ibm.icu.util.ULocale.Type;
 
 import Logic.Task;
 
-public class Storage {
-	private enum ActionType { ADD, REMOVE, EDIT, CLEAR }
+public class Storage implements Closeable {
 	
-	private abstract class Action {
-		ActionType actionType;
-		
-		Action(ActionType actionType) {
-			this.actionType = actionType;
-		}
-	}
+	private interface Action {}
 	
-	private class AddAction extends Action {
+	private class AddAction implements Action {
 		Task changedTask;
 		
 		AddAction(Task changedTask) {
-			super(ActionType.ADD);
 			this.changedTask = changedTask;
 		}
 	}
 	
-	private class RemoveAction extends Action {
+	private class RemoveAction implements Action {
 		Task changedTask;
 		int index;
 		
 		RemoveAction(Task changedTask, int index) {
-			super(ActionType.REMOVE);
 			this.changedTask = changedTask;
 			this.index = index;
 		}
 	}
 	
-	private class EditAction extends Action {
+	private class EditAction implements Action {
 		Task before;
 		Task after;
 		int index;
 		
 		EditAction(int index, Task before, Task after) {
-			super(ActionType.EDIT);
 			this.before = before;
 			this.after = after;
 			this.index = index;
 		}
 	}
 	
-	private class ClearAction extends Action {
+	private class StateAction implements Action {
 		ArrayList<Task> previousState;
 		
-		ClearAction(ArrayList<Task> previousState) {
-			super(ActionType.CLEAR);
+		StateAction(ArrayList<Task> previousState) {
 			this.previousState = previousState;
 		}
 	}
 	
-	private static ArrayList<Task> taskStorage = new ArrayList<Task>();;
+	private static ArrayList<Task> taskStorage;
 	private StorageLinkedList<Action> actionsPerformed = new StorageLinkedList<>();
+	private final String fileName;
 	
-	public Storage() {
-		
+	public Storage(String fileName) throws IOException {
+		this.fileName = fileName;
+		File file = new File(fileName);
+		if (file.exists()) {
+			taskStorage = FileOperations.JSONFileToList(new File(fileName));
+		} else {
+			taskStorage = new ArrayList<>();
+		}
+	}
+	
+	public Storage() throws IOException {
+		this("default.txt");
 	}
 	
 	public void sort() {
-		
+		ArrayList<Task> previousState = (ArrayList<Task>) taskStorage.clone();
+		Collections.sort(taskStorage);
+		StateAction thisAction = new StateAction(previousState);
+		actionsPerformed.pushHere(thisAction);
 	}
 	
 	public void add(Task task) {
@@ -96,15 +104,24 @@ public class Storage {
 	}
 
 	public void clear() {
-		Action thisAction = new ClearAction(taskStorage);
+		Action thisAction = new StateAction(taskStorage);
 		taskStorage = new ArrayList<Task>();
 		actionsPerformed.pushHere(thisAction);
 	}
 
 	public Task get(int index) {
-		return taskStorage.get(index - 1);
+		// TODO change implementation based on accessing classes
+		try {
+			return (Task) taskStorage.get(index - 1).clone(); 
+		} catch (CloneNotSupportedException e) {
+			throw new Error();
+		}
 	}
 	
+	public String getFileName() {
+		return fileName;
+	}
+
 	public Iterator<Task> iterator() {
 		return taskStorage.iterator();
 	}
@@ -123,23 +140,30 @@ public class Storage {
 	}
 	
 	private void undoAction(Action action) {
-		// TODO check if this method is recursive
-		undoAction(action);
+		if(action instanceof AddAction) {
+			undoAddAction((AddAction) action);
+		} else if (action instanceof RemoveAction) {
+			undoRemoveAction((RemoveAction) action);
+		} else if (action instanceof EditAction) {
+			undoEditAction((EditAction) action);
+		} else if (action instanceof StateAction) {
+			undoClearAction((StateAction) action);
+		}
 	}
 	
-	private void undoAction(AddAction action) {
+	private void undoAddAction(AddAction action) {
 		taskStorage.remove(action.changedTask);
 	}
 	
-	private void undoAction(RemoveAction action) {
+	private void undoRemoveAction(RemoveAction action) {
 		taskStorage.add(action.index, action.changedTask);
 	}
 
-	private void undoAction(EditAction action) {
+	private void undoEditAction(EditAction action) {
 		taskStorage.set(action.index, action.before);
 	}
 	
-	private void undoAction(ClearAction action) {
+	private void undoClearAction(StateAction action) {
 		taskStorage = action.previousState;
 	}
 	
@@ -149,23 +173,30 @@ public class Storage {
 	}
 	
 	private void redoAction(Action action) {
-		// TODO check if this method is recursive
-		redoAction(action);
+		if(action instanceof AddAction) {
+			redoAddAction((AddAction) action);
+		} else if (action instanceof RemoveAction) {
+			redoRemoveAction((RemoveAction) action);
+		} else if (action instanceof EditAction) {
+			redoEditAction((EditAction) action);
+		} else if (action instanceof StateAction) {
+			redoClearAction((StateAction) action);
+		}
 	}
 	
-	private void redoAction(AddAction action) {
+	private void redoAddAction(AddAction action) {
 		taskStorage.add(action.changedTask);
 	}
 	
-	private void redoAction(RemoveAction action) {
+	private void redoRemoveAction(RemoveAction action) {
 		taskStorage.remove(action.index);
 	}
 	
-	private void redoAction(EditAction action) {
+	private void redoEditAction(EditAction action) {
 		taskStorage.set(action.index, action.after);
 	}
 	
-	private void redoAction(ClearAction action) {
+	private void redoClearAction(StateAction action) {
 		taskStorage = new ArrayList<Task>();
 	}
 
@@ -175,5 +206,12 @@ public class Storage {
 	
 	public boolean isRedoable() {
 		return actionsPerformed.hasPrevious();
+	}
+
+	@Override
+	public void close() throws IOException {
+		File file = new File(fileName);
+		if(file.exists()) { file.delete(); }
+		FileOperations.tasksToJSONDocument(taskStorage, file);
 	}
 }
