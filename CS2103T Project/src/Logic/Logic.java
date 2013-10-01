@@ -1,6 +1,8 @@
 package Logic;
 
 import Storage.*;
+
+import java.io.IOException;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +22,7 @@ public class Logic {
 	public static HashMap<Integer, Integer> temporaryMapping = new HashMap<Integer, Integer>();
 	public static boolean isDynamicIndex = false;
 
-	public Logic() {
+	public Logic() throws IOException {
 		storage = new Storage();
 	}
 
@@ -445,7 +447,7 @@ public class Logic {
 		return lowerCaseString.indexOf(lowerCaseWord) != -1;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Logic logic = new Logic();
 
 		// Display task test

@@ -56,7 +56,7 @@ public class Interval {
 	}
 	
 	public String toString() {
-		return start.toString("dd/MM/yy hh:mm a") + " to " + end.toString("dd/MM/yy hh:mm a");
+		return start.toString(Constants.DATE_TIME_FORMAT) + " to " + end.toString(Constants.DATE_TIME_FORMAT);
 	}
 	
 	public void normalizeEnd() {

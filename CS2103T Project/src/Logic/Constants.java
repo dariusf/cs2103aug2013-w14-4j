@@ -111,4 +111,6 @@ public class Constants {
 	public static final int SC_SEARCH_KEYWORD_MISSING_ERROR = 80;
 	public static final int SC_FINALISE_TYPE_MISMATCH_ERROR = 90;
 	public static final int SC_UNDO_NO_PRIOR_STATE_ERROR = 100;
+
+	public static final String DATE_TIME_FORMAT = "dd/MM/yy hh:mm a";
 }
