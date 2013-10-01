@@ -2,6 +2,7 @@ package UnitTests;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.joda.time.DateTime;
@@ -15,7 +16,7 @@ import Logic.Logic;
 public class LogicTest {
 
 	@Test
-	public void test() {
+	public void test() throws IOException {
 		Logic logic = new Logic();
 
 		// Display task test

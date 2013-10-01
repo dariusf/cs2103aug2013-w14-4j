@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 
+import Logic.Constants;
 import Logic.Interval;
 import Logic.Task;
 
@@ -30,12 +31,12 @@ import com.google.gson.JsonSerializer;
  * @author Matthew
  *
  */
-public class FileOperations {
+public class Json {
 	
-	static DateTimeFormatter formatter = new DateTimeFormatterBuilder().
-			appendPattern("dd/MM/yy hh:mm a").toFormatter();
+	private static DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder().
+			appendPattern(Constants.DATE_TIME_FORMAT).toFormatter();
 	
-	static Gson JSONformatter = new GsonBuilder().setPrettyPrinting().
+	static Gson jsonFormatter = new GsonBuilder().setPrettyPrinting().
 			registerTypeAdapter(DateTime.class, new DateTimeSerializer()).
 			registerTypeAdapter(DateTime.class, new DateTimeDeserializer()).
 			registerTypeAdapter(Interval.class, new IntervalSerializer()).
@@ -53,14 +54,14 @@ public class FileOperations {
 		public Interval deserialize(JsonElement json, Type typeOfT,
 				JsonDeserializationContext context) throws JsonParseException {
 			String[] dates = json.getAsString().split(" to ");
-			return new Interval(formatter.parseDateTime(dates[0]), formatter.parseDateTime(dates[1]));
+			return new Interval(dateTimeFormatter.parseDateTime(dates[0]), dateTimeFormatter.parseDateTime(dates[1]));
 		}
 	}
 	
 	private static class DateTimeSerializer implements JsonSerializer<DateTime> {
 		public JsonElement serialize(DateTime src, Type typeOfSrc,
 				JsonSerializationContext context) {
-			return new JsonPrimitive(formatter.print(src));
+			return new JsonPrimitive(dateTimeFormatter.print(src));
 		}
 	}
 	
@@ -68,28 +69,32 @@ public class FileOperations {
 		public DateTime deserialize(JsonElement json, Type typeOfT,
 				JsonDeserializationContext context)
 			  throws JsonParseException {
-		  return formatter.parseDateTime(json.getAsJsonPrimitive().getAsString());
+		  return dateTimeFormatter.parseDateTime(json.getAsJsonPrimitive().getAsString());
 		}
 	}
 	
-	public static String tasksToJSONString(ArrayList<Task> taskList) {
-		return JSONformatter.toJson(taskList);
-	}
-	
-	public static void tasksToJSONDocument(ArrayList<Task> taskList, File file) throws IOException {
-		if(file.exists()) { file.delete(); } // for now i'll just delete the existing file
-		FileWriter writer = new FileWriter(file);
-		JSONformatter.toJson(taskList, writer);
-	}
-	
-	public static ArrayList<Task> JSONFileToList(File file) throws IOException {
+	public static ArrayList<Task> readFromFile (File file) throws IOException {
+		if(!file.exists()) {
+			return new ArrayList<>();
+		}
 		FileReader reader = new FileReader(file);
-		Task[] tasksArray = JSONformatter.fromJson(reader, Task[].class);
+		Task[] tasksArray = jsonFormatter.fromJson(reader, Task[].class);
+		reader.close();
 		return arrayToArrayList(tasksArray);
 	}
 	
-	public static ArrayList<Task> JSONStringToList(String JSONString) {
-		Task[] tasksArray = JSONformatter.fromJson(JSONString, Task[].class);
+	public static void writeToFile (ArrayList<Task> tasks, File file) throws IOException {
+		if(file.exists()) {
+			file.delete();
+			file.createNewFile();
+		}
+		FileWriter writer = new FileWriter(file);
+		jsonFormatter.toJson(tasks, writer);
+		writer.close();
+	}
+	
+	public static ArrayList<Task> readFromString (String jsonString) {
+		Task[] tasksArray = jsonFormatter.fromJson(jsonString, Task[].class);
 		if(tasksArray == null) { 
 			return new ArrayList<>();
 		} else { 
@@ -97,8 +102,14 @@ public class FileOperations {
 		}
 	}
 	
+	public static String writeToString (ArrayList<Task> tasks) {
+		return jsonFormatter.toJson(tasks);
+	}
+	
 	private static <E> ArrayList<E> arrayToArrayList(E[] array) {
-		if(array.length == 0) { return new ArrayList<>(); }
+		if(array == null || array.length == 0) {
+			return new ArrayList<>();
+		}
 		ArrayList<E> result = new ArrayList<>();
 		for(E e : array) {
 			result.add(e);
@@ -107,7 +118,7 @@ public class FileOperations {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(formatter.parseDateTime("23/04/13 10:00 PM").toString());
+		System.out.println(dateTimeFormatter.parseDateTime("23/04/13 10:00 PM").toString());
 	}
 
 }

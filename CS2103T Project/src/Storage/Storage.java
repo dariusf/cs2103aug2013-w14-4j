@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
-
-import com.ibm.icu.util.ULocale.Type;
 
 import Logic.Task;
 
@@ -62,7 +59,7 @@ public class Storage implements Closeable {
 		this.fileName = fileName;
 		File file = new File(fileName);
 		if (file.exists()) {
-			taskStorage = FileOperations.JSONFileToList(new File(fileName));
+			taskStorage = Json.readFromFile(new File(fileName));
 		} else {
 			taskStorage = new ArrayList<>();
 		}
@@ -212,6 +209,6 @@ public class Storage implements Closeable {
 	public void close() throws IOException {
 		File file = new File(fileName);
 		if(file.exists()) { file.delete(); }
-		FileOperations.tasksToJSONDocument(taskStorage, file);
+		Json.writeToFile(taskStorage, file);
 	}
 }

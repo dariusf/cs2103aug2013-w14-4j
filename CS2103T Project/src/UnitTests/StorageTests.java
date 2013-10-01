@@ -21,7 +21,7 @@ import org.junit.Test;
 import Logic.Constants;
 import Logic.Interval;
 import Logic.Task;
-import Storage.FileOperations;
+import Storage.Json;
 import Storage.Storage;
 
 public class StorageTests {
@@ -139,12 +139,12 @@ public class StorageTests {
 		ArrayList<Task> taskList = new ArrayList<>();
 		taskList.add(deadlineTask);
 		taskList.add(timedTask);
-		System.out.println(FileOperations.tasksToJSONString(taskList));
+		System.out.println(Json.writeToString(taskList));
 	}
 	
 	@Test
 	public void stringInputTest() {
-		ArrayList<Task> testList = FileOperations.JSONStringToList("[\r\n  {\r\n    \"name\": \"deadlineTask\",\r\n    \"type\": \"deadline\",\r\n    \"location\": \"home\",\r\n    \"tags\": [],\r\n    \"deadline\": \"23/04/13 10:00 PM\",\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  },\r\n  {\r\n    \"name\": \"timedTask\",\r\n    \"type\": \"timed\",\r\n    \"location\": \"office\",\r\n    \"tags\": [],\r\n    \"interval\": \"10/01/13 09:00 AM to 10/01/13 06:00 PM\",\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  }\r\n]\r\n");
+		ArrayList<Task> testList = Json.readFromString("[\r\n  {\r\n    \"name\": \"deadlineTask\",\r\n    \"type\": \"deadline\",\r\n    \"location\": \"home\",\r\n    \"tags\": [],\r\n    \"deadline\": \"23/04/13 10:00 PM\",\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  },\r\n  {\r\n    \"name\": \"timedTask\",\r\n    \"type\": \"timed\",\r\n    \"location\": \"office\",\r\n    \"tags\": [],\r\n    \"interval\": \"10/01/13 09:00 AM to 10/01/13 06:00 PM\",\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  }\r\n]\r\n");
 		for(Task task : testList) {
 			System.out.println(task.toString());
 		}
@@ -155,12 +155,12 @@ public class StorageTests {
 		ArrayList<Task> taskList = new ArrayList<>();
 		taskList.add(deadlineTask);
 		taskList.add(taggedTask);
-		System.out.println(FileOperations.tasksToJSONString(taskList));
+		System.out.println(Json.writeToString(taskList));
 	}
 	
 	@Test
 	public void stringInput_taggedTaskTest() {
-		ArrayList<Task> testList = FileOperations.JSONStringToList("[\r\n  {\r\n    \"name\": \"deadlineTask\",\r\n    \"type\": \"deadline\",\r\n    \"location\": \"home\",\r\n    \"tags\": [],\r\n    \"deadline\": \"23/04/13 10:00 PM\",\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  },\r\n  {\r\n    \"name\": \"timedTask\",\r\n    \"type\": \"untimed\",\r\n    \"location\": \"office\",\r\n    \"tags\": [\r\n      \"blah1\",\r\n      \"blah2\",\r\n      \"blah3\"\r\n    ],\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  }\r\n]\r\n");
+		ArrayList<Task> testList = Json.readFromString("[\r\n  {\r\n    \"name\": \"deadlineTask\",\r\n    \"type\": \"deadline\",\r\n    \"location\": \"home\",\r\n    \"tags\": [],\r\n    \"deadline\": \"23/04/13 10:00 PM\",\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  },\r\n  {\r\n    \"name\": \"timedTask\",\r\n    \"type\": \"untimed\",\r\n    \"location\": \"office\",\r\n    \"tags\": [\r\n      \"blah1\",\r\n      \"blah2\",\r\n      \"blah3\"\r\n    ],\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  }\r\n]\r\n");
 		for(Task task : testList) {
 			System.out.println(task.toString());
 		}
