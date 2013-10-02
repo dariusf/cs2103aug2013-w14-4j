@@ -107,7 +107,9 @@ public class Logic {
 			taskToEdit.setType(Constants.TASK_TYPE_FLOATING);
 			taskToEdit.setPossibleTime(command.getIntervals());
 		}
-
+		
+		storage.replace(taskIndex, taskToEdit);
+		
 		if (isTaskOver(taskToEdit)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
 					CommandType.EDIT_TASK, taskToEdit.toString());
@@ -268,6 +270,8 @@ public class Logic {
 		Interval newInterval = oldIntervalList.get(taskSlotIndex - 1);
 		taskToEdit.setType(Constants.TASK_TYPE_TIMED);
 		taskToEdit.setInterval(newInterval);
+		
+		storage.replace(taskIndex, taskToEdit);
 
 		if (isTaskOver(taskToEdit)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
@@ -307,6 +311,7 @@ public class Logic {
 		if (lineNumber <= storage.size()) {
 			Task doneTask = storage.get(lineNumber);
 			doneTask.markDone();
+			storage.replace(lineNumber, doneTask);
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DONE,
 					doneTask.getName());
 			isDynamicIndex = false;
