@@ -51,6 +51,8 @@ public class Constants {
 	public static final String FINALISE_ATT_LINE = "finaliseIndex";
 	public static final String FINALISE_ATT_INDEX = "finaliseItem";
 
+	public static final String CLEAR_ATT_DONE = "clearDone";
+	
 	public static final String TASK_TYPE_FLOATING = "floating";
 	public static final String TASK_TYPE_TIMED = "timed";
 	public static final String TASK_TYPE_DEADLINE = "deadline";
