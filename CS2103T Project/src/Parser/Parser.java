@@ -3,6 +3,7 @@ package Parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.Stack;
 
 import org.joda.time.DateTime;
@@ -20,13 +21,19 @@ public class Parser {
 		Command command = new Parser().parse("edit 1 go home at 10:00 am");
 		command = new Parser().parse("delete 1");
 		command = new Parser().parse("search haha hi there");
-		System.out.println(command);
+		
 		command = new Parser().parse("clear");
 		command = new Parser().parse("clear done");
 		command = new Parser().parse("clear aklsjdksd");
 		command = new Parser().parse("help done asjdlkasd");
 		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
 		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
+		
+		Scanner scanner = new Scanner(System.in);
+		while(true){
+			String message = scanner.nextLine();
+			System.out.println(new Parser().parse(message));
+		}
 //		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
 //		command = new Parser().parse("add go home by 10:00 am");
 //		command = new Parser().parse("add go home at at 10:00 am on 1/1/12");

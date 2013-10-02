@@ -1,32 +1,26 @@
 package Logic;
 
-import Storage.*;
-
 import java.io.IOException;
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import Parser.Parser;
 import Storage.Storage;
 
 public class Logic {
 
-	public static Storage storage = null;
-	public static HashMap<Integer, Integer> temporaryMapping = new HashMap<Integer, Integer>();
-	public static boolean isDynamicIndex = false;
+	protected static Storage storage = null;
+	protected static HashMap<Integer, Integer> temporaryMapping = new HashMap<Integer, Integer>();
+	protected static boolean isDynamicIndex = false;
 
 	public Logic() throws IOException {
-		storage = new Storage();
+		storage = new Storage("default.txt");
 	}
 
-	public static Feedback executeCommand(String userCommand) {
+	public Feedback executeCommand(String userCommand) {
 		Command command = new Parser().parse(userCommand);
 		CommandType commandType = command.getCommandType();
 
@@ -60,7 +54,7 @@ public class Logic {
 		}
 	}
 
-	public static Feedback addTask(Command command) {
+	protected static Feedback addTask(Command command) {
 		Task newTask = new Task(command);
 		storage.add(newTask);
 
@@ -76,7 +70,7 @@ public class Logic {
 		return feedback;
 	}
 
-	public static Feedback editTask(Command command) {
+	protected static Feedback editTask(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -125,7 +119,7 @@ public class Logic {
 		return feedback;
 	}
 
-	public static Feedback displayTasks() {
+	protected static Feedback displayTasks() {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
 			StringBuilder output = new StringBuilder();
@@ -150,7 +144,7 @@ public class Logic {
 		return feedback;
 	}
 
-	public static Feedback deleteTask(Command command) {
+	protected static Feedback deleteTask(Command command) {
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
 		int lineNumber = Integer.parseInt(commandAttributes
@@ -174,7 +168,7 @@ public class Logic {
 		return feedback;
 	}
 
-	public static Feedback clearTasks() {
+	protected static Feedback clearTasks() {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
 			storage.clear();
@@ -188,7 +182,7 @@ public class Logic {
 	}
 
 	// Not working yet
-	public static Feedback finaliseTask(Command command) {
+	protected static Feedback finaliseTask(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -235,7 +229,7 @@ public class Logic {
 		return feedback;
 	}
 
-	public static Feedback sortTask() {
+	protected static Feedback sortTask() {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
 			storage.sort();
@@ -248,7 +242,7 @@ public class Logic {
 	}
 
 	// Not working yet
-	public static Feedback markDone(Command command) {
+	protected static Feedback markDone(Command command) {
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
 		int lineNumber = Integer.parseInt(commandAttributes
@@ -273,7 +267,7 @@ public class Logic {
 		return feedback;
 	}
 
-	public static Feedback showHelp(Command command) {
+	protected static Feedback showHelp(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -342,7 +336,7 @@ public class Logic {
 		return feedback;
 	}
 
-	public static Feedback undoState() {
+	protected static Feedback undoState() {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
 			storage.sort();
@@ -354,7 +348,7 @@ public class Logic {
 		return feedback;
 	}
 
-	public static Feedback searchTasks(Command command) {
+	protected static Feedback searchTasks(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -408,11 +402,11 @@ public class Logic {
 		return feedback;
 	}
 
-	public static void exitProgram() {
+	protected static void exitProgram() {
 		System.exit(0);
 	}
 
-	public static boolean isTaskOver(Task task) {
+	protected static boolean isTaskOver(Task task) {
 		if (task.isDeadlineTask()) {
 			DateTime deadline = task.getDeadline();
 			return isTimePastAlready(deadline);
@@ -427,7 +421,7 @@ public class Logic {
 		}
 	}
 
-	public static boolean isFloatingTaskOver(List<Interval> possibleTime) {
+	protected static boolean isFloatingTaskOver(List<Interval> possibleTime) {
 		boolean isAllSlotOver = true;
 		for (Interval slot : possibleTime) {
 			if (!isTimePastAlready(slot.getEnd())) {
@@ -437,11 +431,11 @@ public class Logic {
 		return isAllSlotOver;
 	}
 
-	public static boolean isTimePastAlready(DateTime time) {
+	protected static boolean isTimePastAlready(DateTime time) {
 		return time.compareTo(new DateTime()) < 0;
 	}
 
-	public static boolean isWordInString(String word, String string) {
+	protected static boolean isWordInString(String word, String string) {
 		String lowerCaseString = string.toLowerCase();
 		String lowerCaseWord = word.toLowerCase();
 		return lowerCaseString.indexOf(lowerCaseWord) != -1;
@@ -454,23 +448,20 @@ public class Logic {
 		System.out.println(logic.displayTasks());
 
 		// Add task test 1 (deadline task, success not overdue)
-		Command command1 = new Command(CommandType.ADD_TASK);
-		DateTime date1 = new DateTime(2013, 10, 14, 23, 59, 59);
-		command1.setDeadline(date1);
-		command1.setDescription("Submit V0.1");
-		System.out.println(logic.addTask(command1));
+		Command command1 = new Parser().parse("add submit v01 by 11:59 pm 30/10/2013");
+		System.out.println(logic.addTask(command1)+"\n");
 
 		// Add task test 2 (deadline task, success but overdue)
 		Command command2 = new Command(CommandType.ADD_TASK);
 		DateTime date2 = new DateTime(2012, 10, 14, 23, 59, 59);
 		command2.setDeadline(date2);
 		command2.setDescription("Submit overdue V0.1");
-		System.out.println(logic.addTask(command2));
+		System.out.println(logic.addTask(command2)+"\n");
 
 		// Add task test 3 (deadline task, success not overdue)
 		Command command3 = new Command(CommandType.ADD_TASK);
-		DateTime startDate3 = new DateTime(2013, 9, 30, 15, 0, 0);
-		DateTime endDate3 = new DateTime(2013, 9, 30, 16, 0, 0);
+		DateTime startDate3 = new DateTime(2013, 10, 30, 15, 0, 0);
+		DateTime endDate3 = new DateTime(2013, 10, 30, 16, 0, 0);
 		Interval interval3 = new Interval();
 		interval3.setStart(startDate3);
 		interval3.setEnd(endDate3);
@@ -478,7 +469,7 @@ public class Logic {
 		intervalList3.add(interval3);
 		command3.setIntervals(intervalList3);
 		command3.setDescription("CS2105 Test");
-		System.out.println(logic.addTask(command3));
+		System.out.println(logic.addTask(command3)+"\n");
 
 		// Add task test 4 (deadline task, success but overdue)
 		Command command4 = new Command(CommandType.ADD_TASK);
@@ -491,7 +482,7 @@ public class Logic {
 		intervalList4.add(interval4);
 		command4.setIntervals(intervalList4);
 		command4.setDescription("CS2105 Test 2012");
-		System.out.println(logic.addTask(command4));
+		System.out.println(logic.addTask(command4)+"\n");
 
 		// Add task test 5 (floating task, success not overdue)
 		Command command5 = new Command(CommandType.ADD_TASK);
@@ -516,7 +507,7 @@ public class Logic {
 		intervalList5.add(interval5c);
 		command5.setIntervals(intervalList5);
 		command5.setDescription("A floating event!");
-		System.out.println(logic.addTask(command5));
+		System.out.println(logic.addTask(command5)+"\n");
 
 		// Add task test 6 (floating task, success but overdue)
 		Command command6 = new Command(CommandType.ADD_TASK);
@@ -541,7 +532,7 @@ public class Logic {
 		intervalList6.add(interval6c);
 		command6.setIntervals(intervalList6);
 		command6.setDescription("An overdue floating event!");
-		System.out.println(logic.addTask(command6));
+		System.out.println(logic.addTask(command6)+"\n");
 
 		// Add task test 7 (Task with tags)
 		Command command7 = new Command(CommandType.ADD_TASK);
@@ -552,41 +543,41 @@ public class Logic {
 		tags7.add("TGIF");
 		tags7.add("forfun");
 		command7.setTags(tags7);
-		System.out.println(logic.addTask(command7));
+		System.out.println(logic.addTask(command7)+"\n");
 
-		System.out.println(logic.displayTasks());
+		System.out.println(logic.displayTasks()+"\n");
 
 		// Delete task test 8
 		Command command8 = new Command(CommandType.DELETE);
 		command8.setValue("deleteIndex", "1");
-		System.out.println(logic.deleteTask(command8));
+		System.out.println(logic.deleteTask(command8)+"\n");
 
-		System.out.println(logic.displayTasks());
+		System.out.println(logic.displayTasks()+"\n");
 
 		// Help test 9 general
 		Command command9 = new Command(CommandType.HELP);
 		command9.setValue("helpCommand", "");
-		System.out.println(logic.showHelp(command9));
+		System.out.println(logic.showHelp(command9)+"\n");
 
 		// Help test 10 add command
 		Command command10 = new Command(CommandType.HELP);
 		command10.setValue("helpCommand", "add");
-		System.out.println(logic.showHelp(command10));
+		System.out.println(logic.showHelp(command10)+"\n");
 
 		// Done test 11
 		Command command11 = new Command(CommandType.DONE);
 		command11.setValue("doneIndex", "1");
-		System.out.println(logic.markDone(command11));
+		System.out.println(logic.markDone(command11)+"\n");
 
-		System.out.println(logic.displayTasks());
+		System.out.println(logic.displayTasks()+"\n");
 
 		// Edit test 12 change name
 		Command command12 = new Command(CommandType.EDIT_TASK);
 		command12.setDescription("hahahahah");
 		command12.setValue(Constants.EDIT_ATT_LINE, "2");
-		System.out.println(logic.editTask(command12));
+		System.out.println(logic.editTask(command12)+"\n");
 
-		System.out.println(logic.displayTasks());
+		System.out.println(logic.displayTasks()+"\n");
 
 		// Edit test 13 change tags
 		Command command13 = new Command(CommandType.EDIT_TASK);
@@ -595,9 +586,9 @@ public class Logic {
 		tags13.add("Evenmore");
 		command13.setTags(tags13);
 		command13.setValue(Constants.EDIT_ATT_LINE, "6");
-		System.out.println(logic.editTask(command13));
+		System.out.println(logic.editTask(command13)+"\n");
 
-		System.out.println(logic.displayTasks());
+		System.out.println(logic.displayTasks()+"\n");
 
 		// Edit test 14 change deadline (same type)
 		Command command14 = new Command(CommandType.EDIT_TASK);
@@ -605,9 +596,9 @@ public class Logic {
 		DateTime date14 = new DateTime(2012, 11, 11, 23, 59, 59);
 		command14.setDeadline(date14);
 		command14.setValue(Constants.EDIT_ATT_LINE, "1");
-		System.out.println(logic.editTask(command14));
+		System.out.println(logic.editTask(command14)+"\n");
 
-		System.out.println(logic.displayTasks());
+		System.out.println(logic.displayTasks()+"\n");
 
 		// Edit test 15 change deadline (same type)
 		Command command15 = new Command(CommandType.EDIT_TASK);
@@ -624,40 +615,40 @@ public class Logic {
 		tags15.add("important");
 		command15.setTags(tags15);
 		command15.setValue(Constants.EDIT_ATT_LINE, "1");
-		System.out.println(logic.editTask(command15));
+		System.out.println(logic.editTask(command15)+"\n");
 
-		System.out.println(logic.displayTasks());
+		System.out.println(logic.displayTasks()+"\n");
 
 		// Edit test 16 finalise task
 		Command command16 = new Command(CommandType.FINALISE);
 		command16.setValue(Constants.FINALISE_ATT_LINE, "4");
 		command16.setValue(Constants.FINALISE_ATT_INDEX, "3");
-		System.out.println(logic.finaliseTask(command16));
+		System.out.println(logic.finaliseTask(command16)+"\n");
 
-		System.out.println(logic.displayTasks());
+		System.out.println(logic.displayTasks()+"\n");
 
 		// Edit test 17 search task
 		Command command17 = new Command(CommandType.SEARCH);
 		command17.setValue(Constants.TASK_ATT_NAME, "a");
-		System.out.println(logic.searchTasks(command17));
+		System.out.println(logic.searchTasks(command17)+"\n");
 
 		// Delete task test 18
 		Command command18 = new Command(CommandType.DELETE);
 		command18.setValue("deleteIndex", "1");
-		System.out.println(logic.deleteTask(command18));
+		System.out.println(logic.deleteTask(command18)+"\n");
 		
-		System.out.println(logic.searchTasks(command17));
+		System.out.println(logic.searchTasks(command17)+"\n");
 		
 		// Edit test 19 finalise task
 		Command command19 = new Command(CommandType.FINALISE);
 		command19.setValue(Constants.FINALISE_ATT_LINE, "2");
 		command19.setValue(Constants.FINALISE_ATT_INDEX, "3");
-		System.out.println(logic.finaliseTask(command19));
+		System.out.println(logic.finaliseTask(command19)+"\n");
 
-		System.out.println(logic.displayTasks());
+		System.out.println(logic.displayTasks()+"\n");
 		
-		System.out.println(logic.clearTasks());
+		System.out.println(logic.clearTasks()+"\n");
 
-		System.out.println(logic.displayTasks());
+		System.out.println(logic.displayTasks()+"\n");
 	}
 }
