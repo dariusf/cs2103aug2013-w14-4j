@@ -67,6 +67,12 @@ public class Storage implements Closeable {
 	
 	public Storage() throws IOException {
 		this("default.txt");
+		File file = new File(fileName);
+		if (file.exists()) {
+			taskStorage = Json.readFromFile(new File(fileName));
+		} else {
+			taskStorage = new ArrayList<>();
+		}
 	}
 	
 	public void sort() {

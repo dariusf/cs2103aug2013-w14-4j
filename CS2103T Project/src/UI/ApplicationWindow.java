@@ -19,6 +19,7 @@ public class ApplicationWindow {
 	protected Shell shell;
 	private Text input;
 	private Text displayFeedback;
+	private static Logic logic;
 	
 	/**
 	 * Launch the application.
@@ -27,7 +28,8 @@ public class ApplicationWindow {
 	public static void main(String[] args) {
 		try {
 			ApplicationWindow window = new ApplicationWindow();
-			window.open();
+			logic = new Logic();
+			window.open();	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -92,7 +94,7 @@ public class ApplicationWindow {
 				}
 				
 				if (arg0.character == SWT.CR) {
-					Feedback feedbackObj = Logic.executeCommand(userInput);
+					Feedback feedbackObj = logic.executeCommand(userInput);
 					//my stub Feedback feedbackObj = new Feedback(50, CommandType.DISPLAY);
 					System.out.println(userInput);
 					String feedback = feedbackObj.toString();
