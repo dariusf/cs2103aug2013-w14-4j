@@ -3,7 +3,7 @@ package Logic;
 public class Constants {
 	public static final String APP_NAME = "Basket";
 
-	public static String WELCOME_MSG = "Welcome to TextBuddy. %1$s is ready for use";
+	public static String WELCOME_MSG = "Welcome to Basket!";
 
 	public static final String MSG_INVALID_FORMAT = "invalid command format: %1$s";
 	public static final String MSG_ADDED_LINE = "added to %1$s: \"%2$s\"";
