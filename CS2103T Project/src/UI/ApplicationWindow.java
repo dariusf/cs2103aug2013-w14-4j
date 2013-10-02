@@ -95,10 +95,8 @@ public class ApplicationWindow {
 				
 				if (arg0.character == SWT.CR) {
 					Feedback feedbackObj = logic.executeCommand(userInput);
-					//my stub Feedback feedbackObj = new Feedback(50, CommandType.DISPLAY);
 					System.out.println(userInput);
 					String feedback = feedbackObj.toString();
-					//my stub String feedback = convertFeedbackToString();
 					output = output + "\n" + feedback;
 					displayFeedback.setText(output);
 					userInput = "";
@@ -107,10 +105,4 @@ public class ApplicationWindow {
 			}
 		});
 	}
-	
-	//my stub
-	/*private String convertFeedbackToString() {
-		String output = "Hello";
-		return output;
-	}*/
 }
