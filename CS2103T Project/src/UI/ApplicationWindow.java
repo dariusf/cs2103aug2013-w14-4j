@@ -59,14 +59,14 @@ public class ApplicationWindow {
 		shell.setText(Constants.APP_NAME);
 		shell.setLayout(new GridLayout(2, false));
 		
-		displayFeedback = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI);
+		displayFeedback = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.WRAP);
 		displayFeedback.setEnabled(false);
 		GridData gd_feedback = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd_feedback.widthHint = 302;
 		gd_feedback.heightHint = 215;
 		displayFeedback.setLayoutData(gd_feedback);
 		
-		displayTask = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI);
+		displayTask = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.WRAP);
 		displayTask.setEnabled(false);
 		GridData gd_displayTask = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 2);
 		gd_displayTask.widthHint = 153;
