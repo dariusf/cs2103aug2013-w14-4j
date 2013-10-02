@@ -6,6 +6,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
@@ -79,6 +81,20 @@ public class ApplicationWindow {
 	}
 
 	private void enterDriverLoop() {
+		/*input.addVerifyListener(new VerifyListener() {
+
+			@Override
+			public void verifyText(VerifyEvent arg0) {
+				System.out.println(arg0.character);
+				arg0.doit = false;
+				// Allow backspace and delete
+				if (arg0.character == '\u0008' || arg0.character == '\u007F') {
+					arg0.doit = true;
+				}
+			}
+
+		});*/
+		
 		input.addKeyListener(new KeyListener() {
 			String userInput = "";
 			String output = displayWelcomeMessage();
@@ -88,9 +104,18 @@ public class ApplicationWindow {
 
 			@Override
 			public void keyPressed(KeyEvent arg0) {
+				if (arg0.character == '\u0008') {
+					if (userInput.length() != 0) {
+						userInput = userInput.substring(0, userInput.length() - 1);
+						System.out.println("the length is: "+ userInput.length());
+					}
+				}
+				
 				if (arg0.character != SWT.CR) {
-					char characterEntered = arg0.character;
-					userInput = userInput + characterEntered;
+					if (arg0.character != '\u0008') {
+						char characterEntered = arg0.character;			
+						userInput = userInput + characterEntered;
+					}
 				}
 				
 				if (arg0.character == SWT.CR) {
