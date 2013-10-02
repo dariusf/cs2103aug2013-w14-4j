@@ -1,37 +1,35 @@
 package Logic;
 
-import com.ibm.icu.util.RangeValueIterator.Element;
-
 public class Feedback {
 	private CommandType feedbackCommand = null;
 	private String feedbackString = null;
 	private int statusCode = 0;
 	private String statusMessage = null;
 
-	public Feedback(int status, CommandType command) {
+	Feedback(int status, CommandType command) {
 		statusCode = status;
 		feedbackCommand = command;
 	}
 
-	public Feedback(int status, CommandType command, String string) {
+	Feedback(int status, CommandType command, String string) {
 		statusCode = status;
 		feedbackString = string;
 		feedbackCommand = command;
 	}
 
-	public void setStatusCode(int status) {
+	protected void setStatusCode(int status) {
 		statusCode = status;
 	}
 
-	public int getStatusCode() {
+	protected int getStatusCode() {
 		return statusCode;
 	}
 
-	public void setCommand(CommandType command) {
+	protected void setCommand(CommandType command) {
 		feedbackCommand = command;
 	}
 
-	public CommandType getCommand() {
+	protected CommandType getCommand() {
 		return feedbackCommand;
 	}
 
