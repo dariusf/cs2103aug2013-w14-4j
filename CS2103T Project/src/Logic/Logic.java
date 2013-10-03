@@ -54,10 +54,10 @@ public class Logic {
 		}
 	}
 
-	protected static Feedback addTask(Command command) {
+	public static Feedback addTask(Command command) {
 		Task newTask = new Task(command);
 		storage.add(newTask);
-
+		isDynamicIndex = false;
 		Feedback feedback = null;
 		if (isTaskOver(newTask)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
@@ -156,7 +156,7 @@ public class Logic {
 		return feedback;
 	}
 
-	protected static Feedback displayTasks() {
+	public static Feedback displayTasks() {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
 			StringBuilder output = new StringBuilder();
@@ -459,7 +459,13 @@ public class Logic {
 	}
 
 	protected static void exitProgram() {
-		System.exit(0);
+		try {
+			storage.close();
+			System.exit(0);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 
 	protected static boolean isTaskOver(Task task) {
