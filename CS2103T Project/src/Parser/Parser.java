@@ -203,7 +203,9 @@ public class Parser {
 
 	private Command createHelpCommand() {
 		Command command = new Command(CommandType.HELP);
-		command.setValue("helpCommand", getCurrentToken().contents);
+		if (hasTokensLeft()) {
+			command.setValue("helpCommand", getCurrentToken().contents);
+		}
 		return command;
 	}
 
