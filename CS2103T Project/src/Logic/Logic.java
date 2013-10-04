@@ -1,4 +1,4 @@
-package Logic;
+package logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,8 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import Parser.Parser;
-import Storage.Storage;
+
+import parser.Parser;
+import storage.Storage;
 
 public class Logic {
 

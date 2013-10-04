@@ -1,4 +1,8 @@
-package UI;
+package ui;
+
+import logic.Constants;
+import logic.Feedback;
+import logic.Logic;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -9,9 +13,6 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
-import Logic.Constants;
-import Logic.Feedback;
-import Logic.Logic;
 
 public class ApplicationWindow {
 

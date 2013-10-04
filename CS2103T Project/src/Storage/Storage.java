@@ -1,4 +1,4 @@
-package Storage;
+package storage;
 
 import java.io.Closeable;
 import java.io.File;
@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-import Logic.Task;
+import logic.Task;
+
 
 public class Storage implements Closeable {
 	

@@ -1,4 +1,4 @@
-package Logic;
+package logic;
 
 public class Constants {
 	public static final String APP_NAME = "Basket";

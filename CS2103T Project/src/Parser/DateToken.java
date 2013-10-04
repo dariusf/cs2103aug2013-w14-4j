@@ -1,4 +1,4 @@
-package Parser;
+package parser;
 
 import java.util.Calendar;
 import java.util.regex.Matcher;

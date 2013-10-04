@@ -1,4 +1,4 @@
-package Parser;
+package parser;
 
 class WordToken extends Token {
 

@@ -1,4 +1,4 @@
-package Logic;
+package logic;
 
 import java.io.ObjectInputStream.GetField;
 import java.text.ParseException;
