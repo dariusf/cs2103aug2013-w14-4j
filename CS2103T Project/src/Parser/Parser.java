@@ -20,6 +20,7 @@ public class Parser {
 
 	public static void main(String[] args) {
 		Command command = new Parser().parse("edit 1 go home at 10:00 am");
+		command = new Parser().parse("add task 3 by: 10:00pm");
 		command = new Parser().parse("delete 1");
 		command = new Parser().parse("search haha hi there");
 		
