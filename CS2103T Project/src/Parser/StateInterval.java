@@ -1,4 +1,4 @@
-package Parser;
+package parser;
 
 class StateInterval implements Parser.State {
 

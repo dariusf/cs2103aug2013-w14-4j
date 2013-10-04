@@ -1,4 +1,4 @@
-package Parser;
+package parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
 
+import logic.Command;
+import logic.CommandType;
+import logic.Constants;
+import logic.Interval;
+
 import org.joda.time.DateTime;
 
-import Logic.Command;
-import Logic.CommandType;
-import Logic.Constants;
-import Logic.Interval;
 
 public class Parser {
 	

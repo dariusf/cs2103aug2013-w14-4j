@@ -1,4 +1,4 @@
-package Storage;
+package storage;
 
 import java.io.File;
 import java.io.FileReader;
@@ -7,13 +7,14 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import logic.Constants;
+import logic.Interval;
+import logic.Task;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 
-import Logic.Constants;
-import Logic.Interval;
-import Logic.Task;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

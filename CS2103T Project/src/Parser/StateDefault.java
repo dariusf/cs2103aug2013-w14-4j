@@ -1,6 +1,6 @@
-package Parser;
+package parser;
 
-import Logic.Interval;
+import logic.Interval;
 
 
 

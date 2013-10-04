@@ -1,4 +1,4 @@
-package Logic;
+package logic;
 
 public enum CommandType {
 	INVALID, ADD_TASK, EDIT_TASK, DISPLAY, DELETE, CLEAR, EXIT, SORT, SEARCH, UNDO, FINALISE, HELP, DONE;

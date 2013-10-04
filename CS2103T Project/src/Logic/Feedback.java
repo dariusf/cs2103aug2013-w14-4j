@@ -1,4 +1,4 @@
-package Logic;
+package logic;
 
 public class Feedback {
 	private CommandType feedbackCommand = null;

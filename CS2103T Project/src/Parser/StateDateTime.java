@@ -1,11 +1,13 @@
-package Parser;
+package parser;
 
 import java.util.ArrayList;
 
+import logic.Interval;
+
 import org.joda.time.DateTime;
 
-import Logic.Interval;
-import Parser.Parser.State;
+import parser.Parser.State;
+
 
 class StateDateTime implements Parser.State {
 
