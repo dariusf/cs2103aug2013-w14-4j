@@ -25,7 +25,7 @@ import logic.Task;
 import storage.Json;
 import storage.Storage;
 
-public class StorageTests {
+public class StorageTest {
 	
 	private static String dateFormatString = "dd/MM/yy hh:mm a";
 	
