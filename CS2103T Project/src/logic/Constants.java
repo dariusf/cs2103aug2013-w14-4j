@@ -69,13 +69,13 @@ public class Constants {
 			+ "search: Search for existing task(s)\n"
 			+ "sort: Sort the tasks based on dates\n"
 			+ "undo: Return to the previous edit\n"
-			+ "help: Brings up the help guide\n";
-
+			+ "help: Brings up the help guide";
 	public static final String HELP_ADD_TASK = "Add Task:\n"
 			+ "Adds a new task into the database. You may add a timed task, untimed task, floating task or deadline task.\n\n"
 			+ "Command format: \n"
-			+ "add Perform April Fool's Prank in Office on 01/04 at 1200 #forfun: Adds a new timed task with the description 'Perform April Fool's Prank in Office' from 1200 to 1300 on 1/4 this year."
-			+ "";
+			+ "add Perform April Fool's Prank in Office on 01/04 at 1200 #forfun: Adds a new timed task with the description 'Perform April Fool's Prank in Office' from 1200 to 1300 on 1/4 this year.\n"
+			+ "add Save Princess Peach by 22/12/2012: Adds a new deadline task with the description 'Save Princess Peach' before 2359 on 22/12/2012\n"
+			+ "add Meet Boss on 11:00 am or 12:00 pm: Adds a new flaoting task with the description 'Meet Boss' from 11 am to 12 pm or 12 pm to 1pm today.";
 	public static final String HELP_DISPLAY = "Display Task:\n"
 			+ "Displays all tasks in the database. \n\n" + "Command format: \n"
 			+ "display: List all tasks from the database.";
@@ -87,16 +87,39 @@ public class Constants {
 	public static final String HELP_SORT = "Sort Tasks:\n"
 			+ "Sorts all the tasks in the database based on the dates of the tasks, with the earliest one listed first.\n\n"
 			+ "Command format: \n" + "sort: Sorts the database";
-	public static final String HELP_DELETE = "";
-	public static final String HELP_EDIT_TASK = "";
-	public static final String HELP_CLEAR = "";
-	public static final String HELP_UNDO = "";
+	public static final String HELP_DELETE = "Delete Task:\n"
+			+ "Deletes a task specified by the index of the task.\n\n"
+			+ "Command format: \n"
+			+ "delete 1: Deletes the task that corresponds to index 1.";
+	public static final String HELP_EDIT_TASK = "Edit Tasks:\n"
+			+ "Edits the task specified by the index of the task.\n\n"
+			+ "Command format:\n"
+			+ "edit 1 Awesome Task!: Edits name of the task that corresponds to index 1 to 'Awesome Task!'.\n"
+			+ "edit 2 by 12:00 pm 30/10/2013: Changes the task that corresponds to index 2 to a deadline task.";
+	public static final String HELP_CLEAR = "Clear Task:\n"
+			+ "Clears the tasks in the database.\n\n" +
+			"Command format:\n"
+			+ "clear: Clears all the tasks in the database.\n"
+			+ "clear done: Clears all the completed tasks in the database.";
+	public static final String HELP_UNDO = "Undo action:\n"
+			+ "Undo the most recent action. Multiple undos are allowed.\n\n"
+			+ "Command format:\n" + "undo: Undo the most recent change.";
 	public static final String HELP_DONE = "Mark as Done:\n"
 			+ "Marks a completed task as done. \n\n" + "Command format: \n"
 			+ "done 2: Mark the task with id 2 as done.";
-	public static final String HELP_FINALISE = "";
-	public static final String HELP_SEARCH = "";
-	public static final String HELP_EXIT = "";
+	public static final String HELP_FINALISE = "Finalise timing:\n"
+			+ "Finalise the timing of a floating task.\n\n"
+			+ "Command format:\n"
+			+ "finalise 1 2: Set the slot 2 as the finalised timing for the task that corresponds to index 1.";
+	public static final String HELP_SEARCH = "Search tasks:\n"
+			+ "Searches tasks based on the keyword input.\n\n"
+			+ "Command format:\n"
+			+ "search boss: Searches and displays all tasks with name containing the word boss\n"
+			+ "search #homework: Displays all tasks with the tag #homework\n"
+			+ "search 1/1/2014: Displays all tasks on 1/1/2014";
+	public static final String HELP_EXIT = "Exit Application:\n"
+			+ "Exits application.\n\n" + "Command format:\n"
+			+ "exit: Quits applicatoin.";
 
 	public static final int SC_SUCCESS = 10;
 	public static final int SC_SUCCESS_TASK_OVERDUE = 11;

@@ -78,7 +78,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid add (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}
 
 	private String editFeedback() {
@@ -97,7 +97,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid edit (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}
 
 	private String displayFeedback() {
@@ -108,7 +108,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid display (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}
 
 	private String deleteFeedback() {
@@ -121,7 +121,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid delete (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}
 
 	private String clearFeedback() {
@@ -132,7 +132,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid clear (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}
 
 	private String sortFeedback() {
@@ -143,7 +143,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid sort (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}
 
 	private String searchFeedback() {
@@ -158,7 +158,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid search (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}
 
 	private String invalidFeedback() {
@@ -167,7 +167,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid command (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}
 
 	private String undoFeedback() {
@@ -178,7 +178,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid undo (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}
 
 	private String finaliseFeedback() {
@@ -201,7 +201,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid finalise (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}	
 
 	private String helpFeedback() {
@@ -210,7 +210,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid help (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}
 
 	private String doneFeedback() {
@@ -225,6 +225,6 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid done (this should not happen!)";
 		}
-		return statusMessage;
+		return statusMessage+"\n";
 	}
 }
