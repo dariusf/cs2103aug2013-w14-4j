@@ -1,4 +1,4 @@
-package UnitTests;
+package test;
 
 import static org.junit.Assert.*;
 
@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import Logic.Command;
-import Logic.CommandType;
-import Logic.Interval;
-import Logic.Logic;
+import logic.Command;
+import logic.CommandType;
+import logic.Interval;
+import logic.Logic;
 
 public class LogicTest {
 
