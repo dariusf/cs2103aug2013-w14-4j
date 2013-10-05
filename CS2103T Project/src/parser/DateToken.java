@@ -38,7 +38,7 @@ public class DateToken extends Token {
 			}
 		}
 	}
-	
+
 	public String dateString() {
 		return day + "/" + month + "/" + Integer.toString(year).substring(2);
 	}

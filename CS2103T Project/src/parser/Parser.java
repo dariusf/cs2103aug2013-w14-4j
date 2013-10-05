@@ -272,11 +272,21 @@ public class Parser {
 	}
 
 	private Command createNumericalCommand(CommandType commandType) {
-		int index = Integer.parseInt(getCurrentToken().contents);
-		
-		Command command = new Command(commandType);
-		command.setValue(commandType.toString().toLowerCase() + "Index", Integer.toString(index));
-		return command;
+		if (hasTokensLeft()) {
+			int index;
+			try {
+				index = Integer.parseInt(getCurrentToken().contents);
+
+				Command command = new Command(commandType);
+				command.setValue(commandType.toString().toLowerCase() + "Index", Integer.toString(index));
+				return command;
+			} catch (NumberFormatException e) {
+				return new Command(CommandType.INVALID);
+			}
+		}
+		else {
+			return new Command(CommandType.INVALID);
+		}
 	}
 
 	public static CommandType determineCommandType(String enumString) {
