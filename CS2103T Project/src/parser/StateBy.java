@@ -40,10 +40,12 @@ class StateBy implements Parser.State {
 			for (Token token : results) {
 //				System.out.println(token.toString());
 				if (token instanceof DateToken) {
-					parser.deadline = parser.deadline.withDate(((DateToken) token).year, ((DateToken) token).month, ((DateToken) token).day);
+//					parser.deadline = parser.deadline.withDate(((DateToken) token).year, ((DateToken) token).month, ((DateToken) token).day);
+					parser.deadline = ((DateToken) token).mergeInto(parser.deadline);
 				}
 				else {
-					parser.deadline = parser.deadline.withTime(((TimeToken) token).hour, ((TimeToken) token).minute, 0, 0);
+					parser.deadline = ((TimeToken) token).mergeInto(parser.deadline);
+//					parser.deadline = parser.deadline.withTime(((TimeToken) token).hour, ((TimeToken) token).minute, 0, 0);
 				}
 			}
 		}

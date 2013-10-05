@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
 
-class DateToken extends Token {
+public class DateToken extends Token {
 
 	private static final String REGEX_DATE = "(0?[1-9]|[12][0-9]|3[01])([/-])(1[012]|0?[1-9])(\\2((19|20)?\\d\\d))?";
 	private static Pattern datePattern = Pattern.compile(REGEX_DATE);
@@ -46,8 +46,12 @@ class DateToken extends Token {
 	public String toString() {
 		return "Date " + super.toString();
 	}
+	
+	public DateTime mergeInto(DateTime currentDateTime) {
+		return currentDateTime.withDate(year, month, day);
+	}
 
-	public DateTime toDateTime() {
-		return new DateTime().withDate(year, month, day);
+	public DateTime toDateTime(boolean start) {
+		return mergeInto(new DateTime()).withTime(start ? 0 : 23, start ? 0 : 59, 0, 0);
 	}
 }

@@ -58,23 +58,6 @@ public class Command {
 		}
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Command2 [commandType=");
-		builder.append(commandType);
-		builder.append(", description=");
-		builder.append(description);
-		builder.append(", deadline=");
-		builder.append(deadline);
-		builder.append(", intervals=");
-		builder.append(intervals);
-		builder.append(", commandAttributes=");
-		builder.append(commandAttributes);
-		builder.append("]");
-		return builder.toString();
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -99,4 +82,53 @@ public class Command {
 		this.intervals = intervals;
 	}
 
+	@Override
+	public String toString() {
+		return "Command [commandType=" + commandType + ", description="
+				+ description + ", deadline=" + deadline + ", tags=" + tags
+				+ ", intervals=" + intervals + ", commandAttributes="
+				+ commandAttributes + "]";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Command other = (Command) obj;
+		
+		if (commandAttributes == null) {
+			if (other.commandAttributes != null)
+				return false;
+		} else if (!commandAttributes.equals(other.commandAttributes))
+			return false;
+		if (commandType != other.commandType)
+			return false;
+		if (deadline == null) {
+			if (other.deadline != null)
+				return false;
+		} else if (!deadline.equals(other.deadline))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (intervals == null) {
+			if (other.intervals != null)
+				return false;
+		} else if (!intervals.equals(other.intervals))
+			return false;
+		if (tags == null) {
+			if (other.tags != null)
+				return false;
+		} else if (!tags.equals(other.tags))
+			return false;
+		return true;
+	}
+
+	
 }

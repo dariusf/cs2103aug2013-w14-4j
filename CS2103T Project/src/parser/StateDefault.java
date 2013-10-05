@@ -10,7 +10,7 @@ class StateDefault implements Parser.State {
 	StringBuilder words;
 	private final Parser parser;
 	
-	Interval tenuous = new Interval();
+	Interval onAtUntilInterval = new Interval();
 	
 	public StateDefault(Parser parser) {
 		this.parser = parser;
@@ -55,11 +55,11 @@ class StateDefault implements Parser.State {
 //		System.out.println("Words: " + words.toString().trim());
 		parser.text = words.toString().trim();
 		
-		if (tenuous.hasStart()) {
-			if (!tenuous.hasEnd()) {
-				tenuous.normalizeEnd();
-			}
-			parser.intervals.add(tenuous);
+		if (onAtUntilInterval.isSet()) {
+//			if (!onAtUntilInterval.hasEnd()) {
+//				onAtUntilInterval.normalizeEnd();
+//			}
+			parser.intervals.add(onAtUntilInterval);
 		}
 	}
 

@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
 
-class TimeToken extends Token {
+public class TimeToken extends Token {
 
 	private static final String REGEX_TIME = "(1[012]|[1-9]):([0-5][0-9])\\s?(?i)(am|pm)|([01]?[0-9]|2[0-3]):([0-5][0-9])";
 	private static Pattern timePattern = Pattern.compile(REGEX_TIME);
@@ -59,7 +59,11 @@ class TimeToken extends Token {
 		return "Time " + contents;
 	}
 	
+	public DateTime mergeInto(DateTime currentDateTime) {
+		return currentDateTime.withTime(hour, minute, 0, 0);
+	}
+	
 	public DateTime toDateTime() {
-		return new DateTime().withTime(hour, minute, 0, 0);
+		return mergeInto(new DateTime());
 	}
 }

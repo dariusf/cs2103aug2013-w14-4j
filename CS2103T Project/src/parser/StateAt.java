@@ -35,15 +35,25 @@ class StateAt implements Parser.State {
 		}
 		else {
 //			System.out.println("At:");
-			for (TimeToken token : results) {
-				if (parent.tenuous.getStart() == null) {
-					parent.tenuous.setStart(token.toDateTime());
-				}
-				else {
-					DateTime t = token.toDateTime();
-					parent.tenuous.setStart(parent.tenuous.getStart().withTime(t.getHourOfDay(), t.getMinuteOfHour(), 0, 0));
-				}
+			for (TimeToken token : results) { // TODO: only takes one token so why a list?
+				
+//				DateTime intervalStart = parent.onAtUntilInterval.getStart();
+//
+//				if (intervalStart == null) {
+//					parent.onAtUntilInterval.setStart(token.toDateTime());
+//				}
+//				else {
+//					parent.onAtUntilInterval.setStart(token.mergeInto(intervalStart));
+//				}
+//				
+//				intervalStart = parent.onAtUntilInterval.getStart();
+//				DateTime now = new DateTime();
+//				if (intervalStart.isBefore(now)) {
+//					parent.onAtUntilInterval.setStart(intervalStart.plusDays(1));
+//				}
+				parent.onAtUntilInterval.setStartTime(token);
 			}
+//			parser.atTokens.addAll(results);
 		}
 	}
 
