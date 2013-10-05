@@ -1,4 +1,4 @@
-package UnitTests;
+package test;
 
 import static org.junit.Assert.*;
 
@@ -18,11 +18,11 @@ import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.DateTimeParser;
 import org.junit.Test;
 
-import Logic.Constants;
-import Logic.Interval;
-import Logic.Task;
-import Storage.Json;
-import Storage.Storage;
+import logic.Constants;
+import logic.Interval;
+import logic.Task;
+import storage.Json;
+import storage.Storage;
 
 public class StorageTests {
 	

@@ -1,13 +1,13 @@
 
-package UnitTests;
+package test;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import Logic.Command;
-import Logic.CommandType;
-import Logic.Constants;
-import Parser.Parser;
+import logic.Command;
+import logic.CommandType;
+import logic.Constants;
+import parser.Parser;
 
 public class ParserTests {
 
