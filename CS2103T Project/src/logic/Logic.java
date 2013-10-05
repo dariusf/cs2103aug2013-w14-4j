@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import parser.Interval;
 import parser.Parser;
 import storage.Storage;
 
@@ -487,7 +488,7 @@ public class Logic {
 	protected static boolean isFloatingTaskOver(List<Interval> possibleTime) {
 		boolean isAllSlotOver = true;
 		for (Interval slot : possibleTime) {
-			if (!isTimePastAlready(slot.getEnd())) {
+			if (!isTimePastAlready(slot.getEndDateTime())) {
 				isAllSlotOver = false;
 			}
 		}
@@ -527,8 +528,8 @@ public class Logic {
 		DateTime startDate3 = new DateTime(2013, 10, 30, 15, 0, 0);
 		DateTime endDate3 = new DateTime(2013, 10, 30, 16, 0, 0);
 		Interval interval3 = new Interval();
-		interval3.setStart(startDate3);
-		interval3.setEnd(endDate3);
+		interval3.setStartDateTime(startDate3);
+		interval3.setEndDateTime(endDate3);
 		ArrayList<Interval> intervalList3 = new ArrayList<Interval>();
 		intervalList3.add(interval3);
 		command3.setIntervals(intervalList3);
@@ -540,8 +541,8 @@ public class Logic {
 		DateTime startDate4 = new DateTime(2012, 9, 30, 15, 0, 0);
 		DateTime endDate4 = new DateTime(2012, 9, 30, 16, 0, 0);
 		Interval interval4 = new Interval();
-		interval4.setStart(startDate4);
-		interval4.setEnd(endDate4);
+		interval4.setStartDateTime(startDate4);
+		interval4.setEndDateTime(endDate4);
 		ArrayList<Interval> intervalList4 = new ArrayList<Interval>();
 		intervalList4.add(interval4);
 		command4.setIntervals(intervalList4);
@@ -553,18 +554,18 @@ public class Logic {
 		DateTime startDate5a = new DateTime(2013, 10, 30, 15, 0, 0);
 		DateTime endDate5a = new DateTime(2013, 10, 30, 16, 0, 0);
 		Interval interval5a = new Interval();
-		interval5a.setStart(startDate5a);
-		interval5a.setEnd(endDate5a);
+		interval5a.setStartDateTime(startDate5a);
+		interval5a.setEndDateTime(endDate5a);
 		DateTime startDate5b = new DateTime(2013, 10, 30, 16, 0, 0);
 		DateTime endDate5b = new DateTime(2013, 10, 30, 17, 0, 0);
 		Interval interval5b = new Interval();
-		interval5b.setStart(startDate5b);
-		interval5b.setEnd(endDate5b);
+		interval5b.setStartDateTime(startDate5b);
+		interval5b.setEndDateTime(endDate5b);
 		DateTime startDate5c = new DateTime(2013, 10, 30, 17, 0, 0);
 		DateTime endDate5c = new DateTime(2013, 10, 30, 18, 0, 0);
 		Interval interval5c = new Interval();
-		interval5c.setStart(startDate5c);
-		interval5c.setEnd(endDate5c);
+		interval5c.setStartDateTime(startDate5c);
+		interval5c.setEndDateTime(endDate5c);
 		ArrayList<Interval> intervalList5 = new ArrayList<Interval>();
 		intervalList5.add(interval5a);
 		intervalList5.add(interval5b);
@@ -578,18 +579,18 @@ public class Logic {
 		DateTime startDate6a = new DateTime(2012, 10, 30, 15, 0, 0);
 		DateTime endDate6a = new DateTime(2012, 10, 30, 16, 0, 0);
 		Interval interval6a = new Interval();
-		interval6a.setStart(startDate6a);
-		interval6a.setEnd(endDate6a);
+		interval6a.setStartDateTime(startDate6a);
+		interval6a.setEndDateTime(endDate6a);
 		DateTime startDate6b = new DateTime(2012, 10, 30, 16, 0, 0);
 		DateTime endDate6b = new DateTime(2012, 10, 30, 17, 0, 0);
 		Interval interval6b = new Interval();
-		interval6b.setStart(startDate6b);
-		interval6b.setEnd(endDate6b);
+		interval6b.setStartDateTime(startDate6b);
+		interval6b.setEndDateTime(endDate6b);
 		DateTime startDate6c = new DateTime(2012, 10, 30, 17, 0, 0);
 		DateTime endDate6c = new DateTime(2012, 10, 30, 18, 0, 0);
 		Interval interval6c = new Interval();
-		interval6c.setStart(startDate6c);
-		interval6c.setEnd(endDate6c);
+		interval6c.setStartDateTime(startDate6c);
+		interval6c.setEndDateTime(endDate6c);
 		ArrayList<Interval> intervalList6 = new ArrayList<Interval>();
 		intervalList6.add(interval6a);
 		intervalList6.add(interval6b);
@@ -670,8 +671,8 @@ public class Logic {
 		DateTime startDate15 = new DateTime(2013, 10, 14, 0, 0, 0);
 		DateTime endDate15 = new DateTime(2013, 11, 10, 23, 59, 59);
 		Interval interval15 = new Interval();
-		interval15.setStart(startDate15);
-		interval15.setEnd(endDate15);
+		interval15.setStartDateTime(startDate15);
+		interval15.setEndDateTime(endDate15);
 		ArrayList<Interval> intervalList15 = new ArrayList<Interval>();
 		intervalList15.add(interval15);
 		command15.setIntervals(intervalList15);

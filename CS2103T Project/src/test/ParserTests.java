@@ -9,8 +9,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import logic.Command;
 import logic.CommandType;
-import logic.Constants;
-import logic.Interval;
+import parser.Interval;
 import parser.Parser;
 
 public class ParserTests {
