@@ -19,23 +19,30 @@ public class Parser {
 	private static final boolean PRINT_LEXER_TOKENS = false;
 
 	public static void main(String[] args) {
-		Command command = new Parser().parse("edit 1 go home at 10:00 am");
-		command = new Parser().parse("add task 3 by: 10:00pm");
-		command = new Parser().parse("delete 1");
-		command = new Parser().parse("search haha hi there");
-		
-		command = new Parser().parse("clear");
-		command = new Parser().parse("clear done");
-		command = new Parser().parse("clear aklsjdksd");
-		command = new Parser().parse("help done asjdlkasd");
-		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
-		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
-		
-		Scanner scanner = new Scanner(System.in);
-		while(true){
-			String message = scanner.nextLine();
-			System.out.println(new Parser().parse(message));
-		}
+//		Command command = new Parser().parse("add task 3 by: 10:00pm");
+//		command = new Parser().parse("add task at 2:00pm");
+//		command = new Parser().parse("add task at 10:00pm");
+//		
+//		command = new Parser().parse("add task on 1/2/13");
+//		command = new Parser().parse("add task on 5/10/13");
+//		command = new Parser().parse("add task on 6/10/13");
+//		
+//		command = new Parser().parse("edit 1 go home at 10:00 am");
+//		command = new Parser().parse("delete 1");
+//		command = new Parser().parse("search haha hi there");
+//		
+//		command = new Parser().parse("clear");
+//		command = new Parser().parse("clear done");
+//		command = new Parser().parse("clear aklsjdksd");
+//		command = new Parser().parse("help done asjdlkasd");
+//		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
+//		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
+//		
+//		Scanner scanner = new Scanner(System.in);
+//		while(true){
+//			String message = scanner.nextLine();
+//			System.out.println(new Parser().parse(message));
+//		}
 //		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
 //		command = new Parser().parse("add go home by 10:00 am");
 //		command = new Parser().parse("add go home at at 10:00 am on 1/1/12");
@@ -100,6 +107,13 @@ public class Parser {
 	}
 
 	// Components of the command that will be built up gradually
+	
+//	ArrayList<TimeToken> atTokens = new ArrayList<>();
+//	ArrayList<DateToken> onTokens = new ArrayList<>();
+//	ArrayList<Token> untilTokens = new ArrayList<>();
+//	ArrayList<Token> byTokens = new ArrayList<>();
+//	ArrayList<IntervalToken> intervalTokens = new ArrayList<>();
+	
 	DateTime deadline = null;
 	ArrayList<Interval> intervals = new ArrayList<>();
 	String text = "";
@@ -197,6 +211,40 @@ public class Parser {
 		}
 	}
 	
+	private Command createComplexCommand(CommandType commandType) {
+		pushState(new StateDefault(this));
+
+		while (hasTokensLeft()) {
+			State currentState = parseStates.peek();
+
+			if (currentState.popCondition()) {
+				popState();
+			} else {
+				Token token = getCurrentToken();
+				currentState.processToken(token);
+			}
+		}
+
+		// pop the remaining states from the stack, in case we ran out of tokens
+		// before they all were done
+		while (parseStates.size() > 0) {
+			popState();
+		}
+
+		Command command = new Command(commandType);
+				
+		command.setDeadline(deadline);
+		command.setDescription(text);
+		command.setIntervals(intervals);
+		
+		// TODO: factor this out
+		if (commandType == CommandType.EDIT_TASK) {
+			command.setValue("editIndex", Integer.toString(editIndex));
+		}
+		
+		return command;
+	}
+	
 	private Command createClearCommand() {
 		Command command = createArgumentlessCommand(CommandType.CLEAR);
 		command.setValue("clearDone", Boolean.toString(clearDone));
@@ -233,39 +281,6 @@ public class Parser {
 		
 		Command command = new Command(commandType);
 		command.setValue(commandType.toString().toLowerCase() + "Index", Integer.toString(index));
-		return command;
-	}
-	
-	private Command createComplexCommand(CommandType commandType) {
-		pushState(new StateDefault(this));
-
-		while (hasTokensLeft()) {
-			State currentState = parseStates.peek();
-
-			if (currentState.popCondition()) {
-				popState();
-			} else {
-				Token token = getCurrentToken();
-				currentState.processToken(token);
-			}
-		}
-
-		// pop the remaining states from the stack, in case we ran out of tokens
-		// before they all were done
-		while (parseStates.size() > 0) {
-			popState();
-		}
-
-		Command command = new Command(commandType);
-		command.setDeadline(deadline);
-		command.setDescription(text);
-		command.setIntervals(intervals);
-		
-		// TODO: factor this out
-		if (commandType == CommandType.EDIT_TASK) {
-			command.setValue("editIndex", Integer.toString(editIndex));
-		}
-		
 		return command;
 	}
 

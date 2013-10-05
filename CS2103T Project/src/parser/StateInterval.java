@@ -26,9 +26,14 @@ class StateInterval implements Parser.State {
 		Token token = this.parser.getCurrentToken();
 		return (token instanceof WordToken && !token.contents.equals("or")) || !this.parser.hasTokensLeft();
 	}
+	
+	boolean added = false;
 
 	@Override
 	public void onPop() {
+		if (!added) {
+			parent.words.append("from ");
+		}
 	}
 
 	@Override

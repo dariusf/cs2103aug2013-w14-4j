@@ -6,9 +6,6 @@ import org.joda.time.DateTime;
 
 class StateOn implements Parser.State {
 
-	/**
-	 * 
-	 */
 	private final Parser parser;
 	ArrayList<DateToken> results;
 	StateDefault parent;
@@ -39,15 +36,17 @@ class StateOn implements Parser.State {
 		else {
 //			System.out.println("On:");
 			for (DateToken token : results) {
+				parent.onAtUntilInterval.setStartDate(token);
 //				System.out.println(token.toString());
-				if (parent.tenuous.getStart() == null) {
-					parent.tenuous.setStart(token.toDateTime());
-				}
-				else {
-					DateTime d = token.toDateTime();
-					parent.tenuous.setStart(parent.tenuous.getStart().withDate(d.getYear(), d.getMonthOfYear(), d.getDayOfMonth()));
-				}
+//				if (parent.onAtUntilInterval.getStart() == null) {
+//					parent.onAtUntilInterval.setStart(token.toDateTime(true));
+//				}
+//				else {
+//					DateTime d = token.toDateTime(true);
+//					parent.onAtUntilInterval.setStart(parent.onAtUntilInterval.getStart().withDate(d.getYear(), d.getMonthOfYear(), d.getDayOfMonth()));
+//				}
 			}
+//			parser.onTokens.addAll(results);
 		}
 	}
 

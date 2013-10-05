@@ -36,8 +36,14 @@ class StateUntil implements Parser.State {
 //			System.out.println("Until:");
 			for (Token token : results) {
 //				System.out.println(token.toString());
-				if (token instanceof DateToken) parent.tenuous.setEnd(((DateToken) token).toDateTime());
-				else if (token instanceof TimeToken) parent.tenuous.setEnd(((TimeToken) token).toDateTime());
+				if (token instanceof DateToken) {
+//					parent.onAtUntilInterval.setEnd(((DateToken) token).toDateTime(false));
+					parent.onAtUntilInterval.setEndDate((DateToken) token);
+				}
+				else if (token instanceof TimeToken) {
+					parent.onAtUntilInterval.setEndTime((TimeToken) token);
+//					parent.onAtUntilInterval.setEnd(((TimeToken) token).toDateTime());
+				}
 			}
 		}
 	}
