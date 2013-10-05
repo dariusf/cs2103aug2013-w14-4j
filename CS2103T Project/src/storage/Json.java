@@ -8,12 +8,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import logic.Constants;
-import logic.Interval;
 import logic.Task;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
+
+import parser.Interval;
 
 
 import com.google.gson.Gson;

@@ -2,13 +2,6 @@ package parser;
 
 import java.util.ArrayList;
 
-import logic.Interval;
-
-import org.joda.time.DateTime;
-
-import parser.Parser.State;
-
-
 class StateDateTime implements Parser.State {
 
 	private final Parser parser;
@@ -24,6 +17,9 @@ class StateDateTime implements Parser.State {
 	
 	@Override
 	public void processToken(Token t) {
+		assert !popCondition(); // until 'to' is found, t can be anything,
+								// but it has to be a DateToken or TimeToken after
+		
 		if (t instanceof TimeToken || t instanceof DateToken) {
 			if (!foundTo) {
 				from.add(t);
@@ -51,55 +47,21 @@ class StateDateTime implements Parser.State {
 	@Override
 	public void onPop() {
 		Interval that = new Interval();
-//		System.out.println("From:");
 		for (Token token : from) {
 			if (token instanceof DateToken) {
-				that.setStartDate((DateToken) token);
-//				if (that.getStart() == null) {
-//					that.setStart(((DateToken) token).toDateTime(true));
-//				}
-//				else {
-//					DateTime d = ((DateToken) token).toDateTime(true);
-//					that.setStart(that.getStart().withDate(d.getYear(), d.getMonthOfYear(), d.getDayOfMonth()));
-//				}
+				that.changeStartDate((DateToken) token);
 			}
 			else if (token instanceof TimeToken) {
-				that.setStartTime((TimeToken) token);
-				
-//				if (that.getStart() == null) {
-//					that.setStart(((TimeToken) token).toDateTime());
-//				}
-//				else {
-//					DateTime t = ((TimeToken) token).toDateTime();
-//					that.setStart(that.getStart().withTime(t.getHourOfDay(), t.getMinuteOfHour(), 0, 0));
-//				}
+				that.changeStartTime((TimeToken) token);
 			}
-//			System.out.println(token.toString());
 		}
-//		System.out.println("To:");
 		for (Token token : to) {
 			if (token instanceof DateToken) {
-				that.setEndDate((DateToken) token);
-//				if (that.getEnd() == null) {
-//					that.setEnd(((DateToken) token).toDateTime(false));
-//				}
-//				else {
-//					DateTime d = ((DateToken) token).toDateTime(false);
-//					that.setEnd(that.getEnd().withDate(d.getYear(), d.getMonthOfYear(), d.getDayOfMonth()));
-//				}
+				that.changeEndDate((DateToken) token);
 			}
 			else if (token instanceof TimeToken) {
-				that.setEndTime((TimeToken) token);
-
-//				if (that.getEnd() == null) {
-//					that.setEnd(((TimeToken) token).toDateTime());
-//				}
-//				else {
-//					DateTime t = ((TimeToken) token).toDateTime();
-//					that.setEnd(that.getEnd().withTime(t.getHourOfDay(), t.getMinuteOfHour(), 0, 0));
-//				}
+				that.changeEndTime((TimeToken) token);
 			}
-//			System.out.println(token.toString());
 		}
 		parser.intervals.add(that);
 		parent.added = from.size() > 0 || to.size() > 0;
@@ -107,8 +69,6 @@ class StateDateTime implements Parser.State {
 
 	@Override
 	public void onPush() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

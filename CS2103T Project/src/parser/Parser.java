@@ -3,51 +3,46 @@ package parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Stack;
-
 import logic.Command;
 import logic.CommandType;
 import logic.Constants;
-import logic.Interval;
-
 import org.joda.time.DateTime;
-
 
 public class Parser {
 	
 	private static final boolean PRINT_LEXER_TOKENS = false;
 
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
-//		Command command = new Parser().parse("add task 3 by: 10:00pm");
-//		command = new Parser().parse("add task at 2:00pm");
-//		command = new Parser().parse("add task at 10:00pm");
-//		
-//		command = new Parser().parse("add task on 1/2/13");
-//		command = new Parser().parse("add task on 5/10/13");
-//		command = new Parser().parse("add task on 6/10/13");
-//		
-//		command = new Parser().parse("edit 1 go home at 10:00 am");
-//		command = new Parser().parse("delete 1");
-//		command = new Parser().parse("search haha hi there");
-//		
-//		command = new Parser().parse("clear");
-//		command = new Parser().parse("clear done");
-//		command = new Parser().parse("clear aklsjdksd");
-//		command = new Parser().parse("help done asjdlkasd");
-//		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
-//		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
-//		
+		Command command = new Parser().parse("add task 3 from 10:00 pm 1/2/13 to 11:pm 5/5/15");
+		command = new Parser().parse("add task at 2:00pm");
+		command = new Parser().parse("add task at 10:00pm");
+		command = new Parser().parse("add task on 1/2/13");
+		command = new Parser().parse("add task on 5/10/13");
+		command = new Parser().parse("add task on 6/10/13");
+		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
+		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
+		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
+		command = new Parser().parse("add go home by 10:00 am");
+		command = new Parser().parse("add go home at at 10:00 am on 1/1/12");
+		command = new Parser().parse("add go home on 10:00 am at 1/1/12");
+		command = new Parser().parse("add go home at 10:00 am on 1/1/12 until 10:00 pm 1/2/12");
+		
+		command = new Parser().parse("edit 1 go home at 10:00 am");
+		command = new Parser().parse("delete 1");
+		command = new Parser().parse("search hi there");
+		command = new Parser().parse("clear");
+		command = new Parser().parse("clear done");
+		command = new Parser().parse("clear aklsjdksd");
+		command = new Parser().parse("help done asjdlkasd");
+
+		// Mini REPL for testing
 //		Scanner scanner = new Scanner(System.in);
 //		while(true){
 //			String message = scanner.nextLine();
 //			System.out.println(new Parser().parse(message));
 //		}
-//		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
-//		command = new Parser().parse("add go home by 10:00 am");
-//		command = new Parser().parse("add go home at at 10:00 am on 1/1/12");
-//		command = new Parser().parse("add go home on 10:00 am at 1/1/12");
-//		command = new Parser().parse("add go home at 10:00 am on 1/1/12 until 10:00 pm 1/2/12");
 	}
 
 	// States

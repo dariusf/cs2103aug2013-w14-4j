@@ -2,12 +2,10 @@ package parser;
 
 import java.util.ArrayList;
 
-import org.joda.time.DateTime;
-
 class StateAt implements Parser.State {
 
 	private final Parser parser;
-	ArrayList<TimeToken> results;
+	ArrayList<TimeToken> results = new ArrayList<>();
 	StateDefault parent;
 
 	public StateAt (Parser parser, StateDefault parent) {
@@ -17,7 +15,7 @@ class StateAt implements Parser.State {
 
 	@Override
 	public void processToken(Token t) {
-		assert !popCondition();
+		assert !popCondition(); // t has to be a TimeToken
 		results.add((TimeToken) t);
 		this.parser.nextToken();
 	}
@@ -34,31 +32,13 @@ class StateAt implements Parser.State {
 			parent.words.append("at ");
 		}
 		else {
-//			System.out.println("At:");
-			for (TimeToken token : results) { // TODO: only takes one token so why a list?
-				
-//				DateTime intervalStart = parent.onAtUntilInterval.getStart();
-//
-//				if (intervalStart == null) {
-//					parent.onAtUntilInterval.setStart(token.toDateTime());
-//				}
-//				else {
-//					parent.onAtUntilInterval.setStart(token.mergeInto(intervalStart));
-//				}
-//				
-//				intervalStart = parent.onAtUntilInterval.getStart();
-//				DateTime now = new DateTime();
-//				if (intervalStart.isBefore(now)) {
-//					parent.onAtUntilInterval.setStart(intervalStart.plusDays(1));
-//				}
-				parent.onAtUntilInterval.setStartTime(token);
+			for (TimeToken token : results) {
+				parent.onAtUntilInterval.changeStartTime(token);
 			}
-//			parser.atTokens.addAll(results);
 		}
 	}
 
 	@Override
 	public void onPush() {
-		results = new ArrayList<>();
 	}
 }

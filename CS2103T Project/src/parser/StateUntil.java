@@ -5,7 +5,7 @@ import java.util.ArrayList;
 class StateUntil implements Parser.State {
 
 	private final Parser parser;
-	ArrayList<Token> results;
+	ArrayList<Token> results = new ArrayList<>();;
 	StateDefault parent;
 
 	public StateUntil (Parser parser, StateDefault parent) {
@@ -15,8 +15,7 @@ class StateUntil implements Parser.State {
 
 	@Override
 	public void processToken(Token t) {
-		assert !popCondition();
-		// t has to be date or time
+		assert !popCondition(); // t has to be a DateToken or TimeToken
 		results.add(t);
 		this.parser.nextToken();
 	}
@@ -33,16 +32,12 @@ class StateUntil implements Parser.State {
 			parent.words.append("until ");
 		}
 		else {
-//			System.out.println("Until:");
 			for (Token token : results) {
-//				System.out.println(token.toString());
 				if (token instanceof DateToken) {
-//					parent.onAtUntilInterval.setEnd(((DateToken) token).toDateTime(false));
-					parent.onAtUntilInterval.setEndDate((DateToken) token);
+					parent.onAtUntilInterval.changeEndDate((DateToken) token);
 				}
 				else if (token instanceof TimeToken) {
-					parent.onAtUntilInterval.setEndTime((TimeToken) token);
-//					parent.onAtUntilInterval.setEnd(((TimeToken) token).toDateTime());
+					parent.onAtUntilInterval.changeEndTime((TimeToken) token);
 				}
 			}
 		}
@@ -50,6 +45,5 @@ class StateUntil implements Parser.State {
 
 	@Override
 	public void onPush() {
-		results = new ArrayList<>();
 	}
 }

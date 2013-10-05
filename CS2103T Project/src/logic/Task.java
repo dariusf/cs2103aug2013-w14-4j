@@ -13,6 +13,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import parser.Interval;
+
 public class Task implements Comparable<Task>, Cloneable{
 
 	private String name = "";
@@ -68,11 +70,11 @@ public class Task implements Comparable<Task>, Cloneable{
 		} else if (attribute == Constants.TASK_ATT_TYPE) {
 			output = type;
 		} else if (attribute == Constants.TASK_ATT_STARTTIME) {
-			output = interval.getStart().toString();
+			output = interval.getStartDateTime().toString();
 		} else if (attribute == Constants.TASK_ATT_POSSIBLETIME) {
 			output = possibleIntervals.toString();
 		} else if (attribute == Constants.TASK_ATT_ENDTIME) {
-			output = interval.getEnd().toString();
+			output = interval.getEndDateTime().toString();
 		} else if (attribute == Constants.TASK_ATT_TAGS) {
 			output = tagsToString();
 		} else {
@@ -131,19 +133,19 @@ public class Task implements Comparable<Task>, Cloneable{
 	}
 
 	public DateTime getStartTime() {
-		return interval.getStart();
+		return interval.getStartDateTime();
 	}
 
 	public void setStartTime(DateTime startTime) {
-		interval.setStart(startTime);
+		interval.setStartDateTime(startTime);
 	}
 
 	public DateTime getEndTime() {
-		return interval.getEnd();
+		return interval.getEndDateTime();
 	}
 
 	public void setEndTime(DateTime endTime) {
-		interval.setEnd(endTime);
+		interval.setEndDateTime(endTime);
 	}
 
 	public DateTime getDeadline() {
@@ -210,9 +212,9 @@ public class Task implements Comparable<Task>, Cloneable{
 				output.append("(");
 				output.append(index);
 				output.append(") ");
-				output.append(format.print(slot.getStart()));
+				output.append(format.print(slot.getStartDateTime()));
 				output.append(" to ");
-				output.append(format.print(slot.getEnd()));
+				output.append(format.print(slot.getEndDateTime()));
 				if (index != possibleIntervals.size()) {
 					output.append(" or ");
 				}
@@ -299,8 +301,8 @@ public class Task implements Comparable<Task>, Cloneable{
 	public DateTime getEarliestTime (List<Interval> list){
 		DateTime earliestTime = new DateTime(9999, 12, 31, 23, 59);
 		for(Interval interval : list){
-			if(interval.getStart().compareTo(earliestTime) < 0){
-				earliestTime = interval.getStart();
+			if(interval.getStartDateTime().compareTo(earliestTime) < 0){
+				earliestTime = interval.getStartDateTime();
 			}
 		}
 		return earliestTime;

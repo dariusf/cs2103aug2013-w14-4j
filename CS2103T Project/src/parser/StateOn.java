@@ -2,12 +2,10 @@ package parser;
 
 import java.util.ArrayList;
 
-import org.joda.time.DateTime;
-
 class StateOn implements Parser.State {
 
 	private final Parser parser;
-	ArrayList<DateToken> results;
+	ArrayList<DateToken> results = new ArrayList<>();;
 	StateDefault parent;
 
 	public StateOn (Parser parser, StateDefault parent) {
@@ -17,7 +15,7 @@ class StateOn implements Parser.State {
 
 	@Override
 	public void processToken(Token t) {
-		assert !popCondition();
+		assert !popCondition(); // t must be a DateToken
 		results.add((DateToken) t);
 		this.parser.nextToken();
 	}
@@ -34,24 +32,13 @@ class StateOn implements Parser.State {
 			parent.words.append("on ");
 		}
 		else {
-//			System.out.println("On:");
 			for (DateToken token : results) {
-				parent.onAtUntilInterval.setStartDate(token);
-//				System.out.println(token.toString());
-//				if (parent.onAtUntilInterval.getStart() == null) {
-//					parent.onAtUntilInterval.setStart(token.toDateTime(true));
-//				}
-//				else {
-//					DateTime d = token.toDateTime(true);
-//					parent.onAtUntilInterval.setStart(parent.onAtUntilInterval.getStart().withDate(d.getYear(), d.getMonthOfYear(), d.getDayOfMonth()));
-//				}
+				parent.onAtUntilInterval.changeStartDate(token);
 			}
-//			parser.onTokens.addAll(results);
 		}
 	}
 
 	@Override
 	public void onPush() {
-		results = new ArrayList<>();
 	}
 }

@@ -1,13 +1,8 @@
 package parser;
 
-import logic.Interval;
-
-
-
-
 class StateDefault implements Parser.State {
 
-	StringBuilder words;
+	StringBuilder words = new StringBuilder();
 	private final Parser parser;
 	
 	Interval onAtUntilInterval = new Interval();
@@ -46,25 +41,19 @@ class StateDefault implements Parser.State {
 
 	@Override
 	public boolean popCondition() {
-		// this is the starting state so this never pops
+		// This is the starting state, so it never pops until the very end
 		return false;
 	}
 
 	@Override
 	public void onPop() {
-//		System.out.println("Words: " + words.toString().trim());
 		parser.text = words.toString().trim();
-		
 		if (onAtUntilInterval.isSet()) {
-//			if (!onAtUntilInterval.hasEnd()) {
-//				onAtUntilInterval.normalizeEnd();
-//			}
 			parser.intervals.add(onAtUntilInterval);
 		}
 	}
 
 	@Override
 	public void onPush() {
-		words = new StringBuilder();
 	}
 }

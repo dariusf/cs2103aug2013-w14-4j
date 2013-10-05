@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
 class StateBy implements Parser.State {
 
 	private final Parser parser;
-	ArrayList<Token> results;
+	ArrayList<Token> results = new ArrayList<>();;
 	StateDefault parent;
 	
 	public StateBy (Parser parser, StateDefault parent) {
@@ -17,8 +17,7 @@ class StateBy implements Parser.State {
 	
 	@Override
 	public void processToken(Token t) {
-		assert !popCondition();
-		// t has to be date or time
+		assert !popCondition(); // t has to be a DateToken or TimeToken
 		results.add(t);
 		this.parser.nextToken();
 	}
@@ -35,24 +34,19 @@ class StateBy implements Parser.State {
 			parent.words.append("by ");
 		}
 		else {
-//			System.out.println("By:");
 			parser.deadline = new DateTime();
 			for (Token token : results) {
-//				System.out.println(token.toString());
 				if (token instanceof DateToken) {
-//					parser.deadline = parser.deadline.withDate(((DateToken) token).year, ((DateToken) token).month, ((DateToken) token).day);
 					parser.deadline = ((DateToken) token).mergeInto(parser.deadline);
 				}
 				else {
 					parser.deadline = ((TimeToken) token).mergeInto(parser.deadline);
-//					parser.deadline = parser.deadline.withTime(((TimeToken) token).hour, ((TimeToken) token).minute, 0, 0);
 				}
 			}
 		}
 	}
-
+	
 	@Override
 	public void onPush() {
-		results = new ArrayList<>();
 	}
 }

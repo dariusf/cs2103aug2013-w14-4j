@@ -18,8 +18,9 @@ import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.DateTimeParser;
 import org.junit.Test;
 
+import parser.Interval;
+
 import logic.Constants;
-import logic.Interval;
 import logic.Task;
 import storage.Json;
 import storage.Storage;
