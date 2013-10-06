@@ -82,6 +82,7 @@ public class ApplicationWindow {
 		input.setLayoutData(gd_input);
 
 		displayFeedback.setText(displayWelcomeMessage());
+		displayTask.setText(logic.displayOnWindow());
 		
 		enterDriverLoop();
 	}
