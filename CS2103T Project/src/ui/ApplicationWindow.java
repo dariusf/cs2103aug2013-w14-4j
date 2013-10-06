@@ -14,6 +14,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Label;
 
 
 public class ApplicationWindow {
@@ -60,19 +61,20 @@ public class ApplicationWindow {
 		shell = new Shell();
 		shell.setSize(512, 300);
 		shell.setText(Constants.APP_NAME);
-		shell.setLayout(new GridLayout(2, false));
+		shell.setLayout(new GridLayout(1, false));
+		
+		displayTask = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		GridData gd_displayTask = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gd_displayTask.widthHint = 153;
+		gd_displayTask.heightHint = 171;
+		displayTask.setLayoutData(gd_displayTask);
+		displayTask.setText(logic.displayOnWindow());
 		
 		displayFeedback = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		GridData gd_feedback = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd_feedback.widthHint = 302;
-		gd_feedback.heightHint = 215;
+		gd_feedback.heightHint = 90;
 		displayFeedback.setLayoutData(gd_feedback);
-		
-		displayTask = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		GridData gd_displayTask = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 2);
-		gd_displayTask.widthHint = 153;
-		gd_displayTask.heightHint = 230;
-		displayTask.setLayoutData(gd_displayTask);
 		
 		input = new Text(shell, SWT.BORDER);
 		GridData gd_input = new GridData(SWT.FILL, SWT.FILL, true, false);
@@ -81,7 +83,6 @@ public class ApplicationWindow {
 		input.setFocus();
 
 		displayFeedback.setText(displayWelcomeMessage());
-		displayTask.setText(logic.displayOnWindow());
 		
 		enterDriverLoop();
 	}
@@ -94,7 +95,6 @@ public class ApplicationWindow {
 	private void enterDriverLoop() {	
 		input.addKeyListener(new KeyListener() {
 			String userInput = "";
-			String output = displayWelcomeMessage();
 			String tasks = "";
 			UserInputHistory inputHistory = new UserInputHistory();
 			
@@ -129,8 +129,7 @@ public class ApplicationWindow {
 					Feedback feedbackObj = logic.executeCommand(userInput);
 					System.out.println(userInput);
 					String feedback = feedbackObj.toString();
-					output = output + "\n" + feedback;
-					displayFeedback.setText(output);
+					displayFeedback.setText(feedback);
 					input.setText("");
 					
 					tasks = logic.displayOnWindow();
