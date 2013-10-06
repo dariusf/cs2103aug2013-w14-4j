@@ -3,7 +3,7 @@ package logic;
 public class Constants {
 	public static final String APP_NAME = "Basket";
 
-	public static String WELCOME_MSG = "Welcome to Basket!";
+	public static String WELCOME_MSG = "Welcome to Basket! \nType 'help' if you are unsure of what to do.";
 
 	public static final String MSG_INVALID_FORMAT = "invalid command format: %1$s";
 	public static final String MSG_ADDED_LINE = "added to %1$s: \"%2$s\"";
@@ -70,7 +70,8 @@ public class Constants {
 			+ "search: Search for existing task(s)\n"
 			+ "sort: Sort the tasks based on dates\n"
 			+ "undo: Return to the previous edit\n"
-			+ "help: Brings up the help guide";
+			+ "help: Brings up the help guide\n"
+			+ "help <command>: more details on the command";
 	public static final String HELP_ADD_TASK = "Add Task:\n"
 			+ "Adds a new task into the database. You may add a timed task, untimed task, floating task or deadline task.\n\n"
 			+ "Command format: \n"
