@@ -13,6 +13,7 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ApplicationWindow {
 
@@ -64,7 +65,7 @@ public class ApplicationWindow {
 		shell.setLayout(new GridLayout(1, false));
 		
 		displayTask = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		displayTask.setFont(SWTResourceManager.getFont("Garamond", 10, SWT.NORMAL));
+		displayTask.setFont(SWTResourceManager.getFont("Garamond", 11, SWT.NORMAL));
 		displayTask.setBackground(SWTResourceManager.getColor(255, 255, 204));
 		displayTask.setForeground(SWTResourceManager.getColor(153, 102, 51));
 		GridData gd_displayTask = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
