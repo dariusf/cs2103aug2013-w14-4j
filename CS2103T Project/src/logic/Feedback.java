@@ -5,20 +5,24 @@ public class Feedback {
 	private String feedbackString = null;
 	private int statusCode = 0;
 	private String statusMessage = null;
+	private boolean isError = false;
 
 	Feedback(int status, CommandType command) {
 		statusCode = status;
 		feedbackCommand = command;
+		setIsError(statusCode);
 	}
 
 	Feedback(int status, CommandType command, String string) {
 		statusCode = status;
 		feedbackString = string;
 		feedbackCommand = command;
+		setIsError(statusCode);
 	}
 
 	protected void setStatusCode(int status) {
 		statusCode = status;
+		setIsError(statusCode);
 	}
 
 	protected int getStatusCode() {
@@ -31,6 +35,65 @@ public class Feedback {
 
 	protected CommandType getCommand() {
 		return feedbackCommand;
+	}
+	
+	public boolean isErrorMessage() {
+		if (isError == true) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private void setIsError(int statusCode) {
+		switch (statusCode) {
+		case Constants.SC_SUCCESS :
+			isError = false;
+			break;
+		case Constants.SC_SUCCESS_TASK_OVERDUE :
+			isError = false;
+			break;
+		case Constants.SC_INVALID_COMMAND_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_EMPTY_DESCRIPTION_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_NO_TASK_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_NO_ID_INDICATED_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_TASK_ALREADY_FINALISED_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_TASK_ALREADY_DONE_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_NO_ID_INDICATED_TIME_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_SEARCH_KEYWORD_MISSING_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_FINALISE_TYPE_MISMATCH_ERROR :
+			isError = true;
+			break;
+		case Constants.SC_UNDO_NO_PRIOR_STATE_ERROR :
+			isError = true;
+			break;
+			// TODO: add in default case
+		}
 	}
 
 	public String toString() {

@@ -6,15 +6,15 @@ import logic.Logic;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 
@@ -60,6 +60,7 @@ public class ApplicationWindow {
 	 */
 	protected void createContents() {
 		shell = new Shell();
+		shell.setForeground(SWTResourceManager.getColor(0, 0, 0));
 		shell.setBackground(SWTResourceManager.getColor(0, 0, 0));
 		shell.setSize(512, 300);
 		shell.setText(Constants.APP_NAME);
@@ -67,7 +68,6 @@ public class ApplicationWindow {
 		
 		displayTask = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		displayTask.setFont(SWTResourceManager.getFont("Garamond", 10, SWT.NORMAL));
-		displayTask.setToolTipText("");
 		displayTask.setBackground(SWTResourceManager.getColor(255, 255, 204));
 		displayTask.setForeground(SWTResourceManager.getColor(153, 102, 51));
 		GridData gd_displayTask = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -102,6 +102,8 @@ public class ApplicationWindow {
 
 	private void enterDriverLoop() {	
 		input.addKeyListener(new KeyListener() {
+			Color green = shell.getDisplay().getSystemColor(SWT.COLOR_GREEN);
+			Color red = new Color(shell.getDisplay(), 245, 126, 133);
 			String userInput = "";
 			String tasks = "";
 			UserInputHistory inputHistory = new UserInputHistory();
@@ -133,13 +135,16 @@ public class ApplicationWindow {
 					userInput = input.getText();
 				
 					inputHistory.addInput(userInput);
-					
 					Feedback feedbackObj = logic.executeCommand(userInput);
 					System.out.println(userInput);
 					String feedback = feedbackObj.toString();
+					if (feedbackObj.isErrorMessage()) {
+						displayFeedback.setForeground(red);
+					} else if (!feedbackObj.isErrorMessage()) {
+						displayFeedback.setForeground(green);
+					}
 					displayFeedback.setText(feedback);
 					input.setText("");
-					
 					tasks = logic.displayOnWindow();
 					displayTask.setText(tasks);
 				}
