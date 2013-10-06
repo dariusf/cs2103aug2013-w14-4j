@@ -15,7 +15,6 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 
 public class ApplicationWindow {
