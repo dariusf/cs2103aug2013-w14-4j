@@ -15,6 +15,7 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 
 public class ApplicationWindow {
@@ -59,21 +60,28 @@ public class ApplicationWindow {
 	 */
 	protected void createContents() {
 		shell = new Shell();
+		shell.setBackground(SWTResourceManager.getColor(0, 0, 0));
 		shell.setSize(512, 300);
 		shell.setText(Constants.APP_NAME);
 		shell.setLayout(new GridLayout(1, false));
 		
 		displayTask = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		GridData gd_displayTask = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		displayTask.setFont(SWTResourceManager.getFont("Garamond", 10, SWT.NORMAL));
+		displayTask.setToolTipText("");
+		displayTask.setBackground(SWTResourceManager.getColor(255, 255, 204));
+		displayTask.setForeground(SWTResourceManager.getColor(153, 102, 51));
+		GridData gd_displayTask = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_displayTask.widthHint = 153;
-		gd_displayTask.heightHint = 171;
+		gd_displayTask.heightHint = 182;
 		displayTask.setLayoutData(gd_displayTask);
 		displayTask.setText(logic.displayOnWindow());
 		
-		displayFeedback = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		GridData gd_feedback = new GridData(SWT.FILL, SWT.FILL, true, true);
+		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		displayFeedback.setForeground(SWTResourceManager.getColor(255, 153, 102));
+		displayFeedback.setBackground(SWTResourceManager.getColor(0, 0, 0));
+		GridData gd_feedback = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gd_feedback.widthHint = 302;
-		gd_feedback.heightHint = 90;
+		gd_feedback.heightHint = 32;
 		displayFeedback.setLayoutData(gd_feedback);
 		
 		input = new Text(shell, SWT.BORDER);
