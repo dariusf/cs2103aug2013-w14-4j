@@ -11,12 +11,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.wb.swt.SWTResourceManager;
-
 
 public class ApplicationWindow {
 
