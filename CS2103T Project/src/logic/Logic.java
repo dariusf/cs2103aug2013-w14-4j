@@ -17,6 +17,8 @@ public class Logic {
 	protected static Storage storage = null;
 	protected static HashMap<Integer, Integer> temporaryMapping = new HashMap<Integer, Integer>();
 	protected static boolean isDynamicIndex = false;
+	protected static boolean isDisplayHelp = false;
+	protected static Command currentHelpCommand = null;
 
 	public Logic() throws IOException {
 		storage = new Storage("default.txt");
@@ -109,9 +111,9 @@ public class Logic {
 			taskToEdit.setType(Constants.TASK_TYPE_FLOATING);
 			taskToEdit.setPossibleTime(command.getIntervals());
 		}
-		
+
 		storage.replace(taskIndex, taskToEdit);
-		
+
 		if (isTaskOver(taskToEdit)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
 					CommandType.EDIT_TASK, taskToEdit.toString());
@@ -122,11 +124,64 @@ public class Logic {
 
 		return feedback;
 	}
-	
-	public String displayOnWindow(){
+
+	public String displayOnWindow() {
 		String feedback = null;
 		StringBuilder output = new StringBuilder();
-		if(!isDynamicIndex){
+		if (isDisplayHelp) {
+			HashMap<String, String> commandAttributes = currentHelpCommand
+					.getCommandAttributes();
+			if (commandAttributes.containsKey("helpCommand")) {
+				String commandString = commandAttributes.get("helpCommand");
+				CommandType commandType = Parser
+						.determineCommandType(commandString);
+				switch (commandType) {
+				case ADD_TASK:
+					feedback = Constants.HELP_ADD_TASK;
+					break;
+				case EDIT_TASK:
+					feedback = Constants.HELP_EDIT_TASK;
+					break;
+				case SORT:
+					feedback = Constants.HELP_SORT;
+					break;
+				case DELETE:
+					feedback = Constants.HELP_DELETE;
+					break;
+				case CLEAR:
+					feedback = Constants.HELP_CLEAR;
+					break;
+				case UNDO:
+					feedback = Constants.HELP_UNDO;
+					break;
+				case SEARCH:
+					feedback = Constants.HELP_SEARCH;
+					break;
+				case HELP:
+					feedback = Constants.HELP_HELP;
+					break;
+				case DONE:
+					feedback = Constants.HELP_DONE;
+					break;
+				case FINALISE:
+					feedback = Constants.HELP_FINALISE;
+					break;
+				case DISPLAY:
+					feedback = Constants.HELP_DISPLAY;
+					break;
+				case EXIT:
+					feedback = Constants.HELP_EXIT;
+					break;
+				default:
+					feedback = Constants.HELP_GENERAL;
+					;
+				}
+			} else {
+				feedback = Constants.HELP_GENERAL;
+			}
+
+			isDisplayHelp = false;
+		} else if (!isDynamicIndex) {
 			if (storage.size() > 0) {
 				int index = 1;
 				Iterator<Task> storageIterator = storage.iterator();
@@ -216,9 +271,9 @@ public class Logic {
 
 		if (storage.size() > 0) {
 			if (isClearDone) {
-				for(int i = storage.size(); i > 0; i--){
+				for (int i = storage.size(); i > 0; i--) {
 					Task currentTask = storage.get(i);
-					if(currentTask.getDone()){
+					if (currentTask.getDone()) {
 						storage.remove(i);
 					}
 				}
@@ -236,7 +291,6 @@ public class Logic {
 		return feedback;
 	}
 
-	// Not working yet
 	protected static Feedback finaliseTask(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
@@ -272,7 +326,7 @@ public class Logic {
 		Interval newInterval = oldIntervalList.get(taskSlotIndex - 1);
 		taskToEdit.setType(Constants.TASK_TYPE_TIMED);
 		taskToEdit.setInterval(newInterval);
-		
+
 		storage.replace(taskIndex, taskToEdit);
 
 		if (isTaskOver(taskToEdit)) {
@@ -327,70 +381,10 @@ public class Logic {
 
 	protected static Feedback showHelp(Command command) {
 		Feedback feedback = null;
-		HashMap<String, String> commandAttributes = command
-				.getCommandAttributes();
-		if (commandAttributes.containsKey("helpCommand")) {
-			String commandString = commandAttributes.get("helpCommand");
-			CommandType commandToGetHelp = Parser
-					.determineCommandType(commandString);
-			switch (commandToGetHelp) {
-			case ADD_TASK:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_ADD_TASK);
-				break;
-			case EDIT_TASK:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_EDIT_TASK);
-				break;
-			case SORT:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_SORT);
-				break;
-			case DELETE:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_DELETE);
-				break;
-			case CLEAR:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_CLEAR);
-				break;
-			case UNDO:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_UNDO);
-				break;
-			case SEARCH:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_SEARCH);
-				break;
-			case HELP:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_HELP);
-				break;
-			case DONE:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_DONE);
-				break;
-			case FINALISE:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_FINALISE);
-				break;
-			case DISPLAY:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_DISPLAY);
-				break;
-			case EXIT:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_EXIT);
-				break;
-			default:
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-						Constants.HELP_GENERAL);
-				;
-			}
-		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-					Constants.HELP_GENERAL);
-		}
+		currentHelpCommand = command;
+		isDisplayHelp = true;
+		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
+				Constants.HELP_INSTRUCTIONS);
 		return feedback;
 	}
 
@@ -467,7 +461,7 @@ public class Logic {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
 	}
 
 	protected static boolean isTaskOver(Task task) {
@@ -711,23 +705,23 @@ public class Logic {
 		System.out.println(logic.finaliseTask(command19) + "\n");
 
 		System.out.println(logic.displayTasks() + "\n");
-		
+
 		System.out.println(logic.searchTasks(command17) + "\n");
-		
+
 		// Done task test 20
 		Command command20 = new Command(CommandType.DONE);
 		command20.setValue(Constants.DONE_ATT_LINE, "1");
 		System.out.println(logic.markDone(command20) + "\n");
 
 		System.out.println(logic.displayTasks() + "\n");
-		
+
 		// Clear done test 21
 		Command command21 = new Command(CommandType.CLEAR);
 		command21.setValue(Constants.CLEAR_ATT_DONE, "true");
 		System.out.println(logic.clearTasks(command21) + "\n");
 
 		System.out.println(logic.displayTasks() + "\n");
-		
+
 		System.out.println(logic.displayOnWindow());
 	}
 }
