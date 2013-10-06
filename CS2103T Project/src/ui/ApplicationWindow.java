@@ -6,6 +6,8 @@ import logic.Logic;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.KeyEvent;
@@ -89,19 +91,43 @@ public class ApplicationWindow {
 		return welcomeMessage;
 	}
 
-	private void enterDriverLoop() {
+	private void enterDriverLoop() {	
 		input.addKeyListener(new KeyListener() {
 			String userInput = "";
 			String output = displayWelcomeMessage();
 			String tasks = "";
+			UserInputHistory inputHistory = new UserInputHistory();
 			
 			@Override
 			public void keyReleased(KeyEvent arg0) {}
 
 			@Override
-			public void keyPressed(KeyEvent arg0) {				
+			public void keyPressed(KeyEvent arg0) {		
+				if (arg0.keyCode == SWT.ARROW_DOWN) {
+					//System.out.println("keydown pressed");
+					if (!inputHistory.isEndOfHistory()) {
+						int currentIndex = inputHistory.getIndex();
+						String commandField = inputHistory
+								.getInput(currentIndex + 1);
+						input.setText(commandField);
+						inputHistory.setIndex(currentIndex + 1);
+					}
+				}
+				if (arg0.keyCode == SWT.ARROW_UP) {
+					//System.out.println("keyup pressed");
+					int currentIndex = inputHistory.getIndex();
+					if (currentIndex != -1) {
+						String commandField = inputHistory
+								.getInput(currentIndex);
+						input.setText(commandField);
+						inputHistory.setIndex(currentIndex - 1);
+					}
+				}
 				if (arg0.character == SWT.CR) {
 					userInput = input.getText();
+				
+					inputHistory.addInput(userInput);
+					
 					Feedback feedbackObj = logic.executeCommand(userInput);
 					System.out.println(userInput);
 					String feedback = feedbackObj.toString();
