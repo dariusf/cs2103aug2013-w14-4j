@@ -15,6 +15,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 
 public class ApplicationWindow {
@@ -59,9 +60,10 @@ public class ApplicationWindow {
 	 */
 	protected void createContents() {
 		shell = new Shell();
+		shell.setImage(SWTResourceManager.getImage(ApplicationWindow.class, "/image/basketIcon.jpg"));
 		shell.setForeground(SWTResourceManager.getColor(0, 0, 0));
 		shell.setBackground(SWTResourceManager.getColor(0, 0, 0));
-		shell.setSize(512, 300);
+		shell.setSize(446, 361);
 		shell.setText(Constants.APP_NAME);
 		shell.setLayout(new GridLayout(1, false));
 		
