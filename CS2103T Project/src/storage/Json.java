@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import logic.Constants;
 import logic.Task;
 
 import org.joda.time.DateTime;
@@ -26,6 +25,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import common.Constants;
 
 /**
  * Contains two static methods, one for creating a JSON document out of a list of objects

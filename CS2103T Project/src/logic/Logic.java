@@ -8,6 +8,9 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import common.CommandType;
+import common.Constants;
+
 import parser.Interval;
 import parser.Parser;
 import storage.Storage;
@@ -390,13 +393,15 @@ public class Logic {
 
 	protected static Feedback undoState() {
 		Feedback feedback = null;
-		if (storage.size() > 0) {
-			storage.sort();
+		try {
+			storage.undo();
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.UNDO);
-		} else {
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			feedback = new Feedback(Constants.SC_UNDO_NO_PRIOR_STATE_ERROR,
 					CommandType.UNDO);
 		}
+		
 		return feedback;
 	}
 

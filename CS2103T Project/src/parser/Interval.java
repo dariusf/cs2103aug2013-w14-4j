@@ -1,8 +1,9 @@
 package parser;
 
-import logic.Constants;
 
 import org.joda.time.DateTime;
+
+import common.Constants;
 
 public class Interval {
 	/**
