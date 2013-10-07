@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -91,6 +93,14 @@ public class ApplicationWindow {
 		displayFeedback.setText(displayWelcomeMessage());
 		
 		enterDriverLoop();
+		/*System.out.println("hello");
+		Feedback feedbackObj = logic.executeCommand("exit");*/
+		shell.addShellListener(new ShellAdapter() {
+			@Override
+			public void shellClosed(ShellEvent e) {
+				logic.executeCommand("exit");
+			}
+		});
 	}
 
 	private String displayWelcomeMessage() {
