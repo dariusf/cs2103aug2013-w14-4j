@@ -189,7 +189,7 @@ public class Task implements Comparable<Task>, Cloneable{
 		StringBuilder output = new StringBuilder();
 		output.append(name);
 
-		DateTimeFormatter format = DateTimeFormat.forPattern("K:mm a 'on' E, d/M/Y");;
+		DateTimeFormatter format = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/Y");;
 		if (isDeadlineTask()) {
 			output.append(" before " + format.print(deadline));
 		} else if (isTimedTask()) {
@@ -299,7 +299,7 @@ public class Task implements Comparable<Task>, Cloneable{
 	
 	public static void main(String[] args) throws CloneNotSupportedException {
 		Command command6 = new Command(CommandType.ADD_TASK);
-		DateTime startDate6a = new DateTime(2012, 10, 30, 15, 0, 0);
+		DateTime startDate6a = new DateTime(2012, 10, 30, 12, 0, 0);
 		DateTime endDate6a = new DateTime(2012, 10, 30, 16, 0, 0);
 		Interval interval6a = new Interval();
 		interval6a.setStartDateTime(startDate6a);
