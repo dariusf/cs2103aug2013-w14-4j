@@ -9,7 +9,6 @@ import java.util.Iterator;
 
 import logic.Task;
 
-
 public class Storage implements Closeable {
 	
 	private interface Action {}
