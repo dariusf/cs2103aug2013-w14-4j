@@ -14,7 +14,7 @@ public class UserInputHistory {
 	
 	protected void addInput(String input) {
 		userInput.add(input);
-		index++;
+		index = userInput.size() - 1;
 	}
 	
 	protected String getInput(int index) {
