@@ -14,11 +14,16 @@ public class StorageLinkedList<E> implements ListIterator<E> {
 			this.item = item;
 			this.prevNode = prevNode;
 			this.nextNode = nextNode;
+			if (prevNode != null) {
+				prevNode.nextNode = this;
+			}
+			if (nextNode != null) {
+				nextNode.prevNode = this;
+			}
 		}
 	}
 	
 	Node previousNode;
-	Node followingNode;
 	Node headNode;
 	Node tailNode;
 	int index;
@@ -26,40 +31,32 @@ public class StorageLinkedList<E> implements ListIterator<E> {
 	public StorageLinkedList() {
 		headNode = new Node(null, null, null);
 		tailNode = new Node(null, headNode, null);
-		headNode.nextNode = tailNode;
 		previousNode = headNode;
-		followingNode = tailNode;
 		index = -1; //sentinel value representing empty list
 	}
 	
 	public void add(E item) { // adds item to head of list
 		if(index == -1) {
 			Node newNode = new Node(item, headNode, tailNode);
-			headNode.nextNode = newNode;
-			tailNode.prevNode = newNode;
-			followingNode = newNode;
+			previousNode = newNode;
 			index = 0;
 		} else {
-			Node newNode = new Node(item, previousNode, followingNode);
-			previousNode.nextNode = newNode;
-			followingNode.prevNode = newNode;
+			Node newNode = new Node(item, previousNode, previousNode.nextNode);
 			previousNode = newNode;
-			followingNode = newNode.nextNode;
 			index++;
 		}
 	}
 	
 	@Override
 	public boolean hasNext() {
-		return (followingNode != tailNode);
+		return (previousNode.nextNode != tailNode);
 	}
 	
 	@Override
 	public E next() {
 		if(!hasNext()){ throw new NoSuchElementException(); }
 		
-		previousNode = followingNode;
-		followingNode = followingNode.nextNode;
+		previousNode = previousNode.nextNode;
 		index++;
 		return previousNode.item;
 	}
@@ -73,10 +70,10 @@ public class StorageLinkedList<E> implements ListIterator<E> {
 	public E previous() {
 		if(!hasPrevious()){ throw new NoSuchElementException(); }
 
-		followingNode = previousNode;
+		E result = previousNode.item;
 		previousNode = previousNode.prevNode;
 		index--;
-		return followingNode.item;
+		return result;
 	}
 
 	@Override
@@ -102,10 +99,12 @@ public class StorageLinkedList<E> implements ListIterator<E> {
 	}
 	
 	public void removeAllPrevious() {
+		if (previousNode == headNode) { return; }
+		Node nextNode = previousNode.nextNode;
+		nextNode.prevNode = headNode;
+		headNode.nextNode = nextNode;
 		previousNode = headNode;
-		previousNode.nextNode = followingNode;
-		followingNode.prevNode = headNode;
-		if (followingNode == tailNode) {
+		if (previousNode.nextNode == tailNode) {
 			index = -1;
 		} else {
 			index = 0;
@@ -114,6 +113,7 @@ public class StorageLinkedList<E> implements ListIterator<E> {
 	
 	public void push(E item) {
 		add(item);
+		previousNode = headNode;
 	}
 	
 	public void pushHere(E item) {
