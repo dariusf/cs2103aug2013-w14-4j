@@ -44,6 +44,7 @@ public class StorageLinkedList<E> implements ListIterator<E> {
 			previousNode.nextNode = newNode;
 			followingNode.prevNode = newNode;
 			previousNode = newNode;
+			followingNode = newNode.nextNode;
 			index++;
 		}
 	}
@@ -102,7 +103,7 @@ public class StorageLinkedList<E> implements ListIterator<E> {
 	
 	public void removeAllPrevious() {
 		previousNode = headNode;
-		previousNode.nextNode = null;
+		previousNode.nextNode = followingNode;
 		followingNode.prevNode = headNode;
 		if (followingNode == tailNode) {
 			index = -1;
