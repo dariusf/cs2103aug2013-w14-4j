@@ -13,13 +13,15 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import common.CommandType;
+import common.Constants;
+
 import parser.Interval;
 
 public class Task implements Comparable<Task>, Cloneable{
 
 	private String name = "";
 	private String type = "";
-	private String location = "";
 	private ArrayList<String> tags = new ArrayList<String>();
 	private Interval interval = null;
 	private DateTime deadline = null;
@@ -63,8 +65,6 @@ public class Task implements Comparable<Task>, Cloneable{
 			output = deadline.toString();
 		} else if (attribute == Constants.TASK_ATT_DONE) {
 			output = done ? "done" : "not done";
-		} else if (attribute == Constants.TASK_ATT_LOCATION) {
-			output = location;
 		} else if (attribute == Constants.TASK_ATT_NAME) {
 			output = name;
 		} else if (attribute == Constants.TASK_ATT_TYPE) {
@@ -116,13 +116,6 @@ public class Task implements Comparable<Task>, Cloneable{
 		this.type = type;
 	}
 
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
 
 	public ArrayList<String> getTags() {
 		return tags;
@@ -196,9 +189,6 @@ public class Task implements Comparable<Task>, Cloneable{
 		StringBuilder output = new StringBuilder();
 		output.append(name);
 
-		if (!location.isEmpty()) {
-			output.append(" at " + location);
-		}
 		DateTimeFormatter format = DateTimeFormat.forPattern("K:mm a 'on' E, d/M/Y");;
 		if (isDeadlineTask()) {
 			output.append(" before " + format.print(deadline));
@@ -245,16 +235,15 @@ public class Task implements Comparable<Task>, Cloneable{
 	public Object clone() throws CloneNotSupportedException {
 		// TODO Auto-generated method stub
 		Task newTask = new Task();
-		newTask.setName(name);
-		newTask.setTags(tags);
-		newTask.setLocation(location);
-		newTask.setDeadline(deadline);
-		newTask.setPossibleTime(possibleIntervals);
+		newTask.setName(new String(name));
+		newTask.setTags(new ArrayList<String>(tags));
+		newTask.setDeadline(new DateTime(deadline));
+		newTask.setPossibleTime(new ArrayList<Interval>(possibleIntervals));
 		newTask.setInterval(interval);
 		if(done){
 			newTask.markDone();
 		}
-		newTask.setType(type);
+		newTask.setType(new String(type));
 		return newTask;
 	}
 
@@ -308,4 +297,35 @@ public class Task implements Comparable<Task>, Cloneable{
 		return earliestTime;
 	}
 	
+	public static void main(String[] args) throws CloneNotSupportedException {
+		Command command6 = new Command(CommandType.ADD_TASK);
+		DateTime startDate6a = new DateTime(2012, 10, 30, 15, 0, 0);
+		DateTime endDate6a = new DateTime(2012, 10, 30, 16, 0, 0);
+		Interval interval6a = new Interval();
+		interval6a.setStartDateTime(startDate6a);
+		interval6a.setEndDateTime(endDate6a);
+		DateTime startDate6b = new DateTime(2012, 10, 30, 16, 0, 0);
+		DateTime endDate6b = new DateTime(2012, 10, 30, 17, 0, 0);
+		Interval interval6b = new Interval();
+		interval6b.setStartDateTime(startDate6b);
+		interval6b.setEndDateTime(endDate6b);
+		DateTime startDate6c = new DateTime(2012, 10, 30, 17, 0, 0);
+		DateTime endDate6c = new DateTime(2012, 10, 30, 18, 0, 0);
+		Interval interval6c = new Interval();
+		interval6c.setStartDateTime(startDate6c);
+		interval6c.setEndDateTime(endDate6c);
+		ArrayList<Interval> intervalList6 = new ArrayList<Interval>();
+		intervalList6.add(interval6a);
+		intervalList6.add(interval6b);
+		intervalList6.add(interval6c);
+		command6.setIntervals(intervalList6);
+		command6.setDescription("An overdue floating event!");
+		Task task1 = new Task(command6);
+		Task task2 = (Task) task1.clone();
+		task2.setPossibleTime(null);
+		task2.setName("hahaha");
+		
+		System.out.println(task1);
+		System.out.println(task2);
+	}
 }

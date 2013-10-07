@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 import org.joda.time.DateTime;
 
+import common.CommandType;
+import common.Constants;
+
 import parser.Interval;
 
 public class Command {

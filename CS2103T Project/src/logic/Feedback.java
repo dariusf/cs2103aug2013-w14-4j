@@ -1,5 +1,8 @@
 package logic;
 
+import common.CommandType;
+import common.Constants;
+
 public class Feedback {
 	private CommandType feedbackCommand = null;
 	private String feedbackString = null;

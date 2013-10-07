@@ -3,11 +3,13 @@ package parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.Stack;
 import logic.Command;
-import logic.CommandType;
-import logic.Constants;
 import org.joda.time.DateTime;
+
+import common.CommandType;
+import common.Constants;
 
 public class Parser {
 	
@@ -38,11 +40,11 @@ public class Parser {
 		command = new Parser().parse("help done asjdlkasd");
 
 		// Mini REPL for testing
-//		Scanner scanner = new Scanner(System.in);
-//		while(true){
-//			String message = scanner.nextLine();
-//			System.out.println(new Parser().parse(message));
-//		}
+		Scanner scanner = new Scanner(System.in);
+		while(true){
+			String message = scanner.nextLine();
+			System.out.println(new Parser().parse(message));
+		}
 	}
 
 	// States

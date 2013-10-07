@@ -7,8 +7,10 @@ import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
+
+import common.CommandType;
+
 import logic.Command;
-import logic.CommandType;
 import parser.Interval;
 import parser.Parser;
 
