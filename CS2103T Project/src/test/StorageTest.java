@@ -24,6 +24,7 @@ import logic.Constants;
 import logic.Task;
 import storage.Json;
 import storage.Storage;
+import storage.StorageLinkedList;
 
 public class StorageTest {
 	
@@ -178,5 +179,31 @@ public class StorageTest {
 		testStorage.close();
 		File file = new File("newtest.txt");
 		Files.delete(file.toPath());
+	}
+	
+	@Test
+	public void storageLinkedListTest () {
+		StorageLinkedList<Integer> testList = new StorageLinkedList<>();
+		
+		testList.pushHere(1);
+		assertTrue(testList.hasNext());
+		assertEquals((Integer)1, testList.next());
+		testList = new StorageLinkedList<>();
+		
+		for (int i = 5; i > 0; i--) {
+			testList.push(i);
+		}
+		Integer counter = 1;
+		while (testList.hasNext()) {
+			assertEquals(counter++, testList.next());
+		}
+		
+		for (int i = 5; i > 0; i--) {
+			testList.pushHere(i);
+		}
+		counter = 1;
+		while (testList.hasNext()) {
+			assertEquals(counter++, testList.next());
+		}
 	}
 }
