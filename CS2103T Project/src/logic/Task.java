@@ -126,18 +126,30 @@ public class Task implements Comparable<Task>, Cloneable{
 	}
 
 	public DateTime getStartTime() {
+		if(interval == null){
+			return null;
+		}
 		return interval.getStartDateTime();
 	}
 
 	public void setStartTime(DateTime startTime) {
+		if(interval == null){
+			interval = new Interval();
+		}
 		interval.setStartDateTime(startTime);
 	}
 
 	public DateTime getEndTime() {
+		if(interval == null){
+			return null;
+		}
 		return interval.getEndDateTime();
 	}
 
 	public void setEndTime(DateTime endTime) {
+		if(interval == null){
+			interval = new Interval();
+		}
 		interval.setEndDateTime(endTime);
 	}
 
