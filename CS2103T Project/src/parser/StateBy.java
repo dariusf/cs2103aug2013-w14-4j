@@ -34,7 +34,7 @@ class StateBy implements Parser.State {
 			parent.words.append("by ");
 		}
 		else {
-			parser.deadline = new DateTime();
+			parser.deadline = new DateTime().withTime(23, 59, 0, 0);
 			for (Token token : results) {
 				if (token instanceof DateToken) {
 					parser.deadline = ((DateToken) token).mergeInto(parser.deadline);
