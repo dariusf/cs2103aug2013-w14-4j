@@ -20,6 +20,7 @@ public class Parser {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Command command = new Parser().parse("add task 3 from 10:00 pm 1/2/13 to 11:pm 5/5/15");
+		command = new Parser().parse("add Halloween Party on 31/10 #YOLO #Party");
 		command = new Parser().parse("add task at 2:00pm");
 		command = new Parser().parse("add task at 10:00pm");
 		command = new Parser().parse("add task on 1/2/13");
@@ -42,11 +43,11 @@ public class Parser {
 		command = new Parser().parse("help done asjdlkasd");
 
 		// Mini REPL for testing
-		Scanner scanner = new Scanner(System.in);
-		while(true){
-			String message = scanner.nextLine();
-			System.out.println(new Parser().parse(message));
-		}
+//		Scanner scanner = new Scanner(System.in);
+//		while(true){
+//			String message = scanner.nextLine();
+//			System.out.println(new Parser().parse(message));
+//		}
 	}
 
 	// States
@@ -107,17 +108,12 @@ public class Parser {
 
 	// Components of the command that will be built up gradually
 	
-//	ArrayList<TimeToken> atTokens = new ArrayList<>();
-//	ArrayList<DateToken> onTokens = new ArrayList<>();
-//	ArrayList<Token> untilTokens = new ArrayList<>();
-//	ArrayList<Token> byTokens = new ArrayList<>();
-//	ArrayList<IntervalToken> intervalTokens = new ArrayList<>();
-	
 	DateTime deadline = null;
 	ArrayList<Interval> intervals = new ArrayList<>();
 	String text = "";
 	int editIndex = -1;
 	boolean clearDone = false;
+	ArrayList<String> tags = new ArrayList<>();
 
 	public Parser() {
 		parseStates = new Stack<>();
@@ -273,6 +269,7 @@ public class Parser {
 		command.setDeadline(deadline);
 		command.setDescription(text);
 		command.setIntervals(intervals);
+		command.setTags(tags);
 		
 		// TODO: factor this out
 		if (commandType == CommandType.EDIT_TASK) {

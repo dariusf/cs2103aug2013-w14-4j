@@ -27,6 +27,7 @@ package parser;
 Date = (0?[1-9]|[12][0-9]|3[01])([/])(0?[1-9]|1[012])([/]((19|20)?[0-9][0-9]))?
 Time = ((1[012]|[1-9]):([0-5][0-9])[ ]*(am|pm))|(([01]?[0-9]|2[0-3]):([0-5][0-9])[ ]*)
 Word = [a-zA-Z0-9]+
+Tag = #[a-zA-Z0-9]+
 QuotedWords = '[a-zA-Z0-9 :/]+'
 
 %%
@@ -34,6 +35,7 @@ QuotedWords = '[a-zA-Z0-9 :/]+'
 {Time} {return new TimeToken(yytext());}
 {Date} {return new DateToken(yytext());}
 {Word} { return new WordToken(yytext()); }
+{Tag} { return new TagToken(yytext()); }
 {QuotedWords} { return new WordToken(yytext()); }
 
 .|\n {}
