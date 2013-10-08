@@ -201,6 +201,7 @@ public class Parser {
 		case SORT:
 		case UNDO:
 		case DISPLAY:
+		case REDO:
 		case INVALID:
 			return createArgumentlessCommand(commandType);
 		default:

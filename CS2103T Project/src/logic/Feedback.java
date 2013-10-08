@@ -119,6 +119,8 @@ public class Feedback {
 			return invalidFeedback();
 		case UNDO :
 			return undoFeedback();
+		case REDO:
+			return redoFeedback();
 		case FINALISE :
 			return finaliseFeedback();
 		case HELP :
@@ -243,6 +245,17 @@ public class Feedback {
 			statusMessage = "Error: Nothing to undo!";
 		} else {
 			statusMessage = "Error: Invalid undo (this should not happen!)";
+		}
+		return statusMessage+"\n";
+	}
+	
+	private String redoFeedback() {
+		if (statusCode == Constants.SC_SUCCESS) {
+			statusMessage = "Redo successful!";
+		} else if (statusCode == Constants.SC_REDO_NO_PRIOR_STATE_ERROR) {
+			statusMessage = "Error: Nothing to redo!";
+		} else {
+			statusMessage = "Error: Invalid redo (this should not happen!)";
 		}
 		return statusMessage+"\n";
 	}

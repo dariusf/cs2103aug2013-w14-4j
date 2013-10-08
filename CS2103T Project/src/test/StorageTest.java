@@ -64,7 +64,6 @@ public class StorageTest {
 		Task result = new Task();
 		result.setName("deadlineTask");
 		result.setType(Constants.TASK_TYPE_DEADLINE);
-		result.setLocation("home");
 		result.setDeadline(deadlineTime);
 		
 		return result;
@@ -74,7 +73,6 @@ public class StorageTest {
 		Task result = new Task();
 		result.setName("timedTask");
 		result.setType(Constants.TASK_TYPE_TIMED);
-		result.setLocation("office");
 		result.setInterval(new Interval(startTime, endTime));
 		
 		return result;
@@ -84,7 +82,6 @@ public class StorageTest {
 		Task result = new Task();
 		result.setName("timedTask");
 		result.setType(Constants.TASK_TYPE_UNTIMED);
-		result.setLocation("office");
 		
 		return result;
 	}
@@ -93,7 +90,6 @@ public class StorageTest {
 		Task result = new Task();
 		result.setName("timedTask");
 		result.setType(Constants.TASK_TYPE_UNTIMED);
-		result.setLocation("office");
 		result.setTags(tags);
 		
 		return result;
@@ -103,7 +99,6 @@ public class StorageTest {
 		Task result = new Task();
 		result.setName("floatingTask");
 		result.setType(Constants.TASK_TYPE_FLOATING);
-		result.setLocation("the beach");
 		result.setPossibleTime(intervals);
 		
 		return result;
