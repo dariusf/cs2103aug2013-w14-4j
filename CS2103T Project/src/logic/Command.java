@@ -16,6 +16,9 @@ public class Command {
 	private DateTime deadline = null;
 	private ArrayList<String> tags = null;
 	private ArrayList<Interval> intervals = new ArrayList<>();
+	private int taskIndex = 0;
+	private int finaliseIndex = 0;
+	private DateTime searchDateTime = null;
 
 	private HashMap<String, String> commandAttributes = null;
 	
@@ -24,6 +27,30 @@ public class Command {
 		commandType = type;
 	}
 		
+	public int getTaskIndex() {
+		return taskIndex;
+	}
+
+	public void setTaskIndex(int taskIndex) {
+		this.taskIndex = taskIndex;
+	}
+
+	public int getFinaliseIndex() {
+		return finaliseIndex;
+	}
+
+	public void setFinaliseIndex(int finaliseIndex) {
+		this.finaliseIndex = finaliseIndex;
+	}
+
+	public DateTime getSearchDateTime() {
+		return searchDateTime;
+	}
+
+	public void setSearchDateTime(DateTime searchDateTime) {
+		this.searchDateTime = searchDateTime;
+	}
+
 	public CommandType getCommandType(){
 		return commandType;
 	}
