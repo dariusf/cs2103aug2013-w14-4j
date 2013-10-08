@@ -33,6 +33,9 @@ class StateDefault implements Parser.State {
 				words.append(t.contents + " ");
 			}
 		}
+		else if (t instanceof TagToken) {
+			parser.tags.add(((TagToken) t).contents);
+		}
 		else {
 			words.append(t.contents + " ");
 		}

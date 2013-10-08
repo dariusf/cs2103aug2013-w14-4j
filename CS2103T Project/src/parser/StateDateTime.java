@@ -17,7 +17,7 @@ class StateDateTime implements Parser.State {
 	
 	@Override
 	public void processToken(Token t) {
-		assert !popCondition(); // until 'to' is found, t can be anything,
+		assert !popCondition(); // until 'to' is found, t can be anything except a TagToken,
 								// but it has to be a DateToken or TimeToken after
 		
 		if (t instanceof TimeToken || t instanceof DateToken) {
@@ -40,7 +40,7 @@ class StateDateTime implements Parser.State {
 	@Override
 	public boolean popCondition() {
 		Token t = this.parser.getCurrentToken();
-		return foundTo && from.size() > 0 && to.size() > 0
+		return t instanceof TagToken || foundTo && from.size() > 0 && to.size() > 0
 				&& !(t instanceof TimeToken || t instanceof DateToken);
 	}
 

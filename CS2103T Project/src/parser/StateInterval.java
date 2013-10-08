@@ -27,7 +27,7 @@ class StateInterval implements Parser.State {
 	@Override
 	public boolean popCondition() {
 		Token token = this.parser.getCurrentToken();
-		return (token instanceof WordToken && !token.contents.equals("or"));
+		return (token instanceof TagToken || token instanceof WordToken && !token.contents.equals("or"));
 	}
 	
 	@Override
