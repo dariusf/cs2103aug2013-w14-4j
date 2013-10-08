@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
 import logic.Command;
+
+import org.eclipse.ui.internal.operations.AdvancedValidationUserApprover;
 import org.joda.time.DateTime;
 
 import common.CommandType;
@@ -194,8 +196,9 @@ public class Parser {
 			return createComplexCommand(commandType);
 		case DELETE:
 		case DONE:
-		case FINALISE:
 			return createNumericalCommand(commandType);
+		case FINALISE:
+			return createFinaliseCommand(commandType);
 		case SEARCH:
 			return createSearchStringCommand();
 		case HELP:
@@ -214,6 +217,37 @@ public class Parser {
 		}
 	}
 	
+	private Command createFinaliseCommand(CommandType commandType) {
+		if (hasTokensLeft()) {
+			int finaliseIndex;
+			int slotIndex;
+			try {
+				finaliseIndex = Integer.parseInt(getCurrentToken().contents);
+
+				if (nextToken()) {
+					slotIndex = Integer.parseInt(getCurrentToken().contents);
+				}
+				else {
+					// TODO reason
+					return new Command(CommandType.INVALID);
+				}
+				
+			} catch (NumberFormatException e) {
+				// TODO reason
+				return new Command(CommandType.INVALID);
+			}
+			
+			Command command = new Command(commandType);
+			command.setValue("finaliseIndex", Integer.toString(finaliseIndex));
+			command.setValue("slotIndex", Integer.toString(slotIndex));
+			return command;
+
+		}
+		else {
+			return new Command(CommandType.INVALID);
+		}
+	}
+
 	private Command createComplexCommand(CommandType commandType) {
 		pushState(new StateDefault(this));
 
