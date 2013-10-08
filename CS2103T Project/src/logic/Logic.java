@@ -46,6 +46,8 @@ public class Logic {
 			return searchTasks(command);
 		case UNDO:
 			return undoState();
+		case REDO:
+			return redoState();
 		case EDIT_TASK:
 			return editTask(command);
 		case HELP:
@@ -400,6 +402,20 @@ public class Logic {
 			// TODO Auto-generated catch block
 			feedback = new Feedback(Constants.SC_UNDO_NO_PRIOR_STATE_ERROR,
 					CommandType.UNDO);
+		}
+		
+		return feedback;
+	}
+	
+	protected static Feedback redoState() {
+		Feedback feedback = null;
+		try {
+			storage.redo();
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.REDO);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			feedback = new Feedback(Constants.SC_REDO_NO_PRIOR_STATE_ERROR,
+					CommandType.REDO);
 		}
 		
 		return feedback;
