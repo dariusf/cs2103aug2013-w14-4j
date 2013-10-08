@@ -170,7 +170,7 @@ public class Feedback {
 
 	private String displayFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = feedbackString;
+			statusMessage = "Here are your tasks.";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "You have no tasks :)";
 		} else {
@@ -216,7 +216,7 @@ public class Feedback {
 
 	private String searchFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Search results: \n" + feedbackString;
+			statusMessage = "Here are your search results.";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to search!";
 		} else if (statusCode == Constants.SC_SEARCH_KEYWORD_MISSING_ERROR) {

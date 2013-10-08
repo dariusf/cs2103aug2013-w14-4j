@@ -221,20 +221,7 @@ public class Logic {
 	public static Feedback displayTasks() {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
-			StringBuilder output = new StringBuilder();
-			int index = 1;
-			Iterator<Task> storageIterator = storage.iterator();
-			while (storageIterator.hasNext()) {
-				Task task = storageIterator.next();
-				output.append(index + ". ");
-				output.append(task.toString());
-				if (index < storage.size()) {
-					output.append("\n");
-				}
-				index++;
-			}
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY,
-					output.toString());
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY);
 			isDynamicIndex = false;
 		} else {
 			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
@@ -403,10 +390,10 @@ public class Logic {
 			feedback = new Feedback(Constants.SC_UNDO_NO_PRIOR_STATE_ERROR,
 					CommandType.UNDO);
 		}
-		
+
 		return feedback;
 	}
-	
+
 	protected static Feedback redoState() {
 		Feedback feedback = null;
 		try {
@@ -417,7 +404,7 @@ public class Logic {
 			feedback = new Feedback(Constants.SC_REDO_NO_PRIOR_STATE_ERROR,
 					CommandType.REDO);
 		}
-		
+
 		return feedback;
 	}
 
@@ -456,18 +443,7 @@ public class Logic {
 		isDynamicIndex = true;
 
 		if (validTasks.size() > 0) {
-			StringBuilder output = new StringBuilder();
-			int index = 1;
-			for (Task task : validTasks) {
-				output.append(index + ". ");
-				output.append(task.toString());
-				if (index < validTasks.size()) {
-					output.append("\n");
-				}
-				index++;
-			}
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH,
-					output.toString());
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH);
 		} else {
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH,
 					Constants.MSG_NO_RESULT);
