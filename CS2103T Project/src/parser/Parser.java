@@ -123,7 +123,12 @@ public class Parser {
 	}
 
 	public Command parse(String string) {
-
+		
+		if (string == null || string.isEmpty()) {
+			// TODO where to put error fields in task?
+			return new Command(CommandType.INVALID);
+		}
+		
 		// TODO: preliminary processing of string
 		tokenizeInput(string);
 		return buildResult();
