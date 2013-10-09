@@ -1,12 +1,6 @@
 package logic;
 
-import java.io.ObjectInputStream.GetField;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -15,8 +9,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import common.CommandType;
 import common.Constants;
-
-import parser.Interval;
 
 public class Task implements Comparable<Task>, Cloneable{
 

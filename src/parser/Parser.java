@@ -3,9 +3,9 @@ package parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Stack;
 import logic.Command;
+import logic.Interval;
 
 import org.joda.time.DateTime;
 
@@ -42,11 +42,11 @@ public class Parser {
 		command = new Parser().parse("help done asjdlkasd");
 
 		// Mini REPL for testing
-		Scanner scanner = new Scanner(System.in);
-		while(true){
-			String message = scanner.nextLine();
-			System.out.println(new Parser().parse(message));
-		}
+//		java.util.Scanner scanner = new java.util.Scanner(System.in);
+//		while(true){
+//			String message = scanner.nextLine();
+//			System.out.println(new Parser().parse(message));
+//		}
 	}
 
 	// States
@@ -180,8 +180,7 @@ public class Parser {
 				}
 			}
 		} else {
-			// default to the add command
-			commandType = CommandType.ADD_TASK;
+			commandType = CommandType.INVALID;
 		}
 
 		// TODO: factor this out

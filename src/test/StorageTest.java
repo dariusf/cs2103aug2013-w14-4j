@@ -19,8 +19,8 @@ import org.junit.Test;
 
 import common.Constants;
 
-import parser.Interval;
 
+import logic.Interval;
 import logic.Task;
 import storage.Json;
 import storage.Storage;

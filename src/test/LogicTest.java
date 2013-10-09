@@ -10,9 +10,9 @@ import org.junit.Test;
 
 import common.CommandType;
 
-import parser.Interval;
 
 import logic.Command;
+import logic.Interval;
 import logic.Logic;
 
 public class LogicTest {

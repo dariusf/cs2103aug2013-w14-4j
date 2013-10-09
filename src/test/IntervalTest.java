@@ -1,12 +1,12 @@
 package test;
 
 import static org.junit.Assert.*;
+import logic.Interval;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
 
 import parser.DateToken;
-import parser.Interval;
 import parser.TimeToken;
 
 public class IntervalTest {

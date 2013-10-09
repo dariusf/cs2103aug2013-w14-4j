@@ -11,7 +11,6 @@ import org.joda.time.DateTime;
 import common.CommandType;
 import common.Constants;
 
-import parser.Interval;
 import parser.Parser;
 import storage.Storage;
 
