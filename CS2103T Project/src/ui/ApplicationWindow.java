@@ -92,10 +92,9 @@ public class ApplicationWindow {
 		input.setFocus();
 
 		displayFeedback.setText(displayWelcomeMessage());
-		
+
 		enterDriverLoop();
-		/*System.out.println("hello");
-		Feedback feedbackObj = logic.executeCommand("exit");*/
+
 		shell.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent e) {
@@ -128,6 +127,7 @@ public class ApplicationWindow {
 						String commandField = inputHistory
 								.getInput(currentIndex + 1);
 						input.setText(commandField);
+						input.setSelection(input.getText().length());
 						inputHistory.setIndex(currentIndex + 1);
 					}
 				}
