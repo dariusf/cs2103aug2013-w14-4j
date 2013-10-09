@@ -11,7 +11,6 @@ import java.util.Iterator;
 
 import javax.swing.text.StyledEditorKit.ForegroundAction;
 
-import org.eclipse.swt.internal.mozilla.nsDynamicFunctionLoad;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
