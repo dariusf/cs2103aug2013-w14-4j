@@ -13,7 +13,6 @@ package parser;
 
 %%
 
-%public
 %class Lexer
 %function nextToken
 %type Token
