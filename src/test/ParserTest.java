@@ -11,7 +11,7 @@ import org.junit.Test;
 import common.CommandType;
 
 import logic.Command;
-import parser.Interval;
+import logic.Interval;
 import parser.Parser;
 
 public class ParserTest {

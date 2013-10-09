@@ -1,7 +1,10 @@
-package parser;
+package logic;
 
 
 import org.joda.time.DateTime;
+
+import parser.DateToken;
+import parser.TimeToken;
 
 import common.Constants;
 

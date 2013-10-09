@@ -1,5 +1,7 @@
 package parser;
 
+import logic.Interval;
+
 class StateDefault implements Parser.State {
 
 	StringBuilder words = new StringBuilder();

@@ -2,6 +2,8 @@ package parser;
 
 import java.util.ArrayList;
 
+import logic.Interval;
+
 class StateDateTime implements Parser.State {
 
 	private final Parser parser;
