@@ -49,7 +49,7 @@ public class Constants {
 	public static final String DONE_ATT_LINE = "doneIndex";
 	
 	public static final String FINALISE_ATT_LINE = "finaliseIndex";
-	public static final String FINALISE_ATT_INDEX = "finaliseItem";
+	public static final String FINALISE_ATT_INDEX = "slotIndex";
 
 	public static final String CLEAR_ATT_DONE = "clearDone";
 	

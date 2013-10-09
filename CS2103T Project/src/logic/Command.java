@@ -14,7 +14,7 @@ public class Command {
 	
 	private String description = "";
 	private DateTime deadline = null;
-	private ArrayList<String> tags = null;
+	private ArrayList<String> tags = new ArrayList<>();
 	private ArrayList<Interval> intervals = new ArrayList<>();
 	private int taskIndex = 0;
 	private int finaliseIndex = 0;

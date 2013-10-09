@@ -43,11 +43,11 @@ public class Parser {
 		command = new Parser().parse("help done asjdlkasd");
 
 		// Mini REPL for testing
-//		Scanner scanner = new Scanner(System.in);
-//		while(true){
-//			String message = scanner.nextLine();
-//			System.out.println(new Parser().parse(message));
-//		}
+		Scanner scanner = new Scanner(System.in);
+		while(true){
+			String message = scanner.nextLine();
+			System.out.println(new Parser().parse(message));
+		}
 	}
 
 	// States
