@@ -1,3 +1,3 @@
 java -jar ..\lib\JFlex.jar lexer.flex
-copy Lexer.java ..\src\parser\Lexer.java
+move Lexer.java ..\src\parser\Lexer.java
 pause

@@ -7,7 +7,6 @@ import java.util.Scanner;
 import java.util.Stack;
 import logic.Command;
 
-import org.eclipse.ui.internal.operations.AdvancedValidationUserApprover;
 import org.joda.time.DateTime;
 
 import common.CommandType;
