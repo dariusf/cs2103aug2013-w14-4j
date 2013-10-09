@@ -17,11 +17,11 @@ import storage.Storage;
 
 public class Logic {
 
-	protected static Storage storage = null;
-	protected static HashMap<Integer, Integer> temporaryMapping = new HashMap<Integer, Integer>();
-	protected static boolean isDynamicIndex = false;
-	protected static boolean isDisplayHelp = false;
-	protected static Command currentHelpCommand = null;
+	protected Storage storage = null;
+	protected HashMap<Integer, Integer> temporaryMapping = new HashMap<Integer, Integer>();
+	protected boolean isDynamicIndex = false;
+	protected boolean isDisplayHelp = false;
+	protected Command currentHelpCommand = null;
 
 	public Logic() throws IOException {
 		storage = new Storage("default.txt");
@@ -63,7 +63,7 @@ public class Logic {
 		}
 	}
 
-	public static Feedback addTask(Command command) {
+	public Feedback addTask(Command command) {
 		Task newTask = new Task(command);
 		storage.add(newTask);
 		isDynamicIndex = false;
@@ -79,7 +79,7 @@ public class Logic {
 		return feedback;
 	}
 
-	protected static Feedback editTask(Command command) {
+	protected Feedback editTask(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -218,7 +218,7 @@ public class Logic {
 		return feedback;
 	}
 
-	public static Feedback displayTasks() {
+	public Feedback displayTasks() {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY);
@@ -230,7 +230,7 @@ public class Logic {
 		return feedback;
 	}
 
-	protected static Feedback deleteTask(Command command) {
+	protected Feedback deleteTask(Command command) {
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
 		int lineNumber = Integer.parseInt(commandAttributes
@@ -254,7 +254,7 @@ public class Logic {
 		return feedback;
 	}
 
-	protected static Feedback clearTasks(Command command) {
+	protected Feedback clearTasks(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -283,7 +283,7 @@ public class Logic {
 		return feedback;
 	}
 
-	protected static Feedback finaliseTask(Command command) {
+	protected Feedback finaliseTask(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -320,7 +320,8 @@ public class Logic {
 		taskToEdit.setInterval(newInterval);
 
 		storage.replace(taskIndex, taskToEdit);
-
+		isDynamicIndex = false;
+		
 		if (isTaskOver(taskToEdit)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
 					CommandType.FINALISE, taskToEdit.toString());
@@ -332,7 +333,7 @@ public class Logic {
 		return feedback;
 	}
 
-	protected static Feedback sortTask() {
+	protected Feedback sortTask() {
 		Feedback feedback = null;
 		if (storage.size() > 0) {
 			storage.sort();
@@ -345,7 +346,7 @@ public class Logic {
 	}
 
 	// Not working yet
-	protected static Feedback markDone(Command command) {
+	protected Feedback markDone(Command command) {
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
 		int lineNumber = Integer.parseInt(commandAttributes
@@ -371,7 +372,7 @@ public class Logic {
 		return feedback;
 	}
 
-	protected static Feedback showHelp(Command command) {
+	protected Feedback showHelp(Command command) {
 		Feedback feedback = null;
 		currentHelpCommand = command;
 		isDisplayHelp = true;
@@ -380,7 +381,7 @@ public class Logic {
 		return feedback;
 	}
 
-	protected static Feedback undoState() {
+	protected Feedback undoState() {
 		Feedback feedback = null;
 		try {
 			storage.undo();
@@ -394,7 +395,7 @@ public class Logic {
 		return feedback;
 	}
 
-	protected static Feedback redoState() {
+	protected Feedback redoState() {
 		Feedback feedback = null;
 		try {
 			storage.redo();
@@ -408,7 +409,7 @@ public class Logic {
 		return feedback;
 	}
 
-	protected static Feedback searchTasks(Command command) {
+	protected Feedback searchTasks(Command command) {
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -451,7 +452,7 @@ public class Logic {
 		return feedback;
 	}
 
-	protected static void exitProgram() {
+	protected void exitProgram() {
 		try {
 			storage.close();
 			System.exit(0);
@@ -461,7 +462,7 @@ public class Logic {
 		}
 	}
 
-	protected static boolean isTaskOver(Task task) {
+	protected boolean isTaskOver(Task task) {
 		if (task.isDeadlineTask()) {
 			DateTime deadline = task.getDeadline();
 			return isTimePastAlready(deadline);
@@ -476,7 +477,7 @@ public class Logic {
 		}
 	}
 
-	protected static boolean isFloatingTaskOver(List<Interval> possibleTime) {
+	protected boolean isFloatingTaskOver(List<Interval> possibleTime) {
 		boolean isAllSlotOver = true;
 		for (Interval slot : possibleTime) {
 			if (!isTimePastAlready(slot.getEndDateTime())) {
@@ -486,17 +487,17 @@ public class Logic {
 		return isAllSlotOver;
 	}
 
-	protected static boolean isTimePastAlready(DateTime time) {
+	protected boolean isTimePastAlready(DateTime time) {
 		return time.compareTo(new DateTime()) < 0;
 	}
 
-	protected static boolean isWordInString(String word, String string) {
+	protected boolean isWordInString(String word, String string) {
 		String lowerCaseString = string.toLowerCase();
 		String lowerCaseWord = word.toLowerCase();
 		return lowerCaseString.indexOf(lowerCaseWord) != -1;
 	}
 
-	public static void main(String[] args) throws IOException {
+	public void main(String[] args) throws IOException {
 		Logic logic = new Logic();
 
 		// Display task test
