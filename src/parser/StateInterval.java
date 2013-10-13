@@ -35,8 +35,10 @@ class StateInterval implements Parser.State {
 		else if (t instanceof WordToken) {
 			if (t.contents.equalsIgnoreCase("or")) {
 				finaliseInterval();
+				foundDelimiter = false;
 			}
-			else{
+			else {
+				assert t.contents.equalsIgnoreCase("to");
 				foundDelimiter = true;
 			}
 			this.parser.nextToken();
