@@ -44,6 +44,11 @@ public class Interval {
 	 * The start functions incrementally build up an one half
 	 * of the interval. They also set a tentative end. They
 	 * must be called before an end function can be called.
+	 * 
+	 * The idea is that changeStartDate and changeStartTime
+	 * can be called in any order, and will produce equivalent
+	 * results based on the latest calls.
+	 * 
 	 * @param startToken
 	 */
 	public void changeStartDate(DateToken startToken) {
@@ -62,8 +67,11 @@ public class Interval {
 			// a time has already been set
 			DateTime start = startToken.mergeInto(this.start);
 			this.start = start;
-			if (this.end.isBefore(this.start)) {
-				this.end = this.start.plusHours(1);
+			if (end.isBefore(this.start)) {
+				end = this.start.plusHours(1);
+			}
+			else {
+				end = startToken.mergeInto(end);
 			}
 		}
 	}
