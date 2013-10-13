@@ -23,18 +23,44 @@ package parser;
   String name;
 %}
 
-Date = (0?[1-9]|[12][0-9]|3[01])([/])(0?[1-9]|1[012])([/]((19|20)?[0-9][0-9]))?
-Time = ((1[012]|[1-9]):([0-5][0-9])[ ]*(am|pm))|(([01]?[0-9]|2[0-3]):([0-5][0-9])[ ]*)
+From = from
+On = on
+At = at
+TimeQualifier = (({From}|{At})[ ]+)?
+DateQualifier = (({From}|{On})[ ]+)?
+
+Date = {DateQualifier} (0?[1-9]|[12][0-9]|3[01]) ([/]) (0?[1-9]|1[012]) ([/]((19|20)?[0-9][0-9]))?
+Time = {TimeQualifier} (((1[012]|[1-9]):([0-5][0-9])[ ]*(am|pm))|(([01]?[0-9]|2[0-3]):([0-5][0-9])))
+
 Word = [a-zA-Z0-9]+
-Tag = #[a-zA-Z0-9]+
+Tag = #{Word}
 QuotedWords = '[a-zA-Z0-9 :/]+'
 
 %%
 
-{Time} {return new TimeToken(yytext());}
-{Date} {return new DateToken(yytext());}
-{Word} { return new WordToken(yytext()); }
-{Tag} { return new TagToken(yytext()); }
-{QuotedWords} { return new WordToken(yytext()); }
+{Time} {
+	String contents = yytext();
+	String[] split = contents.split("\\s+", 2);
+
+	if (split.length == 2 && (split[0].equalsIgnoreCase("at") || split[0].equalsIgnoreCase("from"))) {
+		System.out.println(split[0] + " + " + split[1]);
+		return new TimeToken(split[1].trim());
+	}
+	else {
+		System.out.println("length 1 only");
+		return new TimeToken(yytext());
+	}
+}
+{Date} {
+	String contents = yytext();
+	String[] split = contents.split("\\s+", 2);
+	if (split[0].equalsIgnoreCase("on") || split[0].equalsIgnoreCase("from")) {
+		return new DateToken(split[1].trim());
+	}
+	return new DateToken(yytext());
+}
+{Word} {return new WordToken(yytext());}
+{Tag} {return new TagToken(yytext());}
+{QuotedWords} {return new WordToken(yytext());}
 
 .|\n {}

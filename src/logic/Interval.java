@@ -51,10 +51,12 @@ public class Interval {
 		if (Interval.nowStub != null) now = Interval.nowStub;
 		
 		if (this.start == null) {
-			DateTime start = startToken.mergeInto(now);
-			start = start.withTime(0, 0, 0, 0);
-			end = start.withTime(23, 59, 0, 0);
+			DateTime start = startToken.mergeInto(now).withTime(0, 0, 0, 0);
+
+			// not leaping forward a year here; date should be taken as is
+			
 			this.start = start;
+			end = start.withTime(23, 59, 0, 0);
 		}
 		else {
 			// a time has already been set
