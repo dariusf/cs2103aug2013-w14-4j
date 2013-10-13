@@ -38,7 +38,7 @@ class StateInterval implements Parser.State {
 				foundDelimiter = false;
 			}
 			else {
-				assert t.contents.equalsIgnoreCase("to");
+				assert tokenIsIntervalDelimiter(t);
 				foundDelimiter = true;
 			}
 			this.parser.nextToken();
