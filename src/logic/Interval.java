@@ -97,11 +97,17 @@ public class Interval {
 			end = start.plusHours(1);
 		}
 	}
-	
+
+	boolean endExplitlySet = false;
 	public void changeEndDate(DateToken startToken) {
 		if (this.start == null) throw new IllegalArgumentException("Start date has to be set before setEndDate can be called");
 		
 		this.end = startToken.mergeInto(this.end);
+		
+		if (!endExplitlySet) {
+			this.end = this.end.withTime(23, 59, 0, 0);
+			endExplitlySet = true;
+		}
 		
 		if (this.end.isBefore(this.start)) {
 			this.end = this.start.plusHours(1);
@@ -112,6 +118,7 @@ public class Interval {
 		if (this.start == null) throw new IllegalArgumentException("Start date has to be set before setEndTime can be called");
 
 		this.end = startToken.mergeInto(this.end);
+		endExplitlySet = true;
 		
 		if (this.end.isBefore(this.start)) {
 			this.end = this.start.plusHours(1);
