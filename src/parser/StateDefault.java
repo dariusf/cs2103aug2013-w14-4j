@@ -15,33 +15,27 @@ class StateDefault implements Parser.State {
 	
 	@Override
 	public void processToken(Token t) {
-		if (t instanceof WordToken) {
-			if (t.contents.equals("from") || t.contents.equals("from:")) {
-				parser.pushState(new StateInterval(parser, this));
-			}
-			else if (t.contents.equals("by") || t.contents.equals("by:")) {
+		if (t instanceof TimeToken || t instanceof DateToken) {
+			parser.pushState(new StateInterval(parser, this));
+			// Do not advance
+		}
+		else if (t instanceof WordToken) {
+			if (t.contents.equals("by")) {
 				parser.pushState(new StateBy(parser, this));
-			}
-			else if (t.contents.equals("on") || t.contents.equals("on:")) {
-				parser.pushState(new StateOn(parser, this));
-			}
-			else if (t.contents.equals("at") || t.contents.equals("at:")) {
-				parser.pushState(new StateAt(parser, this));
-			}
-			else if (t.contents.equals("until") || t.contents.equals("until:")) {
-				parser.pushState(new StateUntil(parser, this));
 			}
 			else {
 				words.append(t.contents + " ");
 			}
+			parser.nextToken();
 		}
 		else if (t instanceof TagToken) {
 			parser.tags.add(((TagToken) t).contents);
+			parser.nextToken();
 		}
 		else {
 			words.append(t.contents + " ");
+			parser.nextToken();
 		}
-		parser.nextToken();
 	}
 
 	@Override

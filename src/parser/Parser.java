@@ -14,10 +14,11 @@ import common.Constants;
 
 public class Parser {
 	
-	private static final boolean PRINT_LEXER_TOKENS = false;
+	private static final boolean PRINT_LEXER_TOKENS = true;
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
+		String[] aStrings = "1/2/3".split("\\s");
 		Command command = new Parser().parse("add task 3 from 10:00 pm 1/2/13 to 11:pm 5/5/15");
 		command = new Parser().parse("add Halloween Party on 31/10 #YOLO #Party");
 		command = new Parser().parse("add task at 2:00pm");
