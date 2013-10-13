@@ -12,6 +12,7 @@ import common.CommandType;
 
 import logic.Command;
 import logic.Interval;
+import parser.DateToken;
 import parser.Parser;
 
 public class ParserTest {
@@ -44,7 +45,9 @@ public class ParserTest {
 	@Test
 	public void addCommandTests() {
 
-		Interval.setNowStub(new DateTime(2013, 10, 5, 20, 0));
+		DateTime now = new DateTime(2013, 10, 5, 20, 0); // saturday
+		Interval.setNowStub(now);
+		DateToken.setNowStub(now);
 		
 		Command expected, gotten;
 		ArrayList<Interval> intervals;
@@ -105,13 +108,13 @@ public class ParserTest {
 		// Symbols, day alias
 		// TODO: symbols are dropped for now
 		expected = new Command(CommandType.ADD_TASK);
-		expected.setDescription("go home on tuesday yeah");
+		expected.setDescription("go home yeah");
 		intervals = new ArrayList<>();
-		start = new DateTime(2013, 10, 6, 13, 0);
+		start = new DateTime(2013, 10, 1, 13, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
-		gotten = new Parser().parse("add go home at 13:00 on tuesday yeah!");
+		gotten = new Parser().parse("add go home at 13:00 on tUeSdAy yeah!");
 		assertEquals(gotten, expected);
 
 		// Proper date format
@@ -129,11 +132,11 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD_TASK);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
-		start = new DateTime(2013, 10, 12, 12, 0);
+		start = new DateTime(2011, 10, 12, 12, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
-		gotten = new Parser().parse("add go home at 12:00 on 12/10");
+		gotten = new Parser().parse("add go home at 12:00 on 12/10/11");
 		assertEquals(gotten, expected);
 		
 		// Date and time

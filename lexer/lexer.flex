@@ -16,6 +16,7 @@ package parser;
 %class Lexer
 %function nextToken
 %type Token
+%ignorecase
 
 %unicode
 
@@ -29,7 +30,10 @@ At = at
 TimeQualifier = (({From}|{At})[ ]+)?
 DateQualifier = (({From}|{On})[ ]+)?
 
-Date = {DateQualifier} (0?[1-9]|[12][0-9]|3[01]) ([/]) (0?[1-9]|1[012]) ([/]((19|20)?[0-9][0-9]))?
+StandardDate = (0?[1-9]|[12][0-9]|3[01])[-/](1[012]|0?[1-9])([-/]((19|20)?[0-9][0-9]))?
+RelativeDayDate = (((this)|(next)|(last))[ ]+)?((((mon)|(tues)|(wednes)|(thurs)|(fri)|(satur)|(sun))day)|(mon)|(tues)|(tue)|(wed)|(thurs)|(thu)|(fri)|(sat)|(sun))
+
+Date = {DateQualifier} ({StandardDate}|{RelativeDayDate})
 Time = {TimeQualifier} (((1[012]|[1-9]):([0-5][0-9])[ ]*(am|pm))|(([01]?[0-9]|2[0-3]):([0-5][0-9])))
 
 Word = [a-zA-Z0-9]+
@@ -42,22 +46,25 @@ QuotedWords = '[a-zA-Z0-9 :/]+'
 	String contents = yytext();
 	String[] split = contents.split("\\s+", 2);
 
+	// Handles the optional qualifier
 	if (split.length == 2 && (split[0].equalsIgnoreCase("at") || split[0].equalsIgnoreCase("from"))) {
-		System.out.println(split[0] + " + " + split[1]);
 		return new TimeToken(split[1].trim());
 	}
 	else {
-		System.out.println("length 1 only");
 		return new TimeToken(yytext());
 	}
 }
 {Date} {
 	String contents = yytext();
 	String[] split = contents.split("\\s+", 2);
-	if (split[0].equalsIgnoreCase("on") || split[0].equalsIgnoreCase("from")) {
+
+	// Handles the optional qualifier
+	if (split.length == 2 && (split[0].equalsIgnoreCase("on") || split[0].equalsIgnoreCase("from"))) {
 		return new DateToken(split[1].trim());
 	}
-	return new DateToken(yytext());
+	else {
+		return new DateToken(yytext());
+	}
 }
 {Word} {return new WordToken(yytext());}
 {Tag} {return new TagToken(yytext());}

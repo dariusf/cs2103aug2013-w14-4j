@@ -8,7 +8,6 @@ import logic.Command;
 import logic.Interval;
 
 import org.joda.time.DateTime;
-
 import common.CommandType;
 import common.Constants;
 
@@ -18,8 +17,9 @@ public class Parser {
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
-		String[] aStrings = "1/2/3".split("\\s");
-		Command command = new Parser().parse("add task 3 from 10:00 pm 1/2/13 to 11:pm 5/5/15");
+		Command command;
+		command = new Parser().parse("add task 3 last mOnDaY 1:00pm");
+		command = new Parser().parse("add task 3 from 10:00 pm 1/2/13 to 11:pm 5/5/15");
 		command = new Parser().parse("add Halloween Party on 31/10 #YOLO #Party");
 		command = new Parser().parse("add task at 2:00pm");
 		command = new Parser().parse("add task at 10:00pm");
@@ -137,7 +137,7 @@ public class Parser {
 			Lexer lexer = new Lexer(new ByteArrayInputStream(string.getBytes("UTF-8")));
 
 			Token next;
-			if (PRINT_LEXER_TOKENS) System.out.println("Tokens:");
+			if (PRINT_LEXER_TOKENS) System.out.println("\nTokens:");
 			while ((next = lexer.nextToken()) != null) {
 				tokens.add(next);
 				if (PRINT_LEXER_TOKENS) System.out.println(next.toString());
