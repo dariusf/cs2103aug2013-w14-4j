@@ -200,6 +200,40 @@ public class ParserTest {
 		gotten = new Parser().parse("add go home at on at at 13:00");
 		assertEquals(gotten, expected);
 		
+		// Date aliases
+		// today
+		expected = new Command(CommandType.ADD_TASK);
+		expected.setDescription("event");
+		intervals = new ArrayList<>();
+		start = now.withTime(0, 0, 0, 0);
+		end = now.withTime(23, 59, 0, 0);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add event today");
+		assertEquals(gotten, expected);
+		
+		// tomorrow
+		expected = new Command(CommandType.ADD_TASK);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.withTime(0, 0, 0, 0).plusDays(1);
+		end = now.withTime(23, 59, 0, 0).plusDays(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add go home tomorrow");
+		assertEquals(gotten, expected);
+
+		// Alias
+		expected = new Command(CommandType.ADD_TASK);
+		expected.setDescription("go home for a scare");
+		intervals = new ArrayList<>();
+		start = now.withMonthOfYear(10).withDayOfMonth(31).withTime(0, 0, 0, 0);
+		end = now.withMonthOfYear(10).withDayOfMonth(31).withTime(23, 59, 0, 0);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add go home on halloween for a scare");
+		assertEquals(gotten, expected);
+
 		// Specifying dates and times in the middle
 		expected = new Command(CommandType.ADD_TASK);
 		expected.setDescription("do schoolwork in school");
@@ -275,7 +309,7 @@ public class ParserTest {
 
 		// Flexible interval
 		expected = new Command(CommandType.ADD_TASK);
-		expected.setDescription("halloween and also maybe");
+		expected.setDescription("'halloween' and also maybe");
 		intervals = new ArrayList<>();
 		start = now.withDayOfMonth(31).withMonthOfYear(10).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
@@ -284,7 +318,7 @@ public class ParserTest {
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
-		gotten = new Parser().parse("add halloween at 13:00 on 31/10 and also maybe at 2:00pm");
+		gotten = new Parser().parse("add 'halloween' at 13:00 on 31/10 and also maybe at 2:00pm");
 		assertEquals(gotten, expected);
 		
 		// Deadline
