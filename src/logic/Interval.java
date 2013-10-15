@@ -18,7 +18,6 @@ public class Interval {
 	private DateTime start = null;
 	private DateTime end = null;
 	
-	
 	public Interval() {
 	}
 
@@ -72,6 +71,9 @@ public class Interval {
 			}
 			else {
 				end = startToken.mergeInto(end);
+				if (end.isBefore(start)) {
+					end = start.plusHours(1);
+				}
 			}
 		}
 	}
@@ -98,15 +100,15 @@ public class Interval {
 		}
 	}
 
-	boolean endExplitlySet = false;
+	private boolean endExplicitlySet = false;
 	public void changeEndDate(DateToken startToken) {
 		if (this.start == null) throw new IllegalArgumentException("Start date has to be set before setEndDate can be called");
 		
 		this.end = startToken.mergeInto(this.end);
 		
-		if (!endExplitlySet) {
+		if (!endExplicitlySet) {
 			this.end = this.end.withTime(23, 59, 0, 0);
-			endExplitlySet = true;
+			endExplicitlySet = true;
 		}
 		
 		if (this.end.isBefore(this.start)) {
@@ -118,7 +120,7 @@ public class Interval {
 		if (this.start == null) throw new IllegalArgumentException("Start date has to be set before setEndTime can be called");
 
 		this.end = startToken.mergeInto(this.end);
-		endExplitlySet = true;
+		endExplicitlySet = true;
 		
 		if (this.end.isBefore(this.start)) {
 			this.end = this.start.plusHours(1);
@@ -146,7 +148,17 @@ public class Interval {
 	public String toString() {
 		return start.toString(Constants.DATE_TIME_FORMAT) + " to " + end.toString(Constants.DATE_TIME_FORMAT);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((end == null) ? 0 : end.hashCode());
+		result = prime * result + (endExplicitlySet ? 1231 : 1237);
+		result = prime * result + ((start == null) ? 0 : start.hashCode());
+		return result;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -168,4 +180,6 @@ public class Interval {
 			return false;
 		return true;
 	}
+	
+
 }

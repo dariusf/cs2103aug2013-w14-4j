@@ -1,6 +1,6 @@
 package parser;
 
-public abstract class Token {
+abstract class Token {
 	String contents = "";
 
 	public Token(String contents) {

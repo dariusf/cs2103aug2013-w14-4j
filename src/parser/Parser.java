@@ -13,12 +13,13 @@ import common.Constants;
 
 public class Parser {
 	
-	private static final boolean PRINT_LEXER_TOKENS = true;
+	private static final boolean PRINT_LEXER_TOKENS = false;
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Command command;
-		command = new Parser().parse("add task 3 at 10am");
+		command = new Parser().parse("add halloween at 13:00 on 31/10 umm i mean 2:00pm");
+		command = new Parser().parse("add 10pm or die");
 		command = new Parser().parse("add task 3 last mOnDaY 1:00pm");
 		command = new Parser().parse("add task 3 from 10:00 pm 1/2/13 to 11:pm 5/5/15");
 		command = new Parser().parse("add Halloween Party on 31/10 #YOLO #Party");

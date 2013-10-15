@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 
-class StateDeadline implements Parser.State {
+public class StateDeadline implements Parser.State {
+
+	private static DateTime nowStub = null; // for testing purposes
 
 	private final Parser parser;
 	ArrayList<Token> results = new ArrayList<>();;
@@ -15,6 +17,10 @@ class StateDeadline implements Parser.State {
 		this.parser = parser;
 		this.parent = parent;
 		this.token = token;
+	}
+	
+	public static void setNowStub(DateTime now) {
+		nowStub = now;
 	}
 	
 	@Override
@@ -36,7 +42,8 @@ class StateDeadline implements Parser.State {
 			parent.words.append(token + " ");
 		}
 		else {
-			parser.deadline = new DateTime().withTime(23, 59, 0, 0);
+			DateTime now = nowStub == null ? new DateTime() : nowStub;
+			parser.deadline = now.withTime(23, 59, 0, 0);
 			for (Token token : results) {
 				if (token instanceof DateToken) {
 					parser.deadline = ((DateToken) token).mergeInto(parser.deadline);

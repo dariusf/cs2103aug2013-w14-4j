@@ -1,6 +1,6 @@
 package parser;
 
-public class TagToken extends Token {
+class TagToken extends Token {
 	public TagToken(String contents) {
 		super(contents.substring(1));
 	}

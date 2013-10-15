@@ -11,6 +11,7 @@ class StateInterval implements Parser.State {
 	private boolean foundDelimiter = false;
 	private ArrayList<Token> from = new ArrayList<>();
 	private ArrayList<Token> to = new ArrayList<>();
+	private boolean trailingOr = false;
 
 	public StateInterval(Parser parser, StateDefault parent) {
 		this.parser = parser;
@@ -30,12 +31,14 @@ class StateInterval implements Parser.State {
 			else {
 				to.add(t);
 			}
+			trailingOr  = false;
 			this.parser.nextToken();
 		}
 		else if (t instanceof WordToken) {
 			if (t.contents.equalsIgnoreCase("or")) {
 				finaliseInterval();
 				foundDelimiter = false;
+				trailingOr = true;
 			}
 			else {
 				assert tokenIsIntervalDelimiter(t);
@@ -63,6 +66,9 @@ class StateInterval implements Parser.State {
 	@Override
 	public void onPop() {
 		finaliseInterval();
+		if (trailingOr) {
+			parent.words.append("or ");
+		}
 	}
 	
 	private void finaliseInterval() {
@@ -83,9 +89,12 @@ class StateInterval implements Parser.State {
 				newInterval.changeEndTime((TimeToken) token);
 			}
 		}
-		to.clear();
-		from.clear();
-		parser.intervals.add(newInterval);
+		boolean intervalNotNull = from.size() > 0 || to.size() > 0;
+		if (intervalNotNull) {
+			parser.intervals.add(newInterval);
+			to.clear();
+			from.clear();
+		}
 	}
 
 	@Override
