@@ -17,6 +17,9 @@ public class DateToken extends Token {
 	private static final String REGEX_RELATIVE_DAY_DATE = "((this|next|last)[ ]+)?(((mon|tues|wednes|thurs|fri|satur|sun)day)|mon|tues|tue|wed|thurs|thu|fri|sat|sun)";
 	private static Pattern relativeDayDate = Pattern.compile(REGEX_RELATIVE_DAY_DATE, Pattern.CASE_INSENSITIVE);
 
+	private static final String REGEX_ALIAS_DATE = "(today|tomorrow|tmrw|tmr|halloween)";
+	private static Pattern aliasDate = Pattern.compile(REGEX_ALIAS_DATE, Pattern.CASE_INSENSITIVE);
+	
 	int day;
 	int month;
 	int year;
@@ -26,7 +29,46 @@ public class DateToken extends Token {
 		
 		if (matchStandardDate(contents)) return;
 		if (matchRelativeDayDate(contents)) return;
-		else assert false : "Date token contents did not match anything";
+		if (matchAliasDate(contents)) return;
+		else assert false : "Date token contents did not match anything; possibly a regex bug in either DateToken or lexer";
+	}
+
+	private boolean matchAliasDate(String contents) {
+
+		Matcher matcher = aliasDate.matcher(contents);
+		
+		if (!matcher.find()) return false;
+				
+		// Capturing groups:
+		
+		// 1: the alias
+		String dateString = matcher.group(1).toLowerCase();
+		DateTime now = nowStub == null ? new DateTime() : nowStub;
+		
+		switch (dateString) {
+		case "today":
+			year = now.getYear();
+			month = now.getMonthOfYear();
+			day = now.getDayOfMonth();
+			break;
+		case "tomorrow":
+		case "tmr":
+		case "tmrw":
+			now = now.plusDays(1);
+			year = now.getYear();
+			month = now.getMonthOfYear();
+			day = now.getDayOfMonth();
+			break;
+		case "halloween":
+			year = now.getYear();
+			month = 10;
+			day = 31;
+			break;
+		default:
+			assert false : "Error in DateToken logic";
+		}
+
+		return true;
 	}
 
 	private boolean matchRelativeDayDate(String contents) {
