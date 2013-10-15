@@ -29,9 +29,10 @@ DateQualifier = ((from|on)[ ]+)?
 
 StandardDate = (0?[1-9]|[12][0-9]|3[01])[-/](1[012]|0?[1-9])([-/]((19|20)?[0-9][0-9]))?
 RelativeDayDate = ((this|next|last)[ ]+)?(((mon|tues|wednes|thurs|fri|satur|sun)day)|mon|tues|tue|wed|thurs|thu|fri|sat|sun)
-AliasDates = (today|tomorrow|tmrw|tmr|halloween)
+MixedDate = ((0?[1-9]|[12][0-9]|3[01])[ ]*(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)[ ]*((19|20)?[0-9][0-9])?)
+AliasDate = (today|tomorrow|tmrw|tmr|halloween)
 
-Date = {DateQualifier} ({StandardDate}|{RelativeDayDate}|{AliasDates})
+Date = {DateQualifier} ({StandardDate}|{RelativeDayDate}|{AliasDate}|{MixedDate})
 Time = {TimeQualifier} (((1[012]|[1-9])(:([0-5][0-9]))?[ ]*(am|pm))|(([01]?[0-9]|2[0-3]):([0-5][0-9])))
 
 Word = [a-zA-Z0-9]+

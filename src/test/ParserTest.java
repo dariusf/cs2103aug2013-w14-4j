@@ -200,6 +200,28 @@ public class ParserTest {
 		gotten = new Parser().parse("add go home at on at at 13:00");
 		assertEquals(gotten, expected);
 		
+		// Mixed date
+		expected = new Command(CommandType.ADD_TASK);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = new DateTime(2015, 2, 12, 12, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add go home at 12:00 on 12 february 15");
+		assertEquals(gotten, expected);
+		
+		// Mixed date (short)
+		expected = new Command(CommandType.ADD_TASK);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = new DateTime(2013, 2, 12, 12, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add go home on 12 feb at 12:00");
+		assertEquals(gotten, expected);
+		
 		// Date aliases
 		// today
 		expected = new Command(CommandType.ADD_TASK);
