@@ -129,92 +129,81 @@ public class Logic {
 		return feedback;
 	}
 
-	public String displayOnWindow() {
-		String feedback = null;
-		StringBuilder output = new StringBuilder();
-		if (isDisplayHelp) {
-			HashMap<String, String> commandAttributes = currentHelpCommand
-					.getCommandAttributes();
-			if (commandAttributes.containsKey("helpCommand")) {
-				String commandString = commandAttributes.get("helpCommand");
-				CommandType commandType = Parser
-						.determineCommandType(commandString);
-				switch (commandType) {
-				case ADD_TASK:
-					feedback = Constants.HELP_ADD_TASK;
-					break;
-				case EDIT_TASK:
-					feedback = Constants.HELP_EDIT_TASK;
-					break;
-				case SORT:
-					feedback = Constants.HELP_SORT;
-					break;
-				case DELETE:
-					feedback = Constants.HELP_DELETE;
-					break;
-				case CLEAR:
-					feedback = Constants.HELP_CLEAR;
-					break;
-				case UNDO:
-					feedback = Constants.HELP_UNDO;
-					break;
-				case SEARCH:
-					feedback = Constants.HELP_SEARCH;
-					break;
-				case HELP:
-					feedback = Constants.HELP_HELP;
-					break;
-				case DONE:
-					feedback = Constants.HELP_DONE;
-					break;
-				case FINALISE:
-					feedback = Constants.HELP_FINALISE;
-					break;
-				case DISPLAY:
-					feedback = Constants.HELP_DISPLAY;
-					break;
-				case EXIT:
-					feedback = Constants.HELP_EXIT;
-					break;
-				default:
-					feedback = Constants.HELP_GENERAL;
-					;
-				}
-			} else {
-				feedback = Constants.HELP_GENERAL;
-			}
+	public int getNumberOfTasks() {
+		return storage.size();
+	}
 
-			isDisplayHelp = false;
-		} else if (!isDynamicIndex) {
-			if (storage.size() > 0) {
-				int index = 1;
-				Iterator<Task> storageIterator = storage.iterator();
-				while (storageIterator.hasNext()) {
-					Task task = storageIterator.next();
-					output.append(index + ". ");
-					output.append(task.toString());
-					if (index < storage.size()) {
-						output.append("\n");
-					}
-					index++;
-				}
-				feedback = output.toString();
-			} else {
-				feedback = "No Task";
+	public ArrayList<Task> getTasksToDisplay() {
+		ArrayList<Task> output = new ArrayList<Task>();
+		// StringBuilder output = new StringBuilder();
+		// if (isDisplayHelp) {
+		// HashMap<String, String> commandAttributes = currentHelpCommand
+		// .getCommandAttributes();
+		// if (commandAttributes.containsKey("helpCommand")) {
+		// String commandString = commandAttributes.get("helpCommand");
+		// CommandType commandType = Parser
+		// .determineCommandType(commandString);
+		// switch (commandType) {
+		// case ADD_TASK:
+		// feedback = Constants.HELP_ADD_TASK;
+		// break;
+		// case EDIT_TASK:
+		// feedback = Constants.HELP_EDIT_TASK;
+		// break;
+		// case SORT:
+		// feedback = Constants.HELP_SORT;
+		// break;
+		// case DELETE:
+		// feedback = Constants.HELP_DELETE;
+		// break;
+		// case CLEAR:
+		// feedback = Constants.HELP_CLEAR;
+		// break;
+		// case UNDO:
+		// feedback = Constants.HELP_UNDO;
+		// break;
+		// case SEARCH:
+		// feedback = Constants.HELP_SEARCH;
+		// break;
+		// case HELP:
+		// feedback = Constants.HELP_HELP;
+		// break;
+		// case DONE:
+		// feedback = Constants.HELP_DONE;
+		// break;
+		// case FINALISE:
+		// feedback = Constants.HELP_FINALISE;
+		// break;
+		// case DISPLAY:
+		// feedback = Constants.HELP_DISPLAY;
+		// break;
+		// case EXIT:
+		// feedback = Constants.HELP_EXIT;
+		// break;
+		// default:
+		// feedback = Constants.HELP_GENERAL;
+		// ;
+		// }
+		// } else {
+		// feedback = Constants.HELP_GENERAL;
+		// }
+		//
+		// isDisplayHelp = false;
+		// } else
+
+		if (!isDynamicIndex) {
+			Iterator<Task> storageIterator = storage.iterator();
+			while (storageIterator.hasNext()) {
+				Task task = storageIterator.next();
+				output.add(task);
 			}
 		} else {
 			for (Integer index : temporaryMapping.keySet()) {
 				Task task = storage.get(temporaryMapping.get(index));
-				output.append(index + ". ");
-				output.append(task.toString());
-				if (index < storage.size()) {
-					output.append("\n");
-				}
-				index++;
+				output.add(task);
 			}
-			feedback = output.toString();
 		}
-		return feedback;
+		return output;
 	}
 
 	public Feedback displayTasks() {
@@ -320,7 +309,7 @@ public class Logic {
 
 		storage.replace(taskIndex, taskToEdit);
 		isDynamicIndex = false;
-		
+
 		if (isTaskOver(taskToEdit)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
 					CommandType.FINALISE, taskToEdit.toString());
@@ -719,6 +708,5 @@ public class Logic {
 
 		System.out.println(logic.displayTasks() + "\n");
 
-		System.out.println(logic.displayOnWindow());
 	}
 }
