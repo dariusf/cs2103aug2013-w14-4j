@@ -20,8 +20,8 @@ class StateDefault implements Parser.State {
 			// Do not advance
 		}
 		else if (t instanceof WordToken) {
-			if (t.contents.equals("by")) {
-				parser.pushState(new StateBy(parser, this));
+			if (t.contents.equals("by") || t.contents.equals("before")) {
+				parser.pushState(new StateDeadline(parser, this, t.contents));
 			}
 			else {
 				words.append(t.contents + " ");

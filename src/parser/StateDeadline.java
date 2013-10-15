@@ -4,15 +4,17 @@ import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 
-class StateBy implements Parser.State {
+class StateDeadline implements Parser.State {
 
 	private final Parser parser;
 	ArrayList<Token> results = new ArrayList<>();;
 	StateDefault parent;
+	String token;
 	
-	public StateBy (Parser parser, StateDefault parent) {
+	public StateDeadline (Parser parser, StateDefault parent, String token) {
 		this.parser = parser;
 		this.parent = parent;
+		this.token = token;
 	}
 	
 	@Override
@@ -31,7 +33,7 @@ class StateBy implements Parser.State {
 	@Override
 	public void onPop() {
 		if (results.size() == 0) {
-			parent.words.append("by ");
+			parent.words.append(token + " ");
 		}
 		else {
 			parser.deadline = new DateTime().withTime(23, 59, 0, 0);
