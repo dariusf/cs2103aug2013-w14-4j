@@ -7,8 +7,8 @@ import org.joda.time.DateTime;
 
 public class TimeToken extends Token {
 
-	private static final String REGEX_TIME = "(1[012]|[1-9]):([0-5][0-9])\\s?(?i)(am|pm)|([01]?[0-9]|2[0-3]):([0-5][0-9])";
-	private static Pattern timePattern = Pattern.compile(REGEX_TIME);
+	private static final String REGEX_TIME = "(((1[012]|[1-9])(:([0-5][0-9]))?[ ]*(am|pm))|(([01]?[0-9]|2[0-3]):([0-5][0-9])))";
+	private static Pattern timePattern = Pattern.compile(REGEX_TIME, Pattern.CASE_INSENSITIVE);
 	
 	// Time is internally represented in 24-hour format
 	int hour;
@@ -19,23 +19,43 @@ public class TimeToken extends Token {
 
 		Matcher matcher = timePattern.matcher(contents); 
 		matcher.find();
+		
+		// Capturing groups:
+		
+		// 1: whole
+		
+		// 2: 12-hour time
+		// 3: hour
+		// 4: :minute
+		// 5: minute
+		// 6: period
 
-		if (matcher.group(1) == null) {
+		// 7: 24-hour time
+		// 8: hour
+		// 9: minute
+
+		if (matcher.group(2) == null) {
 			// 24 hour time matched
-			hour = Integer.parseInt(matcher.group(4));
-			minute = Integer.parseInt(matcher.group(5));
+			hour = Integer.parseInt(matcher.group(8));
+			minute = Integer.parseInt(matcher.group(9));
 		}
 		else {
 			// 12 hour time matched
-			hour = Integer.parseInt(matcher.group(1));
-			minute = Integer.parseInt(matcher.group(2));
-			String period = matcher.group(3).trim();
+			hour = Integer.parseInt(matcher.group(3));
+			if (matcher.group(4) != null) {
+				minute = Integer.parseInt(matcher.group(5));
+			}
+			else {
+				minute = 0;
+			}
+			String period = matcher.group(6).trim();
 			
 			if (period.equalsIgnoreCase("pm")) {
 				if (hour != 12) {
 					hour += 12;
 				}
-			} else if (period.equalsIgnoreCase("am")) {
+			} else {
+				assert period.equalsIgnoreCase("am");
 				if (hour == 12) {
 					hour = 0;
 				}
