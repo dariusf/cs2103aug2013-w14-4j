@@ -14,7 +14,7 @@ public class DateToken extends Token {
 	private static final String REGEX_STANDARD_DATE = "(0?[1-9]|[12][0-9]|3[01])[-/](1[012]|0?[1-9])([-/]((19|20)?[0-9][0-9]))?";
 	private static Pattern standardDate = Pattern.compile(REGEX_STANDARD_DATE, Pattern.CASE_INSENSITIVE);
 
-	private static final String REGEX_RELATIVE_DAY_DATE = "(((this)|(next)|(last))[ ]+)?((((mon)|(tues)|(wednes)|(thurs)|(fri)|(satur)|(sun))day)|(mon)|(tues)|(tue)|(wed)|(thurs)|(thu)|(fri)|(sat)|(sun))";
+	private static final String REGEX_RELATIVE_DAY_DATE = "((this|next|last)[ ]+)?(((mon|tues|wednes|thurs|fri|satur|sun)day)|mon|tues|tue|wed|thurs|thu|fri|sat|sun)";
 	private static Pattern relativeDayDate = Pattern.compile(REGEX_RELATIVE_DAY_DATE, Pattern.CASE_INSENSITIVE);
 
 	int day;
@@ -33,9 +33,17 @@ public class DateToken extends Token {
 		Matcher matcher = relativeDayDate.matcher(contents);
 		
 		if (!matcher.find()) return false;
+				
+		// Capturing groups:
 		
-		String qualifier = matcher.group(1);
-		String dayString = matcher.group(6);
+		// 1: qualifier with trailing spaces
+		// 2: qualifier
+		// 3: day with short forms
+		// 4: day without short forms
+		// 5: <fragment>
+				
+		String qualifier = matcher.group(2);
+		String dayString = matcher.group(3);
 		assert dayString != null;
 		int dayIndex = dayOfWeek(dayString);
 		
@@ -43,7 +51,6 @@ public class DateToken extends Token {
 		DateTime date = now.withDayOfWeek(dayIndex);
 			
 		if (qualifier != null) {
-			qualifier = qualifier.trim();
 			if (qualifier.equalsIgnoreCase("next")) {
 				date = date.plusWeeks(1);
 			}
@@ -97,6 +104,14 @@ public class DateToken extends Token {
 		
 		if (!matcher.find()) return false;
 		
+		// Capturing groups:
+		
+		// 1: day
+		// 2: month
+		// 3: [-/] year
+		// 4: year
+		// 5: first 2 digits of year
+
 		day = Integer.parseInt(matcher.group(1));
 		month = Integer.parseInt(matcher.group(2));
 		String yearString = matcher.group(4);
