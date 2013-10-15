@@ -172,7 +172,7 @@ public class Storage implements Closeable {
 	
 	public void redo() throws Exception {
 		if (!isRedoable()) { throw new Exception(); } // will change to better exception when I find one
-		redoAction(actionsPerformed.next());
+		redoAction(actionsPerformed.previous());
 	}
 	
 	private void redoAction(Action action) {
