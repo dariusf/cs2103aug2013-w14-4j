@@ -19,6 +19,7 @@ public class Task implements Comparable<Task>, Cloneable{
 	private DateTime deadline = null;
 	private List<Interval> possibleIntervals = new ArrayList<Interval>();
 	private boolean done = false;
+	DateTimeFormatter format = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/YY");
 
 	public Task(Command command) {
 		name = command.getDescription();
@@ -148,6 +149,40 @@ public class Task implements Comparable<Task>, Cloneable{
 	public DateTime getDeadline() {
 		return deadline;
 	}
+	
+	public String getInfoString(){
+		StringBuilder output = new StringBuilder();
+		if (isDeadlineTask()) {
+			output.append("by " + format.print(deadline));
+		} else if (isTimedTask()) {
+			output.append("from " + format.print(getStartTime()) + " to "
+					+ format.print(getEndTime()));
+		} else if (isFloatingTask()) {
+			output.append("on ");
+			int index = 1;
+			for (Interval slot : possibleIntervals) {
+				output.append("(");
+				output.append(index);
+				output.append(") ");
+				output.append(format.print(slot.getStartDateTime()));
+				output.append(" to ");
+				output.append(format.print(slot.getEndDateTime()));
+				if (index != possibleIntervals.size()) {
+					output.append("\nor ");
+				}
+				index++;
+			}
+		}
+		if (tags.size() > 0) {
+			if(isDeadlineTask() | isFloatingTask() | isTimedTask()){
+				output.append("\n");
+			}
+			for (String tag : tags) {
+				output.append("#" + tag+" ");
+			}
+		}
+		return output.toString();
+	}
 
 	public void setDeadline(DateTime deadline) {
 		this.deadline = deadline;
@@ -193,7 +228,7 @@ public class Task implements Comparable<Task>, Cloneable{
 		StringBuilder output = new StringBuilder();
 		output.append(name);
 
-		DateTimeFormatter format = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/Y");;
+		
 		if (isDeadlineTask()) {
 			output.append(" before " + format.print(deadline));
 		} else if (isTimedTask()) {
