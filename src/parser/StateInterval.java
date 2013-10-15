@@ -9,9 +9,12 @@ class StateInterval implements Parser.State {
 	private final Parser parser;
 	StateDefault parent;
 	private boolean foundDelimiter = false;
+	private String delimiter;
 	private ArrayList<Token> from = new ArrayList<>();
 	private ArrayList<Token> to = new ArrayList<>();
 	private boolean trailingOr = false;
+	private boolean trailingDelimiter = false;
+	
 
 	public StateInterval(Parser parser, StateDefault parent) {
 		this.parser = parser;
@@ -31,7 +34,8 @@ class StateInterval implements Parser.State {
 			else {
 				to.add(t);
 			}
-			trailingOr  = false;
+			trailingOr = false;
+			trailingDelimiter = false;
 			this.parser.nextToken();
 		}
 		else if (t instanceof WordToken) {
@@ -42,7 +46,9 @@ class StateInterval implements Parser.State {
 			}
 			else {
 				assert tokenIsIntervalDelimiter(t);
+				delimiter = t.contents;
 				foundDelimiter = true;
+				trailingDelimiter = true;
 			}
 			this.parser.nextToken();
 		}
@@ -68,6 +74,9 @@ class StateInterval implements Parser.State {
 		finaliseInterval();
 		if (trailingOr) {
 			parent.words.append("or ");
+		}
+		else if (trailingDelimiter) {
+			parent.words.append(delimiter + " ");
 		}
 	}
 	

@@ -278,6 +278,17 @@ public class ParserTest {
 		gotten = new Parser().parse("add do schoolwork at 13:00 on monday or die");
 		assertEquals(gotten, expected);
 
+		// Like the above, but with a trailing delimiter keyword
+		expected = new Command(CommandType.ADD_TASK);
+		expected.setDescription("go to school to do homework");
+		intervals = new ArrayList<>();
+		start = now.plusDays(1).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add go to school at 1pm to do homework");
+		assertEquals(gotten, expected);
+
 		// From, until, till, to
 		expected = new Command(CommandType.ADD_TASK);
 		expected.setDescription("event");
