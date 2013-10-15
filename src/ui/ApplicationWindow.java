@@ -1,25 +1,16 @@
 package ui;
 
+import java.util.ArrayList;
+
 import logic.Feedback;
 import logic.Logic;
+import logic.Task;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
 import org.eclipse.wb.swt.SWTResourceManager;
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
@@ -34,13 +25,15 @@ public class ApplicationWindow {
 	private Text input;
 	private Text displayFeedback;
 	private static Logic logic;
-	private Text displayTask;
+	private Composite displayTask;
+	private Text displayIndex;
 
 	public static ApplicationWindow self;
 	public boolean moving = false;
 
 	/**
 	 * Launch the application.
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -73,7 +66,7 @@ public class ApplicationWindow {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shell = new Shell(SWT.NO_TRIM | SWT.ON_TOP | SWT.DRAG);
+		shell = new Shell(SWT.NO_TRIM | SWT.DRAG);
 		shell.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
 				"/image/basketIcon.jpg"));
 		ImageData backgroundData = new ImageData(getClass()
@@ -88,16 +81,21 @@ public class ApplicationWindow {
 		shell.setSize(482, 681);
 		shell.setText(Constants.APP_NAME);
 
-		displayTask = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		displayTask.setFont(SWTResourceManager.getFont("Garamond", 16, SWT.NORMAL));
-		displayTask.setBackground(SWTResourceManager.getColor(255, 255, 204));
-		displayTask.setForeground(SWTResourceManager.getColor(153, 102, 51));
-		displayTask.setText(logic.displayOnWindow());
-		displayTask.setBounds(116, 86, 324, 450);
+		displayIndex = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI
+				| SWT.RIGHT);
+		displayIndex.setFont(SWTResourceManager.getFont("Myriad Pro", 48,
+				SWT.NORMAL));
+		displayIndex.setText("1\n2");
+		displayIndex.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
+		displayIndex.setBounds(35, 86, 60, 450);
 
-		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		displayFeedback.setForeground(SWTResourceManager.getColor(255, 153, 102));
-		displayFeedback.setBackground(SWTResourceManager.getColor(0, 0, 0));
+		displayTask = new Composite(shell, SWT.NONE);
+		displayTasksOnWindow();
+
+		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP
+				| SWT.V_SCROLL | SWT.MULTI);
+		displayFeedback.setForeground(SWTResourceManager
+				.getColor(255, 153, 102));
 		displayFeedback.setBounds(35, 558, 412, 40);
 
 		input = new Text(shell, SWT.BORDER);
@@ -116,7 +114,11 @@ public class ApplicationWindow {
 				logic.executeCommand("exit");
 			}
 		});
-		
+
+		enableDrag();
+	}
+
+	private void enableDrag() {
 		final Point[] offset = new Point[1];
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
@@ -153,7 +155,47 @@ public class ApplicationWindow {
 		return welcomeMessage;
 	}
 
-	private void enterDriverLoop() {	
+	private void displayTasksOnWindow() {
+		displayTask.dispose();
+		displayTask = new Composite(shell, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(1, false);
+		displayTask.setLayout(gridLayout);
+		displayTask.setBounds(116, 86, 324, 450);
+		ArrayList<Task> taskList = logic.getTasksToDisplay();
+		int numberOfTasks = taskList.size();
+		Composite[] taskComposites = new Composite[numberOfTasks];
+		int index = 0;
+		for (Task task : taskList) {
+			taskComposites[index] = new Composite(displayTask, SWT.NONE);
+			FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
+			taskComposites[index].setLayout(fillLayout);
+			taskComposites[index].setSize(320, 200);
+			Label taskName = new Label(taskComposites[index], SWT.READ_ONLY);
+			taskName.setText(task.getName());
+			taskName.setFont(SWTResourceManager.getFont("Myriad Pro", 24,
+					SWT.NORMAL));
+
+			Label taskDescription = new Label(taskComposites[index],
+					SWT.READ_ONLY);
+			taskDescription.setText(task.getInfoString());
+			taskDescription.setFont(SWTResourceManager.getFont("Myriad Pro",
+					12, SWT.NORMAL));
+
+			taskComposites[index].pack();
+		}
+		displayTask.pack();
+
+		StringBuilder taskIndexStringBuilder = new StringBuilder();
+		for (int i = 0; i < taskComposites.length; i++) {
+			taskIndexStringBuilder.append(i + 1);
+			if (i < taskComposites.length - 1) {
+				taskIndexStringBuilder.append("\n");
+			}
+		}
+		displayIndex.setText(taskIndexStringBuilder.toString());
+	}
+
+	private void enterDriverLoop() {
 		input.addKeyListener(new KeyListener() {
 			Color green = shell.getDisplay().getSystemColor(SWT.COLOR_GREEN);
 			Color red = new Color(shell.getDisplay(), 245, 126, 133);
@@ -162,12 +204,13 @@ public class ApplicationWindow {
 			UserInputHistory inputHistory = new UserInputHistory();
 
 			@Override
-			public void keyReleased(KeyEvent arg0) {}
+			public void keyReleased(KeyEvent arg0) {
+			}
 
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 
-				performTween();
+				// performTween();
 
 				if (arg0.keyCode == SWT.ARROW_DOWN) {
 					if (!inputHistory.isEndOfHistory()) {
@@ -202,8 +245,7 @@ public class ApplicationWindow {
 					}
 					displayFeedback.setText(feedback);
 					input.setText("");
-					tasks = logic.displayOnWindow();
-					displayTask.setText(tasks);
+					displayTasksOnWindow();
 				}
 			}
 
@@ -214,26 +256,27 @@ public class ApplicationWindow {
 				if (!moving) {
 					moving = true;
 					Tween.to(input, 0, duration)
-					.target(currentPosition - offset)
-					.ease(Quad.INOUT)
-					.start(InputAccessor.manager)
-					.setCallback(new TweenCallback() {
-						@Override
-						public void onEvent(int type, BaseTween<?> source) {
-							Tween.to(input, 0, duration*2)
-							.target(currentPosition + offset)
+							.target(currentPosition - offset).ease(Quad.INOUT)
 							.start(InputAccessor.manager)
 							.setCallback(new TweenCallback() {
 								@Override
-								public void onEvent(int type, BaseTween<?> source) {
-									Tween.to(input, 0, duration)
-									.target(currentPosition)
-									.start(InputAccessor.manager);
-									moving = false;
+								public void onEvent(int type,
+										BaseTween<?> source) {
+									Tween.to(input, 0, duration * 2)
+											.target(currentPosition + offset)
+											.start(InputAccessor.manager)
+											.setCallback(new TweenCallback() {
+												@Override
+												public void onEvent(int type,
+														BaseTween<?> source) {
+													Tween.to(input, 0, duration)
+															.target(currentPosition)
+															.start(InputAccessor.manager);
+													moving = false;
+												}
+											});
 								}
 							});
-						}
-					});
 				}
 			}
 		});
