@@ -63,6 +63,7 @@ public class Logic {
 	}
 
 	public Feedback addTask(Command command) {
+		assert(command.getCommandType() == CommandType.ADD_TASK);
 		Task newTask = new Task(command);
 		storage.add(newTask);
 		isDynamicIndex = false;
@@ -79,6 +80,7 @@ public class Logic {
 	}
 
 	protected Feedback editTask(Command command) {
+		assert(command.getCommandType() == CommandType.EDIT_TASK);
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -333,7 +335,6 @@ public class Logic {
 		return feedback;
 	}
 
-	// Not working yet
 	protected Feedback markDone(Command command) {
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -375,7 +376,6 @@ public class Logic {
 			storage.undo();
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.UNDO);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			feedback = new Feedback(Constants.SC_UNDO_NO_PRIOR_STATE_ERROR,
 					CommandType.UNDO);
 		}
@@ -389,7 +389,6 @@ public class Logic {
 			storage.redo();
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.REDO);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			feedback = new Feedback(Constants.SC_REDO_NO_PRIOR_STATE_ERROR,
 					CommandType.REDO);
 		}
@@ -430,6 +429,7 @@ public class Logic {
 			temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
 		}
 		isDynamicIndex = true;
+		
 
 		if (validTasks.size() > 0) {
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH);

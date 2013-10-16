@@ -96,6 +96,8 @@ public class Feedback {
 		case Constants.SC_UNDO_NO_PRIOR_STATE_ERROR :
 			isError = true;
 			break;
+		default:
+			assert isError = false;
 			// TODO: add in default case
 		}
 	}

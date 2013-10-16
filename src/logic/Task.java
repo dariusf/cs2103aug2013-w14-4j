@@ -19,7 +19,6 @@ public class Task implements Comparable<Task>, Cloneable{
 	private DateTime deadline = null;
 	private List<Interval> possibleIntervals = new ArrayList<Interval>();
 	private boolean done = false;
-	DateTimeFormatter format = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/YY");
 
 	public Task(Command command) {
 		name = command.getDescription();
@@ -153,10 +152,10 @@ public class Task implements Comparable<Task>, Cloneable{
 	public String getInfoString(){
 		StringBuilder output = new StringBuilder();
 		if (isDeadlineTask()) {
-			output.append("by " + format.print(deadline));
+			output.append("by " + Constants.format.print(deadline));
 		} else if (isTimedTask()) {
-			output.append("from " + format.print(getStartTime()) + " to "
-					+ format.print(getEndTime()));
+			output.append("from " + Constants.format.print(getStartTime()) + " to "
+					+ Constants.format.print(getEndTime()));
 		} else if (isFloatingTask()) {
 			output.append("on ");
 			int index = 1;
@@ -164,9 +163,9 @@ public class Task implements Comparable<Task>, Cloneable{
 				output.append("(");
 				output.append(index);
 				output.append(") ");
-				output.append(format.print(slot.getStartDateTime()));
+				output.append(Constants.format.print(slot.getStartDateTime()));
 				output.append(" to ");
-				output.append(format.print(slot.getEndDateTime()));
+				output.append(Constants.format.print(slot.getEndDateTime()));
 				if (index != possibleIntervals.size()) {
 					output.append("\nor ");
 				}
@@ -230,10 +229,10 @@ public class Task implements Comparable<Task>, Cloneable{
 
 		
 		if (isDeadlineTask()) {
-			output.append(" before " + format.print(deadline));
+			output.append(" before " + Constants.format.print(deadline));
 		} else if (isTimedTask()) {
-			output.append(" from " + format.print(getStartTime()) + " to "
-					+ format.print(getEndTime()));
+			output.append(" from " + Constants.format.print(getStartTime()) + " to "
+					+ Constants.format.print(getEndTime()));
 		} else if (isFloatingTask()) {
 			output.append(" on ");
 			int index = 1;
@@ -241,9 +240,9 @@ public class Task implements Comparable<Task>, Cloneable{
 				output.append("(");
 				output.append(index);
 				output.append(") ");
-				output.append(format.print(slot.getStartDateTime()));
+				output.append(Constants.format.print(slot.getStartDateTime()));
 				output.append(" to ");
-				output.append(format.print(slot.getEndDateTime()));
+				output.append(Constants.format.print(slot.getEndDateTime()));
 				if (index != possibleIntervals.size()) {
 					output.append(" or ");
 				}

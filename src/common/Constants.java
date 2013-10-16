@@ -1,5 +1,8 @@
 package common;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 public class Constants {
 	public static final String APP_NAME = "Basket";
 
@@ -140,5 +143,6 @@ public class Constants {
 	public static final int SC_UNDO_NO_PRIOR_STATE_ERROR = 100;
 	public static final int SC_REDO_NO_PRIOR_STATE_ERROR = 110;
 
+	public static DateTimeFormatter format = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/YY");
 	public static final String DATE_TIME_FORMAT = "d/M/yy h:mm a";
 }
