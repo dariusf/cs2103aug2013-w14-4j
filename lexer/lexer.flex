@@ -33,11 +33,11 @@ MixedDate = ((0?[1-9]|[12][0-9]|3[01])[ ]*(january|february|march|april|may|june
 AliasDate = (today|tomorrow|tmrw|tmr|halloween)
 
 Date = {DateQualifier} ({StandardDate}|{RelativeDayDate}|{AliasDate}|{MixedDate})
-Time = {TimeQualifier} (((1[012]|[1-9])(:([0-5][0-9]))?[ ]*(am|pm))|(([01]?[0-9]|2[0-3]):([0-5][0-9])))
+Time = {TimeQualifier} (((1[012]|[1-9])([:.]([0-5][0-9]))?[ ]*(am|pm))|(([01]?[0-9]|2[0-3])[:.]([0-5][0-9])))
 
 Word = [a-zA-Z0-9]+
 Tag = #{Word}
-QuotedWords = '[a-zA-Z0-9 :/]+'
+QuotedWords = '[a-zA-Z0-9 :./-]+'
 
 %%
 
