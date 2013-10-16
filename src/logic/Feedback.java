@@ -11,19 +11,20 @@ public class Feedback {
 	private boolean isError = false;
 
 	Feedback(int status, CommandType command) {
-		statusCode = status;
-		feedbackCommand = command;
+		setStatusCode(status);
+		setCommand(command);
 		setIsError(statusCode);
 	}
 
 	Feedback(int status, CommandType command, String string) {
-		statusCode = status;
+		setStatusCode(status);
+		setCommand(command);
 		feedbackString = string;
-		feedbackCommand = command;
 		setIsError(statusCode);
 	}
 
 	protected void setStatusCode(int status) {
+		assert (status <= 110) && (status >= 10);
 		statusCode = status;
 		setIsError(statusCode);
 	}
