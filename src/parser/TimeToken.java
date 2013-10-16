@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
 
 public class TimeToken extends Token {
 
-	private static final String REGEX_TIME = "(((1[012]|[1-9])(:([0-5][0-9]))?[ ]*(am|pm))|(([01]?[0-9]|2[0-3]):([0-5][0-9])))";
+	private static final String REGEX_TIME = "(((1[012]|[1-9])([:.]([0-5][0-9]))?[ ]*(am|pm))|(([01]?[0-9]|2[0-3])[:.]([0-5][0-9])))";
 	private static Pattern timePattern = Pattern.compile(REGEX_TIME, Pattern.CASE_INSENSITIVE);
 	
 	// Time is internally represented in 24-hour format
@@ -17,8 +17,13 @@ public class TimeToken extends Token {
 	public TimeToken(String contents) {
 		super(contents);
 
+		if (matchTime(contents)) return;
+		else assert false : "Time token contents did not match anything; possibly a regex bug in either DateToken or lexer";
+	}
+
+	private boolean matchTime(String contents) {
 		Matcher matcher = timePattern.matcher(contents); 
-		matcher.find();
+		if (!matcher.find()) return false;
 		
 		// Capturing groups:
 		
@@ -61,6 +66,7 @@ public class TimeToken extends Token {
 				}
 			}
 		}
+		return true;
 	}
 	
 	public String timeString() {

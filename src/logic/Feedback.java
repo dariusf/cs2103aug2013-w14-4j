@@ -11,19 +11,20 @@ public class Feedback {
 	private boolean isError = false;
 
 	Feedback(int status, CommandType command) {
-		statusCode = status;
-		feedbackCommand = command;
+		setStatusCode(status);
+		setCommand(command);
 		setIsError(statusCode);
 	}
 
 	Feedback(int status, CommandType command, String string) {
-		statusCode = status;
+		setStatusCode(status);
+		setCommand(command);
 		feedbackString = string;
-		feedbackCommand = command;
 		setIsError(statusCode);
 	}
 
 	protected void setStatusCode(int status) {
+		assert (status <= 110) && (status >= 10);
 		statusCode = status;
 		setIsError(statusCode);
 	}
@@ -95,6 +96,8 @@ public class Feedback {
 		case Constants.SC_UNDO_NO_PRIOR_STATE_ERROR :
 			isError = true;
 			break;
+		default:
+			assert isError = false;
 			// TODO: add in default case
 		}
 	}
