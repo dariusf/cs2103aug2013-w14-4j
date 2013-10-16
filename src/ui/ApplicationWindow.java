@@ -93,14 +93,13 @@ public class ApplicationWindow {
 
 		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.V_SCROLL | SWT.MULTI);
-		displayFeedback.setForeground(SWTResourceManager
-				.getColor(0x99, 0, 0));
+		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
 		displayFeedback.setBounds(35, 558, 412, 40);
 
 		input = new Text(shell, SWT.BORDER);
 		input.setFocus();
 		input.setBounds(20, 608, 442, 50);
-		input.setBackground(SWTResourceManager.getColor(255,255,255));
+		input.setBackground(SWTResourceManager.getColor(255, 255, 255));
 
 		// Tween.registerAccessor(Text.class, new InputAccessor());
 
@@ -167,12 +166,15 @@ public class ApplicationWindow {
 		for (Task task : taskList) {
 			taskComposites[index] = new Composite(displayTask, SWT.NONE);
 			FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
-			taskComposites[index].setLayout(fillLayout);
-			taskComposites[index].setSize(320, 200);
-			Label taskName = new Label(taskComposites[index], SWT.READ_ONLY);
-			taskName.setText(task.getName());
-			taskName.setFont(SWTResourceManager.getFont("Myriad Pro", 24,
-					SWT.NORMAL));
+			taskComposites[index].setLayout(gridLayout);
+			if (!task.isDone()) {
+				Label taskName = new Label(taskComposites[index], SWT.READ_ONLY);
+				taskName.setText(task.getName());
+				taskName.setFont(SWTResourceManager.getFont("Myriad Pro", 24,
+						SWT.NORMAL));
+			} else {
+				
+			}
 
 			Label taskDescription = new Label(taskComposites[index],
 					SWT.READ_ONLY);
