@@ -85,7 +85,6 @@ public class ApplicationWindow {
 				| SWT.RIGHT);
 		displayIndex.setFont(SWTResourceManager.getFont("Myriad Pro", 48,
 				SWT.NORMAL));
-		displayIndex.setText("1\n2");
 		displayIndex.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
 		displayIndex.setBounds(35, 86, 60, 450);
 
@@ -95,14 +94,15 @@ public class ApplicationWindow {
 		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.V_SCROLL | SWT.MULTI);
 		displayFeedback.setForeground(SWTResourceManager
-				.getColor(255, 153, 102));
+				.getColor(0x99, 0, 0));
 		displayFeedback.setBounds(35, 558, 412, 40);
 
 		input = new Text(shell, SWT.BORDER);
 		input.setFocus();
 		input.setBounds(20, 608, 442, 50);
+		input.setBackground(SWTResourceManager.getColor(255,255,255));
 
-		Tween.registerAccessor(Text.class, new InputAccessor());
+		// Tween.registerAccessor(Text.class, new InputAccessor());
 
 		displayFeedback.setText(displayWelcomeMessage());
 
@@ -127,7 +127,6 @@ public class ApplicationWindow {
 					Point pt1 = shell.toDisplay(0, 0);
 					Point pt2 = Display.getCurrent().getCursorLocation();
 					offset[0] = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
-					System.out.println(offset[0]);
 					break;
 				case SWT.MouseMove:
 					if (offset[0] != null) {
@@ -197,8 +196,8 @@ public class ApplicationWindow {
 
 	private void enterDriverLoop() {
 		input.addKeyListener(new KeyListener() {
-			Color green = shell.getDisplay().getSystemColor(SWT.COLOR_GREEN);
-			Color red = new Color(shell.getDisplay(), 245, 126, 133);
+			Color green = new Color(shell.getDisplay(), 0, 0x66, 0);
+			Color red = new Color(shell.getDisplay(), 0x99, 0, 0);
 			String userInput = "";
 			String tasks = "";
 			UserInputHistory inputHistory = new UserInputHistory();
