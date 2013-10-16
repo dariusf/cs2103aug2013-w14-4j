@@ -127,6 +127,7 @@ public class ApplicationWindow {
 					Point pt1 = shell.toDisplay(0, 0);
 					Point pt2 = Display.getCurrent().getCursorLocation();
 					offset[0] = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
+//					System.out.println(offset[0]);
 					break;
 				case SWT.MouseMove:
 					if (offset[0] != null) {
@@ -155,43 +156,60 @@ public class ApplicationWindow {
 	}
 
 	private void displayTasksOnWindow() {
+		// possibly could change this so a new composite isn't created every time
+		// (to remove the flicker)
 		displayTask.dispose();
 		displayTask = new Composite(shell, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(1, false);
 		displayTask.setLayout(gridLayout);
 		displayTask.setBounds(116, 86, 324, 450);
+
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
 		int numberOfTasks = taskList.size();
+
+		if (numberOfTasks == 0) return;
+
+		Composite first = createTaskItemComposite(taskList.get(0));
+		int compositeHeight = first.getSize().y;
+		int compositesThatWillFitIntoPanel = Math.min(displayTask.getSize().y / compositeHeight, numberOfTasks);
+
 		Composite[] taskComposites = new Composite[numberOfTasks];
-		int index = 0;
-		for (Task task : taskList) {
-			taskComposites[index] = new Composite(displayTask, SWT.NONE);
-			FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
-			taskComposites[index].setLayout(fillLayout);
-			taskComposites[index].setSize(320, 200);
-			Label taskName = new Label(taskComposites[index], SWT.READ_ONLY);
-			taskName.setText(task.getName());
-			taskName.setFont(SWTResourceManager.getFont("Myriad Pro", 24,
-					SWT.NORMAL));
+		taskComposites[0] = first;
 
-			Label taskDescription = new Label(taskComposites[index],
-					SWT.READ_ONLY);
-			taskDescription.setText(task.getInfoString());
-			taskDescription.setFont(SWTResourceManager.getFont("Myriad Pro",
-					12, SWT.NORMAL));
-
-			taskComposites[index].pack();
+		for (int i=1; i<compositesThatWillFitIntoPanel; i++) {
+			taskComposites[i] = createTaskItemComposite(taskList.get(i));
 		}
+
 		displayTask.pack();
 
 		StringBuilder taskIndexStringBuilder = new StringBuilder();
-		for (int i = 0; i < taskComposites.length; i++) {
+		for (int i = 0; i < numberOfTasks; i++) {
 			taskIndexStringBuilder.append(i + 1);
-			if (i < taskComposites.length - 1) {
+			if (i < numberOfTasks - 1) {
 				taskIndexStringBuilder.append("\n");
 			}
 		}
 		displayIndex.setText(taskIndexStringBuilder.toString());
+	}
+
+	private Composite createTaskItemComposite(Task task) {
+		Composite taskItemComposite = new Composite(displayTask, SWT.NONE);
+		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
+		taskItemComposite.setLayout(fillLayout);
+		taskItemComposite.setSize(320, 200);
+		Label taskName = new Label(taskItemComposite, SWT.READ_ONLY);
+		taskName.setText(task.getName());
+		taskName.setFont(SWTResourceManager.getFont("Myriad Pro", 24,
+				SWT.NORMAL));
+
+		Label taskDescription = new Label(taskItemComposite,
+				SWT.READ_ONLY);
+		taskDescription.setText(task.getInfoString());
+		taskDescription.setFont(SWTResourceManager.getFont("Myriad Pro",
+				12, SWT.NORMAL));
+
+		taskItemComposite.pack();
+		return taskItemComposite;
 	}
 
 	private void enterDriverLoop() {
