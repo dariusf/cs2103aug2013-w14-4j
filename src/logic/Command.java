@@ -74,7 +74,7 @@ public class Command {
 	// this is just here for now to illustrate how these
 	// fields alone can define the task type clearly
 	public String getTaskType() {
-		assert commandType == CommandType.ADD_TASK;
+		assert commandType == CommandType.ADD_TASK || commandType == CommandType.EDIT_TASK;
 		if (deadline != null) {
 			return Constants.TASK_TYPE_DEADLINE;
 		}
