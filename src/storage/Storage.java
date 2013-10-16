@@ -11,13 +11,26 @@ import logic.Task;
 
 public class Storage implements Closeable {
 	
-	private interface Action {}
+	private interface Action {
+		void undo();
+		void redo();
+	}
 	
 	private class AddAction implements Action {
 		Task changedTask;
 		
 		AddAction(Task changedTask) {
 			this.changedTask = changedTask;
+		}
+
+		@Override
+		public void undo() {
+			taskStorage.remove(changedTask);
+		}
+
+		@Override
+		public void redo() {
+			taskStorage.add(changedTask);
 		}
 	}
 	
@@ -28,6 +41,16 @@ public class Storage implements Closeable {
 		RemoveAction(Task changedTask, int index) {
 			this.changedTask = changedTask;
 			this.index = index;
+		}
+
+		@Override
+		public void undo() {
+			taskStorage.add(index, changedTask);
+		}
+
+		@Override
+		public void redo() {
+			taskStorage.remove(index);
 		}
 	}
 	
@@ -41,17 +64,39 @@ public class Storage implements Closeable {
 			this.after = after;
 			this.index = index;
 		}
+
+		@Override
+		public void undo() {
+			taskStorage.set(index, before);
+		}
+
+		@Override
+		public void redo() {
+			taskStorage.set(index, after);
+		}
 	}
 	
 	private class StateAction implements Action {
 		ArrayList<Task> previousState;
+		ArrayList<Task> nextState;
 		
-		StateAction(ArrayList<Task> previousState) {
+		StateAction(ArrayList<Task> previousState, ArrayList<Task> nextState) {
 			this.previousState = previousState;
+			this.nextState = nextState;
+		}
+
+		@Override
+		public void undo() {
+			taskStorage = (ArrayList<Task>) previousState.clone();
+		}
+
+		@Override
+		public void redo() {
+			taskStorage = (ArrayList<Task>) nextState.clone();
 		}
 	}
 	
-	private static ArrayList<Task> taskStorage;
+	private ArrayList<Task> taskStorage;
 	private StorageLinkedList<Action> actionsPerformed = new StorageLinkedList<>();
 	private final String fileName;
 	
@@ -78,7 +123,8 @@ public class Storage implements Closeable {
 	public void sort() {
 		ArrayList<Task> previousState = (ArrayList<Task>) taskStorage.clone();
 		Collections.sort(taskStorage);
-		StateAction thisAction = new StateAction(previousState);
+		ArrayList<Task> nextState = (ArrayList<Task>) taskStorage.clone();
+		StateAction thisAction = new StateAction(previousState, nextState);
 		actionsPerformed.pushHere(thisAction);
 	}
 	
@@ -107,7 +153,7 @@ public class Storage implements Closeable {
 	}
 
 	public void clear() {
-		Action thisAction = new StateAction(taskStorage);
+		Action thisAction = new StateAction(taskStorage, new ArrayList<Task>());
 		taskStorage = new ArrayList<Task>();
 		actionsPerformed.pushHere(thisAction);
 	}
@@ -143,31 +189,7 @@ public class Storage implements Closeable {
 	}
 	
 	private void undoAction(Action action) {
-		if(action instanceof AddAction) {
-			undoAddAction((AddAction) action);
-		} else if (action instanceof RemoveAction) {
-			undoRemoveAction((RemoveAction) action);
-		} else if (action instanceof EditAction) {
-			undoEditAction((EditAction) action);
-		} else if (action instanceof StateAction) {
-			undoClearAction((StateAction) action);
-		}
-	}
-	
-	private void undoAddAction(AddAction action) {
-		taskStorage.remove(action.changedTask);
-	}
-	
-	private void undoRemoveAction(RemoveAction action) {
-		taskStorage.add(action.index, action.changedTask);
-	}
-
-	private void undoEditAction(EditAction action) {
-		taskStorage.set(action.index, action.before);
-	}
-	
-	private void undoClearAction(StateAction action) {
-		taskStorage = action.previousState;
+		action.undo();
 	}
 	
 	public void redo() throws Exception {
@@ -176,31 +198,7 @@ public class Storage implements Closeable {
 	}
 	
 	private void redoAction(Action action) {
-		if(action instanceof AddAction) {
-			redoAddAction((AddAction) action);
-		} else if (action instanceof RemoveAction) {
-			redoRemoveAction((RemoveAction) action);
-		} else if (action instanceof EditAction) {
-			redoEditAction((EditAction) action);
-		} else if (action instanceof StateAction) {
-			redoClearAction((StateAction) action);
-		}
-	}
-	
-	private void redoAddAction(AddAction action) {
-		taskStorage.add(action.changedTask);
-	}
-	
-	private void redoRemoveAction(RemoveAction action) {
-		taskStorage.remove(action.index);
-	}
-	
-	private void redoEditAction(EditAction action) {
-		taskStorage.set(action.index, action.after);
-	}
-	
-	private void redoClearAction(StateAction action) {
-		taskStorage = new ArrayList<Task>();
+		action.redo();
 	}
 
 	public boolean isUndoable() {
