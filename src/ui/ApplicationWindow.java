@@ -12,6 +12,9 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import com.joestelmach.natty.generated.DateParser_NumericRules.int_00_to_23_optional_prefix_return;
+
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -89,7 +92,7 @@ public class ApplicationWindow {
 		displayIndex.setBounds(35, 86, 60, 450);
 
 		displayTask = new Composite(shell, SWT.NONE);
-		displayTasksOnWindow();
+		displayTasksOnWindow(0);
 
 		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.V_SCROLL | SWT.MULTI);
@@ -155,11 +158,17 @@ public class ApplicationWindow {
 		return welcomeMessage;
 	}
 
-	private void displayTasksOnWindow() {
-		// possibly could change this so a new composite isn't created every time
-		// (to remove the flicker)
-		displayTask.dispose();
-		displayTask = new Composite(shell, SWT.NONE);
+	private int taskDisplayStart, taskDisplayEnd;
+
+	private void displayTasksOnWindow(int startingIndex) {
+		
+//		displayTask.dispose();
+//		displayTask = new Composite(shell, SWT.NONE);
+		
+		for (Control child : displayTask.getChildren()) {
+			child.dispose();
+		}
+		
 		GridLayout gridLayout = new GridLayout(1, false);
 		displayTask.setLayout(gridLayout);
 		displayTask.setBounds(116, 86, 324, 450);
@@ -169,15 +178,13 @@ public class ApplicationWindow {
 
 		if (numberOfTasks == 0) return;
 
-		Composite first = createTaskItemComposite(taskList.get(0));
-		int compositeHeight = first.getSize().y;
-		int compositesThatWillFitIntoPanel = Math.min(displayTask.getSize().y / compositeHeight, numberOfTasks);
+		assert startingIndex < numberOfTasks;
 
 		Composite[] taskComposites = new Composite[numberOfTasks];
-		taskComposites[0] = first;
-
-		for (int i=1; i<compositesThatWillFitIntoPanel; i++) {
-			taskComposites[i] = createTaskItemComposite(taskList.get(i));
+		int compositesThatWillFitIntoPanel = determineCompositesThatWillFit(startingIndex);
+		
+		for (int i=0; i<compositesThatWillFitIntoPanel; i++) {
+			taskComposites[i] = createTaskItemComposite(taskList.get(startingIndex + i));
 		}
 
 		displayTask.pack();
@@ -190,8 +197,32 @@ public class ApplicationWindow {
 			}
 		}
 		displayIndex.setText(taskIndexStringBuilder.toString());
-	}
 
+		taskDisplayStart = startingIndex;
+		taskDisplayEnd = startingIndex + compositesThatWillFitIntoPanel - 1;
+	}
+	
+	private int determineCompositesThatWillFit(int startingIndex) {
+		ArrayList<Task> taskList = logic.getTasksToDisplay();
+		int numberOfTasks = taskList.size();
+		if (numberOfTasks == 0) return 0;
+		else {
+			Composite temp = createTaskItemComposite(taskList.get(0));
+			int compositeHeight = temp.getSize().y;
+			temp.dispose();
+			return Math.min(displayTask.getSize().y / compositeHeight, numberOfTasks-startingIndex);
+		}
+	}
+	
+	private int determineCompositesThatCanFit(int startingIndex) {
+		ArrayList<Task> taskList = logic.getTasksToDisplay();
+		Composite temp = createTaskItemComposite(taskList.get(0));
+		int compositeHeight = temp.getSize().y;
+		temp.dispose();
+		// todo: magic number
+		return 450 / compositeHeight;
+	}
+	
 	private Composite createTaskItemComposite(Task task) {
 		Composite taskItemComposite = new Composite(displayTask, SWT.NONE);
 		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
@@ -228,7 +259,6 @@ public class ApplicationWindow {
 			public void keyPressed(KeyEvent arg0) {
 
 				// performTween();
-
 				if (arg0.keyCode == SWT.ARROW_DOWN) {
 					if (!inputHistory.isEndOfHistory()) {
 						int currentIndex = inputHistory.getIndex();
@@ -239,7 +269,7 @@ public class ApplicationWindow {
 						inputHistory.setIndex(currentIndex + 1);
 					}
 				}
-				if (arg0.keyCode == SWT.ARROW_UP) {
+				else if (arg0.keyCode == SWT.ARROW_UP) {
 					int currentIndex = inputHistory.getIndex();
 					if (currentIndex != -1) {
 						String commandField = inputHistory
@@ -248,7 +278,7 @@ public class ApplicationWindow {
 						inputHistory.setIndex(currentIndex - 1);
 					}
 				}
-				if (arg0.character == SWT.CR) {
+				else if (arg0.character == SWT.CR) {
 					userInput = input.getText();
 
 					inputHistory.addInput(userInput);
@@ -262,7 +292,24 @@ public class ApplicationWindow {
 					}
 					displayFeedback.setText(feedback);
 					input.setText("");
-					displayTasksOnWindow();
+					displayTasksOnWindow(taskDisplayStart);
+				}
+				else if (arg0.keyCode == SWT.PAGE_UP) {
+					// when non-fixed-height composites are added, on every change
+					// go through the whole list to get the numbers for each page,
+					// then page based on those.
+					// for now, since it's fixed-width...
+					int compositesPerPage = determineCompositesThatCanFit(0);
+					taskDisplayStart = Math.max(taskDisplayStart - compositesPerPage, 0);
+					displayTasksOnWindow(taskDisplayStart);
+				}
+				else if (arg0.keyCode == SWT.PAGE_DOWN) {
+					ArrayList<Task> tasks = logic.getTasksToDisplay();
+					int prospectiveIndex = taskDisplayEnd + 1;
+					if (prospectiveIndex <= tasks.size()-1) {
+						taskDisplayStart = prospectiveIndex;
+						displayTasksOnWindow(prospectiveIndex);
+					}
 				}
 			}
 
