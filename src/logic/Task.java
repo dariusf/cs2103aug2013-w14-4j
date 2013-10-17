@@ -335,6 +335,35 @@ public class Task implements Comparable<Task>, Cloneable{
 		return earliestTime;
 	}
 	
+	public boolean isOverdue(){
+		if (this.isDeadlineTask()) {
+			DateTime deadline = this.getDeadline();
+			return isTimePastAlready(deadline);
+		} else if (this.isTimedTask()) {
+			DateTime endTime = this.getEndTime();
+			return isTimePastAlready(endTime);
+		} else if (this.isFloatingTask()) {
+			List<Interval> possibleTime = this.getPossibleTime();
+			return isFloatingTaskOver(possibleTime);
+		} else {
+			return false;
+		}
+	}
+	
+	protected boolean isFloatingTaskOver(List<Interval> possibleTime) {
+		boolean isAllSlotOver = true;
+		for (Interval slot : possibleTime) {
+			if (!isTimePastAlready(slot.getEndDateTime())) {
+				isAllSlotOver = false;
+			}
+		}
+		return isAllSlotOver;
+	}
+	
+	protected boolean isTimePastAlready(DateTime time) {
+		return time.compareTo(new DateTime()) < 0;
+	}
+	
 	public static void main(String[] args) throws CloneNotSupportedException {
 		Command command6 = new Command(CommandType.ADD_TASK);
 		DateTime startDate6a = new DateTime(2012, 10, 30, 12, 0, 0);

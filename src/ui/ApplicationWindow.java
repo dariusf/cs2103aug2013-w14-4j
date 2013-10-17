@@ -3,14 +3,14 @@ package ui;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import javax.management.loading.PrivateClassLoader;
-
 import logic.Feedback;
 import logic.Logic;
 import logic.Task;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
@@ -279,9 +279,19 @@ public class ApplicationWindow {
 		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
 		taskItemComposite.setLayout(fillLayout);
 		taskItemComposite.setSize(320, 200);
-		Label taskName = new Label(taskItemComposite, SWT.READ_ONLY);
+		
+		StyledText taskName = new StyledText(taskItemComposite, SWT.READ_ONLY);
 		taskName.setText(task.getName());
 		taskName.setFont(myriadProTitle);
+		if(task.isDone()){
+			StyleRange style1 = new StyleRange();
+		    style1.start = 0;
+		    style1.length = task.getName().length();
+		    style1.strikeout = true;
+		    taskName.setStyleRange(style1);
+		} else if(task.isOverdue()){
+			taskName.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+		}
 
 		Label taskDescription = new Label(taskItemComposite, SWT.READ_ONLY);
 		taskDescription.setText(task.getInfoString());
