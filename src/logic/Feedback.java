@@ -57,6 +57,9 @@ public class Feedback {
 		case Constants.SC_SUCCESS_TASK_OVERDUE :
 			isError = false;
 			break;
+		case Constants.SC_SUCCESS_CLEAR_DONE :
+			isError = false;
+			break;
 		case Constants.SC_INVALID_COMMAND_ERROR :
 			isError = true;
 			break;
@@ -98,7 +101,6 @@ public class Feedback {
 			break;
 		default:
 			assert isError = false;
-			// TODO: add in default case
 		}
 	}
 
@@ -139,9 +141,9 @@ public class Feedback {
 
 	private String addFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task added successfully! \n" + feedbackString;
+			statusMessage = "Task added successfully! \n";
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task added successfully! Task is overdue \n" + feedbackString;
+			statusMessage = "Task added successfully! Task is overdue \n";
 		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
 			statusMessage = "Error: No task description was given";
 		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
@@ -154,9 +156,9 @@ public class Feedback {
 
 	private String editFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task edited successfully! \n" + feedbackString;
+			statusMessage = "Task edited successfully! \n";
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task edited successfully! Task is overdue \n" + feedbackString;
+			statusMessage = "Task edited successfully! Task is overdue \n";
 		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
 			statusMessage = "Error: No task description was given";
 		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
@@ -184,7 +186,7 @@ public class Feedback {
 
 	private String deleteFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task deleted successfully! \n" + "The task \""+feedbackString+"\" is deleted";
+			statusMessage = "Task deleted successfully!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
 			statusMessage = "Error: ID is not valid";
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
@@ -267,9 +269,9 @@ public class Feedback {
 
 	private String finaliseFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task finalised successfully! \n" + feedbackString;
+			statusMessage = "Task finalised successfully! \n";
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task finalised successfully! Task is overdue \n" + feedbackString;
+			statusMessage = "Task finalised successfully! Task is overdue \n";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to finalise!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
@@ -281,7 +283,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_TIME_ERROR) {
 			statusMessage = "Error: Time ID is not specified";
 		} else if (statusCode == Constants.SC_FINALISE_TYPE_MISMATCH_ERROR) {
-			statusMessage = "Error: Task selected is not a flaoting task";
+			statusMessage = "Error: Task selected is not a floating task";
 		} else {
 			statusMessage = "Error: Invalid finalise (this should not happen!)";
 		}
@@ -299,7 +301,7 @@ public class Feedback {
 
 	private String doneFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task marked as done! \n" + feedbackString;
+			statusMessage = "Task marked as done! \n";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to mark as done!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
