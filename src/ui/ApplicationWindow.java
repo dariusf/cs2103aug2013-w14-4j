@@ -117,8 +117,8 @@ public class ApplicationWindow {
 		displayFeedback.setText(displayWelcomeMessage());
 
 		closeButton = new Composite(shell, SWT.NONE);
-		closeButton.setBounds(455, 0, 27, 27);
-		enableCloseButton();
+		closeButton.setBounds(433, 0, 49, 27);
+		enableWindowButton();
 		
 		enterDriverLoop();
 
@@ -146,16 +146,19 @@ public class ApplicationWindow {
 				"Myriad Pro Regular", 10, SWT.NORMAL);
 	}
 
-	private void enableCloseButton() {
+	private void enableWindowButton() {
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				if (event.type == SWT.MouseUp) {
 					Point pt1 = shell.toDisplay(0, 0);
 					Point pt2 = Display.getCurrent().getCursorLocation();
 					Point offset = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
+					
 					if(offset.x > 455 && offset.y < 27){
+						System.out.println("here");
 						shell.dispose();
 					} else if (offset.x > 433 && offset.y < 27) {
+						System.out.println("here");
 						shell.setMinimized(true);
 					}
 				}
