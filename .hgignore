@@ -1,4 +1,4 @@
 syntax: glob
-*.class
+*.classpath
 bin
 default.txt

@@ -156,6 +156,7 @@ public class ApplicationWindow {
 					
 					if(offset.x > 455 && offset.y < 27){
 						System.out.println("here");
+						logic.executeCommand("exit");
 						shell.dispose();
 					} else if (offset.x > 433 && offset.y < 27) {
 						System.out.println("here");
