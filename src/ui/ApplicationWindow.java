@@ -221,7 +221,7 @@ public class ApplicationWindow {
 		rowLayout.type = SWT.VERTICAL;
 		rowLayout.pack = true;
 		displayTask.setLayout(rowLayout);
-		displayTask.setBounds(105, 86, 324, 450);
+		displayTask.setBounds(105, 86, 340, 400);
 
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
 		int numberOfTasks = taskList.size();
