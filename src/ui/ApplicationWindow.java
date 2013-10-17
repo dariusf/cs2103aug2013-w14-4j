@@ -1,5 +1,6 @@
 package ui;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import logic.Feedback;
@@ -21,7 +22,7 @@ import common.Constants;
 
 public class ApplicationWindow {
 
-	protected Shell shell;
+	protected static Shell shell;
 	private Text input;
 	private Text displayFeedback;
 	private static Logic logic;
@@ -30,7 +31,7 @@ public class ApplicationWindow {
 
 	public static ApplicationWindow self;
 	public boolean moving = false;
-
+	
 	/**
 	 * Launch the application.
 	 * 
@@ -80,13 +81,18 @@ public class ApplicationWindow {
 		shell.setBackgroundMode(SWT.INHERIT_FORCE);
 		shell.setSize(482, 681);
 		shell.setText(Constants.APP_NAME);
+		System.out.println(shell.getDisplay().loadFont("src/font/MyriadPro-Semibold.otf"));
+		System.out.println(shell.getDisplay().loadFont("src/font/MyriadPro-Regular.otf"));
+		System.out.println(shell.getDisplay().loadFont("src/font/OpenSans-Light.ttf"));
+		Font myriadProSemibold = new Font(shell.getDisplay(), "Myriad Pro Semibold", 48, SWT.NORMAL);
+		Font myriadProRegular = new Font(shell.getDisplay(), "Myriad Pro Regular", 24, SWT.NORMAL);
+		Font openSansLight = new Font(shell.getDisplay(), "Open Sans Light", 12, SWT.NORMAL);
 
 		displayIndex = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI
 				| SWT.RIGHT);
-		displayIndex.setFont(SWTResourceManager.getFont("Myriad Pro", 48,
-				SWT.NORMAL));
+		displayIndex.setFont(myriadProSemibold);
 		displayIndex.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
-		displayIndex.setBounds(35, 86, 60, 450);
+		displayIndex.setBounds(40, 86, 60, 450);
 
 		displayTask = new Composite(shell, SWT.NONE);
 		displayTasksOnWindow();
@@ -158,29 +164,28 @@ public class ApplicationWindow {
 		displayTask = new Composite(shell, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(1, false);
 		displayTask.setLayout(gridLayout);
-		displayTask.setBounds(116, 86, 324, 450);
+		displayTask.setBounds(105, 86, 324, 450);
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
 		int numberOfTasks = taskList.size();
 		Composite[] taskComposites = new Composite[numberOfTasks];
 		int index = 0;
 		for (Task task : taskList) {
 			taskComposites[index] = new Composite(displayTask, SWT.NONE);
-			FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
 			taskComposites[index].setLayout(gridLayout);
 			if (!task.isDone()) {
 				Label taskName = new Label(taskComposites[index], SWT.READ_ONLY);
 				taskName.setText(task.getName());
-				taskName.setFont(SWTResourceManager.getFont("Myriad Pro", 24,
+				taskName.setFont(SWTResourceManager.getFont("Myriad Pro Regular", 24,
 						SWT.NORMAL));
 			} else {
-				
+
 			}
 
 			Label taskDescription = new Label(taskComposites[index],
 					SWT.READ_ONLY);
 			taskDescription.setText(task.getInfoString());
-			taskDescription.setFont(SWTResourceManager.getFont("Myriad Pro",
-					12, SWT.NORMAL));
+			taskDescription.setFont(SWTResourceManager.getFont("Myriad Pro Regular", 10,
+					SWT.NORMAL));
 
 			taskComposites[index].pack();
 		}
