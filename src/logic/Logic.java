@@ -264,7 +264,7 @@ public class Logic {
 						storage.remove(i);
 					}
 				}
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
+				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE, CommandType.CLEAR);
 				isDynamicIndex = false;
 			} else {
 				storage.clear();

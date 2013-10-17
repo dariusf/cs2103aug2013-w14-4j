@@ -102,8 +102,7 @@ public class ApplicationWindow {
 		displayTask = new Composite(shell, SWT.NONE);
 		displayTasksOnWindow(0);
 
-		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP
-				| SWT.V_SCROLL | SWT.MULTI);
+		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
 		displayFeedback.setBounds(35, 558, 412, 40);
 
@@ -218,9 +217,11 @@ public class ApplicationWindow {
 			child.dispose();
 		}
 
-		GridLayout gridLayout = new GridLayout(1, false);
-		displayTask.setLayout(gridLayout);
-		displayTask.setBounds(105, 86, 324, 450);
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.type = SWT.VERTICAL;
+		rowLayout.pack = true;
+		displayTask.setLayout(rowLayout);
+		displayTask.setBounds(105, 86, 340, 400);
 
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
 		int numberOfTasks = taskList.size();
@@ -276,9 +277,12 @@ public class ApplicationWindow {
 
 	private Composite createTaskItemComposite(Task task) {
 		Composite taskItemComposite = new Composite(displayTask, SWT.NONE);
-		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
-		taskItemComposite.setLayout(fillLayout);
-		taskItemComposite.setSize(320, 200);
+		// 340 is the fixed width and 69 is the fixed height. use SWT.default if you do not want to fix the lengths.
+		taskItemComposite.setLayoutData(new RowData(340, 69));
+		RowLayout innerRowLayout = new RowLayout();
+		innerRowLayout.wrap = false;
+		innerRowLayout.type = SWT.VERTICAL;
+		taskItemComposite.setLayout(innerRowLayout);
 		
 		StyledText taskName = new StyledText(taskItemComposite, SWT.READ_ONLY);
 		taskName.setText(task.getName());
