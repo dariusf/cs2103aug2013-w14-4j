@@ -33,15 +33,15 @@ public class ApplicationWindow {
 	private static Logic logic;
 	private Composite displayTask;
 	private Text displayIndex;
-	
+	private Composite closeButton;
+
 	private Font myriadProIndex;
 	private Font myriadProTitle;
 	private Font myriadProDescription;
-	
 
 	public static ApplicationWindow self;
 	public boolean moving = false;
-	
+
 	/**
 	 * Launch the application.
 	 * 
@@ -81,7 +81,7 @@ public class ApplicationWindow {
 		shell.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
 				"/image/basketIcon.jpg"));
 		ImageData backgroundData = new ImageData(getClass()
-				.getResourceAsStream("/image/backgroundWithTask.png"));
+				.getResourceAsStream("/image/background.png"));
 		int whitePixel = backgroundData.palette
 				.getPixel(new RGB(255, 255, 255));
 		backgroundData.transparentPixel = whitePixel;
@@ -116,6 +116,10 @@ public class ApplicationWindow {
 
 		displayFeedback.setText(displayWelcomeMessage());
 
+		closeButton = new Composite(shell, SWT.NONE);
+		closeButton.setBounds(445, 0, 37, 40);
+		enableCloseButton();
+		
 		enterDriverLoop();
 
 		shell.addShellListener(new ShellAdapter() {
@@ -129,12 +133,35 @@ public class ApplicationWindow {
 	}
 
 	private void defineFont() {
-		System.out.println(shell.getDisplay().loadFont("src/font/MyriadPro-Semibold.otf"));
-		System.out.println(shell.getDisplay().loadFont("src/font/MyriadPro-Regular.otf"));
-		
-		myriadProIndex = new Font(shell.getDisplay(), "Myriad Pro Semibold", 48, SWT.NORMAL);
-		myriadProTitle = new Font(shell.getDisplay(), "Myriad Pro Regular", 24, SWT.NORMAL);
-		myriadProDescription = new Font(shell.getDisplay(), "Myriad Pro Regular", 10, SWT.NORMAL);
+		System.out.println(shell.getDisplay().loadFont(
+				"src/font/MyriadPro-Semibold.otf"));
+		System.out.println(shell.getDisplay().loadFont(
+				"src/font/MyriadPro-Regular.otf"));
+
+		myriadProIndex = new Font(shell.getDisplay(), "Myriad Pro Semibold",
+				48, SWT.NORMAL);
+		myriadProTitle = new Font(shell.getDisplay(), "Myriad Pro Regular", 24,
+				SWT.NORMAL);
+		myriadProDescription = new Font(shell.getDisplay(),
+				"Myriad Pro Regular", 10, SWT.NORMAL);
+	}
+
+	private void enableCloseButton() {
+		Listener listener = new Listener() {
+			public void handleEvent(Event event) {
+				if (event.type == SWT.MouseUp) {
+					Point pt1 = shell.toDisplay(0, 0);
+					Point pt2 = Display.getCurrent().getCursorLocation();
+					Point offset = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
+					if(offset.x > 445 && offset.y < 40){
+						shell.dispose();
+					}
+				}
+
+			}
+
+		};
+		closeButton.addListener(SWT.MouseUp, listener);
 	}
 
 	private void enableDrag() {
@@ -146,7 +173,7 @@ public class ApplicationWindow {
 					Point pt1 = shell.toDisplay(0, 0);
 					Point pt2 = Display.getCurrent().getCursorLocation();
 					offset[0] = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
-//					System.out.println(offset[0]);
+					// System.out.println(offset[0]);
 					break;
 				case SWT.MouseMove:
 					if (offset[0] != null) {
@@ -177,28 +204,30 @@ public class ApplicationWindow {
 	private int taskDisplayStart, taskDisplayEnd;
 
 	private void displayTasksOnWindow(int startingIndex) {
-		
-//		displayTask.dispose();
-//		displayTask = new Composite(shell, SWT.NONE);
-		
+
+		// displayTask.dispose();
+		// displayTask = new Composite(shell, SWT.NONE);
+
 		for (Control child : displayTask.getChildren()) {
 			child.dispose();
 		}
-		
+
 		GridLayout gridLayout = new GridLayout(1, false);
 		displayTask.setLayout(gridLayout);
 		displayTask.setBounds(105, 86, 324, 450);
 
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
 		int numberOfTasks = taskList.size();
-		if (numberOfTasks == 0) return;
+		if (numberOfTasks == 0)
+			return;
 		assert startingIndex < numberOfTasks;
 
 		Composite[] taskComposites = new Composite[numberOfTasks];
 		int compositesThatWillFitIntoPanel = determineCompositesThatWillFit(startingIndex);
-		
-		for (int i=0; i<compositesThatWillFitIntoPanel; i++) {
-			taskComposites[i] = createTaskItemComposite(taskList.get(startingIndex + i));
+
+		for (int i = 0; i < compositesThatWillFitIntoPanel; i++) {
+			taskComposites[i] = createTaskItemComposite(taskList
+					.get(startingIndex + i));
 		}
 
 		displayTask.pack();
@@ -215,19 +244,21 @@ public class ApplicationWindow {
 		taskDisplayStart = startingIndex;
 		taskDisplayEnd = startingIndex + compositesThatWillFitIntoPanel - 1;
 	}
-	
+
 	private int determineCompositesThatWillFit(int startingIndex) {
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
 		int numberOfTasks = taskList.size();
-		if (numberOfTasks == 0) return 0;
+		if (numberOfTasks == 0)
+			return 0;
 		else {
 			Composite temp = createTaskItemComposite(taskList.get(0));
 			int compositeHeight = temp.getSize().y;
 			temp.dispose();
-			return Math.min(displayTask.getSize().y / compositeHeight, numberOfTasks-startingIndex);
+			return Math.min(displayTask.getSize().y / compositeHeight,
+					numberOfTasks - startingIndex);
 		}
 	}
-	
+
 	private int determineCompositesThatCanFit(int startingIndex) {
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
 		Composite temp = createTaskItemComposite(taskList.get(0));
@@ -236,7 +267,7 @@ public class ApplicationWindow {
 		// todo: magic number
 		return 450 / compositeHeight;
 	}
-	
+
 	private Composite createTaskItemComposite(Task task) {
 		Composite taskItemComposite = new Composite(displayTask, SWT.NONE);
 		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
@@ -246,8 +277,7 @@ public class ApplicationWindow {
 		taskName.setText(task.getName());
 		taskName.setFont(myriadProTitle);
 
-		Label taskDescription = new Label(taskItemComposite,
-				SWT.READ_ONLY);
+		Label taskDescription = new Label(taskItemComposite, SWT.READ_ONLY);
 		taskDescription.setText(task.getInfoString());
 		taskDescription.setFont(myriadProDescription);
 
@@ -280,8 +310,7 @@ public class ApplicationWindow {
 						input.setSelection(input.getText().length());
 						inputHistory.setIndex(currentIndex + 1);
 					}
-				}
-				else if (arg0.keyCode == SWT.ARROW_UP) {
+				} else if (arg0.keyCode == SWT.ARROW_UP) {
 					int currentIndex = inputHistory.getIndex();
 					if (currentIndex != -1) {
 						String commandField = inputHistory
@@ -289,8 +318,7 @@ public class ApplicationWindow {
 						input.setText(commandField);
 						inputHistory.setIndex(currentIndex - 1);
 					}
-				}
-				else if (arg0.character == SWT.CR) {
+				} else if (arg0.character == SWT.CR) {
 					userInput = input.getText();
 
 					inputHistory.addInput(userInput);
@@ -305,20 +333,21 @@ public class ApplicationWindow {
 					displayFeedback.setText(feedback);
 					input.setText("");
 					displayTasksOnWindow(taskDisplayStart);
-				}
-				else if (arg0.keyCode == SWT.PAGE_UP) {
-					// when non-fixed-height composites are added, on every change
-					// go through the whole list to get the numbers for each page,
+				} else if (arg0.keyCode == SWT.PAGE_UP) {
+					// when non-fixed-height composites are added, on every
+					// change
+					// go through the whole list to get the numbers for each
+					// page,
 					// then page based on those.
 					// for now, since it's fixed-width...
 					int compositesPerPage = determineCompositesThatCanFit(0);
-					taskDisplayStart = Math.max(taskDisplayStart - compositesPerPage, 0);
+					taskDisplayStart = Math.max(taskDisplayStart
+							- compositesPerPage, 0);
 					displayTasksOnWindow(taskDisplayStart);
-				}
-				else if (arg0.keyCode == SWT.PAGE_DOWN) {
+				} else if (arg0.keyCode == SWT.PAGE_DOWN) {
 					ArrayList<Task> tasks = logic.getTasksToDisplay();
 					int prospectiveIndex = taskDisplayEnd + 1;
-					if (prospectiveIndex <= tasks.size()-1) {
+					if (prospectiveIndex <= tasks.size() - 1) {
 						taskDisplayStart = prospectiveIndex;
 						displayTasksOnWindow(prospectiveIndex);
 					}
