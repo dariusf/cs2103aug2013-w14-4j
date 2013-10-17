@@ -137,9 +137,9 @@ public class ApplicationWindow {
 		System.out.println(shell.getDisplay().loadFont(
 				"src/font/MyriadPro-Regular.otf"));
 
-		myriadProIndex = new Font(shell.getDisplay(), "Myriad Pro Semibold",
-				48, SWT.NORMAL);
-		myriadProTitle = new Font(shell.getDisplay(), "Myriad Pro Regular", 24,
+		myriadProIndex = new Font(shell.getDisplay(), "Calibri",
+				60, SWT.NORMAL);
+		myriadProTitle = new Font(shell.getDisplay(), "Calibri", 24,
 				SWT.NORMAL);
 		myriadProDescription = new Font(shell.getDisplay(),
 				"Myriad Pro Regular", 10, SWT.NORMAL);
