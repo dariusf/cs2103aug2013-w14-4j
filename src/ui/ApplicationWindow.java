@@ -102,8 +102,7 @@ public class ApplicationWindow {
 		displayTask = new Composite(shell, SWT.NONE);
 		displayTasksOnWindow(0);
 
-		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP
-				| SWT.V_SCROLL | SWT.MULTI);
+		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
 		displayFeedback.setBounds(35, 558, 412, 40);
 
