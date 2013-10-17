@@ -135,6 +135,11 @@ public class Logic {
 		return storage.size();
 	}
 
+	public ArrayList<Task> getTasksOnPage(int page){
+		
+		return null;
+	}
+	
 	public ArrayList<Task> getTasksToDisplay() {
 		ArrayList<Task> output = new ArrayList<Task>();
 		// StringBuilder output = new StringBuilder();
