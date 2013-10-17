@@ -117,7 +117,7 @@ public class ApplicationWindow {
 		displayFeedback.setText(displayWelcomeMessage());
 
 		closeButton = new Composite(shell, SWT.NONE);
-		closeButton.setBounds(445, 0, 37, 40);
+		closeButton.setBounds(455, 0, 27, 27);
 		enableCloseButton();
 		
 		enterDriverLoop();
@@ -153,8 +153,10 @@ public class ApplicationWindow {
 					Point pt1 = shell.toDisplay(0, 0);
 					Point pt2 = Display.getCurrent().getCursorLocation();
 					Point offset = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
-					if(offset.x > 445 && offset.y < 40){
+					if(offset.x > 455 && offset.y < 27){
 						shell.dispose();
+					} else if (offset.x > 433 && offset.y < 27) {
+						shell.setMinimized(true);
 					}
 				}
 
