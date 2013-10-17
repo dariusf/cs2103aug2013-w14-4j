@@ -128,6 +128,7 @@ public class Constants {
 
 	public static final int SC_SUCCESS = 10;
 	public static final int SC_SUCCESS_TASK_OVERDUE = 11;
+	public static final int SC_SUCCESS_CLEAR_DONE = 12;
 	public static final int SC_INVALID_COMMAND_ERROR = 20;
 	public static final int SC_EMPTY_DESCRIPTION_ERROR = 30;
 	public static final int SC_UNRECOGNISED_ATTRIBUTE_ERROR = 31;

@@ -198,6 +198,8 @@ public class Feedback {
 	private String clearFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = "All tasks cleared!";
+		} else if (statusCode == Constants.SC_SUCCESS_CLEAR_DONE) {
+			statusMessage = "All done tasks cleared!";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to clear!";
 		} else {
