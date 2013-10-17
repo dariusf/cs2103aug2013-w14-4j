@@ -23,7 +23,7 @@ public class Logic {
 	protected Command currentHelpCommand = null;
 
 	public Logic() throws IOException {
-		storage = new Storage("default.txt");
+		storage = new Storage();
 	}
 
 	public Feedback executeCommand(String userCommand) {
