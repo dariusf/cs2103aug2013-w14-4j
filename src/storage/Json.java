@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -14,17 +18,17 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 
-
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+
 import common.Constants;
 
 /**
@@ -75,14 +79,38 @@ public class Json {
 		}
 	}
 	
+	private static ArrayList<Task> fromReader(Reader reader) throws IOException {
+		try {
+			Task[] tasksArray = jsonFormatter.fromJson(reader, Task[].class);
+			ArrayList<Task> tasks = arrayToArrayList(tasksArray);
+			reader.close();
+			return tasks;
+		} catch (Exception e) {
+			throw new IOException(e);
+		}
+	}
+	
 	public static ArrayList<Task> readFromFile (File file) throws IOException {
 		if(!file.exists()) {
 			return new ArrayList<>();
 		}
-		FileReader reader = new FileReader(file);
-		Task[] tasksArray = jsonFormatter.fromJson(reader, Task[].class);
-		reader.close();
-		return arrayToArrayList(tasksArray);
+		return fromReader(new FileReader(file));
+	}
+	
+	public static ArrayList<Task> readFromString (String jsonString) throws IOException {
+		if(jsonString == "") {
+			return new ArrayList<>();
+		}
+		return fromReader(new StringReader(jsonString));
+	}
+
+	private static void toWriter(ArrayList<Task> tasks, Writer writer) throws IOException {
+		try {
+			jsonFormatter.toJson(tasks, writer);
+			writer.close();
+		} catch (JsonIOException e) {
+			throw new IOException(e);
+		}
 	}
 	
 	public static void writeToFile (ArrayList<Task> tasks, File file) throws IOException {
@@ -90,22 +118,13 @@ public class Json {
 			file.delete();
 			file.createNewFile();
 		}
-		FileWriter writer = new FileWriter(file);
-		jsonFormatter.toJson(tasks, writer);
-		writer.close();
+		toWriter(tasks, new FileWriter(file));
 	}
 	
-	public static ArrayList<Task> readFromString (String jsonString) {
-		Task[] tasksArray = jsonFormatter.fromJson(jsonString, Task[].class);
-		if(tasksArray == null) { 
-			return new ArrayList<>();
-		} else { 
-			return arrayToArrayList(tasksArray);
-		}
-	}
-	
-	public static String writeToString (ArrayList<Task> tasks) {
-		return jsonFormatter.toJson(tasks);
+	public static String writeToString (ArrayList<Task> tasks) throws IOException {
+		StringWriter writer = new StringWriter();
+		toWriter(tasks, writer);
+		return writer.toString();
 	}
 	
 	private static <E> ArrayList<E> arrayToArrayList(E[] array) {

@@ -11,12 +11,36 @@ import logic.Task;
 
 public class Storage implements Closeable {
 	
-	private interface Action {
-		void undo();
-		void redo();
+	private abstract class Action {
+		protected abstract void undoImplementation();
+		protected abstract void redoImplementation();
+		protected abstract void executeImplementation();
+		
+		void undo() {
+			undoImplementation();
+			actionFinaliser();
+		}
+		
+		void redo() {
+			redoImplementation();
+			actionFinaliser();
+		}
+		
+		protected void execute() {
+			executeImplementation();
+			actionFinaliser();
+		}
+		
+		private void actionFinaliser() throws Error {
+			try {
+				writeToFile();
+			} catch (IOException e) {
+				throw new Error(e);
+			}
+		}
 	}
 	
-	private class AddAction implements Action {
+	private class AddAction extends Action {
 		Task changedTask;
 		
 		AddAction(Task changedTask) {
@@ -24,75 +48,105 @@ public class Storage implements Closeable {
 		}
 
 		@Override
-		public void undo() {
+		protected void undoImplementation() {
 			taskStorage.remove(changedTask);
 		}
 
 		@Override
-		public void redo() {
+		protected void redoImplementation() {
+			taskStorage.add(changedTask);
+		}
+		
+		@Override
+		protected void executeImplementation() {
 			taskStorage.add(changedTask);
 		}
 	}
 	
-	private class RemoveAction implements Action {
+	private class RemoveAction extends Action {
 		Task changedTask;
 		int index;
 		
-		RemoveAction(Task changedTask, int index) {
-			this.changedTask = changedTask;
+		RemoveAction(int index) {
+			this.changedTask = taskStorage.get(index);
 			this.index = index;
 		}
 
 		@Override
-		public void undo() {
+		protected void undoImplementation() {
 			taskStorage.add(index, changedTask);
 		}
 
 		@Override
-		public void redo() {
+		protected void redoImplementation() {
+			taskStorage.remove(index);
+		}
+		
+		@Override
+		protected void executeImplementation() {
 			taskStorage.remove(index);
 		}
 	}
 	
-	private class EditAction implements Action {
+	private class EditAction extends Action {
 		Task before;
 		Task after;
 		int index;
 		
-		EditAction(int index, Task before, Task after) {
-			this.before = before;
+		EditAction(int index, Task after) {
+			this.before = taskStorage.get(index);
 			this.after = after;
 			this.index = index;
 		}
 
 		@Override
-		public void undo() {
+		protected void undoImplementation() {
 			taskStorage.set(index, before);
 		}
 
 		@Override
-		public void redo() {
+		protected void redoImplementation() {
+			taskStorage.set(index, after);
+		}
+		
+		@Override
+		protected void executeImplementation() {
 			taskStorage.set(index, after);
 		}
 	}
 	
-	private class StateAction implements Action {
+	private abstract class StateAction extends Action {
 		ArrayList<Task> previousState;
 		ArrayList<Task> nextState;
-		
-		StateAction(ArrayList<Task> previousState, ArrayList<Task> nextState) {
-			this.previousState = previousState;
-			this.nextState = nextState;
-		}
 
 		@Override
-		public void undo() {
+		protected void undoImplementation() {
 			taskStorage = (ArrayList<Task>) previousState.clone();
 		}
 
 		@Override
-		public void redo() {
+		protected void redoImplementation() {
 			taskStorage = (ArrayList<Task>) nextState.clone();
+		}
+		
+		@Override
+		protected void executeImplementation() {
+			taskStorage = (ArrayList<Task>) nextState.clone();
+		}
+	}
+	
+	private class ClearAction extends StateAction {
+		ClearAction() {
+			previousState = taskStorage;
+			nextState = new ArrayList<>();
+		}
+	}
+	
+	private class SortAction extends StateAction {
+		SortAction() {
+			previousState = (ArrayList<Task>) taskStorage.clone();
+			nextState = (ArrayList<Task>) previousState.clone();
+			Collections.sort(nextState);
 		}
 	}
 	
@@ -112,33 +166,27 @@ public class Storage implements Closeable {
 	
 	public Storage() throws IOException {
 		this("default.txt");
-		File file = new File(fileName);
-		if (file.exists()) {
-			taskStorage = Json.readFromFile(new File(fileName));
-		} else {
-			taskStorage = new ArrayList<>();
-		}
+	}
+	
+	private void executeAndStore(Action action) {
+		action.execute();
+		actionsPerformed.pushHere(action);
 	}
 	
 	public void sort() {
-		ArrayList<Task> previousState = (ArrayList<Task>) taskStorage.clone();
-		Collections.sort(taskStorage);
-		ArrayList<Task> nextState = (ArrayList<Task>) taskStorage.clone();
-		StateAction thisAction = new StateAction(previousState, nextState);
-		actionsPerformed.pushHere(thisAction);
+		StateAction thisAction = new SortAction();
+		executeAndStore(thisAction);
 	}
 	
 	public void add(Task task) {
-		taskStorage.add(task);
 		Action thisAction = new AddAction(task);
-		actionsPerformed.pushHere(thisAction);
+		executeAndStore(thisAction);
 	}
 	
 	public void remove(int index) {
 		index--;
-		Task removedItem = taskStorage.remove(index);
-		Action thisAction = new RemoveAction(removedItem, index);
-		actionsPerformed.pushHere(thisAction);
+		Action thisAction = new RemoveAction(index);
+		executeAndStore(thisAction);
 	}
 	
 	public void remove(Task t) {
@@ -147,15 +195,13 @@ public class Storage implements Closeable {
 
 	public void replace(int index, Task task) {
 		index--;
-		Action thisAction = new EditAction(index, taskStorage.get(index), task);
-		taskStorage.set(index, task);
-		actionsPerformed.pushHere(thisAction);
+		Action thisAction = new EditAction(index, task);
+		executeAndStore(thisAction);
 	}
 
 	public void clear() {
-		Action thisAction = new StateAction(taskStorage, new ArrayList<Task>());
-		taskStorage = new ArrayList<Task>();
-		actionsPerformed.pushHere(thisAction);
+		Action thisAction = new ClearAction();
+		executeAndStore(thisAction);
 	}
 
 	public Task get(int index) {
@@ -211,6 +257,10 @@ public class Storage implements Closeable {
 
 	@Override
 	public void close() throws IOException {
+		writeToFile();
+	}
+
+	private void writeToFile() throws IOException {
 		File file = new File(fileName);
 		if(file.exists()) { file.delete(); }
 		Json.writeToFile(taskStorage, file);
