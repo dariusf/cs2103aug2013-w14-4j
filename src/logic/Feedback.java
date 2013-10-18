@@ -1,11 +1,17 @@
 package logic;
 
+import org.joda.time.DateTime;
+
 import common.CommandType;
 import common.Constants;
+import common.DisplayMode;
 
 public class Feedback {
 	private CommandType feedbackCommand = null;
 	private int taskIndex = 0; 
+	private DisplayMode displayMode; 
+	private DateTime displayDate;
+
 	private String feedbackString = null;
 	private int statusCode = 0;
 	private String statusMessage = null;
@@ -23,6 +29,15 @@ public class Feedback {
 		feedbackString = string;
 		setIsError(statusCode);
 	}
+	
+	public DisplayMode getDisplayMode() {
+		return displayMode;
+	}
+
+	public void setDisplayMode(DisplayMode displayMode) {
+		this.displayMode = displayMode;
+	}
+
 	
 	public void setTaskIndex(int index){
 		taskIndex = index;
@@ -321,5 +336,13 @@ public class Feedback {
 			statusMessage = "Error: Invalid done (this should not happen!)";
 		}
 		return statusMessage+"\n";
+	}
+
+	public DateTime getDisplayDate() {
+		return displayDate;
+	}
+
+	public void setDisplayDate(DateTime displayDate) {
+		this.displayDate = displayDate;
 	}
 }

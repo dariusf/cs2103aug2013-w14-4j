@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 
 import common.CommandType;
 import common.Constants;
+import common.DisplayMode;
 
 import parser.Parser;
 import storage.Storage;
@@ -63,7 +64,7 @@ public class Logic {
 	}
 
 	public Feedback addTask(Command command) {
-		assert(command.getCommandType() == CommandType.ADD);
+		assert (command.getCommandType() == CommandType.ADD);
 		Task newTask = new Task(command);
 		storage.add(newTask);
 		isDynamicIndex = false;
@@ -80,7 +81,7 @@ public class Logic {
 	}
 
 	protected Feedback editTask(Command command) {
-		assert(command.getCommandType() == CommandType.EDIT);
+		assert (command.getCommandType() == CommandType.EDIT);
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -125,8 +126,8 @@ public class Logic {
 					CommandType.EDIT, taskToEdit.toString());
 			feedback.setTaskIndex(taskIndex);
 		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS,
-					CommandType.EDIT, taskToEdit.toString());
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.EDIT,
+					taskToEdit.toString());
 			feedback.setTaskIndex(taskIndex);
 		}
 
@@ -137,11 +138,11 @@ public class Logic {
 		return storage.size();
 	}
 
-	public ArrayList<Task> getTasksOnPage(int page){
-		
+	public ArrayList<Task> getTasksOnPage(int page) {
+
 		return null;
 	}
-	
+
 	public ArrayList<Task> getTasksToDisplay() {
 		ArrayList<Task> output = new ArrayList<Task>();
 		// StringBuilder output = new StringBuilder();
@@ -216,40 +217,75 @@ public class Logic {
 	}
 
 	public Feedback displayTasks(Command command) {
-		DateTime displayDate = command.getDisplayDateTime();
+		DisplayMode displayMode = command.getDisplayMode();
 		Feedback feedback = null;
-		if(displayDate == null){
-			if (storage.size() > 0) {
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY);
-				isDynamicIndex = false;
-			} else {
-				feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
-						CommandType.DISPLAY);
+
+		ArrayList<Task> validTasks = new ArrayList<Task>();
+		ArrayList<Integer> validTasksAbsoluteIndices = new ArrayList<Integer>();
+		ArrayList<Task> allTasks = new ArrayList<Task>();
+		Iterator<Task> storageIterator = storage.iterator();
+		while (storageIterator.hasNext()) {
+			allTasks.add(storageIterator.next());
+		}
+
+		for (int i = 0; i < allTasks.size(); i++) {
+			Task currentTask = allTasks.get(i);
+			if (displayCondition(command, currentTask)) {
+				validTasks.add(currentTask);
+				validTasksAbsoluteIndices.add(i + 1);
 			}
+		}
+
+		temporaryMapping = new HashMap<Integer, Integer>();
+		for (int i = 1; i <= validTasksAbsoluteIndices.size(); i++) {
+			temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
+		}
+		isDynamicIndex = true;
+
+		if (validTasks.size() > 0) {
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY);
+
 		} else {
-			ArrayList<Task> validTasks = new ArrayList<Task>();
-			ArrayList<Integer> validTasksAbsoluteIndices = new ArrayList<Integer>();
-			ArrayList<Task> allTasks = new ArrayList<Task>();
-			Iterator<Task> storageIterator = storage.iterator();
-			while (storageIterator.hasNext()) {
-				allTasks.add(storageIterator.next());
-			}
-
-			for (int i = 0; i < allTasks.size(); i++) {
-				Task currentTask = allTasks.get(i);
-				if (currentTask.isOnDate(displayDate)) {
-					validTasks.add(currentTask);
-					validTasksAbsoluteIndices.add(i + 1);
-				}
-			}
-
-			temporaryMapping = new HashMap<Integer, Integer>();
-			for (int i = 1; i <= validTasksAbsoluteIndices.size(); i++) {
-				temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
-			}
-			isDynamicIndex = true;
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
+					CommandType.DISPLAY);
+			
+		}
+		feedback.setDisplayMode(displayMode);
+		if(displayMode == DisplayMode.DATE){
+			feedback.setDisplayDate(command.getDisplayDateTime());
 		}
 		return feedback;
+	}
+
+	public boolean displayCondition(Command command, Task task) {
+		DisplayMode displayMode = command.getDisplayMode();
+		DateTime displayDate = null;
+		switch (displayMode) {
+		case DATE:
+			displayDate = command.getDisplayDateTime();
+			return task.isOnDate(displayDate);
+		case TODAY:
+			displayDate = new DateTime();
+			return task.isOnDate(displayDate);
+		case TOMORROW:
+			displayDate = new DateTime();
+			displayDate = displayDate.plusDays(1);
+			return task.isOnDate(displayDate);
+		case ALL:
+			return true;
+		case TIMED:
+			return task.isTimedTask();
+		case DEADLINE:
+			return task.isDeadlineTask();
+		case FLOATING:
+			return task.isFloatingTask();
+		case UNTIMED:
+			return task.isUntimedTask();
+		case OVERDUE:
+			return task.isOverdue();
+		default:
+			return true;
+		}
 	}
 
 	protected Feedback deleteTask(Command command) {
@@ -292,7 +328,8 @@ public class Logic {
 						storage.remove(i);
 					}
 				}
-				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE, CommandType.CLEAR);
+				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE,
+						CommandType.CLEAR);
 				isDynamicIndex = false;
 			} else {
 				storage.clear();
@@ -465,7 +502,6 @@ public class Logic {
 			temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
 		}
 		isDynamicIndex = true;
-		
 
 		if (validTasks.size() > 0) {
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH);
@@ -523,9 +559,9 @@ public class Logic {
 
 	public void main(String[] args) throws IOException {
 		Logic logic = new Logic();
-		
+
 		Command displayCommand = new Command(CommandType.DISPLAY);
-			
+
 		// Display task test
 		System.out.println(logic.displayTasks(displayCommand));
 
