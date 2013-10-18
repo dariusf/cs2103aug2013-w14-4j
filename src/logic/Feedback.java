@@ -23,21 +23,21 @@ public class Feedback {
 		setIsError(statusCode);
 	}
 
-	protected void setStatusCode(int status) {
+	public void setStatusCode(int status) {
 		assert (status <= 110) && (status >= 10);
 		statusCode = status;
 		setIsError(statusCode);
 	}
 
-	protected int getStatusCode() {
+	public int getStatusCode() {
 		return statusCode;
 	}
 
-	protected void setCommand(CommandType command) {
+	public void setCommand(CommandType command) {
 		feedbackCommand = command;
 	}
 
-	protected CommandType getCommand() {
+	public CommandType getCommand() {
 		return feedbackCommand;
 	}
 	

@@ -24,6 +24,7 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.equations.Quad;
 
+import common.CommandType;
 import common.Constants;
 
 public class ApplicationWindow {
@@ -145,11 +146,17 @@ public class ApplicationWindow {
 		displayTask.setBounds(32, 86, 405, 450);
 		
 		determineNumberOfTasksForEachPage();
+		if(pageNumber > numberOfTasksOnEachPage.size()){
+			pageNumber = numberOfTasksOnEachPage.size();
+		}
+		
 		int startingIndex = 0;
 		for(int i = 0; i < pageNumber-1; i++){
 			startingIndex += numberOfTasksOnEachPage.get(i);
 		}
 		System.out.println(startingIndex);
+		
+		
 		
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
 		int numberOfTasks = taskList.size();
@@ -159,7 +166,6 @@ public class ApplicationWindow {
 
 		Composite[] taskComposites = new Composite[numberOfTasks];
 		
-
 		for (int i = 0; i < numberOfTasksOnEachPage.get(pageNumber-1); i++) {
 			taskComposites[i] = createTaskItemComposite(taskList
 					.get(startingIndex + i), startingIndex+i+1);
@@ -334,6 +340,9 @@ public class ApplicationWindow {
 						displayFeedback.setForeground(red);
 					} else if (!feedbackObj.isErrorMessage()) {
 						displayFeedback.setForeground(green);
+					}
+					if(feedbackObj.getCommand() == CommandType.ADD_TASK){
+						pageNumber = Integer.MAX_VALUE;
 					}
 					displayFeedback.setText(feedback);
 					input.setText("");

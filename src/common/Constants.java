@@ -146,4 +146,13 @@ public class Constants {
 
 	public static DateTimeFormatter format = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/YY");
 	public static final String DATE_TIME_FORMAT = "d/M/yy h:mm a";
+	
+	public static final int MODE_TODAY = 1;
+	public static final int MODE_TOMORROW = 2;
+	public static final int MODE_DEADLINE = 3;
+	public static final int MODE_TIMED = 4;
+	public static final int MODE_FLOATING = 5;
+	
+	
+	
 }
