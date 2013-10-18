@@ -151,10 +151,10 @@ public class Task implements Comparable<Task>, Cloneable {
 	public String getInfoString() {
 		StringBuilder output = new StringBuilder();
 		if (isDeadlineTask()) {
-			output.append("by " + Constants.format.print(deadline));
+			output.append("by " + Constants.fullDateTimeFormat.print(deadline));
 		} else if (isTimedTask()) {
-			output.append("from " + Constants.format.print(getStartTime())
-					+ " to " + Constants.format.print(getEndTime()));
+			output.append("from " + Constants.fullDateTimeFormat.print(getStartTime())
+					+ " to " + Constants.fullDateTimeFormat.print(getEndTime()));
 		} else if (isFloatingTask()) {
 			output.append("on ");
 			int index = 1;
@@ -162,9 +162,9 @@ public class Task implements Comparable<Task>, Cloneable {
 				output.append("(");
 				output.append(index);
 				output.append(") ");
-				output.append(Constants.format.print(slot.getStartDateTime()));
+				output.append(Constants.fullDateTimeFormat.print(slot.getStartDateTime()));
 				output.append(" to ");
-				output.append(Constants.format.print(slot.getEndDateTime()));
+				output.append(Constants.fullDateTimeFormat.print(slot.getEndDateTime()));
 				if (index != possibleIntervals.size()) {
 					output.append("\nor ");
 				}
@@ -227,10 +227,10 @@ public class Task implements Comparable<Task>, Cloneable {
 		output.append(name);
 
 		if (isDeadlineTask()) {
-			output.append(" before " + Constants.format.print(deadline));
+			output.append(" before " + Constants.fullDateTimeFormat.print(deadline));
 		} else if (isTimedTask()) {
-			output.append(" from " + Constants.format.print(getStartTime())
-					+ " to " + Constants.format.print(getEndTime()));
+			output.append(" from " + Constants.fullDateTimeFormat.print(getStartTime())
+					+ " to " + Constants.fullDateTimeFormat.print(getEndTime()));
 		} else if (isFloatingTask()) {
 			output.append(" on ");
 			int index = 1;
@@ -238,9 +238,9 @@ public class Task implements Comparable<Task>, Cloneable {
 				output.append("(");
 				output.append(index);
 				output.append(") ");
-				output.append(Constants.format.print(slot.getStartDateTime()));
+				output.append(Constants.fullDateTimeFormat.print(slot.getStartDateTime()));
 				output.append(" to ");
-				output.append(Constants.format.print(slot.getEndDateTime()));
+				output.append(Constants.fullDateTimeFormat.print(slot.getEndDateTime()));
 				if (index != possibleIntervals.size()) {
 					output.append(" or ");
 				}

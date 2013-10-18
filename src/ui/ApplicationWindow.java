@@ -37,6 +37,9 @@ public class ApplicationWindow {
 	private StyledText displayPageNumber;
 	private Composite closeButton;
 	private ArrayList<Integer> numberOfTasksOnEachPage;
+	private StyledText displayTitle;
+	private DisplayMode displayMode = DisplayMode.TODAY;
+	private org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
 
 	private Font indexFont;
 	private Font titleFont;
@@ -98,6 +101,9 @@ public class ApplicationWindow {
 		shell.setText(Constants.APP_NAME);
 		defineFont();
 
+		displayTitle = new StyledText(shell, SWT.READ_ONLY);
+		displayTitle.setText(Constants.MODE_TODAY);
+		
 		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.SINGLE);
 		displayPageNumber.setSize(105, 25);
@@ -196,6 +202,33 @@ public class ApplicationWindow {
 			}
 		}
 		return page;
+	}
+	
+	private String getModeText(){
+		switch (displayMode) {
+		case TODAY:
+			return Constants.MODE_TODAY;
+		case TOMORROW:
+			return Constants.MODE_TOMORROW;
+		case DEADLINE:
+			return Constants.MODE_DEADLINE;
+		case FLOATING:
+			return Constants.MODE_FLOATING;
+		case TIMED:
+			return Constants.MODE_TIMED;
+		case UNTIMED:
+			return Constants.MODE_UNTIMED;
+		case SEARCH:
+			return Constants.MODE_SEARCH;
+		case OVERDUE:
+			return Constants.MODE_OVERDUE;
+		case ALL:
+			return Constants.MODE_ALL;
+		case DATE:
+			return Constants.dateOnlyFormat.print(currentDisplayDateTime);
+		default:
+			return "Congrats! You have managed to break our application!";
+		}
 	}
 
 	private void determineNumberOfTasksForEachPage() {

@@ -9,13 +9,14 @@ import logic.Interval;
 import org.joda.time.DateTime;
 import common.CommandType;
 import common.Constants;
+import common.DisplayMode;
 import common.InvalidCommandReason;
 
 public class Parser {
 
 	private static final boolean PRINT_LEXER_TOKENS = false;
 	private static final boolean PRINT_MATCHED_COMMAND_TYPE = true;
-	private static final boolean PRINT_PARSED_COMMAND = false;
+	private static final boolean PRINT_PARSED_COMMAND = true;
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
@@ -39,7 +40,7 @@ public class Parser {
 
 	private static void test(String input) {
 		Command command = new Parser().parse(input);
-		if (PRINT_PARSED_COMMAND) System.out.println(command);
+		if (PRINT_PARSED_COMMAND) System.out.println(command.toString());
 	}
 
 	// State stack
@@ -343,12 +344,24 @@ public class Parser {
 		return command;
 	}
 
+	
 	private Command createDisplayCommand() {
 		Command command = new Command(CommandType.DISPLAY);
 
 		if(hasTokensLeft()){
-			boolean displayDone = getCurrentToken().contents.equalsIgnoreCase("done");
-			command.setDisplayDone(displayDone);
+			Token currentToken = getCurrentToken();
+			String content = currentToken.contents;
+			DisplayMode displayMode = DisplayMode.fromString(content);
+			DateToken displayDateToken = new DateToken("today");
+			if(displayMode != DisplayMode.INVALID && displayMode != DisplayMode.DATE){
+				command.setDisplayMode(displayMode);
+			} else if (displayDateToken.isValidDateString(content)){
+				displayDateToken = new DateToken(content);
+				command.setDisplayDateTime(displayDateToken.toDateTime(true));
+				command.setDisplayMode(DisplayMode.DATE);
+			} else {
+				command.setDisplayMode(DisplayMode.ALL);
+			}
 		}
 		
 		return command;
