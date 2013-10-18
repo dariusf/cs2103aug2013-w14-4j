@@ -31,7 +31,7 @@ public class Logic {
 		CommandType commandType = command.getCommandType();
 
 		switch (commandType) {
-		case ADD_TASK:
+		case ADD:
 			return addTask(command);
 		case DISPLAY:
 			return displayTasks(command);
@@ -47,7 +47,7 @@ public class Logic {
 			return undoState();
 		case REDO:
 			return redoState();
-		case EDIT_TASK:
+		case EDIT:
 			return editTask(command);
 		case HELP:
 			return showHelp(command);
@@ -63,16 +63,16 @@ public class Logic {
 	}
 
 	public Feedback addTask(Command command) {
-		assert(command.getCommandType() == CommandType.ADD_TASK);
+		assert(command.getCommandType() == CommandType.ADD);
 		Task newTask = new Task(command);
 		storage.add(newTask);
 		isDynamicIndex = false;
 		Feedback feedback = null;
 		if (isTaskOver(newTask)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
-					CommandType.ADD_TASK, newTask.toString());
+					CommandType.ADD, newTask.toString());
 		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.ADD_TASK,
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.ADD,
 					newTask.toString());
 		}
 
@@ -80,7 +80,7 @@ public class Logic {
 	}
 
 	protected Feedback editTask(Command command) {
-		assert(command.getCommandType() == CommandType.EDIT_TASK);
+		assert(command.getCommandType() == CommandType.EDIT);
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -91,7 +91,7 @@ public class Logic {
 		if (taskIndex > storage.size()
 				|| (isDynamicIndex && !temporaryMapping.containsKey(taskIndex))) {
 			return new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
-					CommandType.EDIT_TASK);
+					CommandType.EDIT);
 		} else if (isDynamicIndex && temporaryMapping.containsKey(taskIndex)) {
 			taskIndex = temporaryMapping.get(inputIndex);
 		}
@@ -122,10 +122,10 @@ public class Logic {
 
 		if (isTaskOver(taskToEdit)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
-					CommandType.EDIT_TASK, taskToEdit.toString());
+					CommandType.EDIT, taskToEdit.toString());
 		} else {
 			feedback = new Feedback(Constants.SC_SUCCESS,
-					CommandType.EDIT_TASK, taskToEdit.toString());
+					CommandType.EDIT, taskToEdit.toString());
 		}
 
 		return feedback;
@@ -529,14 +529,14 @@ public class Logic {
 		System.out.println(logic.addTask(command1) + "\n");
 
 		// Add task test 2 (deadline task, success but overdue)
-		Command command2 = new Command(CommandType.ADD_TASK);
+		Command command2 = new Command(CommandType.ADD);
 		DateTime date2 = new DateTime(2012, 10, 14, 23, 59, 59);
 		command2.setDeadline(date2);
 		command2.setDescription("Submit overdue V0.1");
 		System.out.println(logic.addTask(command2) + "\n");
 
 		// Add task test 3 (deadline task, success not overdue)
-		Command command3 = new Command(CommandType.ADD_TASK);
+		Command command3 = new Command(CommandType.ADD);
 		DateTime startDate3 = new DateTime(2013, 10, 30, 15, 0, 0);
 		DateTime endDate3 = new DateTime(2013, 10, 30, 16, 0, 0);
 		Interval interval3 = new Interval();
@@ -549,7 +549,7 @@ public class Logic {
 		System.out.println(logic.addTask(command3) + "\n");
 
 		// Add task test 4 (deadline task, success but overdue)
-		Command command4 = new Command(CommandType.ADD_TASK);
+		Command command4 = new Command(CommandType.ADD);
 		DateTime startDate4 = new DateTime(2012, 9, 30, 15, 0, 0);
 		DateTime endDate4 = new DateTime(2012, 9, 30, 16, 0, 0);
 		Interval interval4 = new Interval();
@@ -562,7 +562,7 @@ public class Logic {
 		System.out.println(logic.addTask(command4) + "\n");
 
 		// Add task test 5 (floating task, success not overdue)
-		Command command5 = new Command(CommandType.ADD_TASK);
+		Command command5 = new Command(CommandType.ADD);
 		DateTime startDate5a = new DateTime(2013, 10, 30, 15, 0, 0);
 		DateTime endDate5a = new DateTime(2013, 10, 30, 16, 0, 0);
 		Interval interval5a = new Interval();
@@ -587,7 +587,7 @@ public class Logic {
 		System.out.println(logic.addTask(command5) + "\n");
 
 		// Add task test 6 (floating task, success but overdue)
-		Command command6 = new Command(CommandType.ADD_TASK);
+		Command command6 = new Command(CommandType.ADD);
 		DateTime startDate6a = new DateTime(2012, 10, 30, 15, 0, 0);
 		DateTime endDate6a = new DateTime(2012, 10, 30, 16, 0, 0);
 		Interval interval6a = new Interval();
@@ -612,7 +612,7 @@ public class Logic {
 		System.out.println(logic.addTask(command6) + "\n");
 
 		// Add task test 7 (Task with tags)
-		Command command7 = new Command(CommandType.ADD_TASK);
+		Command command7 = new Command(CommandType.ADD);
 		DateTime date7 = new DateTime(2013, 10, 11, 22, 00, 00);
 		command7.setDeadline(date7);
 		command7.setDescription("Party");
@@ -649,7 +649,7 @@ public class Logic {
 		System.out.println(logic.displayTasks(displayCommand) + "\n");
 
 		// Edit test 12 change name
-		Command command12 = new Command(CommandType.EDIT_TASK);
+		Command command12 = new Command(CommandType.EDIT);
 		command12.setDescription("hahahahah");
 		command12.setValue(Constants.EDIT_ATT_LINE, "2");
 		System.out.println(logic.editTask(command12) + "\n");
@@ -657,7 +657,7 @@ public class Logic {
 		System.out.println(logic.displayTasks(displayCommand) + "\n");
 
 		// Edit test 13 change tags
-		Command command13 = new Command(CommandType.EDIT_TASK);
+		Command command13 = new Command(CommandType.EDIT);
 		ArrayList<String> tags13 = new ArrayList<String>();
 		tags13.add("Moretags");
 		tags13.add("Evenmore");
@@ -668,7 +668,7 @@ public class Logic {
 		System.out.println(logic.displayTasks(displayCommand) + "\n");
 
 		// Edit test 14 change deadline (same type)
-		Command command14 = new Command(CommandType.EDIT_TASK);
+		Command command14 = new Command(CommandType.EDIT);
 		command14.setDescription("Submit V0.5");
 		DateTime date14 = new DateTime(2012, 11, 11, 23, 59, 59);
 		command14.setDeadline(date14);
@@ -678,7 +678,7 @@ public class Logic {
 		System.out.println(logic.displayTasks(displayCommand) + "\n");
 
 		// Edit test 15 change deadline (same type)
-		Command command15 = new Command(CommandType.EDIT_TASK);
+		Command command15 = new Command(CommandType.EDIT);
 		command15.setDescription("Work on V0.5");
 		DateTime startDate15 = new DateTime(2013, 10, 14, 0, 0, 0);
 		DateTime endDate15 = new DateTime(2013, 11, 10, 23, 59, 59);
