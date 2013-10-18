@@ -38,9 +38,10 @@ public class ApplicationWindow {
 	private Composite closeButton;
 	private ArrayList<Integer> numberOfTasksOnEachPage;
 	private StyledText displayTitle;
-	private DisplayMode displayMode = DisplayMode.TODAY;
+	private DisplayMode displayMode = DisplayMode.ALL;
 	private org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
 
+	private Font windowTitleFont;
 	private Font indexFont;
 	private Font titleFont;
 	private Font descriptionFont;
@@ -101,8 +102,13 @@ public class ApplicationWindow {
 		shell.setText(Constants.APP_NAME);
 		defineFont();
 
-		displayTitle = new StyledText(shell, SWT.READ_ONLY);
-		displayTitle.setText(Constants.MODE_TODAY);
+		displayTitle = new StyledText(shell, SWT.READ_ONLY| SWT.WRAP
+				| SWT.SINGLE);
+		displayTitle.setBounds(36, 23, 311, 50);
+		displayTitle.setText(getModeText());
+		displayTitle.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+		displayTitle.setLineAlignment(0, 1, SWT.LEFT);
+		displayTitle.setFont(windowTitleFont);
 		
 		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.SINGLE);
@@ -154,7 +160,7 @@ public class ApplicationWindow {
 		rowLayout.type = SWT.VERTICAL;
 		rowLayout.pack = true;
 		displayTask.setLayout(rowLayout);
-		displayTask.setBounds(32, 86, 405, 450);
+		displayTask.setBounds(32, 86, 425, 450);
 
 		determineNumberOfTasksForEachPage();
 		if (pageNumber > numberOfTasksOnEachPage.size()) {
@@ -268,13 +274,13 @@ public class ApplicationWindow {
 		Composite taskItemComposite = new Composite(displayTask, SWT.NONE);
 		// 340 is the fixed width and 69 is the fixed height. use SWT.default if
 		// you do not want to fix the lengths.
-		taskItemComposite.setLayoutData(new RowData(405, SWT.DEFAULT));
+		taskItemComposite.setLayoutData(new RowData(415, SWT.DEFAULT));
 		RowLayout innerRowLayout = new RowLayout();
 		taskItemComposite.setLayout(innerRowLayout);
 
 		RowData taskIndexLayoutData = new RowData(60, 73);
 		RowData paddingLayoutData = new RowData(8, SWT.DEFAULT);
-		RowData taskDescriptionLayoutData = new RowData(320, SWT.DEFAULT);
+		RowData taskDescriptionLayoutData = new RowData(330, SWT.DEFAULT);
 
 		StyledText taskIndex = new StyledText(taskItemComposite, SWT.WRAP);
 		taskIndex.setText(String.valueOf(index));
@@ -382,6 +388,11 @@ public class ApplicationWindow {
 						}
 						break;
 					case DISPLAY:
+						displayMode = feedbackObj.getDisplayMode();
+						if(displayMode == DisplayMode.DATE){
+							currentDisplayDateTime = feedbackObj.getDisplayDate();
+						}
+						displayTitle.setText(getModeText());
 					case SORT:
 					case CLEAR:
 					case SEARCH:
@@ -448,6 +459,7 @@ public class ApplicationWindow {
 	}
 
 	private void defineFont() {
+		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44, SWT.NORMAL);
 		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
 		indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
 		titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);

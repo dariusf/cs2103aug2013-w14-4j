@@ -353,7 +353,7 @@ public class Parser {
 			String content = currentToken.contents;
 			DisplayMode displayMode = DisplayMode.fromString(content);
 			DateToken displayDateToken = new DateToken("today");
-			if(displayMode != DisplayMode.INVALID && displayMode != DisplayMode.DATE){
+			if(displayMode != DisplayMode.INVALID && displayMode != DisplayMode.DATE && displayMode != DisplayMode.SEARCH){
 				command.setDisplayMode(displayMode);
 			} else if (displayDateToken.isValidDateString(content)){
 				displayDateToken = new DateToken(content);
@@ -362,6 +362,8 @@ public class Parser {
 			} else {
 				command.setDisplayMode(DisplayMode.ALL);
 			}
+		} else {
+			command.setDisplayMode(DisplayMode.ALL);
 		}
 		
 		return command;
