@@ -45,11 +45,11 @@ public class Parser {
 		command = new Parser().parse("help done asjdlkasd");
 
 		// Mini REPL for testing
-//		java.util.Scanner scanner = new java.util.Scanner(System.in);
-//		while(true){
-//			String message = scanner.nextLine();
-//			System.out.println(new Parser().parse(message));
-//		}
+		java.util.Scanner scanner = new java.util.Scanner(System.in);
+		while(true){
+			String message = scanner.nextLine();
+			System.out.println(new Parser().parse(message));
+		}
 	}
 
 	// States
@@ -202,10 +202,11 @@ public class Parser {
 			return createHelpCommand();
 		case CLEAR:
 			return createClearCommand();
+		case DISPLAY:
+			return createDisplayCommand();
 		case EXIT:
 		case SORT:
 		case UNDO:
-		case DISPLAY:
 		case REDO:
 		case INVALID:
 			return createArgumentlessCommand(commandType);
@@ -283,6 +284,14 @@ public class Parser {
 	private Command createClearCommand() {
 		Command command = createArgumentlessCommand(CommandType.CLEAR);
 		command.setValue("clearDone", Boolean.toString(clearDone));
+		return command;
+	}
+	
+	private Command createDisplayCommand() {
+		Command command = createArgumentlessCommand(CommandType.DISPLAY);
+		if(hasTokensLeft()){
+			
+		}
 		return command;
 	}
 
