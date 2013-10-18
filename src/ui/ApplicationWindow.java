@@ -37,9 +37,9 @@ public class ApplicationWindow {
 	private Composite closeButton;
 	private ArrayList<Integer> numberOfTasksOnEachPage;
 
-	private Font myriadProIndex;
-	private Font myriadProTitle;
-	private Font myriadProDescription;
+	private Font indexFont;
+	private Font titleFont;
+	private Font descriptionFont;
 
 	private int pageNumber = 1;
 	public static ApplicationWindow self;
@@ -127,20 +127,6 @@ public class ApplicationWindow {
 		});
 
 		enableDrag();
-	}
-
-	private void defineFont() {
-		System.out.println(shell.getDisplay().loadFont(
-				"src/font/MyriadPro-Semibold.otf"));
-		System.out.println(shell.getDisplay().loadFont(
-				"src/font/MyriadPro-Regular.otf"));
-
-		myriadProIndex = new Font(shell.getDisplay(), "Calibri",
-				60, SWT.NORMAL);
-		myriadProTitle = new Font(shell.getDisplay(), "Calibri", 24,
-				SWT.NORMAL);
-		myriadProDescription = new Font(shell.getDisplay(),
-				"Myriad Pro Regular", 10, SWT.NORMAL);
 	}
 
 	private void displayTasksOnWindow() {
@@ -256,7 +242,7 @@ public class ApplicationWindow {
 		RowLayout innerRowLayout = new RowLayout();
 		taskItemComposite.setLayout(innerRowLayout);
 		
-		RowData taskIndexLayoutData = new RowData(60, SWT.DEFAULT);
+		RowData taskIndexLayoutData = new RowData(60, 73);
 		RowData paddingLayoutData = new RowData(8, SWT.DEFAULT);
 		RowData taskDescriptionLayoutData = new RowData(320, SWT.DEFAULT);
 		
@@ -276,7 +262,7 @@ public class ApplicationWindow {
 		
 		StyledText taskName = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
 		taskName.setText(task.getName());
-		taskName.setFont(myriadProTitle);
+		taskName.setFont(titleFont);
 		if(task.isDone()){
 			StyleRange style1 = new StyleRange();
 		    style1.start = 0;
@@ -288,13 +274,14 @@ public class ApplicationWindow {
 		}
 		taskName.setLayoutData(taskDescriptionLayoutData);
 
-		Label taskDescription = new Label(taskDetailsComposite, SWT.READ_ONLY);
+		StyledText taskDescription = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
 		taskDescription.setText(task.getInfoString());
-		taskDescription.setFont(myriadProDescription);
+		taskDescription.setFont(descriptionFont);
 		
 		taskDetailsComposite.pack();
 
 		taskItemComposite.pack();
+		System.out.println(taskIndex.getSize().y);
 		return taskItemComposite;
 	}
 
@@ -397,6 +384,16 @@ public class ApplicationWindow {
 				}
 			}
 		});
+	}
+
+	private void defineFont() {
+	
+		indexFont = new Font(shell.getDisplay(), "Calibri",
+				60, SWT.NORMAL);
+		titleFont = new Font(shell.getDisplay(), "Calibri", 24,
+				SWT.NORMAL);
+		descriptionFont = new Font(shell.getDisplay(),
+				"Calibri", 12, SWT.NORMAL);
 	}
 
 	private void enableDrag() {
