@@ -24,6 +24,7 @@ public class Command {
 	private CommandType helpCommand;
 	private String searchString = "";
 	private InvalidCommandReason invalidCommandReason;
+	private boolean displayDone = false;
 
 	// TODO: remove
 	@Deprecated
@@ -221,5 +222,13 @@ public class Command {
 		if (taskIndex != other.taskIndex)
 			return false;
 		return true;
+	}
+
+	public boolean getDisplayDone() {
+		return displayDone;
+	}
+
+	public void setDisplayDone(boolean displayDone) {
+		this.displayDone = displayDone;
 	}
 }

@@ -14,8 +14,8 @@ import common.InvalidCommandReason;
 public class Parser {
 
 	private static final boolean PRINT_LEXER_TOKENS = false;
-	private static final boolean PRINT_MATCHED_COMMAND_TYPE = false;
-	private static final boolean PRINT_PARSED_COMMAND = true;
+	private static final boolean PRINT_MATCHED_COMMAND_TYPE = true;
+	private static final boolean PRINT_PARSED_COMMAND = false;
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
@@ -92,7 +92,6 @@ public class Parser {
 	ArrayList<String> tags = new ArrayList<>();
 
 	int taskIndex = -1;
-	boolean clearDone = false;
 
 	public Command parse(String userInput) {
 
@@ -152,7 +151,7 @@ public class Parser {
 			return createEditCommand();
 		case DELETE:
 		case DONE:
-			return createNumericalCommand(commandType);
+			return createTaskIndexCommand(commandType);
 		case FINALISE:
 			return createFinaliseCommand(commandType);
 		case SEARCH:
@@ -167,8 +166,9 @@ public class Parser {
 		case SORT:
 		case UNDO:
 		case REDO:
-		case INVALID:
 			return createArgumentlessCommand(commandType);
+		case INVALID:
+			return invalidCommand(InvalidCommandReason.UNRECOGNIZED_COMMAND);
 		default:
 			assert false : "No such command type";
 			return null;
@@ -244,39 +244,41 @@ public class Parser {
 		}
 		return commandType;
 	}
-	
-	// TODO: refactoring done up till here
-	
+		
 	private Command createFinaliseCommand(CommandType commandType) {
+		int whichTask, whichSlot;
+		
 		if (hasTokensLeft()) {
-			int whichTask;
-			int whichSlot;
 			try {
 				whichTask = Integer.parseInt(getCurrentToken().contents);
 
 				if (nextToken()) {
-					whichSlot = Integer.parseInt(getCurrentToken().contents);
+					try {
+						whichSlot = Integer.parseInt(getCurrentToken().contents);
+					} catch (NumberFormatException e) {
+						return invalidCommand(InvalidCommandReason.INVALID_FINALISE_INDEX);
+					}
 				}
 				else {
-					// TODO reason
-					return new Command(CommandType.INVALID);
+					return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
 				}
 
 			} catch (NumberFormatException e) {
-				// TODO reason
-				return new Command(CommandType.INVALID);
+				return invalidCommand(InvalidCommandReason.INVALID_TASK_INDEX);
 			}
 
 			Command command = new Command(commandType);
+			
 			command.setTaskIndex(whichTask);
 			command.setFinaliseIndex(whichSlot);
 			command.setValue("finaliseIndex", Integer.toString(whichTask));
 			command.setValue("slotIndex", Integer.toString(whichSlot));
+			
 			return command;
 
 		}
 		else {
-			return new Command(CommandType.INVALID);
+			return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
 		}
 	}
 
@@ -310,8 +312,9 @@ public class Parser {
 			}
 		}
 
-		// pop the remaining states from the stack, in case we ran out of tokens
-		// before they all were done
+		// pop the remaining states from the stack, in case
+		// we ran out of tokens before they all were done
+		
 		while (parseStates.size() > 0) {
 			popState();
 		}
@@ -329,10 +332,10 @@ public class Parser {
 	}
 
 	private Command createClearCommand() {
-		Command command = createArgumentlessCommand(CommandType.CLEAR);
+		Command command = new Command(CommandType.CLEAR);
 
 		if (hasTokensLeft()) {
-			clearDone = getCurrentToken().contents.equalsIgnoreCase("done");
+			boolean clearDone = getCurrentToken().contents.equalsIgnoreCase("done");
 			command.setClearDone(clearDone);
 			command.setValue("clearDone", Boolean.toString(clearDone));
 		}
@@ -341,24 +344,40 @@ public class Parser {
 	}
 
 	private Command createDisplayCommand() {
-		Command command = createArgumentlessCommand(CommandType.DISPLAY);
-		if(hasTokensLeft()){
+		Command command = new Command(CommandType.DISPLAY);
 
+		if(hasTokensLeft()){
+			boolean displayDone = getCurrentToken().contents.equalsIgnoreCase("done");
+			command.setDisplayDone(displayDone);
 		}
+		
 		return command;
 	}
 
 	private Command createHelpCommand() {
 		Command command = new Command(CommandType.HELP);
+
 		if (hasTokensLeft()) {
-			command.setHelpCommand(CommandType.fromString(getCurrentToken().contents));
+			
+			CommandType commandType;
+			
+			if (isCommand(getCurrentToken())) {
+				commandType = CommandType.fromString(getCurrentToken().contents);
+				command.setHelpCommand(commandType);
+			} else {
+				commandType = tryFuzzyMatch(getCurrentToken().contents);
+				command.setHelpCommand(commandType);
+			}
 			command.setValue("helpCommand", getCurrentToken().contents);
+
 		}
+
 		return command;
 	}
 
 	private Command createSearchStringCommand() {
 		StringBuilder toSearch = new StringBuilder();
+		
 		while(hasTokensLeft()) {
 			toSearch.append(getCurrentToken().contents + " ");
 			nextToken();
@@ -375,22 +394,22 @@ public class Parser {
 		return new Command(type);
 	}
 
-	private Command createNumericalCommand(CommandType commandType) {
+	private Command createTaskIndexCommand(CommandType commandType) {
 		if (hasTokensLeft()) {
 			int index;
 			try {
 				index = Integer.parseInt(getCurrentToken().contents);
-
-				Command command = new Command(commandType);
-				command.setTaskIndex(index);
-				command.setValue(commandType.toString().toLowerCase() + "Index", Integer.toString(index));
-				return command;
 			} catch (NumberFormatException e) {
-				return new Command(CommandType.INVALID);
+				return invalidCommand(InvalidCommandReason.INVALID_TASK_INDEX);
 			}
+
+			Command command = new Command(commandType);
+			command.setTaskIndex(index);
+			command.setValue(commandType.toString().toLowerCase() + "Index", Integer.toString(index));
+			return command;
 		}
 		else {
-			return new Command(CommandType.INVALID);
+			return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
 		}
 	}
 
@@ -398,7 +417,7 @@ public class Parser {
 		return CommandType.fromString(token.contents) != CommandType.INVALID;
 	}
 
-	private static int[] listOfNumbers(int lower, int upper) {
+	private static int[] arrayOfNumbers(int lower, int upper) {
 		int[] result = new int[upper-lower+1];
 		for (int i=lower; i<=upper; i++) {
 			result[i-lower] = i;
@@ -414,7 +433,7 @@ public class Parser {
 		if (n == 0) return m;
 		if (m == 0) return n;
 
-		int[] d = listOfNumbers(0, m);
+		int[] d = arrayOfNumbers(0, m);
 		int x = 0;
 
 		for (int i=0; i<n; i++) {
