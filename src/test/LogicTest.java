@@ -20,9 +20,9 @@ public class LogicTest {
 	@Test
 	public void test() throws IOException {
 		Logic logic = new Logic();
-
+		Command displayCommand = new Command(CommandType.DISPLAY);
 		// Display task test
-		assertEquals("You have no tasks :)", logic.displayTasks().toString());
+		assertEquals("You have no tasks :)", logic.displayTasks(displayCommand).toString());
 
 		// Add task test 1 (deadline task, success not overdue)
 		Command command1 = new Command(CommandType.ADD_TASK);

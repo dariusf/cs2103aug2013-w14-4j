@@ -152,7 +152,8 @@ public class Constants {
 	public static final int MODE_DEADLINE = 3;
 	public static final int MODE_TIMED = 4;
 	public static final int MODE_FLOATING = 5;
-	
-	
+	public static final int MODE_UNTIMED = 6;
+	public static final int MODE_ALL = 7;
+	public static final int MODE_SEARCH = 8;
 	
 }
