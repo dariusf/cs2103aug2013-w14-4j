@@ -15,6 +15,8 @@ import common.Constants;
 public class Parser {
 	
 	private static final boolean PRINT_LEXER_TOKENS = false;
+	private static final boolean PRINT_MATCHED_COMMAND_TYPE = true;
+	private static final boolean PRINT_PARSED_COMMAND = false;
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
@@ -50,7 +52,8 @@ public class Parser {
 		java.util.Scanner scanner = new java.util.Scanner(System.in);
 		while(true){
 			String message = scanner.nextLine();
-			System.out.println(new Parser().parse(message));
+			Command result = new Parser().parse(message);
+			if (PRINT_PARSED_COMMAND) System.out.println(result);
 		}
 	}
 
@@ -148,8 +151,9 @@ public class Parser {
 			// take the first token to be a command
 			commandType = determineCommandType(firstToken.contents);
 			nextToken();
+			if (PRINT_MATCHED_COMMAND_TYPE) System.out.println("Command (exact): " + commandType);
 			
-			if (commandType == CommandType.EDIT_TASK) {
+			if (commandType == CommandType.EDIT_TASK && hasTokensLeft()) {
 				try {
 					editIndex = Integer.parseInt(getCurrentToken().contents);
 					nextToken();
@@ -169,8 +173,7 @@ public class Parser {
 			}
 		} else {
 			
-			// try to do a fuzzy match
-			
+						
 			// This list is prioritized
 			String[] keywords = new String[] {
 				Constants.COMMAND_ADD,
@@ -184,30 +187,62 @@ public class Parser {
 				Constants.COMMAND_EXIT,
 				Constants.COMMAND_CLEAR
 			};
+
+			// try longest subsequence first
 			
-			int[] distances = new int[keywords.length];
+			int[] subseq = new int[keywords.length];
 			
-			// Metric is string distance + difference in string length + priority
+//			System.out.println("Subsequence:");
 			for (int i=0; i<keywords.length; i++) {
-				distances[i] = levenshteinDistance(firstToken.contents, keywords[i]) + Math.abs(firstToken.contents.length() - keywords[i].length());
+				subseq[i] = longestCommonSubsequence(firstToken.contents, keywords[i]).length();
+//				System.out.println("    " + keywords[i] + ": " + subseq[i]);
 			}
 			
-			int minimum = Integer.MAX_VALUE;
-			int minimumIndex = -1;
+			int maximum = Integer.MIN_VALUE;
+			int maximumIndex = -1;
 			for (int i=0; i<keywords.length; i++) {
-				if (distances[i] < minimum) {
-					minimum = distances[i];
-					minimumIndex = i;
+				if (subseq[i] > maximum) {
+					maximum = subseq[i];
+					maximumIndex = i;
 				}
 			}
 			
-			if (minimumIndex == -1) {
-				// default to search?
-				commandType = CommandType.INVALID;
-			}
-			else {
-				commandType = determineCommandType(keywords[minimumIndex]);
-			}
+//			if (maximumIndex != -1) {
+//				commandType = determineCommandType(keywords[maximumIndex]);
+//				if (PRINT_MATCHED_COMMAND_TYPE) System.out.println("Command (subsequence): " + commandType);
+//			}
+//			else {
+
+				// try to do a fuzzy match
+
+				int[] distances = new int[keywords.length];
+				
+				// Metric is string distance + difference in string length + priority
+				System.out.println("Metric:");
+				for (int i=0; i<keywords.length; i++) {
+					distances[i] = (firstToken.contents.charAt(0) == keywords[i].charAt(0) ? -1 : 1)+(maximum - subseq[i]) + levenshteinDistance(firstToken.contents, keywords[i]);// + Math.abs(firstToken.contents.length() - keywords[i].length());
+					System.out.println("  " +keywords[i]+": "+ distances[i]);
+				}
+				
+				int threshold = 3;
+				int minimum = Integer.MAX_VALUE;
+				int minimumIndex = -1;
+				for (int i=0; i<keywords.length; i++) {
+					if (distances[i] < minimum && distances[i] <= threshold) {
+						minimum = distances[i];
+						minimumIndex = i;
+					}
+				}
+				
+				if (minimumIndex == -1) {
+					// default to search?
+					commandType = CommandType.INVALID;
+				}
+				else {
+					commandType = determineCommandType(keywords[minimumIndex]);
+				}
+				if (PRINT_MATCHED_COMMAND_TYPE) System.out.println("Command (fuzzy): " + commandType);
+//			}
 		}
 
 		// TODO: factor this out
@@ -390,6 +425,7 @@ public class Parser {
 	    return result;
 	}
 
+	// Source: https://github.com/threedaymonk/text/blob/master/lib/text/levenshtein.rb
 	private static int levenshteinDistance(String s, String t) {
 	    int n = s.length();
 	    int m = t.length();
@@ -416,5 +452,37 @@ public class Parser {
 	    }
 	    return x;
 	}
-
+	
+	// Source: http://rosettacode.org/wiki/Longest_common_subsequence
+	private static String longestCommonSubsequence(String a, String b) {
+	    int[][] lengths = new int[a.length()+1][b.length()+1];
+	    
+	    // row 0 and column 0 are initialized to 0 already
+	 
+	    for (int i = 0; i < a.length(); i++)
+	        for (int j = 0; j < b.length(); j++)
+	            if (a.charAt(i) == b.charAt(j))
+	                lengths[i+1][j+1] = lengths[i][j] + 1;
+	            else
+	                lengths[i+1][j+1] =
+	                    Math.max(lengths[i+1][j], lengths[i][j+1]);
+	 
+	    // read the substring out from the matrix
+	    StringBuffer sb = new StringBuffer();
+	    for (int x = a.length(), y = b.length();
+	         x != 0 && y != 0; ) {
+	        if (lengths[x][y] == lengths[x-1][y])
+	            x--;
+	        else if (lengths[x][y] == lengths[x][y-1])
+	            y--;
+	        else {
+	            assert a.charAt(x-1) == b.charAt(y-1);
+	            sb.append(a.charAt(x-1));
+	            x--;
+	            y--;
+	        }
+	    }
+	 
+	    return sb.reverse().toString();
+    }
 }
