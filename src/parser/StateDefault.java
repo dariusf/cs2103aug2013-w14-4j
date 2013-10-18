@@ -46,7 +46,7 @@ class StateDefault implements State {
 
 	@Override
 	public void onPop() {
-		parser.text = words.toString().trim();
+		parser.description = words.toString().trim();
 		if (onAtUntilInterval.isSet()) {
 			parser.intervals.add(onAtUntilInterval);
 		}

@@ -106,9 +106,9 @@ public class Feedback {
 
 	public String toString() {
 		switch (feedbackCommand) {
-		case ADD_TASK :
+		case ADD :
 			return addFeedback();
-		case EDIT_TASK:
+		case EDIT:
 			return editFeedback();
 		case DISPLAY :
 			return displayFeedback();

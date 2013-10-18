@@ -341,7 +341,7 @@ public class ApplicationWindow {
 					} else if (!feedbackObj.isErrorMessage()) {
 						displayFeedback.setForeground(green);
 					}
-					if(feedbackObj.getCommand() == CommandType.ADD_TASK){
+					if(feedbackObj.getCommand() == CommandType.ADD){
 						pageNumber = Integer.MAX_VALUE;
 					}
 					displayFeedback.setText(feedback);

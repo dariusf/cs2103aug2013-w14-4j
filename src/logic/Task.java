@@ -406,7 +406,7 @@ public class Task implements Comparable<Task>, Cloneable {
 	}
 
 	public static void main(String[] args) throws CloneNotSupportedException {
-		Command command6 = new Command(CommandType.ADD_TASK);
+		Command command6 = new Command(CommandType.ADD);
 		DateTime startDate6a = new DateTime(2012, 10, 30, 12, 0, 0);
 		DateTime endDate6a = new DateTime(2012, 10, 30, 16, 0, 0);
 		Interval interval6a = new Interval();
