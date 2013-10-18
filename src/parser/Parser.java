@@ -19,8 +19,6 @@ public class Parser {
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 		
-		
-		
 //		Command command;
 //		command = new Parser().parse("add event from 10:00 am until 11am");
 //		command = new Parser().parse("add 10pm or die");
@@ -228,10 +226,11 @@ public class Parser {
 			return createHelpCommand();
 		case CLEAR:
 			return createClearCommand();
+		case DISPLAY:
+			return createDisplayCommand();
 		case EXIT:
 		case SORT:
 		case UNDO:
-		case DISPLAY:
 		case REDO:
 		case INVALID:
 			return createArgumentlessCommand(commandType);
@@ -309,6 +308,14 @@ public class Parser {
 	private Command createClearCommand() {
 		Command command = createArgumentlessCommand(CommandType.CLEAR);
 		command.setValue("clearDone", Boolean.toString(clearDone));
+		return command;
+	}
+	
+	private Command createDisplayCommand() {
+		Command command = createArgumentlessCommand(CommandType.DISPLAY);
+		if(hasTokensLeft()){
+			
+		}
 		return command;
 	}
 
