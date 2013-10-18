@@ -5,6 +5,7 @@ import common.Constants;
 
 public class Feedback {
 	private CommandType feedbackCommand = null;
+	private int taskIndex = 0; 
 	private String feedbackString = null;
 	private int statusCode = 0;
 	private String statusMessage = null;
@@ -21,6 +22,14 @@ public class Feedback {
 		setCommand(command);
 		feedbackString = string;
 		setIsError(statusCode);
+	}
+	
+	public void setTaskIndex(int index){
+		taskIndex = index;
+	}
+	
+	public int getTaskIndex(){
+		return taskIndex;
 	}
 
 	public void setStatusCode(int status) {
