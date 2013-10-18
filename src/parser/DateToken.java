@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 public class DateToken extends Token {
-
+	
 	private static DateTime nowStub = null; // for testing purposes
 
 	private static final String REGEX_STANDARD_DATE = "(0?[1-9]|[12][0-9]|3[01])[-/](1[012]|0?[1-9])([-/]((19|20)?[0-9][0-9]))?";
@@ -37,7 +37,10 @@ public class DateToken extends Token {
 		else assert false : "Date token contents did not match anything; possibly a regex bug in either DateToken or lexer";
 	}
 
-
+	public boolean isValidDateString(String contents){
+		return matchStandardDate(contents) || matchRelativeDayDate(contents) || matchAliasDate(contents) || matchMixedDate(contents);
+	}
+	
 	private boolean matchMixedDate(String contents) {
 
 		Matcher matcher = mixedDate.matcher(contents);

@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 
 import common.CommandType;
 import common.Constants;
+import common.DisplayMode;
 import common.InvalidCommandReason;
 
 
@@ -19,13 +20,15 @@ public class Command {
 
 	private int taskIndex = 0;
 	private int finaliseIndex = 0;
-	private DateTime displayDateTime = null;
+	
 	private boolean clearDone = false;
 	private CommandType helpCommand;
 	private String searchString = "";
 	private InvalidCommandReason invalidCommandReason;
-	private boolean displayDone = false;
-
+	private DisplayMode displayMode;
+	private DateTime displayDateTime = null;
+	
+	
 	// TODO: remove
 	@Deprecated
 	private HashMap<String, String> commandAttributes = null;
@@ -166,7 +169,8 @@ public class Command {
 				+ ", finaliseIndex=" + finaliseIndex + ", displayDateTime="
 				+ displayDateTime + ", clearDone=" + clearDone
 				+ ", helpCommand=" + helpCommand + ", searchString="
-				+ searchString + ", invalidCommandReason="
+				+ searchString + ", displayMode="
+						+ displayMode+ ", invalidCommandReason="
 				+ invalidCommandReason + "]";
 	}
 
@@ -224,11 +228,11 @@ public class Command {
 		return true;
 	}
 
-	public boolean getDisplayDone() {
-		return displayDone;
+	public DisplayMode getDisplayMode() {
+		return displayMode;
 	}
 
-	public void setDisplayDone(boolean displayDone) {
-		this.displayDone = displayDone;
+	public void setDisplayMode(DisplayMode displayMode) {
+		this.displayMode = displayMode;
 	}
 }

@@ -144,16 +144,18 @@ public class Constants {
 	public static final int SC_UNDO_NO_PRIOR_STATE_ERROR = 100;
 	public static final int SC_REDO_NO_PRIOR_STATE_ERROR = 110;
 
-	public static DateTimeFormatter format = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/YY");
+	public static DateTimeFormatter fullDateTimeFormat = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/YY");
+	public static DateTimeFormatter dateOnlyFormat = DateTimeFormat.forPattern("d M ',' EE");
 	public static final String DATE_TIME_FORMAT = "d/M/yy h:mm a";
 	
-	public static final int MODE_TODAY = 1;
-	public static final int MODE_TOMORROW = 2;
-	public static final int MODE_DEADLINE = 3;
-	public static final int MODE_TIMED = 4;
-	public static final int MODE_FLOATING = 5;
-	public static final int MODE_UNTIMED = 6;
-	public static final int MODE_ALL = 7;
-	public static final int MODE_SEARCH = 8;
+	public static final String MODE_TODAY = "Today";
+	public static final String MODE_TOMORROW = "Tomorrow";
+	public static final String MODE_DEADLINE = "Deadlines";
+	public static final String MODE_TIMED = "Timed Tasks";
+	public static final String MODE_FLOATING = "Floating Tasks";
+	public static final String MODE_UNTIMED = "Untimed Tasks";
+	public static final String MODE_ALL = "All Tasks";
+	public static final String MODE_SEARCH = "Search Result";
+	public static final String MODE_OVERDUE = "Overdue Tasks";
 	
 }
