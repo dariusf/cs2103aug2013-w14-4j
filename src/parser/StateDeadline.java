@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 
-public class StateDeadline implements Parser.State {
+public class StateDeadline implements State {
 
 	private static DateTime nowStub = null; // for testing purposes
 

@@ -8,6 +8,7 @@ import logic.Command;
 import logic.Interval;
 
 import org.joda.time.DateTime;
+
 import common.CommandType;
 import common.Constants;
 
@@ -15,34 +16,35 @@ public class Parser {
 	
 	private static final boolean PRINT_LEXER_TOKENS = false;
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
-		Command command;
-		command = new Parser().parse("add event from 10:00 am until 11am");
-		command = new Parser().parse("add 10pm or die");
-		command = new Parser().parse("add task 3 last mOnDaY 1:00pm");
-		command = new Parser().parse("add task 3 from 10:00 pm 1/2/13 to 11:pm 5/5/15");
-		command = new Parser().parse("add Halloween Party on 31/10 #YOLO #Party");
-		command = new Parser().parse("add task at 2:00pm");
-		command = new Parser().parse("add task at 10:00pm");
-		command = new Parser().parse("add task on 1/2/13");
-		command = new Parser().parse("add task on 5/10/13");
-		command = new Parser().parse("add task on 6/10/13");
-		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
-		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
-		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
-		command = new Parser().parse("add go home by 10:00 am");
-		command = new Parser().parse("add go home at at 10:00 am on 1/1/12");
-		command = new Parser().parse("add go home on 10:00 am at 1/1/12");
-		command = new Parser().parse("add go home at 10:00 am on 1/1/12 until 10:00 pm 1/2/12");
 		
-		command = new Parser().parse("edit 1 go home at 10:00 am");
-		command = new Parser().parse("delete 1");
-		command = new Parser().parse("search hi there");
-		command = new Parser().parse("clear");
-		command = new Parser().parse("clear done");
-		command = new Parser().parse("clear aklsjdksd");
-		command = new Parser().parse("help done asjdlkasd");
+//		Command command;
+//		command = new Parser().parse("add event from 10:00 am until 11am");
+//		command = new Parser().parse("add 10pm or die");
+//		command = new Parser().parse("add task 3 last mOnDaY 1:00pm");
+//		command = new Parser().parse("add task 3 from 10:00 pm 1/2/13 to 11:pm 5/5/15");
+//		command = new Parser().parse("add Halloween Party on 31/10 #YOLO #Party");
+//		command = new Parser().parse("add task at 2:00pm");
+//		command = new Parser().parse("add task at 10:00pm");
+//		command = new Parser().parse("add task on 1/2/13");
+//		command = new Parser().parse("add task on 5/10/13");
+//		command = new Parser().parse("add task on 6/10/13");
+//		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1/2/13 12:00 pm to 1:00 pm 2/3/14");
+//		command = new Parser().parse("add go home from 10:00 am to 11:00 am");
+//		command = new Parser().parse("add go home from 10:00 am to 11:00 am or 1:00 pm");
+//		command = new Parser().parse("add go home by 10:00 am");
+//		command = new Parser().parse("add go home at at 10:00 am on 1/1/12");
+//		command = new Parser().parse("add go home on 10:00 am at 1/1/12");
+//		command = new Parser().parse("add go home at 10:00 am on 1/1/12 until 10:00 pm 1/2/12");
+//		
+//		command = new Parser().parse("edit 1 go home at 10:00 am");
+//		command = new Parser().parse("delete 1");
+//		command = new Parser().parse("search hi there");
+//		command = new Parser().parse("clear");
+//		command = new Parser().parse("clear done");
+//		command = new Parser().parse("clear aklsjdksd");
+//		command = new Parser().parse("help done asjdlkasd");
 
 		// Mini REPL for testing
 		java.util.Scanner scanner = new java.util.Scanner(System.in);
@@ -52,24 +54,7 @@ public class Parser {
 		}
 	}
 
-	// States
-
-	public interface State {
-
-		// This method determines if the current state will be popped from
-		// the state stack
-		public boolean popCondition();
-
-		// This is called only if the current state remains on the state stack,
-		// in which case it will processe the current token
-		// (you can assert !popCondition(); in here)
-		public void processToken(Token t);
-
-		// These are called when the pop or push happen
-		public void onPop();
-
-		public void onPush();
-	}
+	// State stack
 
 	private Stack<State> parseStates;
 
@@ -129,7 +114,7 @@ public class Parser {
 			return new Command(CommandType.INVALID);
 		}
 		
-		// TODO: preliminary processing of string
+		// TODO: deal with this via return values, not global state
 		tokenizeInput(string);
 		return buildResult();
 	}
@@ -183,7 +168,46 @@ public class Parser {
 				}
 			}
 		} else {
-			commandType = CommandType.INVALID;
+			
+			// try to do a fuzzy match
+			
+			// This list is prioritized
+			String[] keywords = new String[] {
+				Constants.COMMAND_ADD,
+				Constants.COMMAND_SEARCH,
+				Constants.COMMAND_HELP,
+				Constants.COMMAND_EDIT,
+				Constants.COMMAND_DELETE,
+				Constants.COMMAND_DISPLAY,
+				Constants.COMMAND_SORT,
+				Constants.COMMAND_FINALISE,
+				Constants.COMMAND_EXIT,
+				Constants.COMMAND_CLEAR
+			};
+			
+			int[] distances = new int[keywords.length];
+			
+			// Metric is string distance + difference in string length + priority
+			for (int i=0; i<keywords.length; i++) {
+				distances[i] = levenshteinDistance(firstToken.contents, keywords[i]) + Math.abs(firstToken.contents.length() - keywords[i].length());
+			}
+			
+			int minimum = Integer.MAX_VALUE;
+			int minimumIndex = -1;
+			for (int i=0; i<keywords.length; i++) {
+				if (distances[i] < minimum) {
+					minimum = distances[i];
+					minimumIndex = i;
+				}
+			}
+			
+			if (minimumIndex == -1) {
+				// default to search?
+				commandType = CommandType.INVALID;
+			}
+			else {
+				commandType = determineCommandType(keywords[minimumIndex]);
+			}
 		}
 
 		// TODO: factor this out
@@ -357,4 +381,40 @@ public class Parser {
 	private static boolean isCommand(Token token) {
 		return determineCommandType(token.contents) != CommandType.INVALID;
 	}
+	
+	private static int[] listOfNumbers(int lower, int upper) {
+	    int[] result = new int[upper-lower+1];
+	    for (int i=lower; i<=upper; i++) {
+	    	result[i-lower] = i;
+	    }
+	    return result;
+	}
+
+	private static int levenshteinDistance(String s, String t) {
+	    int n = s.length();
+	    int m = t.length();
+
+	    if (n == 0) return m;
+	    if (m == 0) return n;
+
+	    int[] d = listOfNumbers(0, m);
+	    int x = 0;
+
+	    for (int i=0; i<n; i++) {
+	        int e = i + 1;
+	        for (int j=0; j<m; j++) {
+	            int cost = s.charAt(i) == t.charAt(j) ? 0 : 1;
+	            x = Math.min(
+	                d[j+1] + 1, Math.min(// insertion
+	                e + 1, // deletion
+	                d[j] + cost // substitution
+	            ));
+	            d[j] = e;
+	            e = x;
+	        }
+	        d[m] = x;
+	    }
+	    return x;
+	}
+
 }
