@@ -2,7 +2,7 @@ package parser;
 
 import logic.Interval;
 
-class StateDefault implements Parser.State {
+class StateDefault implements State {
 
 	StringBuilder words = new StringBuilder();
 	private final Parser parser;
