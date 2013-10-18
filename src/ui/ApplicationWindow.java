@@ -17,8 +17,6 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import com.joestelmach.natty.generated.DateParser_NumericRules.int_00_to_23_optional_prefix_return;
-
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -34,13 +32,14 @@ public class ApplicationWindow {
 	private Text displayFeedback;
 	private static Logic logic;
 	private Composite displayTask;
-	private Text displayIndex;
+	private StyledText displayPageNumber;
 	private Composite closeButton;
 	private ArrayList<Integer> numberOfTasksOnEachPage;
 
 	private Font indexFont;
 	private Font titleFont;
 	private Font descriptionFont;
+	private Font pageNumberFont;
 
 	private int pageNumber = 1;
 	public static ApplicationWindow self;
@@ -96,7 +95,10 @@ public class ApplicationWindow {
 		shell.setSize(482, 681);
 		shell.setText(Constants.APP_NAME);
 		defineFont();
-
+		
+		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP | SWT.SINGLE);
+		displayPageNumber.setSize(105, 25);
+		displayPageNumber.setLocation(335, 567);
 
 		displayTask = new Composite(shell, SWT.NONE);
 		displayTasksOnWindow();
@@ -105,6 +107,8 @@ public class ApplicationWindow {
 		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
 		displayFeedback.setBounds(35, 558, 412, 40);
 
+		
+		
 		input = new Text(shell, SWT.BORDER);
 		input.setFocus();
 		input.setBounds(20, 608, 442, 50);
@@ -154,7 +158,6 @@ public class ApplicationWindow {
 		for(int i = 0; i < pageNumber-1; i++){
 			startingIndex += numberOfTasksOnEachPage.get(i);
 		}
-		System.out.println(startingIndex);
 		
 		
 		
@@ -170,42 +173,13 @@ public class ApplicationWindow {
 			taskComposites[i] = createTaskItemComposite(taskList
 					.get(startingIndex + i), startingIndex+i+1);
 		}
-
+		
+		displayPageNumber.setText("Page "+pageNumber + " of " + numberOfTasksOnEachPage.size());
+		displayPageNumber.setLineAlignment(0,1,SWT.CENTER);
+		displayPageNumber.setFont(pageNumberFont);
 		displayTask.pack();
-
-//		StringBuilder taskIndexStringBuilder = new StringBuilder();
-//		for (int i = 0; i < numberOfTasks; i++) {
-//			taskIndexStringBuilder.append(i + 1);
-//			if (i < numberOfTasks - 1) {
-//				taskIndexStringBuilder.append("\n");
-//			}
-//		}
-//		displayIndex.setText(taskIndexStringBuilder.toString());
 		
 	}
-
-//	private int determineCompositesThatWillFit(int startingIndex) {
-//		ArrayList<Task> taskList = logic.getTasksToDisplay();
-//		int numberOfTasks = taskList.size();
-//		if (numberOfTasks == 0)
-//			return 0;
-//		else {
-//			Composite temp = createTaskItemComposite(taskList.get(0), 1);
-//			int compositeHeight = temp.getSize().y;
-//			temp.dispose();
-//			return Math.min(displayTask.getSize().y / compositeHeight,
-//					numberOfTasks - startingIndex);
-//		}
-//	}
-//
-//	private int determineCompositesThatCanFit(int startingIndex) {
-//		ArrayList<Task> taskList = logic.getTasksToDisplay();
-//		Composite temp = createTaskItemComposite(taskList.get(0), 1);
-//		int compositeHeight = temp.getSize().y;
-//		temp.dispose();
-//		// todo: magic number
-//		return 450 / compositeHeight;
-//	}
 	
 	private void determineNumberOfTasksForEachPage(){
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
@@ -220,7 +194,7 @@ public class ApplicationWindow {
 		for(int i = 0; i < numberOfTasks; i++){
 			heights[i] = taskComposites[i].getSize().y;  
 		}
-		System.out.println(Arrays.toString(heights));
+
 		numberOfTasksOnEachPage = new ArrayList<>();
 		int currentCountOfTasks = 0;
 		int currentHeight = 0;
@@ -235,7 +209,6 @@ public class ApplicationWindow {
 			}
 		}
 		numberOfTasksOnEachPage.add(currentCountOfTasks);
-		System.out.println(numberOfTasksOnEachPage);
 		for (Control child : displayTask.getChildren()) {
 			child.dispose();
 		}
@@ -254,7 +227,7 @@ public class ApplicationWindow {
 		
 		StyledText taskIndex = new StyledText(taskItemComposite, SWT.WRAP);
 		taskIndex.setText(String.valueOf(index));
-		taskIndex.setFont(SWTResourceManager.getFont("Calibri", 60, 0));
+		taskIndex.setFont(indexFont);
 		taskIndex.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
 		taskIndex.setLineAlignment(0, 1, SWT.RIGHT);
 		taskIndex.setLayoutData(taskIndexLayoutData);
@@ -287,7 +260,7 @@ public class ApplicationWindow {
 		taskDetailsComposite.pack();
 
 		taskItemComposite.pack();
-		System.out.println(taskIndex.getSize().y);
+		
 		return taskItemComposite;
 	}
 
@@ -334,7 +307,7 @@ public class ApplicationWindow {
 
 					inputHistory.addInput(userInput);
 					Feedback feedbackObj = logic.executeCommand(userInput);
-					System.out.println(userInput);
+					
 					String feedback = feedbackObj.toString();
 					if (feedbackObj.isErrorMessage()) {
 						displayFeedback.setForeground(red);
@@ -343,6 +316,8 @@ public class ApplicationWindow {
 					}
 					if(feedbackObj.getCommand() == CommandType.ADD){
 						pageNumber = Integer.MAX_VALUE;
+					} else if (feedbackObj.getCommand() == CommandType.SEARCH){
+						pageNumber = 1;
 					}
 					displayFeedback.setText(feedback);
 					input.setText("");
@@ -396,7 +371,8 @@ public class ApplicationWindow {
 	}
 
 	private void defineFont() {
-	
+		pageNumberFont = new Font(shell.getDisplay(), "Calibri",
+				18, SWT.NORMAL);
 		indexFont = new Font(shell.getDisplay(), "Calibri",
 				60, SWT.NORMAL);
 		titleFont = new Font(shell.getDisplay(), "Calibri", 24,
@@ -446,11 +422,11 @@ public class ApplicationWindow {
 					Point offset = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
 					
 					if(offset.x > 455 && offset.y < 27){
-						System.out.println("here");
+						
 						logic.executeCommand("exit");
 						shell.dispose();
 					} else if (offset.x > 433 && offset.y < 27) {
-						System.out.println("here");
+					
 						shell.setMinimized(true);
 					}
 				}
