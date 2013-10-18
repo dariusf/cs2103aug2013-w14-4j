@@ -123,9 +123,11 @@ public class Logic {
 		if (isTaskOver(taskToEdit)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
 					CommandType.EDIT, taskToEdit.toString());
+			feedback.setTaskIndex(taskIndex);
 		} else {
 			feedback = new Feedback(Constants.SC_SUCCESS,
 					CommandType.EDIT, taskToEdit.toString());
+			feedback.setTaskIndex(taskIndex);
 		}
 
 		return feedback;
@@ -253,18 +255,19 @@ public class Logic {
 	protected Feedback deleteTask(Command command) {
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
-		int lineNumber = Integer.parseInt(commandAttributes
+		int taskIndex = Integer.parseInt(commandAttributes
 				.get(Constants.DELETE_ATT_LINE));
 		if (isDynamicIndex) {
-			lineNumber = temporaryMapping.get(lineNumber);
+			taskIndex = temporaryMapping.get(taskIndex);
 		}
 
 		Feedback feedback = null;
-		if (lineNumber <= storage.size()) {
-			String taskDescription = storage.get(lineNumber).getName();
-			storage.remove(lineNumber);
+		if (taskIndex <= storage.size()) {
+			String taskDescription = storage.get(taskIndex).getName();
+			storage.remove(taskIndex);
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE,
 					taskDescription);
+			feedback.setTaskIndex(taskIndex);
 			isDynamicIndex = false;
 		} else {
 			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
@@ -345,9 +348,11 @@ public class Logic {
 		if (isTaskOver(taskToEdit)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
 					CommandType.FINALISE, taskToEdit.toString());
+			feedback.setTaskIndex(taskIndex);
 		} else {
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.FINALISE,
 					taskToEdit.toString());
+			feedback.setTaskIndex(taskIndex);
 		}
 
 		return feedback;
@@ -368,20 +373,21 @@ public class Logic {
 	protected Feedback markDone(Command command) {
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
-		int lineNumber = Integer.parseInt(commandAttributes
+		int taskIndex = Integer.parseInt(commandAttributes
 				.get(Constants.DONE_ATT_LINE));
 		if (isDynamicIndex) {
-			lineNumber = temporaryMapping.get(lineNumber);
+			taskIndex = temporaryMapping.get(taskIndex);
 		}
 
 		Feedback feedback = null;
 
-		if (lineNumber <= storage.size()) {
-			Task doneTask = storage.get(lineNumber);
+		if (taskIndex <= storage.size()) {
+			Task doneTask = storage.get(taskIndex);
 			doneTask.markDone();
-			storage.replace(lineNumber, doneTask);
+			storage.replace(taskIndex, doneTask);
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DONE,
 					doneTask.getName());
+			feedback.setTaskIndex(taskIndex);
 			isDynamicIndex = false;
 		} else {
 			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
