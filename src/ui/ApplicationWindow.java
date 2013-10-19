@@ -345,8 +345,7 @@ public class ApplicationWindow {
 	}
 	
 	private void setWelcomePage() {
-		// TODO Auto-generated method stub
-		
+		executeUserInput(Constants.WELCOME_PAGE_DISPLAY);
 	}
 
 	private void enterDriverLoop() {
