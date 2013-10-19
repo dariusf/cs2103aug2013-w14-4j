@@ -16,6 +16,7 @@ public class Feedback {
 	private int statusCode = 0;
 	private String statusMessage = null;
 	private boolean isError = false;
+	private int gotoPage = 0;
 
 	Feedback(int status, CommandType command) {
 		setStatusCode(status);
@@ -156,6 +157,8 @@ public class Feedback {
 			return helpFeedback();
 		case DONE :
 			return doneFeedback();
+		case GOTO :
+			return gotoFeedback();
 		case EXIT :
 			System.exit(0);
 		default :
@@ -337,6 +340,17 @@ public class Feedback {
 		}
 		return statusMessage+"\n";
 	}
+	
+	private String gotoFeedback() {
+		if (statusCode == Constants.SC_SUCCESS) {
+			statusMessage = "Page " + gotoPage + "\n";
+		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX) {
+			statusMessage = "Error: Invalid page " + gotoPage + "\n";
+		} else {
+			statusMessage = "Error: Invalid goto (this should not happen!)";
+		}
+		return statusMessage+"\n";
+	}
 
 	public DateTime getDisplayDate() {
 		return displayDate;
@@ -344,5 +358,13 @@ public class Feedback {
 
 	public void setDisplayDate(DateTime displayDate) {
 		this.displayDate = displayDate;
+	}
+
+	public int getGotoPage() {
+		return gotoPage;
+	}
+
+	public void setGotoPage(int gotoPage) {
+		this.gotoPage = gotoPage;
 	}
 }
