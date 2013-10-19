@@ -9,14 +9,14 @@ import org.joda.time.DateTimeConstants;
 
 public class DateToken extends Token {
 
-	public static void main(String[] args){
-		java.util.Scanner scanner = new java.util.Scanner(System.in);
-		while(true) {
-			DateToken randomDateToken = new DateToken("12 Oct");
-			String input = scanner.nextLine();
-			System.out.println(randomDateToken.isValidDateString(input));
-		}
-	}
+//	public static void main(String[] args){
+//		java.util.Scanner scanner = new java.util.Scanner(System.in);
+//		while(true) {
+//			DateToken randomDateToken = new DateToken("12 Oct");
+//			String input = scanner.nextLine();
+////			System.out.println(randomDateToken.isValidDateString(input));
+//		}
+//	}
 	
 	private static DateTime nowStub = null; // for testing purposes
 
@@ -46,9 +46,9 @@ public class DateToken extends Token {
 		else assert false : "Date token contents did not match anything; possibly a regex bug in either DateToken or lexer";
 	}
 
-	public boolean isValidDateString(String contents){
-		return matchStandardDate(contents) || matchRelativeDayDate(contents) || matchAliasDate(contents) || matchMixedDate(contents);
-	}
+//	public boolean isValidDateString(String contents){
+//		return matchStandardDate(contents) || matchRelativeDayDate(contents) || matchAliasDate(contents) || matchMixedDate(contents);
+//	}
 	
 	private boolean matchMixedDate(String contents) {
 
@@ -187,8 +187,8 @@ public class DateToken extends Token {
 		return currentDateTime.withDate(year, month, day);
 	}
 
-	public DateTime toDateTime(boolean start) {
-		return mergeInto(new DateTime()).withTime(start ? 0 : 23, start ? 0 : 59, 0, 0);
+	public DateTime toDateTime() {
+		return mergeInto(new DateTime());//.withTime(start ? 0 : 23, start ? 0 : 59, 0, 0);
 	}
 
 	public static void setNowStub(DateTime now) {

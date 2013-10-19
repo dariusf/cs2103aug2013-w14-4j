@@ -35,6 +35,10 @@ public class Constants {
 	public static final String COMMAND_HELP = "help";
 	public static final String COMMAND_FINALISE = "finalise";
 	public static final String COMMAND_EDIT = "edit";
+	public static final String COMMAND_GOTO = "goto";
+	public static final String COMMAND_UNDO = "undo";
+	public static final String COMMAND_REDO = "redo";
+	public static final String COMMAND_DONE = "done";
 
 	public static final String TASK_ATT_NAME = "name";
 	public static final String TASK_ATT_LOCATION = "location";

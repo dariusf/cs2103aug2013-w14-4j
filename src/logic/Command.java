@@ -19,6 +19,7 @@ public class Command {
 	private ArrayList<String> tags = new ArrayList<>();
 
 	private int taskIndex = 0;
+	private int pageIndex = 0;
 	private int finaliseIndex = 0;
 	
 	private boolean clearDone = false;
@@ -234,5 +235,13 @@ public class Command {
 
 	public void setDisplayMode(DisplayMode displayMode) {
 		this.displayMode = displayMode;
+	}
+
+	public int getPageIndex() {
+		return pageIndex;
+	}
+
+	public void setPageIndex(int pageIndex) {
+		this.pageIndex = pageIndex;
 	}
 }
