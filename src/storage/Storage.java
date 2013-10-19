@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 import logic.Task;
 
-public class Storage implements Closeable {
+public class Storage implements Closeable, Iterable<Task> {
 	
 	private abstract class Action {
 		protected abstract void undoImplementation();
