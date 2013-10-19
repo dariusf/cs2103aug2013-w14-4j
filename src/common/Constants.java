@@ -148,6 +148,7 @@ public class Constants {
 	public static final int SC_FINALISE_TYPE_MISMATCH_ERROR = 90;
 	public static final int SC_UNDO_NO_PRIOR_STATE_ERROR = 100;
 	public static final int SC_REDO_NO_PRIOR_STATE_ERROR = 110;
+	public static final int SC_INVALID_PAGE_INDEX = 120;
 
 	public static DateTimeFormatter fullDateTimeFormat = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/YY");
 	public static DateTimeFormatter dateOnlyFormat = DateTimeFormat.forPattern("d MMMM',' EE");

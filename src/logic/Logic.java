@@ -58,6 +58,8 @@ public class Logic {
 			return finaliseTask(command);
 		case SORT:
 			return sortTask();
+		case GOTO:
+			return gotoPage(command);
 		default:
 			throw new Error(Constants.MSG_UNRECOGNISED_COMMAND);
 		}
@@ -406,6 +408,20 @@ public class Logic {
 			feedback.setTaskIndex(taskIndex);
 		}
 
+		return feedback;
+	}
+
+	protected Feedback gotoPage(Command command) {
+		Feedback feedback = null;
+		int pageIndex = command.getPageIndex();
+
+		if (pageIndex != 0) {
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.GOTO);
+			feedback.setGotoPage(pageIndex);
+		} else {
+			feedback = new Feedback(Constants.SC_INVALID_PAGE_INDEX, CommandType.GOTO);
+		}
+		
 		return feedback;
 	}
 
