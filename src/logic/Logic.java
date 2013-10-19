@@ -83,10 +83,7 @@ public class Logic {
 	protected Feedback editTask(Command command) {
 		assert (command.getCommandType() == CommandType.EDIT);
 		Feedback feedback = null;
-		HashMap<String, String> commandAttributes = command
-				.getCommandAttributes();
-		int inputIndex = Integer.parseInt(commandAttributes
-				.get(Constants.EDIT_ATT_LINE));
+		int inputIndex = command.getTaskIndex();
 		int taskIndex = inputIndex;
 
 		if (taskIndex > storage.size()
@@ -137,10 +134,25 @@ public class Logic {
 	public int getNumberOfTasks() {
 		return storage.size();
 	}
-
-	public ArrayList<Task> getTasksOnPage(int page) {
-
-		return null;
+	
+	public int getNumberOfRemaingingTasks(){
+		int count = 0;
+		for(Task task : storage){
+			if(!task.isDone()){
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public int getNumberOfTasksToday(){
+		int count = 0;
+		for(Task task : storage){
+			if(!task.isDone()){
+				count++;
+			}
+		}
+		return count;
 	}
 
 	public ArrayList<Task> getTasksToDisplay() {
