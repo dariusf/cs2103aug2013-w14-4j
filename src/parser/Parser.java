@@ -168,6 +168,8 @@ public class Parser {
 		case UNDO:
 		case REDO:
 			return createArgumentlessCommand(commandType);
+		case GOTO:
+			return createPageIndexCommand(commandType);
 		case INVALID:
 			return invalidCommand(InvalidCommandReason.UNRECOGNIZED_COMMAND);
 		default:
@@ -179,7 +181,6 @@ public class Parser {
 	private CommandType tryFuzzyMatch(String probableCommand) {
 
 		// This list is prioritized
-		// TODO: not complete
 		String[] keywords = new String[] {
 				Constants.COMMAND_ADD,
 				Constants.COMMAND_SEARCH,
@@ -190,7 +191,12 @@ public class Parser {
 				Constants.COMMAND_SORT,
 				Constants.COMMAND_FINALISE,
 				Constants.COMMAND_EXIT,
-				Constants.COMMAND_CLEAR
+				Constants.COMMAND_CLEAR,
+				Constants.COMMAND_GOTO,
+				Constants.COMMAND_UNDO,
+				Constants.COMMAND_REDO,
+				Constants.COMMAND_DONE
+
 		};
 
 		// Calculate length of longest subsequence and Levenshtein distance for each keyword
@@ -348,17 +354,20 @@ public class Parser {
 	private Command createDisplayCommand() {
 		Command command = new Command(CommandType.DISPLAY);
 
-		if(hasTokensLeft()){
+		if (hasTokensLeft()) {
 			Token currentToken = getCurrentToken();
-			String content = currentToken.contents;
-			DisplayMode displayMode = DisplayMode.fromString(content);
-			DateToken displayDateToken = new DateToken("today");
-			if(displayMode != DisplayMode.INVALID && displayMode != DisplayMode.DATE && displayMode != DisplayMode.SEARCH){
+//			String content = currentToken.contents;
+			
+			DisplayMode displayMode = DisplayMode.fromString(currentToken.contents);
+//			DateToken displayDateToken = new DateToken("today");
+			
+			if (displayMode != DisplayMode.INVALID && displayMode != DisplayMode.DATE && displayMode != DisplayMode.SEARCH){
 				command.setDisplayMode(displayMode);
-			} else if (displayDateToken.isValidDateString(content)){
-				displayDateToken = new DateToken(content);
-				command.setDisplayDateTime(displayDateToken.toDateTime(true));
+			}
+			else if (currentToken instanceof DateToken){
+//				displayDateToken = new DateToken(content);
 				command.setDisplayMode(DisplayMode.DATE);
+				command.setDisplayDateTime(((DateToken) currentToken).toDateTime());
 			} else {
 				command.setDisplayMode(DisplayMode.ALL);
 			}
@@ -407,6 +416,24 @@ public class Parser {
 
 	private Command createArgumentlessCommand(CommandType type) { 
 		return new Command(type);
+	}
+
+	private Command createPageIndexCommand(CommandType commandType) {
+		if (hasTokensLeft()) {
+			int index;
+			try {
+				index = Integer.parseInt(getCurrentToken().contents);
+			} catch (NumberFormatException e) {
+				return invalidCommand(InvalidCommandReason.INVALID_PAGE_INDEX);
+			}
+
+			Command command = new Command(commandType);
+			command.setPageIndex(index);
+			return command;
+		}
+		else {
+			return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+		}
 	}
 
 	private Command createTaskIndexCommand(CommandType commandType) {
