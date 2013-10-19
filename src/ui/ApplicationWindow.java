@@ -552,6 +552,8 @@ public class ApplicationWindow {
 		case SEARCH:
 			pageNumber = 1;
 			break;
+		case GOTO:
+			pageNumber = feedbackObj.getGotoPage();
 		case HELP:
 		case EXIT:
 		case UNDO:
