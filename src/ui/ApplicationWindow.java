@@ -1,8 +1,6 @@
 package ui;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import logic.Feedback;
 import logic.Logic;
@@ -350,7 +348,6 @@ public class ApplicationWindow {
 			Color green = new Color(shell.getDisplay(), 0, 0x66, 0);
 			Color red = new Color(shell.getDisplay(), 0x99, 0, 0);
 			String userInput = "";
-			String tasks = "";
 			UserInputHistory inputHistory = new UserInputHistory();
 
 			@Override
@@ -475,12 +472,20 @@ public class ApplicationWindow {
 	}
 
 	private void defineFont() {
+		// For Mac:
 		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44, SWT.NORMAL);
 		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
 		indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
 		titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
 		descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
 				SWT.NORMAL);
+		// For windows: 
+		/*windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33, SWT.NORMAL);
+		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
+		indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
+		titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
+		descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
+				SWT.NORMAL);*/
 	}
 
 	private void enableDrag() {
