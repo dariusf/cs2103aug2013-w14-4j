@@ -140,11 +140,12 @@ public class ApplicationWindow {
 
 		// Tween.registerAccessor(Text.class, new InputAccessor());
 
-		displayFeedback.setText(displayWelcomeMessage());
-
 		closeButton = new Composite(shell, SWT.NONE);
 		closeButton.setBounds(433, 0, 49, 27);
 		enableWindowButton();
+		
+		displayFeedback.setText(displayWelcomeMessage());
+		setWelcomePage();
 
 		enterDriverLoop();
 
@@ -342,11 +343,14 @@ public class ApplicationWindow {
 		String welcomeMessage = Constants.WELCOME_MSG;
 		return welcomeMessage;
 	}
+	
+	private void setWelcomePage() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	private void enterDriverLoop() {
 		input.addKeyListener(new KeyListener() {
-			Color green = new Color(shell.getDisplay(), 0, 0x66, 0);
-			Color red = new Color(shell.getDisplay(), 0x99, 0, 0);
 			String userInput = "";
 			UserInputHistory inputHistory = new UserInputHistory();
 
@@ -379,49 +383,8 @@ public class ApplicationWindow {
 					userInput = input.getText();
 
 					inputHistory.addInput(userInput);
-					Feedback feedbackObj = logic.executeCommand(userInput);
-
-					String feedback = feedbackObj.toString();
-					if (feedbackObj.isErrorMessage()) {
-						displayFeedback.setForeground(red);
-					} else if (!feedbackObj.isErrorMessage()) {
-						displayFeedback.setForeground(green);
-					}
-
-					switch (feedbackObj.getCommand()) {
-					case ADD:
-						pageNumber = Integer.MAX_VALUE;
-						break;
-					case EDIT:
-					case DELETE:
-					case DONE:
-					case FINALISE:
-						if (!feedbackObj.isErrorMessage()) {
-							pageNumber = getPage(feedbackObj.getTaskIndex());
-						}
-						break;
-					case DISPLAY:
-						displayMode = feedbackObj.getDisplayMode();
-						if(displayMode == DisplayMode.DATE){
-							currentDisplayDateTime = feedbackObj.getDisplayDate();
-						}
-						displayTitle.setText(getModeText());
-					case SORT:
-					case CLEAR:
-					case SEARCH:
-						pageNumber = 1;
-						break;
-					case HELP:
-					case EXIT:
-					case UNDO:
-					case REDO:
-					case INVALID:
-					default:
-					}
-
-					displayFeedback.setText(feedback);
-					input.setText("");
-					displayTasksOnWindow();
+					
+					executeUserInput(userInput);
 				} else if (arg0.keyCode == SWT.PAGE_UP) {
 					// when non-fixed-height composites are added, on every
 					// change
@@ -469,6 +432,21 @@ public class ApplicationWindow {
 				}
 			}
 		});
+	}
+
+	
+	/**
+	 * @param feedbackObj
+	 */
+	protected void setFeedbackColour(Feedback feedbackObj) {
+		Color green = new Color(shell.getDisplay(), 0, 0x66, 0);
+		Color red = new Color(shell.getDisplay(), 0x99, 0, 0);
+
+		if (feedbackObj.isErrorMessage()) {
+			displayFeedback.setForeground(red);
+		} else if (!feedbackObj.isErrorMessage()) {
+			displayFeedback.setForeground(green);
+		}
 	}
 
 	private void defineFont() {
@@ -542,5 +520,48 @@ public class ApplicationWindow {
 
 		};
 		closeButton.addListener(SWT.MouseUp, listener);
+	}
+
+	private void executeUserInput(String userInput) {
+		Feedback feedbackObj = logic.executeCommand(userInput);
+
+		String feedback = feedbackObj.toString();
+		setFeedbackColour(feedbackObj);
+
+		switch (feedbackObj.getCommand()) {
+		case ADD:
+			pageNumber = Integer.MAX_VALUE;
+			break;
+		case EDIT:
+		case DELETE:
+		case DONE:
+		case FINALISE:
+			if (!feedbackObj.isErrorMessage()) {
+				pageNumber = getPage(feedbackObj.getTaskIndex());
+			}
+			break;
+		case DISPLAY:
+			displayMode = feedbackObj.getDisplayMode();
+			if (displayMode == DisplayMode.DATE) {
+				currentDisplayDateTime = feedbackObj
+						.getDisplayDate();
+			}
+			displayTitle.setText(getModeText());
+		case SORT:
+		case CLEAR:
+		case SEARCH:
+			pageNumber = 1;
+			break;
+		case HELP:
+		case EXIT:
+		case UNDO:
+		case REDO:
+		case INVALID:
+		default:
+		}
+
+		displayFeedback.setText(feedback);
+		input.setText("");
+		displayTasksOnWindow();
 	}
 }
