@@ -528,35 +528,34 @@ public class ApplicationWindow {
 		setFeedbackColour(feedbackObj);
 
 		switch (feedbackObj.getCommand()) {
-		case ADD:
+		case ADD :
 			pageNumber = Integer.MAX_VALUE;
 			break;
-		case EDIT:
-		case DELETE:
-		case DONE:
-		case FINALISE:
+		case EDIT :
+		case DELETE :
+		case DONE :
+		case FINALISE :
 			if (!feedbackObj.isErrorMessage()) {
 				pageNumber = getPage(feedbackObj.getTaskIndex());
 			}
 			break;
-		case DISPLAY:
+		case DISPLAY :
 			displayMode = feedbackObj.getDisplayMode();
 			if (displayMode == DisplayMode.DATE) {
-				currentDisplayDateTime = feedbackObj
-						.getDisplayDate();
+				currentDisplayDateTime = feedbackObj.getDisplayDate();
 			}
 			displayTitle.setText(getModeText());
-		case SORT:
-		case CLEAR:
-		case SEARCH:
+		case SORT :
+		case CLEAR :
+		case SEARCH :
 			pageNumber = 1;
 			break;
-		case HELP:
-		case EXIT:
-		case UNDO:
-		case REDO:
-		case INVALID:
-		default:
+		case HELP :
+		case EXIT :
+		case UNDO :
+		case REDO :
+		case INVALID :
+		default :
 		}
 
 		displayFeedback.setText(feedback);
