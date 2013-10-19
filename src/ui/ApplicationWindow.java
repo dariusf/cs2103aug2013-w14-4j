@@ -39,6 +39,8 @@ public class ApplicationWindow {
 	private ArrayList<Integer> numberOfTasksOnEachPage;
 	private StyledText displayTitle;
 	private StyledText displayRemainingTaskCount;
+	private StyledText displayTodayTaskCount;
+	
 	private DisplayMode displayMode = DisplayMode.TODAY;
 	private org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
 
@@ -121,6 +123,11 @@ public class ApplicationWindow {
 		displayRemainingTaskCount.setFont(descriptionFont);
 		displayRemainingTaskCount.setLineAlignment(0,1,SWT.RIGHT);
 		
+		displayTodayTaskCount = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP | SWT.SINGLE);
+		displayTodayTaskCount.setBounds(370, 41, 77, 14);
+		displayTodayTaskCount.setFont(descriptionFont);
+		displayTodayTaskCount.setLineAlignment(0,1,SWT.RIGHT);
+		
 		displayTask = new Composite(shell, SWT.NONE);
 		displayTasksOnWindow();
 
@@ -200,6 +207,7 @@ public class ApplicationWindow {
 		displayPageNumber.setFont(pageNumberFont);
 		
 		displayRemainingTaskCount.setText("Remaining: "+logic.getNumberOfRemaingingTasks());
+		displayTodayTaskCount.setText("Today: "+logic.getNumberOfTasksToday());
 		displayTask.pack();
 
 	}
