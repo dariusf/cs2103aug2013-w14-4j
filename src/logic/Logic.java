@@ -147,12 +147,14 @@ public class Logic {
 	
 	public int getNumberOfTasksToday(){
 		int count = 0;
+		DateTime today = new DateTime();
 		for(Task task : storage){
-			if(!task.isDone()){
+			if(task.isOnDate(today)){
 				count++;
 			}
 		}
 		return count;
+		
 	}
 
 	public ArrayList<Task> getTasksToDisplay() {
