@@ -500,6 +500,8 @@ public class Logic {
 	}
 
 	protected Feedback searchTasks(Command command) {
+		DisplayMode displayMode = command.getDisplayMode();
+		System.out.println(displayMode);
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
@@ -539,6 +541,7 @@ public class Logic {
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH,
 					Constants.MSG_NO_RESULT);
 		}
+		feedback.setDisplayMode(displayMode);
 		return feedback;
 	}
 
