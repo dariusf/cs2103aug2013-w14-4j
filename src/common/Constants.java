@@ -151,7 +151,7 @@ public class Constants {
 	public static final int SC_INVALID_PAGE_INDEX = 120;
 
 	public static DateTimeFormatter fullDateTimeFormat = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/YY");
-	public static DateTimeFormatter dateOnlyFormat = DateTimeFormat.forPattern("d MMMM',' EE");
+	public static DateTimeFormatter dateOnlyFormat = DateTimeFormat.forPattern("d MMM',' EE");
 	public static final String DATE_TIME_FORMAT = "d/M/yy h:mm a";
 	
 	public static final String MODE_TODAY = "Today";
