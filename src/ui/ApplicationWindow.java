@@ -227,25 +227,25 @@ public class ApplicationWindow {
 	
 	private String getModeText(){
 		switch (displayMode) {
-		case TODAY:
+		case TODAY :
 			return Constants.MODE_TODAY;
-		case TOMORROW:
+		case TOMORROW :
 			return Constants.MODE_TOMORROW;
-		case DEADLINE:
+		case DEADLINE :
 			return Constants.MODE_DEADLINE;
-		case FLOATING:
+		case FLOATING :
 			return Constants.MODE_FLOATING;
-		case TIMED:
+		case TIMED :
 			return Constants.MODE_TIMED;
-		case UNTIMED:
+		case UNTIMED :
 			return Constants.MODE_UNTIMED;
-		case SEARCH:
+		case SEARCH :
 			return Constants.MODE_SEARCH;
-		case OVERDUE:
+		case OVERDUE :
 			return Constants.MODE_OVERDUE;
-		case ALL:
+		case ALL :
 			return Constants.MODE_ALL;
-		case DATE:
+		case DATE :
 			return Constants.dateOnlyFormat.print(currentDisplayDateTime);
 		default:
 			return "Congrats! You have managed to break our application!";
@@ -545,13 +545,19 @@ public class ApplicationWindow {
 				currentDisplayDateTime = feedbackObj.getDisplayDate();
 			}
 			displayTitle.setText(getModeText());
+			break;
 		case SORT :
 		case CLEAR :
 		case SEARCH :
 			pageNumber = 1;
+			/*displayMode = feedbackObj.getDisplayMode();
+			displayTitle.setText(getModeText());*/
+			// TODO: change to the above.
+			displayTitle.setText(Constants.MODE_SEARCH);
 			break;
-		case GOTO:
+		case GOTO :
 			pageNumber = feedbackObj.getGotoPage();
+			break;
 		case HELP :
 		case EXIT :
 		case UNDO :
