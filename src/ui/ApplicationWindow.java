@@ -105,6 +105,7 @@ public class ApplicationWindow {
 
 		displayTitle = new StyledText(shell, SWT.READ_ONLY| SWT.WRAP
 				| SWT.SINGLE);
+		displayTitle.setEnabled(false);
 		displayTitle.setBounds(36, 23, 311, 50);
 		displayTitle.setText(getModeText());
 		displayTitle.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
@@ -113,15 +114,18 @@ public class ApplicationWindow {
 		
 		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.SINGLE);
+		displayPageNumber.setEnabled(false);
 		displayPageNumber.setSize(105, 25);
 		displayPageNumber.setLocation(335, 567);
 		
 		displayRemainingTaskCount = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP | SWT.SINGLE);
+		displayRemainingTaskCount.setEnabled(false);
 		displayRemainingTaskCount.setBounds(370, 54, 77, 14);
 		displayRemainingTaskCount.setFont(descriptionFont);
 		displayRemainingTaskCount.setLineAlignment(0,1,SWT.RIGHT);
 		
 		displayTodayTaskCount = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP | SWT.SINGLE);
+		displayTodayTaskCount.setEnabled(false);
 		displayTodayTaskCount.setBounds(370, 41, 77, 14);
 		displayTodayTaskCount.setFont(descriptionFont);
 		displayTodayTaskCount.setLineAlignment(0,1,SWT.RIGHT);
