@@ -205,7 +205,7 @@ public class ApplicationWindow {
 		displayPageNumber.setLineAlignment(0, 1, SWT.CENTER);
 		displayPageNumber.setFont(pageNumberFont);
 		
-		displayRemainingTaskCount.setText("Remaining: "+logic.getNumberOfRemaingingTasks());
+		displayRemainingTaskCount.setText("Remaining: "+logic.getNumberOfRemainingTasks());
 		displayTodayTaskCount.setText("Today: "+logic.getNumberOfTasksToday());
 		displayTask.pack();
 
@@ -450,19 +450,19 @@ public class ApplicationWindow {
 
 	private void defineFont() {
 		// For Mac:
-		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44, SWT.NORMAL);
+		/*windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44, SWT.NORMAL);
 		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
 		indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
 		titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
 		descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
-				SWT.NORMAL);
+				SWT.NORMAL);*/
 		// For windows: 
-		/*windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33, SWT.NORMAL);
+		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33, SWT.NORMAL);
 		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
 		indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
 		titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
 		descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
-				SWT.NORMAL);*/
+				SWT.NORMAL);
 	}
 
 	private void enableDrag() {
