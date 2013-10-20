@@ -137,7 +137,7 @@ public class Logic {
 		return storage.size();
 	}
 	
-	public int getNumberOfRemaingingTasks(){
+	public int getNumberOfRemainingTasks(){
 		int count = 0;
 		for(Task task : storage){
 			if(!task.isDone()){
