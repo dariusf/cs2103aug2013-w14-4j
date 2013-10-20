@@ -279,6 +279,7 @@ public class Logic {
 		switch (displayMode) {
 		case DATE:
 			displayDate = command.getDisplayDateTime();
+			System.out.println(displayDate);
 			return task.isOnDate(displayDate);
 		case TODAY:
 			displayDate = new DateTime();
@@ -501,7 +502,6 @@ public class Logic {
 
 	protected Feedback searchTasks(Command command) {
 		DisplayMode displayMode = command.getDisplayMode();
-		System.out.println(displayMode);
 		Feedback feedback = null;
 		HashMap<String, String> commandAttributes = command
 				.getCommandAttributes();
