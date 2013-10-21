@@ -9,7 +9,7 @@ import java.util.List;
 
 import logic.Task;
 
-public class Storage implements Closeable {
+public class Storage implements Closeable, Iterable<Task> {
 	private ActionCapturer<Task> taskStorage;
 	private final String fileName;
 	private boolean definingCustomAction;

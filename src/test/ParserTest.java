@@ -54,7 +54,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Correct format
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = now.withTime(22, 0, 0, 0);
@@ -65,7 +65,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// No qualifier
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = now.withTime(22, 0, 0, 0);
@@ -76,7 +76,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// 24h format
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = now.withTime(22, 0, 0, 0);
@@ -87,7 +87,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// 12h shorthand 
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = now.withTime(22, 0, 0, 0);
@@ -99,7 +99,7 @@ public class ParserTest {
 		
 		// Invalid 12-hour format
 		// Loose spaces
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home pm");
 		intervals = new ArrayList<>();
 		start = now.plusDays(1).withTime(13, 0, 0, 0);
@@ -110,7 +110,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// Quotes
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("'  go home at 10:00 pm'");
 		gotten = new Parser().parse("add'  go home at 10:00 pm'");
 		assertEquals(gotten, expected);
@@ -121,7 +121,7 @@ public class ParserTest {
 		gotten = new Parser().parse("''add task at ''10 pm");
 		assertEquals(gotten, expected);
 		// Valid
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("'task at '");
 		intervals = new ArrayList<>();
 		start = now.withTime(22, 0, 0, 0);
@@ -135,7 +135,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Typo in pm
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home p");
 		intervals = new ArrayList<>();
 		start = now.plusDays(1).withTime(13, 0, 0, 0);
@@ -146,7 +146,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Symbols
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home yeah");
 		intervals = new ArrayList<>();
 		start = now.plusDays(1).withTime(13, 0, 0, 0);
@@ -157,7 +157,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// Proper date format
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = new DateTime(2015, 2, 12, 0, 0);
@@ -168,7 +168,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// No year
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = new DateTime(2011, 10, 12, 12, 0);
@@ -179,7 +179,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// Date and time
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = new DateTime(2015, 2, 12, 12, 0);
@@ -190,7 +190,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// Fake on and at keywords
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home at on at");
 		intervals = new ArrayList<>();
 		start = new DateTime(2013, 10, 6, 13, 0);
@@ -201,7 +201,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// Mixed date
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = new DateTime(2015, 2, 12, 12, 0);
@@ -212,7 +212,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// Mixed date (short)
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = new DateTime(2013, 2, 12, 12, 0);
@@ -224,7 +224,7 @@ public class ParserTest {
 		
 		// Date aliases
 		// today
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("event");
 		intervals = new ArrayList<>();
 		start = now.withTime(0, 0, 0, 0);
@@ -235,7 +235,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// tomorrow
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = now.withTime(0, 0, 0, 0).plusDays(1);
@@ -246,7 +246,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Alias
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home for a scare");
 		intervals = new ArrayList<>();
 		start = now.withMonthOfYear(10).withDayOfMonth(31).withTime(0, 0, 0, 0);
@@ -257,7 +257,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Specifying dates and times in the middle
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("do schoolwork in school");
 		intervals = new ArrayList<>();
 		start = now.withDayOfWeek(DateTimeConstants.MONDAY).withTime(13, 0, 0, 0);
@@ -268,7 +268,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// Like the above, but with a trailing or keyword
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("do schoolwork or die");
 		intervals = new ArrayList<>();
 		start = now.withDayOfWeek(DateTimeConstants.MONDAY).withTime(13, 0, 0, 0);
@@ -279,7 +279,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Like the above, but with a trailing delimiter keyword
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go to school to do homework");
 		intervals = new ArrayList<>();
 		start = now.plusDays(1).withTime(13, 0, 0, 0);
@@ -290,7 +290,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// From, until, till, to
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("event");
 		intervals = new ArrayList<>();
 		start = now.withTime(10, 0, 0, 0).plusDays(1);
@@ -305,7 +305,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Wrong qualifier
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("event on");
 		intervals = new ArrayList<>();
 		start = now.withTime(10, 0, 0, 0).plusDays(1);
@@ -316,7 +316,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Interval literal
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("event");
 		intervals = new ArrayList<>();
 		start = now.withTime(10, 0, 0, 0).plusDays(1);
@@ -330,7 +330,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// Crossing am boundary
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("event");
 		intervals = new ArrayList<>();
 		start = now.withTime(23, 59, 0, 0);
@@ -341,7 +341,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Flexible interval
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("'halloween' and also maybe");
 		intervals = new ArrayList<>();
 		start = now.withDayOfMonth(31).withMonthOfYear(10).withTime(13, 0, 0, 0);
@@ -356,21 +356,21 @@ public class ParserTest {
 		
 		// Deadline
 		// Date
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("finish assignment");
 		expected.setDeadline(now.withDate(2015, 2, 12).withTime(23, 59, 0, 0));
 		gotten = new Parser().parse("add finish assignment by 12/2/15");
 		assertEquals(gotten, expected);
 		
 		// Time
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("finish assignment");
 		expected.setDeadline(now.withTime(23, 59, 0, 0));
 		gotten = new Parser().parse("add finish assignment by 23:59");
 		assertEquals(gotten, expected);
 
 		// Both
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("finish assignment");
 		expected.setDeadline(now.withTime(23, 59, 0, 0).withDate(2013, 10, 10));
 		gotten = new Parser().parse("add finish assignment by 23:59 10/10/13");
@@ -419,7 +419,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Days of the week
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = now.withDayOfWeek(DateTimeConstants.TUESDAY).withTime(13, 0, 0, 0);
@@ -430,7 +430,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// this keyword
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = now.withDayOfWeek(DateTimeConstants.TUESDAY).withTime(13, 0, 0, 0);
@@ -441,7 +441,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// last keyword
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = now.withDayOfWeek(DateTimeConstants.TUESDAY).withTime(13, 0, 0, 0).minusWeeks(1);
@@ -452,7 +452,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// next keyword
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = now.withDayOfWeek(DateTimeConstants.MONDAY).withTime(13, 0, 0, 0).plusWeeks(1);
@@ -463,7 +463,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Wacky case
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("gO hOmE");
 		intervals = new ArrayList<>();
 		start = now.withDayOfWeek(DateTimeConstants.THURSDAY).withTime(13, 0, 0, 0);
@@ -474,7 +474,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// Day of week shorthand
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
 		start = now.withDayOfWeek(DateTimeConstants.THURSDAY).withTime(13, 0, 0, 0);
@@ -485,7 +485,7 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 		
 		// Substring of day - does not match word boundary
-		expected = new Command(CommandType.ADD_TASK);
+		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home nes");
 		intervals = new ArrayList<>();
 		start = now.withDayOfWeek(DateTimeConstants.WEDNESDAY).withTime(13, 0, 0, 0);

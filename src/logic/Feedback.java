@@ -1,14 +1,22 @@
 package logic;
 
+import org.joda.time.DateTime;
+
 import common.CommandType;
 import common.Constants;
+import common.DisplayMode;
 
 public class Feedback {
 	private CommandType feedbackCommand = null;
+	private int taskIndex = 0; 
+	private DisplayMode displayMode; 
+	private DateTime displayDate;
+
 	private String feedbackString = null;
 	private int statusCode = 0;
 	private String statusMessage = null;
 	private boolean isError = false;
+	private int gotoPage = 0;
 
 	Feedback(int status, CommandType command) {
 		setStatusCode(status);
@@ -22,22 +30,39 @@ public class Feedback {
 		feedbackString = string;
 		setIsError(statusCode);
 	}
+	
+	public DisplayMode getDisplayMode() {
+		return displayMode;
+	}
 
-	protected void setStatusCode(int status) {
+	public void setDisplayMode(DisplayMode displayMode) {
+		this.displayMode = displayMode;
+	}
+
+	
+	public void setTaskIndex(int index){
+		taskIndex = index;
+	}
+	
+	public int getTaskIndex(){
+		return taskIndex;
+	}
+
+	public void setStatusCode(int status) {
 		assert (status <= 110) && (status >= 10);
 		statusCode = status;
 		setIsError(statusCode);
 	}
 
-	protected int getStatusCode() {
+	public int getStatusCode() {
 		return statusCode;
 	}
 
-	protected void setCommand(CommandType command) {
+	public void setCommand(CommandType command) {
 		feedbackCommand = command;
 	}
 
-	protected CommandType getCommand() {
+	public CommandType getCommand() {
 		return feedbackCommand;
 	}
 	
@@ -106,9 +131,9 @@ public class Feedback {
 
 	public String toString() {
 		switch (feedbackCommand) {
-		case ADD_TASK :
+		case ADD :
 			return addFeedback();
-		case EDIT_TASK:
+		case EDIT:
 			return editFeedback();
 		case DISPLAY :
 			return displayFeedback();
@@ -132,6 +157,8 @@ public class Feedback {
 			return helpFeedback();
 		case DONE :
 			return doneFeedback();
+		case GOTO :
+			return gotoFeedback();
 		case EXIT :
 			System.exit(0);
 		default :
@@ -312,5 +339,32 @@ public class Feedback {
 			statusMessage = "Error: Invalid done (this should not happen!)";
 		}
 		return statusMessage+"\n";
+	}
+	
+	private String gotoFeedback() {
+		if (statusCode == Constants.SC_SUCCESS) {
+			statusMessage = "Page " + gotoPage + "\n";
+		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX) {
+			statusMessage = "Error: Invalid page " + gotoPage + "\n";
+		} else {
+			statusMessage = "Error: Invalid goto (this should not happen!)";
+		}
+		return statusMessage+"\n";
+	}
+
+	public DateTime getDisplayDate() {
+		return displayDate;
+	}
+
+	public void setDisplayDate(DateTime displayDate) {
+		this.displayDate = displayDate;
+	}
+
+	public int getGotoPage() {
+		return gotoPage;
+	}
+
+	public void setGotoPage(int gotoPage) {
+		this.gotoPage = gotoPage;
 	}
 }

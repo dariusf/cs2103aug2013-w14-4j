@@ -20,12 +20,12 @@ public class LogicTest {
 	@Test
 	public void test() throws IOException {
 		Logic logic = new Logic();
-
+		Command displayCommand = new Command(CommandType.DISPLAY);
 		// Display task test
-		assertEquals("You have no tasks :)", logic.displayTasks().toString());
+		assertEquals("You have no tasks :)", logic.displayTasks(displayCommand).toString());
 
 		// Add task test 1 (deadline task, success not overdue)
-		Command command1 = new Command(CommandType.ADD_TASK);
+		Command command1 = new Command(CommandType.ADD);
 		DateTime date1 = new DateTime(2013, 10, 14, 23, 59, 59);
 		command1.setDeadline(date1);
 		command1.setDescription("Submit V0.1");
@@ -34,7 +34,7 @@ public class LogicTest {
 				logic.addTask(command1).toString());
 
 		// Add task test 2 (deadline task, success but overdue)
-		Command command2 = new Command(CommandType.ADD_TASK);
+		Command command2 = new Command(CommandType.ADD);
 		DateTime date2 = new DateTime(2012, 10, 14, 23, 59, 59);
 		command2.setDeadline(date2);
 		command2.setDescription("Submit overdue V0.1");
@@ -43,7 +43,7 @@ public class LogicTest {
 				logic.addTask(command2).toString());
 
 		// Add task test 3 (deadline task, success not overdue)
-		Command command3 = new Command(CommandType.ADD_TASK);
+		Command command3 = new Command(CommandType.ADD);
 		DateTime startDate3 = new DateTime(2013, 9, 30, 15, 0, 0);
 		DateTime endDate3 = new DateTime(2013, 9, 30, 16, 0, 0);
 		Interval interval3 = new Interval();
@@ -58,7 +58,7 @@ public class LogicTest {
 				logic.addTask(command3).toString());
 		
 		// Add task test 4 (deadline task, success but overdue)
-		Command command4 = new Command(CommandType.ADD_TASK);
+		Command command4 = new Command(CommandType.ADD);
 		DateTime startDate4 = new DateTime(2012, 9, 30, 15, 0, 0);
 		DateTime endDate4 = new DateTime(2012, 9, 30, 16, 0, 0);
 		Interval interval4 = new Interval();
@@ -73,7 +73,7 @@ public class LogicTest {
 				logic.addTask(command4).toString());
 		
 		// Add task test 5 (floating task, success not overdue)
-		Command command5 = new Command(CommandType.ADD_TASK);
+		Command command5 = new Command(CommandType.ADD);
 		DateTime startDate5a = new DateTime(2013, 10, 30, 15, 0, 0);
 		DateTime endDate5a = new DateTime(2013, 10, 30, 16, 0, 0);
 		Interval interval5a = new Interval();
@@ -100,7 +100,7 @@ public class LogicTest {
 				logic.addTask(command5).toString());
 		
 		// Add task test 5 (floating task, success but overdue)
-		Command command6 = new Command(CommandType.ADD_TASK);
+		Command command6 = new Command(CommandType.ADD);
 		DateTime startDate6a = new DateTime(2013, 10, 30, 15, 0, 0);
 		DateTime endDate6a = new DateTime(2013, 10, 30, 16, 0, 0);
 		Interval interval6a = new Interval();
@@ -126,7 +126,7 @@ public class LogicTest {
 				"Task added successfully! \nAn overdue floating event! on (1) 3:00 PM on Wed, 30/10/2013 to 4:00 PM on Wed, 30/10/2013 or (2) 4:00 PM on Wed, 30/10/2013 to 5:00 PM on Wed, 30/10/2013 or (3) 5:00 PM on Wed, 30/10/2013 to 6:00 PM on Wed, 30/10/2013", logic.addTask(command6).toString());
 		
 		// Add task test 7 (task with tags)
-		Command command7 = new Command(CommandType.ADD_TASK);
+		Command command7 = new Command(CommandType.ADD);
 		DateTime date7 = new DateTime(2013, 10, 11, 22, 00, 00);
 		command7.setDeadline(date7);
 		command7.setDescription("Party");
