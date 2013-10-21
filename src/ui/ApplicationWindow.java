@@ -193,9 +193,7 @@ public class ApplicationWindow {
 
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
 		int numberOfTasks = taskList.size();
-		if (numberOfTasks == 0)
-			return;
-		assert startingIndex < numberOfTasks;
+	
 
 		Composite[] taskComposites = new Composite[numberOfTasks];
 
@@ -204,6 +202,8 @@ public class ApplicationWindow {
 					taskList.get(startingIndex + i), startingIndex + i + 1);
 		}
 
+		System.out.println(pageNumber);
+		System.out.println(numberOfTasksOnEachPage.size());
 		displayPageNumber.setText("Page " + pageNumber + " of "
 				+ numberOfTasksOnEachPage.size());
 		displayPageNumber.setLineAlignment(0, 1, SWT.CENTER);
@@ -550,8 +550,6 @@ public class ApplicationWindow {
 			}
 			displayTitle.setText(getModeText());
 			break;
-		case SORT :
-		case CLEAR :
 		case SEARCH :
 			pageNumber = 1;
 			/*displayMode = feedbackObj.getDisplayMode();
@@ -562,6 +560,10 @@ public class ApplicationWindow {
 		case GOTO :
 			pageNumber = feedbackObj.getGotoPage();
 			break;
+		case CLEAR :
+			pageNumber = 1;
+			displayMode = DisplayMode.ALL;
+		case SORT :
 		case HELP :
 		case EXIT :
 		case UNDO :
