@@ -23,7 +23,7 @@ public class Logic {
 	protected boolean isDisplayHelp = false;
 	protected Command currentHelpCommand = null;
 
-	public Logic() {
+	public Logic() throws IOException {
 		storage = new Storage();
 	}
 	
