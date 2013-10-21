@@ -23,8 +23,59 @@ public class Logic {
 	protected boolean isDisplayHelp = false;
 	protected Command currentHelpCommand = null;
 
-	public Logic() throws IOException {
+	public Logic() {
 		storage = new Storage();
+	}
+	
+	public ActiveFeedback activeFeedback(String userInput){
+		Command command = new Parser().parse(userInput);
+		CommandType commandType = command.getCommandType();
+		switch (commandType) {
+		case ADD:
+			return activeAddTask(command);
+		case EDIT:
+			return activeEditTask(command);
+		case DELETE:
+			return activeDeleteTask(command);
+		case DONE:
+			return activeMarkDone(userInput);
+		case FINALISE:
+			return activeFinalisaTask(command);
+		case SEARCH:
+			return activeSearchTasks(command);
+		default:
+			return null;
+		}
+	}
+
+	private ActiveFeedback activeSearchTasks(Command command) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private ActiveFeedback activeFinalisaTask(Command command) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private ActiveFeedback activeMarkDone(String userInput) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private ActiveFeedback activeDeleteTask(Command command) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private ActiveFeedback activeEditTask(Command command) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private ActiveFeedback activeAddTask(Command command) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public Feedback executeCommand(String userCommand) {
@@ -81,6 +132,7 @@ public class Logic {
 
 		return feedback;
 	}
+	
 
 	protected Feedback editTask(Command command) {
 		assert (command.getCommandType() == CommandType.EDIT);
