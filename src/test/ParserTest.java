@@ -9,6 +9,7 @@ import org.joda.time.DateTimeConstants;
 import org.junit.Test;
 
 import common.CommandType;
+import common.InvalidCommandReason;
 
 import logic.Command;
 import logic.Interval;
@@ -35,6 +36,7 @@ public class ParserTest {
 		// Invalid commands
 		// Empty string
 		expected = new Command(CommandType.INVALID);
+		expected.setInvalidCommandReason(InvalidCommandReason.EMPTY_COMMAND);
 		gotten = new Parser().parse("");
 		assertEquals(gotten, expected);
 
@@ -45,6 +47,7 @@ public class ParserTest {
 		// Plain invalid commands
 		// Gibberish
 		gotten = new Parser().parse("kasdkajsklad aklsjdkals kajsld klajsd");
+		expected.setInvalidCommandReason(InvalidCommandReason.UNRECOGNIZED_COMMAND);
 		assertEquals(gotten, expected);
 		// Invalid starting keyword
 		gotten = new Parser().parse("hjkhjs task at 10:00 pm");
@@ -111,27 +114,28 @@ public class ParserTest {
 		
 		// Quotes
 		expected = new Command(CommandType.ADD);
-		expected.setDescription("'  go home at 10:00 pm'");
-		gotten = new Parser().parse("add'  go home at 10:00 pm'");
+		expected.setDescription("go home at 10:00 pm");
+		gotten = new Parser().parse("add\"  go home at 10:00 pm  \"");
 		assertEquals(gotten, expected);
 		
 		// Multiple quotes
 		// Missing add keyword
 		expected = new Command(CommandType.INVALID);
-		gotten = new Parser().parse("''add task at ''10 pm");
+		expected.setInvalidCommandReason(InvalidCommandReason.UNRECOGNIZED_COMMAND);
+		gotten = new Parser().parse("\"\"add task at \"\"10 pm");
 		assertEquals(gotten, expected);
 		// Valid
 		expected = new Command(CommandType.ADD);
-		expected.setDescription("'task at '");
+		expected.setDescription("task at");
 		intervals = new ArrayList<>();
 		start = now.withTime(22, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
-		gotten = new Parser().parse("add''task at ''10 pm");
+		gotten = new Parser().parse("add\"\"task at \"\"10 pm");
 		assertEquals(gotten, expected);
-		expected.setDescription("'what a ' task weird at hello");
-		gotten = new Parser().parse("add 'what a 'task weird at ' hello 10 pm");
+		expected.setDescription("what a  task weird at hello");
+		gotten = new Parser().parse("add \"what a \"task weird at \" hello 10 pm");
 		assertEquals(gotten, expected);
 
 		// Typo in pm
@@ -147,7 +151,7 @@ public class ParserTest {
 
 		// Symbols
 		expected = new Command(CommandType.ADD);
-		expected.setDescription("go home yeah");
+		expected.setDescription("go home yeah!");
 		intervals = new ArrayList<>();
 		start = now.plusDays(1).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
@@ -502,19 +506,19 @@ public class ParserTest {
 		
 		// Correct format
 		expected = new Command(CommandType.DELETE);
-		expected.setValue("deleteIndex", Integer.toString(1));
+		expected.setTaskIndex(1);
 		gotten = new Parser().parse("delete 1");
 		assertEquals(gotten, expected);
 
 		// Missing index
 		expected = new Command(CommandType.INVALID);
-		// TODO add error info
+		expected.setInvalidCommandReason(InvalidCommandReason.TOO_FEW_ARGUMENTS);
 		gotten = new Parser().parse("delete");
 		assertEquals(gotten, expected);
 
 		// Invalid format
 		expected = new Command(CommandType.INVALID);
-		// TODO add error info
+		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_TASK_INDEX);
 		gotten = new Parser().parse("delete askldjas");
 		assertEquals(gotten, expected);
 	}
