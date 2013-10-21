@@ -138,7 +138,7 @@ public class Storage implements Closeable, Iterable<Task> {
 
 	private void writeToFile() throws IOException {
 		File file = new File(fileName);
-		if(file.exists()) { file.delete(); }
+		//if(file.exists()) { file.delete(); }
 		
 		Json.writeToFile(convertIteratorToList(taskStorage.iterator()), file);
 	}
