@@ -533,6 +533,7 @@ public class ApplicationWindow {
 
 		switch (feedbackObj.getCommand()) {
 		case ADD :
+			displayMode = DisplayMode.ALL;
 			pageNumber = Integer.MAX_VALUE;
 			break;
 		case EDIT :
