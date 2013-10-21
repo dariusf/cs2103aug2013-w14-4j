@@ -397,7 +397,7 @@ public class Logic {
 			feedback = new Feedback(Constants.SC_REDO_NO_PRIOR_STATE_ERROR,
 					CommandType.REDO);
 		}
-
+		
 		return feedback;
 	}
 

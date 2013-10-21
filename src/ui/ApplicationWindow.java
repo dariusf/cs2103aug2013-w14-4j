@@ -1,6 +1,5 @@
 package ui;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import logic.Feedback;
@@ -15,8 +14,6 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.wb.swt.SWTResourceManager;
-
-import com.joestelmach.natty.generated.DateParser_NumericRules.int_00_to_23_optional_prefix_return;
 
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;

@@ -3,7 +3,7 @@ package storage;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
-public class StorageLinkedList<E> implements ListIterator<E> {
+public class DoublyLinkedList<E> implements ListIterator<E> {
 	
 	private class Node {
 		E item;
@@ -28,7 +28,7 @@ public class StorageLinkedList<E> implements ListIterator<E> {
 	Node tailNode;
 	int index;
 	
-	public StorageLinkedList() {
+	public DoublyLinkedList() {
 		headNode = new Node(null, null, null);
 		tailNode = new Node(null, headNode, null);
 		previousNode = headNode;
