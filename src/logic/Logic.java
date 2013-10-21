@@ -112,7 +112,7 @@ public class Logic {
 		case GOTO:
 			return gotoPage(command);
 		default:
-			throw new Error(Constants.MSG_UNRECOGNISED_COMMAND);
+			return new Feedback(Constants.SC_INVALID_COMMAND_ERROR, CommandType.INVALID);
 		}
 	}
 
@@ -213,61 +213,6 @@ public class Logic {
 
 	public ArrayList<Task> getTasksToDisplay() {
 		ArrayList<Task> output = new ArrayList<Task>();
-		// StringBuilder output = new StringBuilder();
-		// if (isDisplayHelp) {
-		// HashMap<String, String> commandAttributes = currentHelpCommand
-		// .getCommandAttributes();
-		// if (commandAttributes.containsKey("helpCommand")) {
-		// String commandString = commandAttributes.get("helpCommand");
-		// CommandType commandType = Parser
-		// .determineCommandType(commandString);
-		// switch (commandType) {
-		// case ADD_TASK:
-		// feedback = Constants.HELP_ADD_TASK;
-		// break;
-		// case EDIT_TASK:
-		// feedback = Constants.HELP_EDIT_TASK;
-		// break;
-		// case SORT:
-		// feedback = Constants.HELP_SORT;
-		// break;
-		// case DELETE:
-		// feedback = Constants.HELP_DELETE;
-		// break;
-		// case CLEAR:
-		// feedback = Constants.HELP_CLEAR;
-		// break;
-		// case UNDO:
-		// feedback = Constants.HELP_UNDO;
-		// break;
-		// case SEARCH:
-		// feedback = Constants.HELP_SEARCH;
-		// break;
-		// case HELP:
-		// feedback = Constants.HELP_HELP;
-		// break;
-		// case DONE:
-		// feedback = Constants.HELP_DONE;
-		// break;
-		// case FINALISE:
-		// feedback = Constants.HELP_FINALISE;
-		// break;
-		// case DISPLAY:
-		// feedback = Constants.HELP_DISPLAY;
-		// break;
-		// case EXIT:
-		// feedback = Constants.HELP_EXIT;
-		// break;
-		// default:
-		// feedback = Constants.HELP_GENERAL;
-		// ;
-		// }
-		// } else {
-		// feedback = Constants.HELP_GENERAL;
-		// }
-		//
-		// isDisplayHelp = false;
-		// } else
 
 		if (!isDynamicIndex) {
 			Iterator<Task> storageIterator = storage.iterator();
@@ -282,6 +227,45 @@ public class Logic {
 			}
 		}
 		return output;
+	}
+	
+	public ArrayList<Task> getTaskToDisplay(DisplayMode displayMode){
+		Command displayCommand = new Command(CommandType.DISPLAY);
+		displayCommand.setDisplayMode(displayMode);
+		displayTasks(displayCommand);
+		return getTasksToDisplay();
+	}
+
+	public boolean displayCondition(Command command, Task task) {
+		DisplayMode displayMode = command.getDisplayMode();
+		DateTime displayDate = null;
+		switch (displayMode) {
+		case DATE:
+			displayDate = command.getDisplayDateTime();
+			System.out.println(displayDate);
+			return task.isOnDate(displayDate);
+		case TODAY:
+			displayDate = new DateTime();
+			return task.isOnDate(displayDate);
+		case TOMORROW:
+			displayDate = new DateTime();
+			displayDate = displayDate.plusDays(1);
+			return task.isOnDate(displayDate);
+		case ALL:
+			return true;
+		case TIMED:
+			return task.isTimedTask();
+		case DEADLINE:
+			return task.isDeadlineTask();
+		case FLOATING:
+			return task.isFloatingTask();
+		case UNTIMED:
+			return task.isUntimedTask();
+		case OVERDUE:
+			return task.isOverdue();
+		default:
+			return true;
+		}
 	}
 
 	public Feedback displayTasks(Command command) {
@@ -323,38 +307,6 @@ public class Logic {
 			feedback.setDisplayDate(command.getDisplayDateTime());
 		}
 		return feedback;
-	}
-
-	public boolean displayCondition(Command command, Task task) {
-		DisplayMode displayMode = command.getDisplayMode();
-		DateTime displayDate = null;
-		switch (displayMode) {
-		case DATE:
-			displayDate = command.getDisplayDateTime();
-			System.out.println(displayDate);
-			return task.isOnDate(displayDate);
-		case TODAY:
-			displayDate = new DateTime();
-			return task.isOnDate(displayDate);
-		case TOMORROW:
-			displayDate = new DateTime();
-			displayDate = displayDate.plusDays(1);
-			return task.isOnDate(displayDate);
-		case ALL:
-			return true;
-		case TIMED:
-			return task.isTimedTask();
-		case DEADLINE:
-			return task.isDeadlineTask();
-		case FLOATING:
-			return task.isFloatingTask();
-		case UNTIMED:
-			return task.isUntimedTask();
-		case OVERDUE:
-			return task.isOverdue();
-		default:
-			return true;
-		}
 	}
 
 	protected Feedback deleteTask(Command command) {
