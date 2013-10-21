@@ -98,6 +98,17 @@ public class ParserTest {
 		gotten = new Parser().parse("add go home 22:00");
 		assertEquals(gotten, expected);
 
+		// 24h format without colon
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.withTime(22, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add go home at 2200");
+		assertEquals(gotten, expected);
+
 		// 12h shorthand 
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
