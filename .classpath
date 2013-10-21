@@ -29,5 +29,16 @@
         <classpathentry kind="lib" path="lib/natty/natty-0.7.jar"/>
         <classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
         <classpathentry kind="lib" path="lib/tween-engine-api-6.3.3/tween-engine-api.jar" sourcepath="lib/tween-engine-api-6.3.3/tween-engine-api-sources.jar"/>
+        <classpathentry kind="lib" path="lib/cloning/cloning-1.9.0.jar" sourcepath="lib/cloning/cloning-1.9.0-sources.jar">
+                <attributes>
+                        <attribute name="javadoc_location" value="jar:platform:/resource/cs2103aug2013-w14-4j/lib/cloning/cloning-1.9.0-javadoc.jar!/"/>
+                </attributes>
+        </classpathentry>
+        <classpathentry kind="lib" path="lib/objenesis/objenesis-2.1.jar" sourcepath="lib/objenesis/objenesis-2.1-sources.jar">
+                <attributes>
+                        <attribute name="javadoc_location" value="jar:platform:/resource/cs2103aug2013-w14-4j/lib/objenesis/objenesis-2.1-javadoc.jar!/"/>
+                </attributes>
+        </classpathentry>
+        <classpathentry kind="lib" path="lib/JNativeHook/jar/JNativeHook.jar" sourcepath="lib/JNativeHook/src/java"/>
         <classpathentry kind="output" path="bin"/>
 </classpath>
