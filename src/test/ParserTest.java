@@ -49,11 +49,20 @@ public class ParserTest {
 		gotten = new Parser().parse("kasdkajsklad aklsjdkals kajsld klajsd");
 		expected.setInvalidCommandReason(InvalidCommandReason.UNRECOGNIZED_COMMAND);
 		assertEquals(gotten, expected);
+		gotten = new Parser().parse("!@#$%^&*({}][]\\|';.,><;");
+		expected.setInvalidCommandReason(InvalidCommandReason.UNRECOGNIZED_COMMAND);
+		assertEquals(gotten, expected);
 		// Invalid starting keyword
 		gotten = new Parser().parse("hjkhjs task at 10:00 pm");
 		assertEquals(gotten, expected);
 		// Missing add keyword
 		gotten = new Parser().parse("task at 10:00 pm");
+		assertEquals(gotten, expected);
+
+		// Adding a bunch of symbols
+		gotten = new Parser().parse("add !@#$%^&*({}][]\\|';.,><;");
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("! ';., ;");
 		assertEquals(gotten, expected);
 
 		// Correct format
@@ -118,6 +127,12 @@ public class ParserTest {
 		gotten = new Parser().parse("add\"  go home at 10:00 pm  \"");
 		assertEquals(gotten, expected);
 		
+		// Apostrophe
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("don't go home");
+		gotten = new Parser().parse("add don't go home");
+		assertEquals(gotten, expected);
+
 		// Multiple quotes
 		// Missing add keyword
 		expected = new Command(CommandType.INVALID);

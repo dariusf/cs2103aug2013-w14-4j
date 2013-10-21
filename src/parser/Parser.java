@@ -15,8 +15,8 @@ import common.InvalidCommandReason;
 public class Parser {
 
 	private static final boolean PRINT_LEXER_TOKENS = false;
-	private static final boolean PRINT_MATCHED_COMMAND_TYPE = true;
-	private static final boolean PRINT_PARSED_COMMAND = true;
+	private static final boolean PRINT_MATCHED_COMMAND_TYPE = false;
+	private static final boolean PRINT_PARSED_COMMAND = false;
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
