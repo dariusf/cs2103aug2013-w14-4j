@@ -7,6 +7,7 @@ public class Constants {
 	public static final String APP_NAME = "Basket";
 
 	public static String WELCOME_MSG = "Welcome to Basket! \nType 'help' if you are unsure of what to do.";
+	public static String WELCOME_PAGE_DISPLAY = "display today";
 
 	public static final String MSG_INVALID_FORMAT = "invalid command format: %1$s";
 	public static final String MSG_ADDED_LINE = "added to %1$s: \"%2$s\"";
@@ -34,6 +35,10 @@ public class Constants {
 	public static final String COMMAND_HELP = "help";
 	public static final String COMMAND_FINALISE = "finalise";
 	public static final String COMMAND_EDIT = "edit";
+	public static final String COMMAND_GOTO = "goto";
+	public static final String COMMAND_UNDO = "undo";
+	public static final String COMMAND_REDO = "redo";
+	public static final String COMMAND_DONE = "done";
 
 	public static final String TASK_ATT_NAME = "name";
 	public static final String TASK_ATT_LOCATION = "location";
@@ -143,7 +148,20 @@ public class Constants {
 	public static final int SC_FINALISE_TYPE_MISMATCH_ERROR = 90;
 	public static final int SC_UNDO_NO_PRIOR_STATE_ERROR = 100;
 	public static final int SC_REDO_NO_PRIOR_STATE_ERROR = 110;
+	public static final int SC_INVALID_PAGE_INDEX = 120;
 
-	public static DateTimeFormatter format = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/YY");
+	public static DateTimeFormatter fullDateTimeFormat = DateTimeFormat.forPattern("h:mm a 'on' E, d/M/YY");
+	public static DateTimeFormatter dateOnlyFormat = DateTimeFormat.forPattern("d MMM',' EE");
 	public static final String DATE_TIME_FORMAT = "d/M/yy h:mm a";
+	
+	public static final String MODE_TODAY = "Today";
+	public static final String MODE_TOMORROW = "Tomorrow";
+	public static final String MODE_DEADLINE = "Deadlines";
+	public static final String MODE_TIMED = "Timed Tasks";
+	public static final String MODE_FLOATING = "Floating Tasks";
+	public static final String MODE_UNTIMED = "Untimed Tasks";
+	public static final String MODE_ALL = "All Tasks";
+	public static final String MODE_SEARCH = "Search Result";
+	public static final String MODE_OVERDUE = "Overdue Tasks";
+	
 }

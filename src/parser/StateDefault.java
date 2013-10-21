@@ -2,7 +2,7 @@ package parser;
 
 import logic.Interval;
 
-class StateDefault implements Parser.State {
+class StateDefault implements State {
 
 	StringBuilder words = new StringBuilder();
 	private final Parser parser;
@@ -46,7 +46,7 @@ class StateDefault implements Parser.State {
 
 	@Override
 	public void onPop() {
-		parser.text = words.toString().trim();
+		parser.description = words.toString().trim();
 		if (onAtUntilInterval.isSet()) {
 			parser.intervals.add(onAtUntilInterval);
 		}
