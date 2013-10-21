@@ -99,7 +99,7 @@ public class Json {
 	
 	public static ArrayList<Task> readFromString (String jsonString) throws IOException {
 		if(jsonString == "") {
-			return new ArrayList<>();
+			return new ArrayList<>(); // uses the ArrayList implementation
 		}
 		return fromReader(new StringReader(jsonString));
 	}

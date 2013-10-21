@@ -24,7 +24,7 @@ import logic.Interval;
 import logic.Task;
 import storage.Json;
 import storage.Storage;
-import storage.StorageLinkedList;
+import storage.DoublyLinkedList;
 
 public class StorageTest {
 	
@@ -178,12 +178,12 @@ public class StorageTest {
 	
 	@Test
 	public void storageLinkedListTest () {
-		StorageLinkedList<Integer> testList = new StorageLinkedList<>();
+		DoublyLinkedList<Integer> testList = new DoublyLinkedList<>();
 		
 		testList.pushHere(1);
 		assertTrue(testList.hasNext());
 		assertEquals((Integer)1, testList.next());
-		testList = new StorageLinkedList<>();
+		testList = new DoublyLinkedList<>();
 		
 		for (int i = 5; i > 0; i--) {
 			testList.push(i);
