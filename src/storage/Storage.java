@@ -154,17 +154,21 @@ public class Storage implements Closeable, Iterable<Task> {
 	private StorageLinkedList<Action> actionsPerformed = new StorageLinkedList<>();
 	private final String fileName;
 	
-	public Storage(String fileName) throws IOException {
+	public Storage(String fileName){
 		this.fileName = fileName;
 		File file = new File(fileName);
 		if (file.exists()) {
-			taskStorage = Json.readFromFile(new File(fileName));
+			try {
+				taskStorage = Json.readFromFile(new File(fileName));
+			} catch (IOException e) {
+				taskStorage = new ArrayList<>();
+			}
 		} else {
 			taskStorage = new ArrayList<>();
 		}
 	}
 	
-	public Storage() throws IOException {
+	public Storage(){
 		this("default.txt");
 	}
 	
