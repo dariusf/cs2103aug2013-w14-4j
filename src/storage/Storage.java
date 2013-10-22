@@ -125,10 +125,11 @@ public class Storage implements Closeable, Iterable<Task> {
 	
 	public void removeSet(List<Task> items) {
 		Iterator<Task> itemsIterator = items.iterator();
+		beginCustomActionSet();
 		while (itemsIterator.hasNext()) {
 			remove(itemsIterator.next());
 		}
-		finaliseActions();
+		endCustomActionSet();
 	}
 	
 	@Override
