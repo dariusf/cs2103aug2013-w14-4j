@@ -343,12 +343,17 @@ public class Logic {
 
 		if (storage.size() > 0) {
 			if (isClearDone) {
-				for (int i = storage.size(); i > 0; i--) {
-					Task currentTask = storage.get(i);
+				Iterator<Task> tasksIterator = storage.iterator();
+				ArrayList<Task> doneTasks = new ArrayList<>();
+				
+				while (tasksIterator.hasNext()){
+					Task currentTask = tasksIterator.next();
 					if (currentTask.getDone()) {
-						storage.remove(i);
+						doneTasks.add(currentTask);
 					}
 				}
+				
+				storage.removeSet(doneTasks);
 				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE,
 						CommandType.CLEAR);
 				isDynamicIndex = false;
