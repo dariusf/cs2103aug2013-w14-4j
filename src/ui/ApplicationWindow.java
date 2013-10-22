@@ -16,6 +16,12 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.NativeInputEvent;
+import org.jnativehook.example.NativeHookDemo;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
 
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
@@ -147,6 +153,8 @@ public class ApplicationWindow {
 		closeButton = new Composite(shell, SWT.NONE);
 		closeButton.setBounds(433, 0, 49, 27);
 		enableWindowButton();
+		
+		enableNativeHook();
 		
 		displayFeedback.setText(displayWelcomeMessage());
 		setWelcomePage();
@@ -523,6 +531,51 @@ public class ApplicationWindow {
 
 		};
 		closeButton.addListener(SWT.MouseUp, listener);
+	}
+	
+	private void enableNativeHook () {
+		class UiUpdater implements Runnable {
+
+			@Override
+			public void run() {
+				if(shell.getMinimized()) {
+					shell.setMinimized(false);
+				} else {
+					shell.setMinimized(true);
+				}
+			}
+			
+		}
+		
+		class NativeHook implements NativeKeyListener {
+
+			@Override
+			public void nativeKeyPressed(NativeKeyEvent e) {
+				if(e.getModifiers() == (NativeInputEvent.SHIFT_MASK + NativeInputEvent.CTRL_MASK)
+						&& e.getKeyCode() == NativeKeyEvent.VK_T) {
+					Display.getDefault().asyncExec(new UiUpdater());
+				}
+			}
+
+			@Override
+			public void nativeKeyReleased(NativeKeyEvent e) {
+				// do nothing
+			}
+
+			@Override
+			public void nativeKeyTyped(NativeKeyEvent e) {
+				// do nothing
+			}
+			
+		}
+		
+		try {
+			GlobalScreen.registerNativeHook();
+		} catch (NativeHookException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		GlobalScreen.getInstance().addNativeKeyListener(new NativeHook());
 	}
 
 	private void executeUserInput(String userInput) {
