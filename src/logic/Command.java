@@ -18,9 +18,9 @@ public class Command {
 	private ArrayList<Interval> intervals = new ArrayList<>();
 	private ArrayList<String> tags = new ArrayList<>();
 
-	private int taskIndex = 0;
-	private int pageIndex = 0;
-	private int finaliseIndex = 0;
+	private int taskIndex = -1;
+	private int pageIndex = -1;
+	private int finaliseIndex = -1;
 	
 	private boolean clearDone = false;
 	private CommandType helpCommand;
