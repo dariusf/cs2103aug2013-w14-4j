@@ -53,6 +53,7 @@ public class ApplicationWindow {
 	private Font titleFont;
 	private Font descriptionFont;
 	private Font pageNumberFont;
+	private DisplayStateHistory displayStateHistory;
 
 	private int pageNumber = 1;
 	public static ApplicationWindow self;
@@ -79,9 +80,11 @@ public class ApplicationWindow {
 	 */
 	public void open() {
 		Display display = Display.getDefault();
+		displayStateHistory = new DisplayStateHistory();
 		createContents();
 		shell.open();
 		shell.layout();
+		
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -201,7 +204,6 @@ public class ApplicationWindow {
 
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
 		int numberOfTasks = taskList.size();
-	
 
 		Composite[] taskComposites = new Composite[numberOfTasks];
 
@@ -221,6 +223,10 @@ public class ApplicationWindow {
 		displayTodayTaskCount.setText("Today: "+logic.getNumberOfTasksToday());
 		displayTask.pack();
 
+	}
+	
+	private void displayWindowTitle(){
+		displayTitle.setText(getModeText());
 	}
 
 	private int getPage(int index) {
@@ -462,19 +468,19 @@ public class ApplicationWindow {
 
 	private void defineFont() {
 		// For Mac:
-		/*windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44, SWT.NORMAL);
+		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44, SWT.NORMAL);
 		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
 		indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
 		titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
 		descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
-				SWT.NORMAL);*/
-		// For windows: 
-		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33, SWT.NORMAL);
-		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
-		indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
-		titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
-		descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
 				SWT.NORMAL);
+		// For windows: 
+//		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33, SWT.NORMAL);
+//		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
+//		indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
+//		titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
+//		descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
+//				SWT.NORMAL);
 	}
 
 	private void enableDrag() {
@@ -588,6 +594,7 @@ public class ApplicationWindow {
 		case ADD :
 			displayMode = DisplayMode.ALL;
 			pageNumber = Integer.MAX_VALUE;
+			displayStateHistory.addDisplayState(displayMode, pageNumber);
 			break;
 		case EDIT :
 		case DELETE :
@@ -596,32 +603,41 @@ public class ApplicationWindow {
 			if (!feedbackObj.isErrorMessage()) {
 				pageNumber = getPage(feedbackObj.getTaskIndex());
 			}
+			displayStateHistory.addDisplayState(displayMode, pageNumber);
 			break;
 		case DISPLAY :
 			displayMode = feedbackObj.getDisplayMode();
 			if (displayMode == DisplayMode.DATE) {
 				currentDisplayDateTime = feedbackObj.getDisplayDate();
 			}
-			displayTitle.setText(getModeText());
+			displayStateHistory.addDisplayState(displayMode, pageNumber);
 			break;
 		case SEARCH :
 			pageNumber = 1;
-			/*displayMode = feedbackObj.getDisplayMode();
-			displayTitle.setText(getModeText());*/
-			// TODO: change to the above.
-			displayTitle.setText(Constants.MODE_SEARCH);
+			displayMode = DisplayMode.SEARCH;
 			break;
 		case GOTO :
 			pageNumber = feedbackObj.getGotoPage();
 			break;
+		case SORT :
 		case CLEAR :
 			pageNumber = 1;
 			displayMode = DisplayMode.ALL;
-		case SORT :
+			displayStateHistory.addDisplayState(displayMode, pageNumber);
+			break;
+		case UNDO :
+			displayMode=displayStateHistory.getCurrentDisplayMode();
+			pageNumber=displayStateHistory.getCurrentPageNumber();
+			displayStateHistory.undo();
+			break;
+		case REDO :
+			displayStateHistory.redo();
+			displayMode=displayStateHistory.getCurrentDisplayMode();
+			pageNumber=displayStateHistory.getCurrentPageNumber();
+			
+			break;
 		case HELP :
 		case EXIT :
-		case UNDO :
-		case REDO :
 		case INVALID :
 		default :
 		}
@@ -629,5 +645,6 @@ public class ApplicationWindow {
 		displayFeedback.setText(feedback);
 		input.setText("");
 		displayTasksOnWindow();
+		displayWindowTitle();
 	}
 }
