@@ -473,8 +473,10 @@ public class Logic {
 	protected Feedback showHelp(Command command) {
 		Feedback feedback = null;
 		currentHelpCommand = command;
+		CommandType helpCommandType = currentHelpCommand.getHelpCommand();
 		isDisplayHelp = true;
 		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP);
+		feedback.setHelpCommandType(helpCommandType);
 		return feedback;
 	}
 
