@@ -59,6 +59,10 @@ public class HelpDialog extends Dialog {
 	}
 	
 	private String getHelpText(CommandType helpCommandType){
+		if (helpCommandType == null) {
+			return Constants.HELP_GENERAL;
+		}
+		
 		switch (helpCommandType) {
 		case ADD :
 			return Constants.HELP_ADD;
