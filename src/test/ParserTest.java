@@ -422,6 +422,17 @@ public class ParserTest {
 		gotten = new Parser().parse("add go home at 3:00 on 12/2/12");
 		assertEquals(gotten, expected);
 		
+		// Inferring start date if start date is unspecified and end date is
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("task");
+		intervals = new ArrayList<>();
+		start = now.withTime(13, 0, 0, 0).plusDays(1);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add task 1pm to 2pm today");
+		assertEquals(gotten, expected);
+		
 		// Default intervals
 		// Date only
 		// Past
