@@ -1,6 +1,8 @@
 package ui;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import logic.Feedback;
 import logic.Logic;
@@ -19,7 +21,6 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.NativeInputEvent;
-import org.jnativehook.example.NativeHookDemo;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
@@ -28,11 +29,14 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.equations.Quad;
 
-import common.CommandType;
 import common.Constants;
+
 
 public class ApplicationWindow {
 
+
+	private static final Logger logger = Logger.getLogger(ApplicationWindow.class.getName());
+	
 	protected static Shell shell;
 	private Text input;
 	private Text displayFeedback;
@@ -212,8 +216,6 @@ public class ApplicationWindow {
 					taskList.get(startingIndex + i), startingIndex + i + 1);
 		}
 
-		System.out.println(pageNumber);
-		System.out.println(numberOfTasksOnEachPage.size());
 		displayPageNumber.setText("Page " + pageNumber + " of "
 				+ numberOfTasksOnEachPage.size());
 		displayPageNumber.setLineAlignment(0, 1, SWT.CENTER);
@@ -402,6 +404,7 @@ public class ApplicationWindow {
 					inputHistory.addInput(userInput);
 					
 					executeUserInput(userInput);
+					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_UP) {
 					// when non-fixed-height composites are added, on every
 					// change
@@ -411,11 +414,15 @@ public class ApplicationWindow {
 					// for now, since it's fixed-width...
 					pageNumber = Math.max(pageNumber - 1, 0);
 					displayTasksOnWindow();
+					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_DOWN) {
 					pageNumber = Math.min(pageNumber + 1,
 							numberOfTasksOnEachPage.size());
 					displayTasksOnWindow();
+					logger.log(Level.INFO, generateLoggingString());
 				}
+				
+				
 			}
 
 			private void performTween() {
@@ -451,6 +458,7 @@ public class ApplicationWindow {
 		});
 	}
 
+	
 	
 	/**
 	 * @param feedbackObj
@@ -492,7 +500,7 @@ public class ApplicationWindow {
 					Point pt1 = shell.toDisplay(0, 0);
 					Point pt2 = Display.getCurrent().getCursorLocation();
 					offset[0] = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
-					// System.out.println(offset[0]);
+				
 					break;
 				case SWT.MouseMove:
 					if (offset[0] != null) {
@@ -557,7 +565,7 @@ public class ApplicationWindow {
 
 			@Override
 			public void nativeKeyPressed(NativeKeyEvent e) {
-				if(e.getModifiers() == (NativeInputEvent.SHIFT_MASK + NativeInputEvent.CTRL_MASK)
+				if(e.getModifiers() == (NativeInputEvent.ALT_MASK + NativeInputEvent.CTRL_MASK)
 						&& e.getKeyCode() == NativeKeyEvent.VK_T) {
 					Display.getDefault().asyncExec(new UiUpdater());
 				}
@@ -646,5 +654,25 @@ public class ApplicationWindow {
 		input.setText("");
 		displayTasksOnWindow();
 		displayWindowTitle();
+	}
+	
+	public String generateLoggingString(){
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(displayTitle.getText()+"\n");
+		stringBuilder.append(displayTodayTaskCount.getText()+"\n");
+		stringBuilder.append(displayRemainingTaskCount.getText()+"\n");
+		Control[] controls = displayTask.getChildren();
+		for(Control control : controls){
+			Composite taskComposite = (Composite) control;
+			Control[] taskControls = taskComposite.getChildren();
+			StyledText taskIndex = (StyledText) taskControls[0];
+			Composite taskDescriptionComposite = (Composite) taskControls[2];
+			StyledText taskTitle = (StyledText) taskDescriptionComposite.getChildren()[0];
+			StyledText taskDescription = (StyledText) taskDescriptionComposite.getChildren()[1];
+			stringBuilder.append(taskIndex.getText()+" "+taskTitle.getText()+"\n"+taskDescription.getText()+"\n");
+		}
+		stringBuilder.append(displayPageNumber.getText()+"\n");
+		stringBuilder.append(displayFeedback.getText()+"\n");
+		return stringBuilder.toString();
 	}
 }

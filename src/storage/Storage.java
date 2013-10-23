@@ -27,7 +27,7 @@ public class Storage implements Closeable, Iterable<Task> {
 				taskStorage = new ActionCapturer<> (new RealStorage<Task> ());
 			}
 		} catch (Exception e) {
-			throw new IOException();
+			e.printStackTrace();
 		}
 	}
 	
