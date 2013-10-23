@@ -51,7 +51,7 @@ public class RealStorage<E extends Comparable<E>> implements StorageBase<E>{
 
 	@Override
 	public void setState(List<E> newState) {
-		newState = new ArrayList<>(newState);
+		items = new ArrayList<>(newState);
 	}
 	
 	@Override
