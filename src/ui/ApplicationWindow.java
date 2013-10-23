@@ -687,7 +687,7 @@ public class ApplicationWindow {
 
 			break;
 		case HELP:
-			helpDialog.open();
+			helpDialog.open(feedbackObj);
 		case EXIT:
 		case INVALID:
 		default:
