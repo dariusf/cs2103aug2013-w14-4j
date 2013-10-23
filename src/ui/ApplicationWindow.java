@@ -1,8 +1,6 @@
 package ui;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import logic.Feedback;
 import logic.Logic;
@@ -37,7 +35,7 @@ public class ApplicationWindow {
 
 	private static final Logger logger = Logger.getLogger(ApplicationWindow.class.getName());
 	
-	protected static Shell shell;
+	static Shell shell; // accessed by task composite
 	private Text input;
 	private Text displayFeedback;
 	private static Logic logic;
@@ -51,16 +49,17 @@ public class ApplicationWindow {
 	
 	private DisplayMode displayMode = DisplayMode.TODAY;
 	private org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
+	private static HelpDialog helpDialog;
 
 	private Font windowTitleFont;
-	private Font indexFont;
-	private Font titleFont;
-	private Font descriptionFont;
+	Font indexFont; // accessed by task composite
+	Font titleFont; // accessed by task composite
+	Font descriptionFont; // accessed by task composite
 	private Font pageNumberFont;
 	private DisplayStateHistory displayStateHistory;
 
 	private int pageNumber = 1;
-	public static ApplicationWindow self;
+	public static ApplicationWindow self; // singleton?
 	public boolean moving = false;
 
 	/**
@@ -115,7 +114,7 @@ public class ApplicationWindow {
 		shell.setSize(482, 681);
 		shell.setText(Constants.APP_NAME);
 		defineFont();
-
+		
 		displayTitle = new StyledText(shell, SWT.READ_ONLY| SWT.WRAP
 				| SWT.SINGLE);
 		displayTitle.setEnabled(false);
@@ -165,6 +164,8 @@ public class ApplicationWindow {
 		
 		displayFeedback.setText(displayWelcomeMessage());
 		setWelcomePage();
+		
+		helpDialog = new HelpDialog(shell);
 
 		enterDriverLoop();
 
@@ -212,7 +213,7 @@ public class ApplicationWindow {
 		Composite[] taskComposites = new Composite[numberOfTasks];
 
 		for (int i = 0; i < numberOfTasksOnEachPage.get(pageNumber - 1); i++) {
-			taskComposites[i] = createTaskItemComposite(
+			taskComposites[i] = new TaskComposite(displayTask,
 					taskList.get(startingIndex + i), startingIndex + i + 1);
 		}
 
@@ -278,7 +279,7 @@ public class ApplicationWindow {
 		Composite[] taskComposites = new Composite[numberOfTasks];
 		int index = 0;
 		for (Task task : taskList) {
-			taskComposites[index] = createTaskItemComposite(task, index + 1);
+			taskComposites[index] = new TaskComposite(displayTask, task, index + 1);
 			index++;
 		}
 		int[] heights = new int[numberOfTasks];
@@ -305,59 +306,59 @@ public class ApplicationWindow {
 		}
 	}
 
-	private Composite createTaskItemComposite(Task task, int index) {
-		Composite taskItemComposite = new Composite(displayTask, SWT.NONE);
-		// 340 is the fixed width and 69 is the fixed height. use SWT.default if
-		// you do not want to fix the lengths.
-		taskItemComposite.setLayoutData(new RowData(415, SWT.DEFAULT));
-		RowLayout innerRowLayout = new RowLayout();
-		taskItemComposite.setLayout(innerRowLayout);
-
-		RowData taskIndexLayoutData = new RowData(60, 73);
-		RowData paddingLayoutData = new RowData(8, SWT.DEFAULT);
-		RowData taskDescriptionLayoutData = new RowData(330, SWT.DEFAULT);
-
-		StyledText taskIndex = new StyledText(taskItemComposite, SWT.WRAP);
-		taskIndex.setText(String.valueOf(index));
-		taskIndex.setFont(indexFont);
-		taskIndex.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
-		taskIndex.setLineAlignment(0, 1, SWT.RIGHT);
-		taskIndex.setLayoutData(taskIndexLayoutData);
-
-		Composite paddingComposite = new Composite(taskItemComposite, SWT.NONE);
-		paddingComposite.setLayoutData(paddingLayoutData);
-
-		Composite taskDetailsComposite = new Composite(taskItemComposite,
-				SWT.NONE);
-		taskDetailsComposite.setLayoutData(taskDescriptionLayoutData);
-		taskDetailsComposite.setLayout(innerRowLayout);
-
-		StyledText taskName = new StyledText(taskDetailsComposite,
-				SWT.READ_ONLY);
-		taskName.setText(task.getName());
-		taskName.setFont(titleFont);
-		if (task.isDone()) {
-			StyleRange style1 = new StyleRange();
-			style1.start = 0;
-			style1.length = task.getName().length();
-			style1.strikeout = true;
-			taskName.setStyleRange(style1);
-		} else if (task.isOverdue()) {
-			taskName.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
-		}
-		taskName.setLayoutData(taskDescriptionLayoutData);
-
-		StyledText taskDescription = new StyledText(taskDetailsComposite,
-				SWT.READ_ONLY);
-		taskDescription.setText(task.getInfoString());
-		taskDescription.setFont(descriptionFont);
-
-		taskDetailsComposite.pack();
-
-		taskItemComposite.pack();
-
-		return taskItemComposite;
-	}
+//	private Composite createTaskItemComposite(Task task, int index) {
+//		Composite taskItemComposite = new Composite(displayTask, SWT.NONE);
+//		// 340 is the fixed width and 69 is the fixed height. use SWT.default if
+//		// you do not want to fix the lengths.
+//		taskItemComposite.setLayoutData(new RowData(415, SWT.DEFAULT));
+//		RowLayout innerRowLayout = new RowLayout();
+//		taskItemComposite.setLayout(innerRowLayout);
+//
+//		RowData taskIndexLayoutData = new RowData(60, 73);
+//		RowData paddingLayoutData = new RowData(8, SWT.DEFAULT);
+//		RowData taskDescriptionLayoutData = new RowData(330, SWT.DEFAULT);
+//
+//		StyledText taskIndex = new StyledText(taskItemComposite, SWT.WRAP);
+//		taskIndex.setText(String.valueOf(index));
+//		taskIndex.setFont(indexFont);
+//		taskIndex.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+//		taskIndex.setLineAlignment(0, 1, SWT.RIGHT);
+//		taskIndex.setLayoutData(taskIndexLayoutData);
+//
+//		Composite paddingComposite = new Composite(taskItemComposite, SWT.NONE);
+//		paddingComposite.setLayoutData(paddingLayoutData);
+//
+//		Composite taskDetailsComposite = new Composite(taskItemComposite,
+//				SWT.NONE);
+//		taskDetailsComposite.setLayoutData(taskDescriptionLayoutData);
+//		taskDetailsComposite.setLayout(innerRowLayout);
+//
+//		StyledText taskName = new StyledText(taskDetailsComposite,
+//				SWT.READ_ONLY);
+//		taskName.setText(task.getName());
+//		taskName.setFont(titleFont);
+//		if (task.isDone()) {
+//			StyleRange style1 = new StyleRange();
+//			style1.start = 0;
+//			style1.length = task.getName().length();
+//			style1.strikeout = true;
+//			taskName.setStyleRange(style1);
+//		} else if (task.isOverdue()) {
+//			taskName.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+//		}
+//		taskName.setLayoutData(taskDescriptionLayoutData);
+//
+//		StyledText taskDescription = new StyledText(taskDetailsComposite,
+//				SWT.READ_ONLY);
+//		taskDescription.setText(task.getInfoString());
+//		taskDescription.setFont(descriptionFont);
+//
+//		taskDetailsComposite.pack();
+//
+//		taskItemComposite.pack();
+//
+//		return taskItemComposite;
+//	}
 
 	private String displayWelcomeMessage() {
 		String welcomeMessage = Constants.WELCOME_MSG;
@@ -476,19 +477,19 @@ public class ApplicationWindow {
 
 	private void defineFont() {
 		// For Mac:
-		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44, SWT.NORMAL);
+		/*windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44, SWT.NORMAL);
 		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
 		indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
 		titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
 		descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
-				SWT.NORMAL);
+				SWT.NORMAL);*/
 		// For windows: 
-//		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33, SWT.NORMAL);
-//		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
-//		indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
-//		titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
-//		descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
-//				SWT.NORMAL);
+		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33, SWT.NORMAL);
+		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
+		indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
+		titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
+		descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
+				SWT.NORMAL);
 	}
 
 	private void enableDrag() {
@@ -598,6 +599,9 @@ public class ApplicationWindow {
 		String feedback = feedbackObj.toString();
 		setFeedbackColour(feedbackObj);
 
+		displayFeedback.setText(feedback);
+		input.setText("");
+		
 		switch (feedbackObj.getCommand()) {
 		case ADD :
 			displayMode = DisplayMode.ALL;
@@ -645,13 +649,12 @@ public class ApplicationWindow {
 			
 			break;
 		case HELP :
+			helpDialog.open();
 		case EXIT :
 		case INVALID :
 		default :
 		}
 
-		displayFeedback.setText(feedback);
-		input.setText("");
 		displayTasksOnWindow();
 		displayWindowTitle();
 	}
