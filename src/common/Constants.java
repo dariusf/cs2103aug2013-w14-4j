@@ -66,7 +66,7 @@ public class Constants {
 	public static final String TASK_TYPE_DEADLINE = "deadline";
 	public static final String TASK_TYPE_UNTIMED = "untimed";
 
-	public static final String HELP_INSTRUCTIONS = "Refer to the display window above for instructions.";
+	public static final String HELP_INSTRUCTIONS = "Refer to the help window.";
 	public static final String HELP_GENERAL = "Here are the available commands:\n"
 			+ "add: Add a new task\n"
 			+ "edit: Edit an existing task\n"
