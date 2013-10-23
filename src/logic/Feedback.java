@@ -12,22 +12,15 @@ public class Feedback {
 	private DisplayMode displayMode; 
 	private DateTime displayDate;
 
-	private String feedbackString = null;
 	private int statusCode = 0;
 	private String statusMessage = null;
 	private boolean isError = false;
 	private int gotoPage = 0;
+	private CommandType helpCommandType = null;
 
 	public Feedback(int status, CommandType command) {
 		setStatusCode(status);
 		setCommand(command);
-		setIsError(statusCode);
-	}
-
-	public Feedback(int status, CommandType command, String string) {
-		setStatusCode(status);
-		setCommand(command);
-		feedbackString = string;
 		setIsError(statusCode);
 	}
 	
@@ -56,6 +49,15 @@ public class Feedback {
 
 	public int getStatusCode() {
 		return statusCode;
+	}
+	
+	public void setHelpCommandType(CommandType command) {
+		// TODO check that it's a valid command here.
+		helpCommandType = command;
+	}
+	
+	public CommandType getHelpCommandType() {
+		return helpCommandType;
 	}
 
 	public void setCommand(CommandType command) {
@@ -322,7 +324,7 @@ public class Feedback {
 
 	private String helpFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = feedbackString;
+			statusMessage = Constants.HELP_INSTRUCTIONS;
 		} else {
 			statusMessage = "Error: Invalid help (this should not happen!)";
 		}
