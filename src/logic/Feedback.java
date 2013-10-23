@@ -17,6 +17,7 @@ public class Feedback {
 	private String statusMessage = null;
 	private boolean isError = false;
 	private int gotoPage = 0;
+	private CommandType helpCommandType = null;
 
 	public Feedback(int status, CommandType command) {
 		setStatusCode(status);
@@ -56,6 +57,15 @@ public class Feedback {
 
 	public int getStatusCode() {
 		return statusCode;
+	}
+	
+	public void setHelpCommandType(CommandType command) {
+		// TODO check that it's a valid command here.
+		helpCommandType = command;
+	}
+	
+	public CommandType getHelpCommandType() {
+		return helpCommandType;
 	}
 
 	public void setCommand(CommandType command) {
