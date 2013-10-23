@@ -95,37 +95,32 @@ public class ApplicationWindow {
 		shell.open();
 		shell.layout();
 		if (testMode) {
-			try {
-				Scanner scanner = new Scanner(new File("testCommands.txt"));
-				ArrayList<String> testCommands = new ArrayList<>();
-				while (scanner.hasNextLine()) {
-					String currentLine = scanner.nextLine();
-					testCommands.add(currentLine);
-				}
-	
-				for (String string : testCommands) {
-					System.out.println(string);
-					input.setText(string);
-					Event event = new Event();
-					event.type = SWT.KeyDown;
-					event.keyCode = SWT.CR;
-					display.post(event);
-					event = new Event();
-					event.type = SWT.KeyUp;
-					event.keyCode = SWT.CR;
-					display.post(event);
-				}
-
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			runTest(display);
 		}
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
+		}
+	}
+
+	private void runTest(Display display) {
+		try {
+			Scanner scanner = new Scanner(new File("testCommands.txt"));
+			ArrayList<String> testCommands = new ArrayList<>();
+			while (scanner.hasNextLine()) {
+				String currentLine = scanner.nextLine();
+				testCommands.add(currentLine);
+			}
+
+			for (String string : testCommands) {
+				executeUserInput(string);
+
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -695,6 +690,9 @@ public class ApplicationWindow {
 
 		displayTasksOnWindow();
 		displayWindowTitle();
+		if(testMode){
+			logger.log(Level.INFO, generateLoggingString());
+		}
 	}
 
 	public String generateLoggingString() {
