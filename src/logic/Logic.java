@@ -125,10 +125,9 @@ public class Logic {
 		Feedback feedback = null;
 		if (isTaskOver(newTask)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
-					CommandType.ADD, newTask.toString());
+					CommandType.ADD);
 		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.ADD,
-					newTask.toString());
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.ADD);
 		}
 
 		return feedback;
@@ -174,11 +173,10 @@ public class Logic {
 
 		if (isTaskOver(taskToEdit)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
-					CommandType.EDIT, taskToEdit.toString());
+					CommandType.EDIT);
 			feedback.setTaskIndex(taskIndex);
 		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.EDIT,
-					taskToEdit.toString());
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.EDIT);
 			feedback.setTaskIndex(taskIndex);
 		}
 
@@ -322,8 +320,7 @@ public class Logic {
 		if (taskIndex <= storage.size()) {
 			String taskDescription = storage.get(taskIndex).getName();
 			storage.remove(taskIndex);
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE,
-					taskDescription);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
 			feedback.setTaskIndex(taskIndex);
 			isDynamicIndex = false;
 		} else {
@@ -410,11 +407,10 @@ public class Logic {
 
 		if (isTaskOver(taskToEdit)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
-					CommandType.FINALISE, taskToEdit.toString());
+					CommandType.FINALISE);
 			feedback.setTaskIndex(taskIndex);
 		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.FINALISE,
-					taskToEdit.toString());
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.FINALISE);
 			feedback.setTaskIndex(taskIndex);
 		}
 
@@ -463,8 +459,7 @@ public class Logic {
 			Task doneTask = storage.get(taskIndex);
 			doneTask.markDone();
 			storage.replace(taskIndex, doneTask);
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DONE,
-					doneTask.getName());
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DONE);
 			feedback.setTaskIndex(taskIndex);
 			isDynamicIndex = false;
 		} else {
@@ -479,8 +474,7 @@ public class Logic {
 		Feedback feedback = null;
 		currentHelpCommand = command;
 		isDisplayHelp = true;
-		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP,
-				Constants.HELP_INSTRUCTIONS);
+		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP);
 		return feedback;
 	}
 
@@ -545,12 +539,9 @@ public class Logic {
 		}
 		isDynamicIndex = true;
 
-		if (validTasks.size() > 0) {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH);
-		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH,
-					Constants.MSG_NO_RESULT);
-		}
+		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH);
+		
+		// TODO: add in checks that correspond to errors in Feedback
 		feedback.setDisplayMode(displayMode);
 		return feedback;
 	}
