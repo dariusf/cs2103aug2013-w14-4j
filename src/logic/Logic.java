@@ -604,8 +604,10 @@ public class Logic {
 		Logic logic;
 		try {
 			logic = new Logic();
-
+			
+			
 			Command displayCommand = new Command(CommandType.DISPLAY);
+			displayCommand.setDisplayMode(DisplayMode.ALL);
 
 			// Display task test
 			System.out.println(logic.displayTasks(displayCommand));

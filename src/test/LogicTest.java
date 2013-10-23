@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import common.CommandType;
+import common.DisplayMode;
 
 
 import logic.Command;
@@ -21,6 +22,7 @@ public class LogicTest {
 	public void test() throws IOException {
 		Logic logic = new Logic();
 		Command displayCommand = new Command(CommandType.DISPLAY);
+		displayCommand.setDisplayMode(DisplayMode.ALL);
 		// Display task test
 		assertEquals("You have no tasks :)", logic.displayTasks(displayCommand).toString());
 
