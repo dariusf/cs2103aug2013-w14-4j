@@ -18,13 +18,13 @@ public class Feedback {
 	private boolean isError = false;
 	private int gotoPage = 0;
 
-	Feedback(int status, CommandType command) {
+	public Feedback(int status, CommandType command) {
 		setStatusCode(status);
 		setCommand(command);
 		setIsError(statusCode);
 	}
 
-	Feedback(int status, CommandType command, String string) {
+	public Feedback(int status, CommandType command, String string) {
 		setStatusCode(status);
 		setCommand(command);
 		feedbackString = string;
@@ -171,9 +171,9 @@ public class Feedback {
 
 	private String addFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task added successfully! \n";
+			statusMessage = "Task added successfully!";
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task added successfully! Task is overdue \n";
+			statusMessage = "Task added successfully! \nTask is overdue";
 		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
 			statusMessage = "Error: No task description was given";
 		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
@@ -181,14 +181,14 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid add (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 
 	private String editFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task edited successfully! \n";
+			statusMessage = "Task edited successfully!";
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task edited successfully! Task is overdue \n";
+			statusMessage = "Task edited successfully! \nTask is overdue";
 		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
 			statusMessage = "Error: No task description was given";
 		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
@@ -200,7 +200,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid edit (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 
 	private String displayFeedback() {
@@ -211,7 +211,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid display (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 
 	private String deleteFeedback() {
@@ -224,7 +224,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid delete (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 
 	private String clearFeedback() {
@@ -237,7 +237,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid clear (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 
 	private String sortFeedback() {
@@ -248,7 +248,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid sort (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 
 	private String searchFeedback() {
@@ -263,7 +263,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid search (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 
 	private String invalidFeedback() {
@@ -272,7 +272,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid command (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 
 	private String undoFeedback() {
@@ -283,7 +283,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid undo (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 	
 	private String redoFeedback() {
@@ -294,14 +294,14 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid redo (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 
 	private String finaliseFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task finalised successfully! \n";
+			statusMessage = "Task finalised successfully!";
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task finalised successfully! Task is overdue \n";
+			statusMessage = "Task finalised successfully! \nTask is overdue";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to finalise!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
@@ -317,7 +317,7 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid finalise (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}	
 
 	private String helpFeedback() {
@@ -326,12 +326,12 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid help (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 
 	private String doneFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task marked as done! \n";
+			statusMessage = "Task marked as done!";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to mark as done!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
@@ -341,18 +341,18 @@ public class Feedback {
 		} else {
 			statusMessage = "Error: Invalid done (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 	
 	private String gotoFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Page " + gotoPage + "\n";
+			statusMessage = "Page " + gotoPage;
 		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX) {
-			statusMessage = "Error: Invalid page " + gotoPage + "\n";
+			statusMessage = "Error: Invalid page " + gotoPage;
 		} else {
 			statusMessage = "Error: Invalid goto (this should not happen!)";
 		}
-		return statusMessage+"\n";
+		return statusMessage;
 	}
 
 	public DateTime getDisplayDate() {
