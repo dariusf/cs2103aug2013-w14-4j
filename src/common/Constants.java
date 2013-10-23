@@ -80,12 +80,12 @@ public class Constants {
 			+ "undo: Return to the previous edit\n"
 			+ "help: Brings up the help guide\n"
 			+ "help <command>: more details on the command";
-	public static final String HELP_ADD_TASK = "Add Task:\n"
+	public static final String HELP_ADD = "Add Task:\n"
 			+ "Adds a new task into the database. You may add a timed task, untimed task, floating task or deadline task.\n\n"
 			+ "Command format: \n"
 			+ "add Perform April Fool's Prank in Office on 01/04 at 1200 #forfun: Adds a new timed task with the description 'Perform April Fool's Prank in Office' from 1200 to 1300 on 1/4 this year.\n"
 			+ "add Save Princess Peach by 22/12/2012: Adds a new deadline task with the description 'Save Princess Peach' before 2359 on 22/12/2012\n"
-			+ "add Meet Boss on 11:00 am or 12:00 pm: Adds a new flaoting task with the description 'Meet Boss' from 11 am to 12 pm or 12 pm to 1pm today.";
+			+ "add Meet Boss on 11:00 am or 12:00 pm: Adds a new floating task with the description 'Meet Boss' from 11 am to 12 pm or 12 pm to 1pm today.";
 	public static final String HELP_DISPLAY = "Display Task:\n"
 			+ "Displays all tasks in the database. \n\n" + "Command format: \n"
 			+ "display: List all tasks from the database.";
@@ -101,7 +101,7 @@ public class Constants {
 			+ "Deletes a task specified by the index of the task.\n\n"
 			+ "Command format: \n"
 			+ "delete 1: Deletes the task that corresponds to index 1.";
-	public static final String HELP_EDIT_TASK = "Edit Tasks:\n"
+	public static final String HELP_EDIT = "Edit Tasks:\n"
 			+ "Edits the task specified by the index of the task.\n\n"
 			+ "Command format:\n"
 			+ "edit 1 Awesome Task!: Edits name of the task that corresponds to index 1 to 'Awesome Task!'.\n"
