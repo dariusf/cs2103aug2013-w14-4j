@@ -47,6 +47,7 @@ public class ApplicationWindow {
 	
 	private DisplayMode displayMode = DisplayMode.TODAY;
 	private org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
+	private static HelpDialog helpDialog;
 
 	private Font windowTitleFont;
 	Font indexFont; // accessed by task composite
@@ -111,7 +112,7 @@ public class ApplicationWindow {
 		shell.setSize(482, 681);
 		shell.setText(Constants.APP_NAME);
 		defineFont();
-
+		
 		displayTitle = new StyledText(shell, SWT.READ_ONLY| SWT.WRAP
 				| SWT.SINGLE);
 		displayTitle.setEnabled(false);
@@ -161,6 +162,8 @@ public class ApplicationWindow {
 		
 		displayFeedback.setText(displayWelcomeMessage());
 		setWelcomePage();
+		
+		helpDialog = new HelpDialog(shell);
 
 		enterDriverLoop();
 
@@ -468,19 +471,19 @@ public class ApplicationWindow {
 
 	private void defineFont() {
 		// For Mac:
-		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44, SWT.NORMAL);
+		/*windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44, SWT.NORMAL);
 		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
 		indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
 		titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
 		descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
-				SWT.NORMAL);
+				SWT.NORMAL);*/
 		// For windows: 
-//		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33, SWT.NORMAL);
-//		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
-//		indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
-//		titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
-//		descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
-//				SWT.NORMAL);
+		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33, SWT.NORMAL);
+		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
+		indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
+		titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
+		descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
+				SWT.NORMAL);
 	}
 
 	private void enableDrag() {
@@ -590,6 +593,9 @@ public class ApplicationWindow {
 		String feedback = feedbackObj.toString();
 		setFeedbackColour(feedbackObj);
 
+		displayFeedback.setText(feedback);
+		input.setText("");
+		
 		switch (feedbackObj.getCommand()) {
 		case ADD :
 			displayMode = DisplayMode.ALL;
@@ -637,13 +643,12 @@ public class ApplicationWindow {
 			
 			break;
 		case HELP :
+			helpDialog.open();
 		case EXIT :
 		case INVALID :
 		default :
 		}
 
-		displayFeedback.setText(feedback);
-		input.setText("");
 		displayTasksOnWindow();
 		displayWindowTitle();
 	}
