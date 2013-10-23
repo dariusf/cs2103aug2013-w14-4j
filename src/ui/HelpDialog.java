@@ -25,7 +25,6 @@ public class HelpDialog extends Dialog {
 		closeButton.setBounds(121, 357, 118, 25);
 		closeButton.setText("Got it!");
 		dialog.open();
-		//dialog.close();
 		
 		Listener listener = new Listener() {
 			@Override
