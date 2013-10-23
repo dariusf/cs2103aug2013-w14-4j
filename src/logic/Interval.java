@@ -17,7 +17,10 @@ public class Interval {
 
 	private DateTime start = null;
 	private DateTime end = null;
-	
+
+	private boolean endExplicitlySet = false;
+	private boolean startDateExplicitlySet = false;
+
 	public Interval() {
 	}
 
@@ -53,6 +56,8 @@ public class Interval {
 	public void changeStartDate(DateToken startToken) {
 		DateTime now = new DateTime();
 		if (Interval.nowStub != null) now = Interval.nowStub;
+		
+		startDateExplicitlySet = true;
 		
 		if (this.start == null) {
 			DateTime start = startToken.mergeInto(now).withTime(0, 0, 0, 0);
@@ -100,7 +105,6 @@ public class Interval {
 		}
 	}
 
-	private boolean endExplicitlySet = false;
 	public void changeEndDate(DateToken startToken) {
 		if (this.start == null) throw new IllegalArgumentException("Start date has to be set before setEndDate can be called");
 		
@@ -113,6 +117,10 @@ public class Interval {
 		
 		if (this.end.isBefore(this.start)) {
 			this.end = this.start.plusHours(1);
+		}
+		
+		if (!startDateExplicitlySet) {
+			this.start = this.start.withDate(this.end.getYear(), this.end.getMonthOfYear(), this.end.getDayOfMonth());
 		}
 	}
 	
