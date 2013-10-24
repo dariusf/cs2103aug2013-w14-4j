@@ -55,14 +55,9 @@ public class ApplicationWindow {
 	public StyledText displayTitle;
 	public StyledText displayRemainingTaskCount;
 	public StyledText displayTodayTaskCount;
-	
-	public int taskCompositeHeight = 0;
-	public int taskCompositeIncrement = 0;
-	public int taskComposite3LinesHeight = 0;
 
-	public DisplayMode displayMode = DisplayMode.TODAY;
-	public org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
 	public static HelpDialog helpDialog;
+	public static DisplayLogic displayLogic;
 
 	public Font windowTitleFont;
 	Font indexFont; // accessed by task composite
@@ -151,15 +146,6 @@ public class ApplicationWindow {
 		shell.setText(Constants.APP_NAME);
 		defineFont();
 
-		displayTitle = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
-				| SWT.SINGLE);
-		displayTitle.setEnabled(false);
-		displayTitle.setBounds(36, 23, 311, 50);
-		displayTitle.setText(getModeText());
-		displayTitle.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
-		displayTitle.setLineAlignment(0, 1, SWT.LEFT);
-		displayTitle.setFont(windowTitleFont);
-
 		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.SINGLE);
 		displayPageNumber.setEnabled(false);
@@ -187,8 +173,19 @@ public class ApplicationWindow {
 		displayTask.setLayout(rowLayout);
 		displayTask.setBounds(32, 86, 425, 450);
 		
+		displayLogic = new DisplayLogic(logic, DisplayMode.TODAY);		
+		
 		defineTaskCompositeHeight();
 		displayTasksOnWindow();
+		
+		displayTitle = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
+				| SWT.SINGLE);
+		displayTitle.setEnabled(false);
+		displayTitle.setBounds(36, 23, 311, 50);
+		displayTitle.setText(displayLogic.getDisplayWindowTitle());
+		displayTitle.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+		displayTitle.setLineAlignment(0, 1, SWT.LEFT);
+		displayTitle.setFont(windowTitleFont);
 		
 		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
@@ -225,10 +222,6 @@ public class ApplicationWindow {
 	}
 
 	public void displayTasksOnWindow() {
-
-		// displayTask.dispose();
-		// displayTask = new Composite(shell, SWT.NONE);
-
 		for (Control child : displayTask.getChildren()) {
 			child.dispose();
 		}
@@ -239,7 +232,8 @@ public class ApplicationWindow {
 		displayTask.setLayout(rowLayout);
 		displayTask.setBounds(32, 86, 425, 450);
 
-		determineNumberOfTasksForEachPage();
+		numberOfTasksOnEachPage = displayLogic.getNumberOfTasksForEachPage();
+		
 		if (pageNumber > numberOfTasksOnEachPage.size()) {
 			pageNumber = numberOfTasksOnEachPage.size();
 		}
@@ -267,17 +261,12 @@ public class ApplicationWindow {
 		displayPageNumber.setLineAlignment(0, 1, SWT.CENTER);
 		displayPageNumber.setFont(pageNumberFont);
 
-		DisplayLogic displayLogic = new DisplayLogic(logic);
 		displayRemainingTaskCount.setText("Remaining: "
 				+ displayLogic.getNumberOfRemainingTasks());
 		displayTodayTaskCount
 				.setText("Today: " + displayLogic.getNumberOfTasksToday());
 		displayTask.pack();
 
-	}
-
-	public void displayWindowTitle() {
-		displayTitle.setText(getModeText());
 	}
 
 	public int getPage(int index) {
@@ -292,79 +281,6 @@ public class ApplicationWindow {
 			}
 		}
 		return page;
-	}
-
-	public String getModeText() {
-		switch (displayMode) {
-		case TODAY:
-			return Constants.MODE_TODAY;
-		case TOMORROW:
-			return Constants.MODE_TOMORROW;
-		case DEADLINE:
-			return Constants.MODE_DEADLINE;
-		case FLOATING:
-			return Constants.MODE_FLOATING;
-		case TIMED:
-			return Constants.MODE_TIMED;
-		case UNTIMED:
-			return Constants.MODE_UNTIMED;
-		case SEARCH:
-			return Constants.MODE_SEARCH;
-		case OVERDUE:
-			return Constants.MODE_OVERDUE;
-		case ALL:
-			return Constants.MODE_ALL;
-		case DATE:
-			return Constants.dateOnlyFormat.print(currentDisplayDateTime);
-		default:
-			return "Congrats! You have managed to break our application!";
-		}
-	}
-	
-	public int determineTaskHeight(Task task){
-		if(!task.isFloatingTask()){
-			return taskCompositeHeight;
-		} else {
-			int numberOfSlots = task.getPossibleTime().size();
-			boolean hasTags = task.getTags().size() > 0;
-			int numberOfLines = numberOfSlots;
-			if(hasTags){
-				numberOfLines++;
-			}
-			if(numberOfLines == 3){
-				return taskComposite3LinesHeight;
-			} else {
-				return (numberOfLines - 3)*taskCompositeIncrement+taskComposite3LinesHeight;
-			}
-		}
-	}
-	
-	public void determineNumberOfTasksForEachPage() {
-		ArrayList<Task> taskList = logic.getTasksToDisplay();
-		int numberOfTasks = taskList.size();
-		int[] heights = new int[numberOfTasks];
-		int index = 0;
-		for (Task task : taskList) {
-			heights[index] = determineTaskHeight(task);
-			index++;
-		}
-		System.out.println(Arrays.toString(heights));
-
-		numberOfTasksOnEachPage = new ArrayList<>();
-		int currentCountOfTasks = 0;
-		int currentHeight = 0;
-		for (int i = 0; i < numberOfTasks; i++) {
-			if (currentHeight + heights[i] > 450) {
-				numberOfTasksOnEachPage.add(currentCountOfTasks);
-				currentCountOfTasks = 1;
-				currentHeight = heights[i];
-			} else {
-				currentCountOfTasks++;
-				currentHeight += heights[i];
-			}
-		}
-		numberOfTasksOnEachPage.add(currentCountOfTasks);
-		System.out.println(numberOfTasksOnEachPage);
 	}
 
 	public String displayWelcomeMessage() {
@@ -414,12 +330,6 @@ public class ApplicationWindow {
 					executeUserInput(userInput);
 					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_UP) {
-					// when non-fixed-height composites are added, on every
-					// change
-					// go through the whole list to get the numbers for each
-					// page,
-					// then page based on those.
-					// for now, since it's fixed-width...
 					pageNumber = Math.max(pageNumber - 1, 0);
 					displayTasksOnWindow();
 					logger.log(Level.INFO, generateLoggingString());
@@ -619,9 +529,9 @@ public class ApplicationWindow {
 
 		switch (feedbackObj.getCommand()) {
 		case ADD:
-			displayMode = DisplayMode.ALL;
+			displayLogic.setDisplayMode(DisplayMode.ALL);
 			pageNumber = Integer.MAX_VALUE;
-			displayStateHistory.addDisplayState(displayMode, pageNumber);
+			displayStateHistory.addDisplayState(DisplayMode.ALL, pageNumber);
 			break;
 		case EDIT:
 		case DELETE:
@@ -630,19 +540,19 @@ public class ApplicationWindow {
 			if (!feedbackObj.isErrorMessage()) {
 				pageNumber = getPage(feedbackObj.getTaskIndex());
 			}
-			displayStateHistory.addDisplayState(displayMode, pageNumber);
+			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), pageNumber);
 			break;
 		case DISPLAY:
-			displayMode = feedbackObj.getDisplayMode();
-			if (displayMode == DisplayMode.DATE) {
-				currentDisplayDateTime = feedbackObj.getDisplayDate();
+			displayLogic.setDisplayMode(feedbackObj.getDisplayMode());
+			if (displayLogic.getDisplayMode() == DisplayMode.DATE) {
+				displayLogic.setDisplayDateTime(feedbackObj.getDisplayDate());
 			}
 			pageNumber = 1;
-			displayStateHistory.addDisplayState(displayMode, pageNumber);
+			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), pageNumber);
 			break;
 		case SEARCH:
 			pageNumber = 1;
-			displayMode = DisplayMode.SEARCH;
+			displayLogic.setDisplayMode(DisplayMode.SEARCH);
 			break;
 		case GOTO:
 			pageNumber = feedbackObj.getGotoPage();
@@ -650,19 +560,18 @@ public class ApplicationWindow {
 		case SORT:
 		case CLEAR:
 			pageNumber = 1;
-			displayMode = DisplayMode.ALL;
-			displayStateHistory.addDisplayState(displayMode, pageNumber);
+			displayLogic.setDisplayMode(DisplayMode.ALL);
+			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), pageNumber);
 			break;
 		case UNDO:
-			displayMode = displayStateHistory.getCurrentDisplayMode();
+			displayLogic.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
 			pageNumber = displayStateHistory.getCurrentPageNumber();
 			displayStateHistory.undo();
 			break;
 		case REDO:
 			displayStateHistory.redo();
-			displayMode = displayStateHistory.getCurrentDisplayMode();
+			displayLogic.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
 			pageNumber = displayStateHistory.getCurrentPageNumber();
-
 			break;
 		case HELP:
 			helpDialog.open(feedbackObj);
@@ -672,7 +581,8 @@ public class ApplicationWindow {
 		}
 
 		displayTasksOnWindow();
-		displayWindowTitle();
+		displayTitle.setText(displayLogic.getDisplayWindowTitle());
+
 		if (testMode) {
 			logger.log(Level.INFO, generateLoggingString());
 		}
@@ -684,7 +594,8 @@ public class ApplicationWindow {
 		Task task1 = new Task(command1);
 		task1.setType(Constants.TASK_TYPE_UNTIMED);
 		TaskComposite taskComposite1 = new TaskComposite(displayTask, task1, 1);
-		taskCompositeHeight = taskComposite1.getSize().y;
+		int taskCompositeHeight = taskComposite1.getSize().y;
+		displayLogic.setTaskCompositeHeight(taskCompositeHeight);
 		System.out.println(taskCompositeHeight);
 		
 		DateTime startDate1 = new DateTime(2013, 10, 30, 15, 0, 0);
@@ -710,14 +621,16 @@ public class ApplicationWindow {
 		task1.setType(Constants.TASK_TYPE_FLOATING);
 		task1.setPossibleTime(intervalList);
 		TaskComposite taskComposite2 = new TaskComposite(displayTask, task1, 1);
-		taskComposite3LinesHeight = taskComposite2.getSize().y;
+		int taskComposite3LinesHeight = taskComposite2.getSize().y;
+		displayLogic.setTaskCompositeHeightForThreeLines(taskComposite3LinesHeight);
 		System.out.println(taskComposite3LinesHeight);
 		
 		ArrayList<String> tags = new ArrayList<String>();
 		tags.add("TGIF");
 		task1.setTags(tags);
 		TaskComposite taskComposite3 = new TaskComposite(displayTask, task1, 1);
-		taskCompositeIncrement =  taskComposite3.getSize().y-taskComposite3LinesHeight;
+		int taskCompositeIncrement =  taskComposite3.getSize().y-taskComposite3LinesHeight;
+		displayLogic.setTaskCompositeIncrement(taskCompositeIncrement);
 		System.out.println(taskCompositeIncrement);
 	}
 
