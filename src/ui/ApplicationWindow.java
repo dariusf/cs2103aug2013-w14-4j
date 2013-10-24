@@ -267,10 +267,11 @@ public class ApplicationWindow {
 		displayPageNumber.setLineAlignment(0, 1, SWT.CENTER);
 		displayPageNumber.setFont(pageNumberFont);
 
+		DisplayLogic displayLogic = new DisplayLogic(logic);
 		displayRemainingTaskCount.setText("Remaining: "
-				+ logic.getNumberOfRemainingTasks());
+				+ displayLogic.getNumberOfRemainingTasks());
 		displayTodayTaskCount
-				.setText("Today: " + logic.getNumberOfTasksToday());
+				.setText("Today: " + displayLogic.getNumberOfTasksToday());
 		displayTask.pack();
 
 	}
