@@ -20,11 +20,11 @@ import parser.StateDeadline;
 public class ParserTest {
 
 //	public void assertEquals(Object one, Object two) {}
-
+	
 	@Test
 	public void addCommandTests() {
 
-		DateTime now = new DateTime(2013, 10, 5, 20, 0); // saturday
+		DateTime now = new DateTime(2013, 10, 5, 20, 0); // saturday 8pm 5/10/13
 		Interval.setNowStub(now);
 		DateToken.setNowStub(now);
 		StateDeadline.setNowStub(now);
@@ -62,7 +62,7 @@ public class ParserTest {
 		// Adding a bunch of symbols
 		gotten = new Parser().parse("add !@#$%^&*({}][]\\|';.,><;");
 		expected = new Command(CommandType.ADD);
-		expected.setDescription("! ';., ;");
+		expected.setDescription("! ' .");
 		assertEquals(gotten, expected);
 
 		// Correct format
@@ -534,6 +534,147 @@ public class ParserTest {
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
 		gotten = new Parser().parse("add go home at 13:00 this wednes");
+		assertEquals(gotten, expected);
+	}
+
+	@Test
+	public void editCommandTests() {
+		Command expected, gotten;
+		ArrayList<Interval> intervals;
+		DateTime start, end;
+		
+		DateTime now = new DateTime(2013, 10, 5, 20, 0); // saturday 8pm 5/10/13
+		Interval.setNowStub(now);
+		DateToken.setNowStub(now);
+		StateDeadline.setNowStub(now);
+		
+		// Insufficient parameters
+		expected = new Command(CommandType.INVALID);
+		expected.setInvalidCommandReason(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+		gotten = new Parser().parse("edit");
+		assertEquals(gotten, expected);
+		
+		// Index only
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		gotten = new Parser().parse("edit 1");
+		assertEquals(gotten, expected);
+
+		// Description only
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		expected.setDescription("hello");
+		gotten = new Parser().parse("edit 1 hello");
+		assertEquals(gotten, expected);
+
+		// Interval only
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		intervals = new ArrayList<Interval>();
+		start = now.withTime(13, 0, 0, 0).plusDays(1);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("edit 1 1pm");
+		assertEquals(gotten, expected);
+		
+		// Description and interval
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		expected.setDescription("hello");
+		intervals = new ArrayList<Interval>();
+		start = now.withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("edit 1 1pm today hello");
+		assertEquals(gotten, expected);
+
+		// Index and timeslot index only
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		expected.setTimeslotIndex(1);
+		gotten = new Parser().parse("edit 1 1");
+		assertEquals(gotten, expected);
+
+		// Empty timeslot
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		expected.setTimeslotIndex(1);
+		gotten = new Parser().parse("edit 1 1 kajsld");
+		assertEquals(gotten, expected);
+
+		// Empty timeslot
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		expected.setTimeslotIndex(1);
+		gotten = new Parser().parse("edit 1 1 kajsld");
+		assertEquals(gotten, expected);
+
+		// Garbage before timeslot
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		expected.setTimeslotIndex(1);
+		intervals = new ArrayList<Interval>();
+		start = now.withTime(13, 0, 0, 0).plusDays(1);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("edit 1 1 kajsld 1pm");
+		assertEquals(gotten, expected);
+		
+		// Comma does not delimit as you would expect
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		expected.setTimeslotIndex(1);
+		intervals = new ArrayList<Interval>();
+		start = now.withTime(15, 0, 0, 0).plusDays(1);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("edit 1 1 1pm, 3pm");
+		assertEquals(gotten, expected);
+		
+		// Proper interval format
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		expected.setTimeslotIndex(1);
+		intervals = new ArrayList<Interval>();
+		start = now.withTime(13, 0, 0, 0).plusDays(1);
+		end = start.plusHours(2);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("edit 1 1 1pm to 3pm");
+		assertEquals(gotten, expected);
+		
+		// Proper interval format 2
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		expected.setTimeslotIndex(1);
+		intervals = new ArrayList<Interval>();
+		start = now.withTime(13, 0, 0, 0).plusDays(1);
+		end = start.plusHours(2);
+		intervals.add(new Interval(start, end));
+		start = now.withTime(14, 0, 0, 0).plusDays(1);
+		end = start.plusHours(2);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("edit 1 1 1pm to 3pm or 2pm to 4pm");
+		assertEquals(gotten, expected);
+		
+		// Random gibberish inserted in the middle of intervals
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		expected.setTimeslotIndex(1);
+		intervals = new ArrayList<Interval>();
+		start = now.withTime(13, 0, 0, 0).plusDays(1);
+		end = start.plusHours(2);
+		intervals.add(new Interval(start, end));
+		start = now.withTime(14, 0, 0, 0).plusDays(1);
+		end = start.plusHours(2);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("edit 1 1 1pm asda to jashdk 3pm !!! or asdn 2pm asjd to asdasd 4pm");
 		assertEquals(gotten, expected);
 	}
 
