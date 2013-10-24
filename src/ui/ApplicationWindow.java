@@ -10,6 +10,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import logic.ActiveFeedback;
 import logic.Command;
 import logic.Feedback;
 import logic.Interval;
@@ -364,60 +365,6 @@ public class ApplicationWindow {
 		numberOfTasksOnEachPage.add(currentCountOfTasks);
 	}
 
-	// public Composite createTaskItemComposite(Task task, int index) {
-	// Composite taskItemComposite = new Composite(displayTask, SWT.NONE);
-	// // 340 is the fixed width and 69 is the fixed height. use SWT.default if
-	// // you do not want to fix the lengths.
-	// taskItemComposite.setLayoutData(new RowData(415, SWT.DEFAULT));
-	// RowLayout innerRowLayout = new RowLayout();
-	// taskItemComposite.setLayout(innerRowLayout);
-	//
-	// RowData taskIndexLayoutData = new RowData(60, 73);
-	// RowData paddingLayoutData = new RowData(8, SWT.DEFAULT);
-	// RowData taskDescriptionLayoutData = new RowData(330, SWT.DEFAULT);
-	//
-	// StyledText taskIndex = new StyledText(taskItemComposite, SWT.WRAP);
-	// taskIndex.setText(String.valueOf(index));
-	// taskIndex.setFont(indexFont);
-	// taskIndex.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
-	// taskIndex.setLineAlignment(0, 1, SWT.RIGHT);
-	// taskIndex.setLayoutData(taskIndexLayoutData);
-	//
-	// Composite paddingComposite = new Composite(taskItemComposite, SWT.NONE);
-	// paddingComposite.setLayoutData(paddingLayoutData);
-	//
-	// Composite taskDetailsComposite = new Composite(taskItemComposite,
-	// SWT.NONE);
-	// taskDetailsComposite.setLayoutData(taskDescriptionLayoutData);
-	// taskDetailsComposite.setLayout(innerRowLayout);
-	//
-	// StyledText taskName = new StyledText(taskDetailsComposite,
-	// SWT.READ_ONLY);
-	// taskName.setText(task.getName());
-	// taskName.setFont(titleFont);
-	// if (task.isDone()) {
-	// StyleRange style1 = new StyleRange();
-	// style1.start = 0;
-	// style1.length = task.getName().length();
-	// style1.strikeout = true;
-	// taskName.setStyleRange(style1);
-	// } else if (task.isOverdue()) {
-	// taskName.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
-	// }
-	// taskName.setLayoutData(taskDescriptionLayoutData);
-	//
-	// StyledText taskDescription = new StyledText(taskDetailsComposite,
-	// SWT.READ_ONLY);
-	// taskDescription.setText(task.getInfoString());
-	// taskDescription.setFont(descriptionFont);
-	//
-	// taskDetailsComposite.pack();
-	//
-	// taskItemComposite.pack();
-	//
-	// return taskItemComposite;
-	// }
-
 	public String displayWelcomeMessage() {
 		String welcomeMessage = Constants.WELCOME_MSG;
 		return welcomeMessage;
@@ -479,6 +426,9 @@ public class ApplicationWindow {
 							numberOfTasksOnEachPage.size());
 					displayTasksOnWindow();
 					logger.log(Level.INFO, generateLoggingString());
+				} else if (isKeyboardInput(arg0.keyCode)){
+					userInput = input.getText();
+					ActiveFeedback activeFeedback = logic.activeFeedback(userInput);
 				}
 
 			}
@@ -514,6 +464,10 @@ public class ApplicationWindow {
 				}
 			}
 		});
+	}
+	
+	public boolean isKeyboardInput(int keyCode){
+		return (keyCode < 127 && keyCode > 31) || keyCode == SWT.BS;
 	}
 
 	/**
