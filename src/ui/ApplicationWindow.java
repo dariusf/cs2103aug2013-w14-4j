@@ -66,7 +66,7 @@ public class ApplicationWindow {
 	public Font pageNumberFont;
 	public DisplayStateHistory displayStateHistory;
 
-	public int pageNumber = 1;
+	public int defaultPageNumber = 1;
 	public static ApplicationWindow self; // singleton?
 	public boolean moving = false;
 
@@ -173,7 +173,7 @@ public class ApplicationWindow {
 		displayTask.setLayout(rowLayout);
 		displayTask.setBounds(32, 86, 425, 450);
 		
-		displayLogic = new DisplayLogic(logic, DisplayMode.TODAY);		
+		displayLogic = new DisplayLogic(logic, DisplayMode.TODAY, displayTask, defaultPageNumber);		
 		
 		defineTaskCompositeHeight();
 		displayTasksOnWindow();
@@ -234,29 +234,9 @@ public class ApplicationWindow {
 
 		numberOfTasksOnEachPage = displayLogic.getNumberOfTasksForEachPage();
 		
-		if (pageNumber > numberOfTasksOnEachPage.size()) {
-			pageNumber = numberOfTasksOnEachPage.size();
-		}
-		if (pageNumber <= 0) {
-			pageNumber = 1;
-		}
+		displayLogic.displayOnWindow();
 
-		int startingIndex = 0;
-		for (int i = 0; i < pageNumber - 1; i++) {
-			startingIndex += numberOfTasksOnEachPage.get(i);
-		}
-
-		ArrayList<Task> taskList = logic.getTasksToDisplay();
-		int numberOfTasks = taskList.size();
-
-		Composite[] taskComposites = new Composite[numberOfTasks];
-
-		for (int i = 0; i < numberOfTasksOnEachPage.get(pageNumber - 1); i++) {
-			taskComposites[i] = new TaskComposite(displayTask,
-					taskList.get(startingIndex + i), startingIndex + i + 1);
-		}
-
-		displayPageNumber.setText("Page " + pageNumber + " of "
+		displayPageNumber.setText("Page " + displayLogic.getPageNumber() + " of "
 				+ numberOfTasksOnEachPage.size());
 		displayPageNumber.setLineAlignment(0, 1, SWT.CENTER);
 		displayPageNumber.setFont(pageNumberFont);
@@ -330,12 +310,12 @@ public class ApplicationWindow {
 					executeUserInput(userInput);
 					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_UP) {
-					pageNumber = Math.max(pageNumber - 1, 0);
+					displayLogic.setPageNumber(Math.max(displayLogic.getPageNumber() - 1, 0));
 					displayTasksOnWindow();
 					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_DOWN) {
-					pageNumber = Math.min(pageNumber + 1,
-							numberOfTasksOnEachPage.size());
+					displayLogic.setPageNumber(Math.min(displayLogic.getPageNumber() + 1,
+							numberOfTasksOnEachPage.size()));
 					displayTasksOnWindow();
 					logger.log(Level.INFO, generateLoggingString());
 				} else if (isKeyboardInput(arg0.keyCode)){
@@ -530,48 +510,48 @@ public class ApplicationWindow {
 		switch (feedbackObj.getCommand()) {
 		case ADD:
 			displayLogic.setDisplayMode(DisplayMode.ALL);
-			pageNumber = Integer.MAX_VALUE;
-			displayStateHistory.addDisplayState(DisplayMode.ALL, pageNumber);
+			displayLogic.setPageNumber(Integer.MAX_VALUE);
+			displayStateHistory.addDisplayState(DisplayMode.ALL, Integer.MAX_VALUE);
 			break;
 		case EDIT:
 		case DELETE:
 		case DONE:
 		case FINALISE:
 			if (!feedbackObj.isErrorMessage()) {
-				pageNumber = getPage(feedbackObj.getTaskIndex());
+				displayLogic.setPageNumber(getPage(feedbackObj.getTaskIndex()));
 			}
-			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), pageNumber);
+			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
 			break;
 		case DISPLAY:
 			displayLogic.setDisplayMode(feedbackObj.getDisplayMode());
 			if (displayLogic.getDisplayMode() == DisplayMode.DATE) {
 				displayLogic.setDisplayDateTime(feedbackObj.getDisplayDate());
 			}
-			pageNumber = 1;
-			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), pageNumber);
+			displayLogic.setPageNumber(defaultPageNumber);
+			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
 			break;
 		case SEARCH:
-			pageNumber = 1;
+			displayLogic.setPageNumber(defaultPageNumber);
 			displayLogic.setDisplayMode(DisplayMode.SEARCH);
 			break;
 		case GOTO:
-			pageNumber = feedbackObj.getGotoPage();
+			displayLogic.setPageNumber(feedbackObj.getGotoPage());
 			break;
 		case SORT:
 		case CLEAR:
-			pageNumber = 1;
+			displayLogic.setPageNumber(defaultPageNumber);
 			displayLogic.setDisplayMode(DisplayMode.ALL);
-			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), pageNumber);
+			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
 			break;
 		case UNDO:
 			displayLogic.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
-			pageNumber = displayStateHistory.getCurrentPageNumber();
+			displayLogic.setPageNumber(displayStateHistory.getCurrentPageNumber());
 			displayStateHistory.undo();
 			break;
 		case REDO:
 			displayStateHistory.redo();
 			displayLogic.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
-			pageNumber = displayStateHistory.getCurrentPageNumber();
+			displayLogic.setPageNumber(displayStateHistory.getCurrentPageNumber());
 			break;
 		case HELP:
 			helpDialog.open(feedbackObj);

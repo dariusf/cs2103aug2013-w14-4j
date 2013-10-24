@@ -3,6 +3,8 @@ package ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.eclipse.swt.widgets.Composite;
+
 import common.Constants;
 import common.DisplayMode;
 
@@ -13,7 +15,9 @@ public class DisplayLogic {
 
 	private Logic logic;
 	private DisplayMode displayMode;
-	
+	private Composite displayTask;
+	private int pageNumber = 1;
+
 	private org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
 	
 	private int noOfTasksToday = 0;
@@ -24,9 +28,11 @@ public class DisplayLogic {
 	private int taskCompositeIncrement = 0;
 	private int taskCompositeHeightForThreeLines = 0;
 
-	public DisplayLogic(Logic logic, DisplayMode displayMode) {
+	public DisplayLogic(Logic logic, DisplayMode displayMode, Composite displayTask, int pageNumber) {
 		this.logic = logic;
 		this.displayMode = displayMode;
+		this.displayTask = displayTask;
+		this.pageNumber = pageNumber;
 	}
 	
 	protected void setTaskCompositeHeight(int height) {
@@ -47,6 +53,14 @@ public class DisplayLogic {
 	
 	protected void setDisplayDateTime(org.joda.time.DateTime currentDisplayDateTime) {
 		this.currentDisplayDateTime = currentDisplayDateTime;
+	}
+	
+	protected void setPageNumber(int pageNumber) {
+		this.pageNumber = pageNumber;
+	}
+	
+	protected int getPageNumber() {
+		return pageNumber;
 	}
 	
 	protected DisplayMode getDisplayMode() {
@@ -145,6 +159,30 @@ public class DisplayLogic {
 			return Constants.dateOnlyFormat.print(currentDisplayDateTime);
 		default:
 			return "Congrats! You have managed to break our application!";
+		}
+	}
+	
+	protected void displayOnWindow() {
+		if (pageNumber > numberOfTasksOnEachPage.size()) {
+			pageNumber = numberOfTasksOnEachPage.size();
+		}
+		if (pageNumber <= 0) {
+			pageNumber = 1;
+		}
+
+		int startingIndex = 0;
+		for (int i = 0; i < pageNumber - 1; i++) {
+			startingIndex += numberOfTasksOnEachPage.get(i);
+		}
+
+		ArrayList<Task> taskList = logic.getTasksToDisplay();
+		int numberOfTasks = taskList.size();
+
+		Composite[] taskComposites = new Composite[numberOfTasks];
+
+		for (int i = 0; i < numberOfTasksOnEachPage.get(pageNumber - 1); i++) {
+			taskComposites[i] = new TaskComposite(displayTask,
+					taskList.get(startingIndex + i), startingIndex + i + 1);
 		}
 	}
 
