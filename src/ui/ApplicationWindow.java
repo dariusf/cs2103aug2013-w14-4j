@@ -636,6 +636,7 @@ public class ApplicationWindow {
 			if (displayMode == DisplayMode.DATE) {
 				currentDisplayDateTime = feedbackObj.getDisplayDate();
 			}
+			pageNumber = 1;
 			displayStateHistory.addDisplayState(displayMode, pageNumber);
 			break;
 		case SEARCH:
