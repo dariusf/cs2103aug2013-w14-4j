@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -38,7 +39,7 @@ import common.Constants;
 
 public class ApplicationWindow {
 
-	public static boolean testMode = true;
+	public static boolean testMode = false;
 	public static final Logger logger = Logger
 			.getLogger(ApplicationWindow.class.getName());
 
@@ -305,21 +306,35 @@ public class ApplicationWindow {
 			return "Congrats! You have managed to break our application!";
 		}
 	}
-
+	
+	public int determineTaskHeight(Task task){
+		if(!task.isFloatingTask()){
+			return 79;
+		} else {
+			int numberOfSlots = task.getPossibleTime().size();
+			boolean hasTags = task.getTags().size() > 0;
+			int numberOfLines = numberOfSlots;
+			if(hasTags){
+				numberOfLines++;
+			}
+			if(numberOfLines == 3){
+				return 86;
+			} else {
+				return (numberOfLines - 3)*14+86;
+			}
+		}
+	}
+	
 	public void determineNumberOfTasksForEachPage() {
 		ArrayList<Task> taskList = logic.getTasksToDisplay();
 		int numberOfTasks = taskList.size();
-		Composite[] taskComposites = new Composite[numberOfTasks];
+		int[] heights = new int[numberOfTasks];
 		int index = 0;
 		for (Task task : taskList) {
-			taskComposites[index] = new TaskComposite(displayTask, task,
-					index + 1);
+			heights[index] = determineTaskHeight(task);
 			index++;
 		}
-		int[] heights = new int[numberOfTasks];
-		for (int i = 0; i < numberOfTasks; i++) {
-			heights[i] = taskComposites[i].getSize().y;
-		}
+		System.out.println(Arrays.toString(heights));
 
 		numberOfTasksOnEachPage = new ArrayList<>();
 		int currentCountOfTasks = 0;
@@ -508,21 +523,22 @@ public class ApplicationWindow {
 
 	public void defineFont() {
 		// For Mac:
-		/*
-		 * windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
-		 * SWT.NORMAL); pageNumberFont = new Font(shell.getDisplay(), "Calibri",
-		 * 18, SWT.NORMAL); indexFont = new Font(shell.getDisplay(), "Calibri",
-		 * 60, SWT.NORMAL); titleFont = new Font(shell.getDisplay(), "Calibri",
-		 * 24, SWT.NORMAL); descriptionFont = new Font(shell.getDisplay(),
-		 * "Calibri", 12, SWT.NORMAL);
-		 */
-		// For windows:
-		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33,
+
+		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
 				SWT.NORMAL);
-		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
-		indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
-		titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
-		descriptionFont = new Font(shell.getDisplay(), "Calibri", 9, SWT.NORMAL);
+		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
+		indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
+		titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
+		descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
+				SWT.NORMAL);
+
+		// For windows:
+//		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33,
+//				SWT.NORMAL);
+//		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
+//		indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
+//		titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
+//		descriptionFont = new Font(shell.getDisplay(), "Calibri", 9, SWT.NORMAL);
 	}
 
 	public void enableDrag() {
@@ -690,7 +706,7 @@ public class ApplicationWindow {
 
 		displayTasksOnWindow();
 		displayWindowTitle();
-		if(testMode){
+		if (testMode) {
 			logger.log(Level.INFO, generateLoggingString());
 		}
 	}
