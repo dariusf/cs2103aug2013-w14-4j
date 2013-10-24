@@ -16,7 +16,7 @@ public class Parser {
 
 	private static final boolean PRINT_LEXER_TOKENS = false;
 	private static final boolean PRINT_MATCHED_COMMAND_TYPE = false;
-	private static final boolean PRINT_PARSED_COMMAND = false;
+	private static final boolean PRINT_PARSED_COMMAND = true;
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
@@ -400,17 +400,47 @@ public class Parser {
 	}
 
 	private Command createSearchStringCommand() {
-		StringBuilder toSearch = new StringBuilder();
+		Command command;
 		
-		while(hasTokensLeft()) {
-			toSearch.append(getCurrentToken().contents + " ");
-			nextToken();
+		if (!hasTokensLeft()) {
+			command = new Command(CommandType.INVALID);
+			command.setInvalidCommandReason(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+			return command;
 		}
+		
+		Token firstToken = getCurrentToken();
+		
+		if (firstToken instanceof WordToken) {
+			StringBuilder toSearch = new StringBuilder();
+			
+			while(hasTokensLeft()) {
+				toSearch.append(getCurrentToken().contents + " ");
+				nextToken();
+			}
 
-		Command command = new Command(CommandType.SEARCH);
-		command.setSearchString(toSearch.toString().trim());
-		command.setValue(Constants.TASK_ATT_NAME, toSearch.toString().trim());
-
+			command = new Command(CommandType.SEARCH);
+			command.setSearchString(toSearch.toString().trim());
+			command.setValue(Constants.TASK_ATT_NAME, toSearch.toString().trim());
+		}
+		else if (firstToken instanceof TagToken) {
+			ArrayList<String> tags = new ArrayList<String>();
+			
+			while (hasTokensLeft()) {
+				Token token = getCurrentToken();
+				if (token instanceof TagToken) {
+					tags.add(token.contents);
+				}
+				nextToken();
+			}
+			
+			command = new Command(CommandType.SEARCH);
+			command.setTags(tags);
+		}
+		else {
+			command = new Command(CommandType.INVALID);
+			command.setInvalidCommandReason(InvalidCommandReason.INVALID_SEARCH_PARAMETERS);
+		}
+		
 		return command;
 	}
 
