@@ -1,7 +1,5 @@
 package ui;
 
-import java.awt.AWTException;
-import java.awt.Robot;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,8 +32,6 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.joda.time.DateTime;
 
-import parser.Parser;
-
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -48,7 +44,6 @@ public class ApplicationWindow {
 	public static boolean testMode = false;
 	public static final Logger logger = Logger
 			.getLogger(ApplicationWindow.class.getName());
-
 	static Shell shell; // accessed by task composite
 	public Text input;
 	public Text displayFeedback;
@@ -87,6 +82,7 @@ public class ApplicationWindow {
 	 */
 	public static void main(String[] args) {
 		try {
+			logger.setLevel(Level.OFF);
 			logic = new Logic();
 			ApplicationWindow window = new ApplicationWindow();
 			self = window;
@@ -237,7 +233,11 @@ public class ApplicationWindow {
 			child.dispose();
 		}
 
-	
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.type = SWT.VERTICAL;
+		rowLayout.pack = true;
+		displayTask.setLayout(rowLayout);
+		displayTask.setBounds(32, 86, 425, 450);
 
 		determineNumberOfTasksForEachPage();
 		if (pageNumber > numberOfTasksOnEachPage.size()) {
@@ -363,6 +363,7 @@ public class ApplicationWindow {
 			}
 		}
 		numberOfTasksOnEachPage.add(currentCountOfTasks);
+		System.out.println(numberOfTasksOnEachPage);
 	}
 
 	public String displayWelcomeMessage() {
