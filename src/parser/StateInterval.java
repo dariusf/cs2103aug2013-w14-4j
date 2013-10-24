@@ -72,11 +72,13 @@ class StateInterval implements State {
 	@Override
 	public void onPop() {
 		finaliseInterval();
-		if (trailingOr) {
-			parent.words.append("or ");
-		}
-		else if (trailingDelimiter) {
-			parent.words.append(delimiter + " ");
+		if (parent != null) { // this state may be used standalone
+			if (trailingOr) {
+				parent.words.append("or ");
+			}
+			else if (trailingDelimiter) {
+				parent.words.append(delimiter + " ");
+			}
 		}
 	}
 	
@@ -98,8 +100,10 @@ class StateInterval implements State {
 				newInterval.changeEndTime((TimeToken) token);
 			}
 		}
-		boolean intervalNotNull = from.size() > 0 || to.size() > 0;
-		if (intervalNotNull) {
+		
+		boolean intervalValid = from.size() > 0 || to.size() > 0;
+		
+		if (intervalValid) {
 			parser.intervals.add(newInterval);
 			to.clear();
 			from.clear();

@@ -20,7 +20,7 @@ public class Command {
 
 	private int taskIndex = -1;
 	private int pageIndex = -1;
-	private int finaliseIndex = -1;
+	private int timeslotIndex = -1;
 	
 	private boolean clearDone = false;
 	private CommandType helpCommand;
@@ -83,12 +83,12 @@ public class Command {
 		this.taskIndex = taskIndex;
 	}
 
-	public int getFinaliseIndex() {
-		return finaliseIndex;
+	public int getTimeslotIndex() {
+		return timeslotIndex;
 	}
 
-	public void setFinaliseIndex(int finaliseIndex) {
-		this.finaliseIndex = finaliseIndex;
+	public void setTimeslotIndex(int timeslotIndex) {
+		this.timeslotIndex = timeslotIndex;
 	}
 
 	public DateTime getDisplayDateTime() {
@@ -167,7 +167,7 @@ public class Command {
 		return "Command [commandType=" + commandType + ", description="
 				+ description + ", deadline=" + deadline + ", intervals="
 				+ intervals + ", tags=" + tags + ", taskIndex=" + taskIndex
-				+ ", finaliseIndex=" + finaliseIndex + ", displayDateTime="
+				+ ", finaliseIndex=" + timeslotIndex + ", displayDateTime="
 				+ displayDateTime + ", clearDone=" + clearDone
 				+ ", helpCommand=" + helpCommand + ", searchString="
 				+ searchString + ", displayMode="
@@ -203,7 +203,7 @@ public class Command {
 				return false;
 		} else if (!displayDateTime.equals(other.displayDateTime))
 			return false;
-		if (finaliseIndex != other.finaliseIndex)
+		if (timeslotIndex != other.timeslotIndex)
 			return false;
 		if (helpCommand != other.helpCommand)
 			return false;

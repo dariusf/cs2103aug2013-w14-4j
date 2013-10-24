@@ -7,6 +7,7 @@ import java.util.Stack;
 import logic.Command;
 import logic.Interval;
 import org.joda.time.DateTime;
+
 import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
@@ -93,6 +94,7 @@ public class Parser {
 	ArrayList<String> tags = new ArrayList<>();
 
 	int taskIndex = -1;
+	int timeslotIndex = -1;
 
 	public Command parse(String userInput) {
 
@@ -196,7 +198,6 @@ public class Parser {
 				Constants.COMMAND_UNDO,
 				Constants.COMMAND_REDO,
 				Constants.COMMAND_DONE
-
 		};
 
 		// Calculate length of longest subsequence and Levenshtein distance for each keyword
@@ -263,7 +264,7 @@ public class Parser {
 					try {
 						whichSlot = Integer.parseInt(getCurrentToken().contents);
 					} catch (NumberFormatException e) {
-						return invalidCommand(InvalidCommandReason.INVALID_FINALISE_INDEX);
+						return invalidCommand(InvalidCommandReason.INVALID_TIMESLOT_INDEX);
 					}
 				}
 				else {
@@ -277,7 +278,7 @@ public class Parser {
 			Command command = new Command(commandType);
 			
 			command.setTaskIndex(whichTask);
-			command.setFinaliseIndex(whichSlot);
+			command.setTimeslotIndex(whichSlot);
 			command.setValue("finaliseIndex", Integer.toString(whichTask));
 			command.setValue("slotIndex", Integer.toString(whichSlot));
 			
@@ -298,11 +299,51 @@ public class Parser {
 				return invalidCommand(InvalidCommandReason.INVALID_TASK_INDEX);
 			}
 			nextToken();
-			return createNaturalCommand(CommandType.EDIT);
+			
+			// check if the second index is numerical; if it is, the edit
+			// command is being applied to a floating task
+			
+			try {
+				timeslotIndex = Integer.parseInt(getCurrentToken().contents);
+				return createNaturalCommand(CommandType.EDIT);
+			} catch (NumberFormatException e) {
+				nextToken();
+				return createEditTimeslotCommand();
+			}
 		}
 		else {
 			return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
 		}
+	}
+
+	private Command createEditTimeslotCommand() {
+		pushState(new StateInterval(this, null));
+
+		while (hasTokensLeft()) {
+			State currentState = parseStates.peek();
+
+			if (currentState.popCondition()) {
+				popState();
+			} else {
+				Token token = getCurrentToken();
+				currentState.processToken(token);
+			}
+		}
+
+		// pop the remaining states from the stack, in case
+		// we ran out of tokens before they all were done
+		
+		while (parseStates.size() > 0) {
+			popState();
+		}
+
+		Command command = new Command(CommandType.EDIT);
+
+		command.setTaskIndex(taskIndex);
+		command.setTimeslotIndex(timeslotIndex);
+		command.setIntervals(intervals);
+
+		return command;
 	}
 
 	private Command createNaturalCommand(CommandType commandType) {
