@@ -486,7 +486,7 @@ public class ApplicationWindow {
 	}
 
 	public void defineFont() {
-		boolean isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") > 0;
+		boolean isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
 		if (isWindows) {
 			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33,
 					SWT.NORMAL);
