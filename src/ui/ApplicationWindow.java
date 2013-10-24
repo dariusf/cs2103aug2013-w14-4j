@@ -486,23 +486,24 @@ public class ApplicationWindow {
 	}
 
 	public void defineFont() {
-		// For Mac:
-
-		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
-				SWT.NORMAL);
-		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
-		indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
-		titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
-		descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
-				SWT.NORMAL);
-
-		// For windows:
-//		windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33,
-//				SWT.NORMAL);
-//		pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
-//		indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
-//		titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
-//		descriptionFont = new Font(shell.getDisplay(), "Calibri", 9, SWT.NORMAL);
+		boolean isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") > 0;
+		if (isWindows) {
+			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33,
+					SWT.NORMAL);
+			pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
+			indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
+			titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
+			descriptionFont = new Font(shell.getDisplay(), "Calibri", 9, SWT.NORMAL);
+		}
+		else {
+			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
+					SWT.NORMAL);
+			pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
+			indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
+			titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
+			descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
+					SWT.NORMAL);
+		}
 	}
 
 	public void enableDrag() {

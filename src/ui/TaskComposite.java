@@ -45,8 +45,7 @@ public class TaskComposite extends Composite {
         taskDetailsComposite.setLayoutData(taskDescriptionLayoutData);
         taskDetailsComposite.setLayout(innerRowLayout);
 
-        StyledText taskName = new StyledText(taskDetailsComposite,
-                SWT.READ_ONLY);
+        StyledText taskName = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
         taskName.setText(task.getName());
         taskName.setFont(ApplicationWindow.self.titleFont);
         if (task.isDone()) {
