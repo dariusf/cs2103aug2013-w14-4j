@@ -15,7 +15,7 @@ import common.InvalidCommandReason;
 
 public class Parser {
 
-	private static final boolean PRINT_LEXER_TOKENS = false;
+	private static final boolean PRINT_LEXER_TOKENS = true;
 	private static final boolean PRINT_MATCHED_COMMAND_TYPE = false;
 	private static final boolean PRINT_PARSED_COMMAND = true;
 
@@ -303,12 +303,19 @@ public class Parser {
 			// check if the second index is numerical; if it is, the edit
 			// command is being applied to a floating task
 			
-			try {
-				timeslotIndex = Integer.parseInt(getCurrentToken().contents);
-				return createNaturalCommand(CommandType.EDIT);
-			} catch (NumberFormatException e) {
-				nextToken();
-				return createEditTimeslotCommand();
+			if (hasTokensLeft()) {
+				try {
+					timeslotIndex = Integer.parseInt(getCurrentToken().contents);
+					nextToken();
+					return createEditTimeslotCommand();
+				} catch (NumberFormatException e) {
+					return createNaturalCommand(CommandType.EDIT);
+				}
+			}
+			else {
+				Command command = new Command(CommandType.EDIT);
+				command.setTaskIndex(taskIndex);
+				return command;
 			}
 		}
 		else {
@@ -317,7 +324,7 @@ public class Parser {
 	}
 
 	private Command createEditTimeslotCommand() {
-		pushState(new StateInterval(this, null));
+		pushState(new StateEditInterval(this));
 
 		while (hasTokensLeft()) {
 			State currentState = parseStates.peek();
