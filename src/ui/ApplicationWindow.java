@@ -10,7 +10,9 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import logic.Command;
 import logic.Feedback;
+import logic.Interval;
 import logic.Logic;
 import logic.Task;
 
@@ -29,6 +31,9 @@ import org.jnativehook.NativeHookException;
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
+import org.joda.time.DateTime;
+
+import parser.Parser;
 
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
@@ -54,6 +59,10 @@ public class ApplicationWindow {
 	public StyledText displayTitle;
 	public StyledText displayRemainingTaskCount;
 	public StyledText displayTodayTaskCount;
+	
+	public int taskCompositeHeight = 0;
+	public int taskCompositeIncrement = 0;
+	public int taskComposite3LinesHeight = 0;
 
 	public DisplayMode displayMode = DisplayMode.TODAY;
 	public org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
@@ -175,8 +184,15 @@ public class ApplicationWindow {
 		displayTodayTaskCount.setLineAlignment(0, 1, SWT.RIGHT);
 
 		displayTask = new Composite(shell, SWT.NONE);
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.type = SWT.VERTICAL;
+		rowLayout.pack = true;
+		displayTask.setLayout(rowLayout);
+		displayTask.setBounds(32, 86, 425, 450);
+		
+		defineTaskCompositeHeight();
 		displayTasksOnWindow();
-
+		
 		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
 		displayFeedback.setBounds(35, 558, 412, 40);
@@ -220,11 +236,7 @@ public class ApplicationWindow {
 			child.dispose();
 		}
 
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.type = SWT.VERTICAL;
-		rowLayout.pack = true;
-		displayTask.setLayout(rowLayout);
-		displayTask.setBounds(32, 86, 425, 450);
+	
 
 		determineNumberOfTasksForEachPage();
 		if (pageNumber > numberOfTasksOnEachPage.size()) {
@@ -309,7 +321,7 @@ public class ApplicationWindow {
 	
 	public int determineTaskHeight(Task task){
 		if(!task.isFloatingTask()){
-			return 79;
+			return taskCompositeHeight;
 		} else {
 			int numberOfSlots = task.getPossibleTime().size();
 			boolean hasTags = task.getTags().size() > 0;
@@ -318,9 +330,9 @@ public class ApplicationWindow {
 				numberOfLines++;
 			}
 			if(numberOfLines == 3){
-				return 86;
+				return taskComposite3LinesHeight;
 			} else {
-				return (numberOfLines - 3)*14+86;
+				return (numberOfLines - 3)*taskCompositeIncrement+taskComposite3LinesHeight;
 			}
 		}
 	}
@@ -350,9 +362,6 @@ public class ApplicationWindow {
 			}
 		}
 		numberOfTasksOnEachPage.add(currentCountOfTasks);
-		for (Control child : displayTask.getChildren()) {
-			child.dispose();
-		}
 	}
 
 	// public Composite createTaskItemComposite(Task task, int index) {
@@ -709,6 +718,49 @@ public class ApplicationWindow {
 		if (testMode) {
 			logger.log(Level.INFO, generateLoggingString());
 		}
+	}
+	
+	public void defineTaskCompositeHeight(){
+		Command command1 = new Command(CommandType.ADD);
+		command1.setDescription("haha");
+		Task task1 = new Task(command1);
+		task1.setType(Constants.TASK_TYPE_UNTIMED);
+		TaskComposite taskComposite1 = new TaskComposite(displayTask, task1, 1);
+		taskCompositeHeight = taskComposite1.getSize().y;
+		System.out.println(taskCompositeHeight);
+		
+		DateTime startDate1 = new DateTime(2013, 10, 30, 15, 0, 0);
+		DateTime endDate1 = new DateTime(2013, 10, 30, 16, 0, 0);
+		Interval interval1 = new Interval();
+		interval1.setStartDateTime(startDate1);
+		interval1.setEndDateTime(endDate1);
+		DateTime startDate2 = new DateTime(2013, 10, 30, 16, 0, 0);
+		DateTime endDate2 = new DateTime(2013, 10, 30, 17, 0, 0);
+		Interval interval2 = new Interval();
+		interval2.setStartDateTime(startDate2);
+		interval2.setEndDateTime(endDate2);
+		DateTime startDate3 = new DateTime(2013, 10, 30, 17, 0, 0);
+		DateTime endDate3 = new DateTime(2013, 10, 30, 18, 0, 0);
+		Interval interval3 = new Interval();
+		interval3.setStartDateTime(startDate3);
+		interval3.setEndDateTime(endDate3);
+		ArrayList<Interval> intervalList = new ArrayList<Interval>();
+		intervalList.add(interval1);
+		intervalList.add(interval2);
+		intervalList.add(interval3);
+		
+		task1.setType(Constants.TASK_TYPE_FLOATING);
+		task1.setPossibleTime(intervalList);
+		TaskComposite taskComposite2 = new TaskComposite(displayTask, task1, 1);
+		taskComposite3LinesHeight = taskComposite2.getSize().y;
+		System.out.println(taskComposite3LinesHeight);
+		
+		ArrayList<String> tags = new ArrayList<String>();
+		tags.add("TGIF");
+		task1.setTags(tags);
+		TaskComposite taskComposite3 = new TaskComposite(displayTask, task1, 1);
+		taskCompositeIncrement =  taskComposite3.getSize().y-taskComposite3LinesHeight;
+		System.out.println(taskCompositeIncrement);
 	}
 
 	public String generateLoggingString() {
