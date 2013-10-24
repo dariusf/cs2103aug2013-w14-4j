@@ -55,14 +55,11 @@ public class ApplicationWindow {
 	public StyledText displayTitle;
 	public StyledText displayRemainingTaskCount;
 	public StyledText displayTodayTaskCount;
-	
-	public int taskCompositeHeight = 0;
-	public int taskCompositeIncrement = 0;
-	public int taskComposite3LinesHeight = 0;
 
 	public DisplayMode displayMode = DisplayMode.TODAY;
 	public org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
 	public static HelpDialog helpDialog;
+	public static DisplayLogic displayLogic;
 
 	public Font windowTitleFont;
 	Font indexFont; // accessed by task composite
@@ -187,6 +184,8 @@ public class ApplicationWindow {
 		displayTask.setLayout(rowLayout);
 		displayTask.setBounds(32, 86, 425, 450);
 		
+		displayLogic = new DisplayLogic(logic);		
+		
 		defineTaskCompositeHeight();
 		displayTasksOnWindow();
 		
@@ -239,7 +238,8 @@ public class ApplicationWindow {
 		displayTask.setLayout(rowLayout);
 		displayTask.setBounds(32, 86, 425, 450);
 
-		determineNumberOfTasksForEachPage();
+		numberOfTasksOnEachPage = displayLogic.getNumberOfTasksForEachPage();
+		
 		if (pageNumber > numberOfTasksOnEachPage.size()) {
 			pageNumber = numberOfTasksOnEachPage.size();
 		}
@@ -267,7 +267,6 @@ public class ApplicationWindow {
 		displayPageNumber.setLineAlignment(0, 1, SWT.CENTER);
 		displayPageNumber.setFont(pageNumberFont);
 
-		DisplayLogic displayLogic = new DisplayLogic(logic);
 		displayRemainingTaskCount.setText("Remaining: "
 				+ displayLogic.getNumberOfRemainingTasks());
 		displayTodayTaskCount
@@ -319,52 +318,6 @@ public class ApplicationWindow {
 		default:
 			return "Congrats! You have managed to break our application!";
 		}
-	}
-	
-	public int determineTaskHeight(Task task){
-		if(!task.isFloatingTask()){
-			return taskCompositeHeight;
-		} else {
-			int numberOfSlots = task.getPossibleTime().size();
-			boolean hasTags = task.getTags().size() > 0;
-			int numberOfLines = numberOfSlots;
-			if(hasTags){
-				numberOfLines++;
-			}
-			if(numberOfLines == 3){
-				return taskComposite3LinesHeight;
-			} else {
-				return (numberOfLines - 3)*taskCompositeIncrement+taskComposite3LinesHeight;
-			}
-		}
-	}
-	
-	public void determineNumberOfTasksForEachPage() {
-		ArrayList<Task> taskList = logic.getTasksToDisplay();
-		int numberOfTasks = taskList.size();
-		int[] heights = new int[numberOfTasks];
-		int index = 0;
-		for (Task task : taskList) {
-			heights[index] = determineTaskHeight(task);
-			index++;
-		}
-		System.out.println(Arrays.toString(heights));
-
-		numberOfTasksOnEachPage = new ArrayList<>();
-		int currentCountOfTasks = 0;
-		int currentHeight = 0;
-		for (int i = 0; i < numberOfTasks; i++) {
-			if (currentHeight + heights[i] > 450) {
-				numberOfTasksOnEachPage.add(currentCountOfTasks);
-				currentCountOfTasks = 1;
-				currentHeight = heights[i];
-			} else {
-				currentCountOfTasks++;
-				currentHeight += heights[i];
-			}
-		}
-		numberOfTasksOnEachPage.add(currentCountOfTasks);
-		System.out.println(numberOfTasksOnEachPage);
 	}
 
 	public String displayWelcomeMessage() {
@@ -684,7 +637,8 @@ public class ApplicationWindow {
 		Task task1 = new Task(command1);
 		task1.setType(Constants.TASK_TYPE_UNTIMED);
 		TaskComposite taskComposite1 = new TaskComposite(displayTask, task1, 1);
-		taskCompositeHeight = taskComposite1.getSize().y;
+		int taskCompositeHeight = taskComposite1.getSize().y;
+		displayLogic.setTaskCompositeHeight(taskCompositeHeight);
 		System.out.println(taskCompositeHeight);
 		
 		DateTime startDate1 = new DateTime(2013, 10, 30, 15, 0, 0);
@@ -710,14 +664,16 @@ public class ApplicationWindow {
 		task1.setType(Constants.TASK_TYPE_FLOATING);
 		task1.setPossibleTime(intervalList);
 		TaskComposite taskComposite2 = new TaskComposite(displayTask, task1, 1);
-		taskComposite3LinesHeight = taskComposite2.getSize().y;
+		int taskComposite3LinesHeight = taskComposite2.getSize().y;
+		displayLogic.setTaskCompositeHeightForThreeLines(taskComposite3LinesHeight);
 		System.out.println(taskComposite3LinesHeight);
 		
 		ArrayList<String> tags = new ArrayList<String>();
 		tags.add("TGIF");
 		task1.setTags(tags);
 		TaskComposite taskComposite3 = new TaskComposite(displayTask, task1, 1);
-		taskCompositeIncrement =  taskComposite3.getSize().y-taskComposite3LinesHeight;
+		int taskCompositeIncrement =  taskComposite3.getSize().y-taskComposite3LinesHeight;
+		displayLogic.setTaskCompositeIncrement(taskCompositeIncrement);
 		System.out.println(taskCompositeIncrement);
 	}
 
