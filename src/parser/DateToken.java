@@ -22,6 +22,9 @@ public class DateToken extends Token {
 
 	private static final String REGEX_STANDARD_DATE = "(0?[1-9]|[12][0-9]|3[01])[-/](1[012]|0?[1-9])([-/]((19|20)?[0-9][0-9]))?";
 	private static Pattern standardDate = Pattern.compile(REGEX_STANDARD_DATE, Pattern.CASE_INSENSITIVE);
+			
+	private static final String REGEX_RELATIVE_DATE = "(next[ ]+)?(week|year|month|fortnight)";
+	private static Pattern relativeDate = Pattern.compile(REGEX_RELATIVE_DATE, Pattern.CASE_INSENSITIVE);
 
 	private static final String REGEX_RELATIVE_DAY_DATE = "((this|next|last)[ ]+)?(((mon|tues|wednes|thurs|fri|satur|sun)day)|mon|tues|tue|wed|thurs|thu|fri|sat|sun)";
 	private static Pattern relativeDayDate = Pattern.compile(REGEX_RELATIVE_DAY_DATE, Pattern.CASE_INSENSITIVE);
@@ -40,16 +43,48 @@ public class DateToken extends Token {
 		super(contents);
 		
 		if (matchStandardDate(contents)) return;
+		else if (matchRelativeDate(contents)) return;
 		else if (matchRelativeDayDate(contents)) return;
 		else if (matchAliasDate(contents)) return;
 		else if (matchMixedDate(contents)) return;
 		else assert false : "Date token contents did not match anything; possibly a regex bug in either DateToken or lexer";
 	}
-
-//	public boolean isValidDateString(String contents){
-//		return matchStandardDate(contents) || matchRelativeDayDate(contents) || matchAliasDate(contents) || matchMixedDate(contents);
-//	}
 	
+	private boolean matchRelativeDate(String contents) {
+
+		Matcher matcher = relativeDate.matcher(contents);
+		
+		if (!matcher.find()) return false;
+				
+		// Capturing groups:
+		
+		// 1: next
+		// 2: year/week
+		
+		DateTime now = nowStub == null ? new DateTime() : nowStub;
+		String duration = matcher.group(2);
+		
+		if (duration.equalsIgnoreCase("year")) {
+			now = now.plusYears(1);
+		}
+		else if (duration.equalsIgnoreCase("month")) {
+			now = now.plusMonths(1);
+		}
+		else if (duration.equalsIgnoreCase("fortnight")) {
+			now = now.plusWeeks(2);
+		}
+		else {
+			assert duration.equalsIgnoreCase("week") : "Invalid duration " + duration + "; possibly a regex bug in either DateToken or lexer";
+			now = now.plusWeeks(1);
+		}
+
+		day = now.getDayOfMonth();
+		month = now.getMonthOfYear();
+		year = now.getYear();
+
+		return true;
+	}
+
 	private boolean matchMixedDate(String contents) {
 
 		Matcher matcher = mixedDate.matcher(contents);
