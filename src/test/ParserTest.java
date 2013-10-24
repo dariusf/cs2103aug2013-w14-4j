@@ -535,6 +535,62 @@ public class ParserTest {
 		expected.setIntervals(intervals);
 		gotten = new Parser().parse("add go home at 13:00 this wednes");
 		assertEquals(gotten, expected);
+		
+		// Relative dates
+		// Year
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusYears(1).withTime(0, 0, 0, 0);
+		end = start.withTime(23, 59, 0, 0);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add go home next year");
+		assertEquals(gotten, expected);
+		
+		// Week
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusWeeks(1).withTime(0, 0, 0, 0);
+		end = start.withTime(23, 59, 0, 0);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add go home next week");
+		assertEquals(gotten, expected);
+		
+		// Month
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusMonths(1).withTime(0, 0, 0, 0);
+		end = start.withTime(23, 59, 0, 0);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add go home next month");
+		assertEquals(gotten, expected);
+
+		// Fortnight
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusWeeks(2).withTime(0, 0, 0, 0);
+		end = start.withTime(23, 59, 0, 0);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add go home next fortnight");
+		assertEquals(gotten, expected);
+		
+		// Treating relative dates as dates
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusWeeks(2).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add go home next fortnight 1pm");
+		assertEquals(gotten, expected);
 	}
 
 	@Test
