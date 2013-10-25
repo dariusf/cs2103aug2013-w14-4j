@@ -37,7 +37,24 @@ public class Task implements Comparable<Task>, Cloneable {
 			tags = command.getTags();
 		}
 	}
-
+	
+	public Task(Task task) {
+		this.setName(new String(task.name));
+		this.setTags(new ArrayList<String>(task.tags));
+		this.setType(new String(task.type));
+		if (task.done) {
+			this.markDone();
+		}
+		if (this.type.equals(Constants.TASK_TYPE_TIMED)) {
+			this.interval = new Interval(task.interval);
+		} else if (this.type.equals(Constants.TASK_TYPE_DEADLINE)) {
+			this.deadline = new DateTime(task.deadline);
+		} else if (this.type.equals(Constants.TASK_TYPE_FLOATING)) {
+			this.possibleIntervals = duplicatePossibleIntervals(task.possibleIntervals);
+		}
+		
+	}
+	
 	public Task() {
 
 	}
@@ -267,21 +284,7 @@ public class Task implements Comparable<Task>, Cloneable {
 		return super.equals(obj);
 	}
 
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		// TODO Auto-generated method stub
-		Task newTask = new Task();
-		newTask.setName(new String(name));
-		newTask.setTags(new ArrayList<String>(tags));
-		newTask.setDeadline(new DateTime(deadline));
-		newTask.setPossibleTime(new ArrayList<Interval>(possibleIntervals));
-		newTask.setInterval(interval);
-		if (done) {
-			newTask.markDone();
-		}
-		newTask.setType(new String(type));
-		return newTask;
-	}
+	
 
 	public Interval getInterval() {
 		return interval;
@@ -404,6 +407,14 @@ public class Task implements Comparable<Task>, Cloneable {
 
 	protected boolean isTimePastAlready(DateTime time) {
 		return time.compareTo(new DateTime()) < 0;
+	}
+	
+	public ArrayList<Interval> duplicatePossibleIntervals(List<Interval> possibleIntervals2){
+		ArrayList<Interval> cloned = new ArrayList<>();
+		for(Interval interval : possibleIntervals2){
+			cloned.add(new Interval(interval));
+		}
+		return cloned;
 	}
 
 	public static void main(String[] args) throws CloneNotSupportedException {
