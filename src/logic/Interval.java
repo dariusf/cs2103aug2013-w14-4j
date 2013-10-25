@@ -34,6 +34,13 @@ public class Interval {
 		this.end = end;
 	}
 	
+	public Interval(Interval interval){
+		this.start = new DateTime(interval.start);
+		this.end = new DateTime(interval.end);
+		this.endExplicitlySet = interval.endExplicitlySet;
+		this.startDateExplicitlySet = interval.startDateExplicitlySet;	
+	}
+	
 	public static void setNowStub(DateTime now) {
 		Interval.nowStub = now;
 	}
