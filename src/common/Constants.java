@@ -67,27 +67,28 @@ public class Constants {
 	public static final String TASK_TYPE_UNTIMED = "untimed";
 
 	public static final String HELP_INSTRUCTIONS = "Refer to the help window.";
-	public static final String HELP_GENERAL = "Here are the available commands:\n\n"
-			+ "add:      Adds a new task\n"
-			+ "edit:     Modifies a specified task\n"
+	public static final String HELP_GENERAL = "Available Commands\n"
+			+ "add:       Adds a new task\n"
+			+ "edit:       Modifies a specified task\n"
 			+ "done:     Marks a specified task as done\n"
-			+ "finalise: Confirms the timing of a specified floating task\n"
-			+ "sort:     Organises the tasks by date order\n"
+			+ "finalise:  Confirms the timing of a specified floating task\n"
+			+ "sort:       Organises the tasks by date order\n"
 			+ "delete:   Removes a specified task\n"
-			+ "clear:    Removes all tasks\n"
+			+ "clear:      Removes all tasks\n"
 			+ "display:  Shows all tasks\n"
 			+ "search:   Shows the task(s) matching the keyword(s)\n"
+			+ "goto:      Jumps to the specified page\n"
 			+ "undo:     Reverses the previous action\n"
-			+ "redo:     Reverses undo\n"
-			+ "help:     Brings up the help guide\n"
+			+ "redo:      Reverses undo\n"
+			+ "help:       Brings up the help guide\n"
 			+ "help <command>: Explains the command in detail";
-	public static final String HELP_ADD = "Add Task:\n"
+	public static final String HELP_ADD = "Adding a Task\n"
 			+ "Adds a new task into the database. You may add a timed task, untimed task, floating task or deadline task.\n\n"
 			+ "Command format: \n"
 			+ "add Perform April Fool's Prank in Office on 01/04 at 1200 #forfun: Adds a new timed task with the description 'Perform April Fool's Prank in Office' from 1200 to 1300 on 1st April this year.\n"
 			+ "add Save Princess Peach by 22/12/2012: Adds a new deadline task with the description 'Save Princess Peach' before 2359 on 22/12/2012\n"
 			+ "add Meet Boss at 11am or 12pm: Adds a new floating task with the description 'Meet Boss' from 11am - 12pm or from 12pm - 1pm today.";
-	public static final String HELP_DISPLAY = "Display Task:\n"
+	public static final String HELP_DISPLAY = "Displaying Task(s)\n"
 			+ "Displays all tasks in the database. \n\n" 
 			+ "Command format: \n"
 			+ "1. display: Default case. Shows all undone task(s)\n"
@@ -96,45 +97,48 @@ public class Constants {
 			+ "Dates available: today, tomorrow, 13/10\n"
 			+ "4. display <type>: Shows task(s) corresponding to the specified type\n"
 			+ "Types available: untimed, deadline, timed, floating, overdue, done(not implemented yet)";
-	public static final String HELP_HELP = "Help:\n"
+	public static final String HELP_HELP = "Help\n"
 			+ "Displays help for a specific command. Includes the description of the command as well as examples.\n\n"
 			+ "Command format: \n"
 			+ "help: Provides a brief description of each command\n"
 			+ "help add: Provides a detailed description of the 'add' command and some sample usages";
-	public static final String HELP_SORT = "Sort Tasks:\n"
+	public static final String HELP_SORT = "Sorting Task(s):\n"
 			+ "Sorts all the tasks in the database based on the dates of the tasks, with the earliest one listed first.\n\n"
 			+ "Command format: \n" + "sort: Sorts the database";
-	public static final String HELP_DELETE = "Delete Task:\n"
+	public static final String HELP_DELETE = "Deleting a Task\n"
 			+ "Deletes a task specified by the index of the task.\n\n"
 			+ "Command format: \n"
 			+ "delete 1: Deletes the task that corresponds to index 1.";
-	public static final String HELP_EDIT = "Edit Tasks:\n"
+	public static final String HELP_EDIT = "Editing a Task\n"
 			+ "Edits the task specified by the index of the task.\n\n"
 			+ "Command format:\n"
 			+ "edit 1 Awesome Task!: Edits name of the task that corresponds to index 1 to 'Awesome Task!'.\n"
 			+ "edit 2 by 12:00 pm 30/10/2013: Changes the task that corresponds to index 2 to a deadline task.";
-	public static final String HELP_CLEAR = "Clear Task:\n"
+	public static final String HELP_CLEAR = "Clearing Task(s)\n"
 			+ "Clears the tasks in the database.\n\n" +
 			"Command format:\n"
 			+ "clear: Clears all the tasks in the database.\n"
 			+ "clear done: Clears all the completed tasks in the database.";
-	public static final String HELP_UNDO = "Undo action:\n"
+	public static final String HELP_UNDO = "Undoing\n"
 			+ "Undo the most recent action. Multiple undos are allowed.\n\n"
 			+ "Command format:\n" + "undo: Undo the most recent change.";
-	public static final String HELP_DONE = "Mark as Done:\n"
+	public static final String HELP_REDO = "Redoing\n"
+			+ "Reverses the last undo made. Multiple redos are allowed.\n\n"
+			+ "Command format:\n" + "redo: Reverses undo.";
+	public static final String HELP_DONE = "Marking Task as Done\n"
 			+ "Marks a completed task as done. \n\n" + "Command format: \n"
 			+ "done 2: Mark the task with id 2 as done.";
-	public static final String HELP_FINALISE = "Finalise timing:\n"
+	public static final String HELP_FINALISE = "Finalising Timing For a Floating Task\n"
 			+ "Finalise the timing of a floating task.\n\n"
 			+ "Command format:\n"
 			+ "finalise 1 2: Set the slot 2 as the finalised timing for the task that corresponds to index 1.";
-	public static final String HELP_SEARCH = "Search tasks:\n"
+	public static final String HELP_SEARCH = "Searching For Task(s)\n"
 			+ "Searches tasks based on the keyword input.\n\n"
 			+ "Command format:\n"
 			+ "search boss: Searches and displays all tasks with name containing the word boss\n"
 			+ "search #homework: Displays all tasks with the tag #homework\n"
 			+ "search 1/1/2014: Displays all tasks on 1/1/2014";
-	public static final String HELP_EXIT = "Exit Application:\n"
+	public static final String HELP_EXIT = "Exiting\n"
 			+ "Exits application.\n\n" + "Command format:\n"
 			+ "exit: Quits applicatoin.";
 
