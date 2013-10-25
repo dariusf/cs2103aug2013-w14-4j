@@ -171,18 +171,17 @@ public class ApplicationWindow {
 		displayTask.setBounds(32, 86, 425, 450);
 		
 		displayLogic = new DisplayLogic(logic, DisplayMode.TODO, displayTask, Constants.DEFAULT_PAGE_NUMBER);		
-		
-		defineTaskCompositeHeight();
-		displayTasksOnWindow();
-		
+	
 		displayTitle = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.SINGLE);
 		displayTitle.setEnabled(false);
 		displayTitle.setBounds(36, 23, 311, 50);
-		displayTitle.setText(displayLogic.getDisplayWindowTitle());
 		displayTitle.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
 		displayTitle.setLineAlignment(0, 1, SWT.LEFT);
 		displayTitle.setFont(windowTitleFont);
+		
+		defineTaskCompositeHeight();
+		displayTasksOnWindow();
 		
 		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
@@ -242,8 +241,8 @@ public class ApplicationWindow {
 				+ displayLogic.getNumberOfRemainingTasks());
 		displayTodayTaskCount
 				.setText("Today: " + displayLogic.getNumberOfTasksToday());
-		displayTask.pack();
-
+		
+		displayTitle.setText(displayLogic.getDisplayWindowTitle());
 	}
 
 
@@ -493,9 +492,7 @@ public class ApplicationWindow {
 		
 		displayLogic.processFeedbackObject(feedbackObj, helpDialog);
 		
-		
 		displayTasksOnWindow();
-		displayTitle.setText(displayLogic.getDisplayWindowTitle());
 
 		if (testMode) {
 			logger.log(Level.INFO, generateLoggingString());
