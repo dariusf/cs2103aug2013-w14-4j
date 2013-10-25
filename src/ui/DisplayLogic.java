@@ -27,7 +27,7 @@ public class DisplayLogic {
 	private int taskCompositeIncrement = 0;
 	private int taskCompositeHeightForThreeLines = 0;
 
-	private Composite[] taskComposites = null;
+	private TaskComposite[] taskComposites = null;
 
 	// A list of globol indices of tasks that should be highlighted on next display draw
 	private ArrayList<Integer> highlightedTasks = new ArrayList<Integer>();
@@ -59,7 +59,7 @@ public class DisplayLogic {
 
 		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
 
-		taskComposites = new Composite[numberOfTasksOnEachPage.get(pageNumber - 1)];
+		taskComposites = new TaskComposite[numberOfTasksOnEachPage.get(pageNumber - 1)];
 
 		for (int i = 0; i < taskComposites.length; i++) {
 			taskComposites[i] = new TaskComposite(displayTask, taskList.get(startingIndex + i), startingIndex + i + 1);
@@ -168,12 +168,12 @@ public class DisplayLogic {
 		return getPageNumber() == getPageOfTask(index);
 	}
 
-	public Composite getCompositeLocal (int index) {
+	public TaskComposite getCompositeLocal (int index) {
 		assert index >= 0 && index < taskComposites.length : "Invalid local composite index";
 		return taskComposites[index];
 	}
 	
-	public Composite getCompositeGlobal (int index) {
+	public TaskComposite getCompositeGlobal (int index) {
 		assert isTaskDisplayedCurrently(index) : "Cannot get composite of task that isn't currently displayed";
 		int indexOfFirstTask = 1;
 		for (int i=0; i<getPageNumber()-1; i++) {
@@ -264,7 +264,7 @@ public class DisplayLogic {
 	private void highlightTasks(boolean on) {
 		for (Integer taskIndex : highlightedTasks) {
 			if (isTaskDisplayedCurrently(taskIndex)) {
-				((TaskComposite) getCompositeGlobal(taskIndex)).setHighlighted(on);
+				getCompositeGlobal(taskIndex).setHighlighted(on);
 			}
 		}
 	}
