@@ -215,6 +215,7 @@ public class ApplicationWindow {
 		enableDrag();
 	}
 
+	 // TODO this needs to not recreate the whole list on every keypress
 	public void displayTasksOnWindow() {
 		for (Control child : displayTask.getChildren()) {
 			child.dispose();
@@ -261,11 +262,8 @@ public class ApplicationWindow {
 			public void keyReleased(KeyEvent arg0) {
 				if (isKeyboardInput(arg0.keyCode)) {
 					userInput = input.getText();
-					ActiveFeedback activeFeedback = logic
-							.activeFeedback(userInput);
-					if (activeFeedback != null) {
-						processFeedback(activeFeedback);
-					}
+					ActiveFeedback activeFeedback = logic.activeFeedback(userInput);
+					processFeedback(activeFeedback);
 				}
 			}
 
@@ -310,7 +308,14 @@ public class ApplicationWindow {
 					logger.log(Level.INFO, generateLoggingString());
 				}
 			}
+			
 			private void processFeedback(ActiveFeedback activeFeedback) {
+				
+				if (activeFeedback == null) {
+					displayLogic.clearHighlightedTasks();
+					return;
+				}
+
 				Command executedCommand = activeFeedback.getCommand();
 				int taskIndex = executedCommand.getTaskIndex();
 				
@@ -319,7 +324,22 @@ public class ApplicationWindow {
 					displayLogic.clearHighlightedTasks();
 					displayLogic.addHighlightedTask(taskIndex);
 					displayLogic.setPageNumber(displayLogic.getPageOfTask(taskIndex));
+					displayTasksOnWindow(); // TODO this needs to not recreate the whole list on every keypress
+					break;
+				case EDIT:
+					displayLogic.clearHighlightedTasks();
+					displayLogic.addHighlightedTask(taskIndex);
+					displayLogic.setPageNumber(displayLogic.getPageOfTask(taskIndex));
 					displayTasksOnWindow();
+					if (executedCommand.getTimeslotIndex() != -1) {
+						// TODO
+					}
+					else {
+						if (!executedCommand.getDescription().isEmpty()) {
+							displayLogic.getCompositeGlobal(taskIndex).setTaskName(executedCommand.getDescription());
+						}
+						// TODO other info
+					}
 					break;
 				default:
 					System.out.println("Instant feedback not yet implemented for command " + executedCommand.getCommandType());
