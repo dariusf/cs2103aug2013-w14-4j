@@ -169,7 +169,7 @@ public class Logic {
 			taskToEdit.setType(Constants.TASK_TYPE_FLOATING);
 			taskToEdit.setPossibleTime(command.getIntervals());
 		}
-
+		
 		storage.replace(taskIndex, taskToEdit);
 
 		if (isTaskOver(taskToEdit)) {
