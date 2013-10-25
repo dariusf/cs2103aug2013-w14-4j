@@ -65,8 +65,7 @@ public class Logic {
 	}
 
 	private ActiveFeedback activeDeleteTask(Command command) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ActiveFeedback(command);
 	}
 
 	private ActiveFeedback activeEditTask(Command command) {

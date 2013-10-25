@@ -1,8 +1,11 @@
 package ui;
 
+import java.io.Console;
 import java.util.ArrayList;
 
 import org.eclipse.swt.widgets.Composite;
+
+import com.joestelmach.natty.generated.DateParser_NumericRules.int_00_to_23_optional_prefix_return;
 
 import common.Constants;
 import common.DisplayMode;
@@ -28,6 +31,8 @@ public class DisplayLogic {
 	private int taskCompositeHeight = 0;
 	private int taskCompositeIncrement = 0;
 	private int taskCompositeHeightForThreeLines = 0;
+
+	private Composite[] taskComposites = null;
 
 	public DisplayLogic(Logic logic, DisplayMode displayMode,
 			Composite displayTask, int pageNumber) {
@@ -122,6 +127,17 @@ public class DisplayLogic {
 		}
 		return page;
 	}
+	
+	public Composite getCompositeByIndex (int index) {
+		assert getPageNumber() == getPage(index) : "Cannot get composite of task that isn't currently displayed";
+		int tasksOnThisPage = numberOfTasksOnEachPage.get(getPageNumber());
+		// get index of first task on this page
+		int indexOfFirstTask = 1;
+		for (int i=0; i<getPageNumber()-1; i++) {
+			indexOfFirstTask += numberOfTasksOnEachPage.get(i);
+		}
+		return taskComposites[index - indexOfFirstTask];
+	}
 
 	private void determineNumberOfTasksForEachPage(DisplayMode displayMode) {
 		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
@@ -198,7 +214,7 @@ public class DisplayLogic {
 			return "Congrats! You have managed to break our application!";
 		}
 	}
-
+	
 	protected void displayTasks() {
 		if (pageNumber > numberOfTasksOnEachPage.size()) {
 			pageNumber = numberOfTasksOnEachPage.size();
@@ -214,8 +230,7 @@ public class DisplayLogic {
 		
 		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
 
-		Composite[] taskComposites = new Composite[numberOfTasksOnEachPage
-				.get(pageNumber - 1)];
+		taskComposites = new Composite[numberOfTasksOnEachPage.get(pageNumber - 1)];
 
 		for (int i = 0; i < taskComposites.length; i++) {
 			taskComposites[i] = new TaskComposite(displayTask,
