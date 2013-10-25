@@ -58,7 +58,7 @@ public class DisplayLogic {
 			startingIndex += numberOfTasksOnEachPage.get(i);
 		}
 
-		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
+		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
 
 		taskComposites = new TaskComposite[numberOfTasksOnEachPage.get(pageNumber - 1)];
 
