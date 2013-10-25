@@ -312,17 +312,17 @@ public class ApplicationWindow {
 
 			private void processFeedback(ActiveFeedback activeFeedback) {
 				Command executedCommand = activeFeedback.getCommand();
+				int taskIndex = executedCommand.getTaskIndex();
+				
 				switch (executedCommand.getCommandType()) {
 				case DELETE:
-					System.out.println("Delete command instant feedback");
-					displayLogic.setPageNumber(displayLogic.getPage(executedCommand.getTaskIndex()));
+					displayLogic.clearHighlightedTasks();
+					displayLogic.addHighlightedTask(taskIndex);
+					displayLogic.setPageNumber(displayLogic.getPageOfTask(taskIndex));
 					displayTasksOnWindow();
-					System.out.println(displayLogic.getPage(executedCommand.getTaskIndex()));
-					TaskComposite taskComposite = (TaskComposite) displayLogic.getCompositeByIndex(executedCommand.getTaskIndex());
-					taskComposite.setHighlighted(true);
 					break;
 				default:
-//					System.out.println("Command " + executedCommand.getCommandType() + " does not have instant feedback");
+					System.out.println("Instant feedback not yet implemented for command " + executedCommand.getCommandType());
 					break;
 				}
 			}
@@ -509,7 +509,7 @@ public class ApplicationWindow {
 		displayFeedback.setText(feedback);
 		input.setText("");
 		
-		displayLogic.processFeedbackObject(feedbackObj, helpDialog);
+		displayLogic.processFeedback(feedbackObj, helpDialog);
 		
 		displayTasksOnWindow();
 
