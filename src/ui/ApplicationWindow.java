@@ -304,8 +304,27 @@ public class ApplicationWindow {
 				} else if (isKeyboardInput(arg0.keyCode)){
 					userInput = input.getText();
 					ActiveFeedback activeFeedback = logic.activeFeedback(userInput);
+					if (activeFeedback != null) {
+						processFeedback(activeFeedback);
+					}
 				}
+			}
 
+			private void processFeedback(ActiveFeedback activeFeedback) {
+				Command executedCommand = activeFeedback.getCommand();
+				switch (executedCommand.getCommandType()) {
+				case DELETE:
+					System.out.println("Delete command instant feedback");
+					displayLogic.setPageNumber(displayLogic.getPage(executedCommand.getTaskIndex()));
+					displayTasksOnWindow();
+					System.out.println(displayLogic.getPage(executedCommand.getTaskIndex()));
+					TaskComposite taskComposite = (TaskComposite) displayLogic.getCompositeByIndex(executedCommand.getTaskIndex());
+					taskComposite.setHighlighted(true);
+					break;
+				default:
+//					System.out.println("Command " + executedCommand.getCommandType() + " does not have instant feedback");
+					break;
+				}
 			}
 
 			public void performTween() {
