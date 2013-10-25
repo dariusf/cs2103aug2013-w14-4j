@@ -497,6 +497,7 @@ public class ApplicationWindow {
 		if (testMode) {
 			logger.log(Level.INFO, generateLoggingString());
 		}
+		
 	}
 	
 	public void defineTaskCompositeHeight(){
@@ -507,7 +508,7 @@ public class ApplicationWindow {
 		TaskComposite taskComposite1 = new TaskComposite(displayTask, task1, 1);
 		int taskCompositeHeight = taskComposite1.getSize().y;
 		displayLogic.setTaskCompositeHeight(taskCompositeHeight);
-		System.out.println(taskCompositeHeight);
+		
 		
 		DateTime startDate1 = new DateTime(2013, 10, 30, 15, 0, 0);
 		DateTime endDate1 = new DateTime(2013, 10, 30, 16, 0, 0);
@@ -534,7 +535,6 @@ public class ApplicationWindow {
 		TaskComposite taskComposite2 = new TaskComposite(displayTask, task1, 1);
 		int taskComposite3LinesHeight = taskComposite2.getSize().y;
 		displayLogic.setTaskCompositeHeightForThreeLines(taskComposite3LinesHeight);
-		System.out.println(taskComposite3LinesHeight);
 		
 		ArrayList<String> tags = new ArrayList<String>();
 		tags.add("TGIF");
@@ -542,7 +542,7 @@ public class ApplicationWindow {
 		TaskComposite taskComposite3 = new TaskComposite(displayTask, task1, 1);
 		int taskCompositeIncrement =  taskComposite3.getSize().y-taskComposite3LinesHeight;
 		displayLogic.setTaskCompositeIncrement(taskCompositeIncrement);
-		System.out.println(taskCompositeIncrement);
+
 	}
 
 	public String generateLoggingString() {

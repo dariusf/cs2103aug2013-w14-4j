@@ -116,7 +116,7 @@ public class DisplayLogic {
 			heights[index] = determineTaskHeight(task);
 			index++;
 		}
-		System.out.println(Arrays.toString(heights));
+
 
 		numberOfTasksOnEachPage = new ArrayList<>();
 		int currentCountOfTasks = 0;
@@ -132,7 +132,7 @@ public class DisplayLogic {
 			}
 		}
 		numberOfTasksOnEachPage.add(currentCountOfTasks);
-		System.out.println(numberOfTasksOnEachPage);
+		
 	}
 
 	private int determineTaskHeight(Task task) {
@@ -197,7 +197,7 @@ public class DisplayLogic {
 		for (int i = 0; i < pageNumber - 1; i++) {
 			startingIndex += numberOfTasksOnEachPage.get(i);
 		}
-
+		
 		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
 
 		Composite[] taskComposites = new Composite[numberOfTasksOnEachPage

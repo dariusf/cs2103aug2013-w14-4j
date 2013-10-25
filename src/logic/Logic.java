@@ -169,7 +169,7 @@ public class Logic {
 			taskToEdit.setType(Constants.TASK_TYPE_FLOATING);
 			taskToEdit.setPossibleTime(command.getIntervals());
 		}
-		
+
 		storage.replace(taskIndex, taskToEdit);
 
 		if (isTaskOver(taskToEdit)) {
@@ -202,7 +202,7 @@ public class Logic {
 		int count = 0;
 		DateTime today = new DateTime();
 		for (Task task : storage) {
-			if (!task.isDone() && task.isOnDate(today) ) {
+			if (!task.isDone() && task.isOnDate(today)) {
 				count++;
 			}
 		}
@@ -279,29 +279,35 @@ public class Logic {
 		while (storageIterator.hasNext()) {
 			allTasks.add(storageIterator.next());
 		}
-
-		for (int i = 0; i < allTasks.size(); i++) {
-			Task currentTask = allTasks.get(i);
-			if (displayCondition(command, currentTask)) {
-				validTasks.add(currentTask);
-				validTasksAbsoluteIndices.add(i + 1);
+		if (displayMode != DisplayMode.SEARCH) {
+			for (int i = 0; i < allTasks.size(); i++) {
+				Task currentTask = allTasks.get(i);
+				if (displayCondition(command, currentTask)) {
+					validTasks.add(currentTask);
+					validTasksAbsoluteIndices.add(i + 1);
+				}
 			}
-		}
 
-		temporaryMapping = new HashMap<Integer, Integer>();
-		for (int i = 1; i <= validTasksAbsoluteIndices.size(); i++) {
-			temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
-		}
-		isDynamicIndex = true;
+			temporaryMapping = new HashMap<Integer, Integer>();
+			for (int i = 1; i <= validTasksAbsoluteIndices.size(); i++) {
+				temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
+			}
+			isDynamicIndex = true;
 
-		if (validTasks.size() > 0) {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY);
+			if (validTasks.size() > 0) {
+				feedback = new Feedback(Constants.SC_SUCCESS,
+						CommandType.DISPLAY);
 
+			} else {
+				feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
+						CommandType.DISPLAY);
+
+			}
 		} else {
-			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
+			feedback = new Feedback(Constants.SC_SUCCESS,
 					CommandType.DISPLAY);
-
 		}
+		
 		feedback.setDisplayMode(displayMode);
 		if (displayMode == DisplayMode.DATE) {
 			feedback.setDisplayDate(command.getDisplayDateTime());
@@ -449,12 +455,13 @@ public class Logic {
 	protected Feedback markDone(Command command) {
 		Feedback feedback = null;
 		int taskIndex = command.getTaskIndex();
-		
-		if((isDynamicIndex && !temporaryMapping.containsKey(taskIndex)) || taskIndex > storage.size()){
+
+		if ((isDynamicIndex && !temporaryMapping.containsKey(taskIndex))
+				|| taskIndex > storage.size()) {
 			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
 					CommandType.DONE);
 		} else {
-			if(isDynamicIndex){
+			if (isDynamicIndex) {
 				taskIndex = temporaryMapping.get(taskIndex);
 			}
 			Task doneTask = storage.get(taskIndex);
@@ -505,32 +512,38 @@ public class Logic {
 	}
 
 	protected Feedback searchTasks(Command command) {
-		DisplayMode displayMode = command.getDisplayMode();
 		Feedback feedback = null;
-		HashMap<String, String> commandAttributes = command
-				.getCommandAttributes();
+		String searchString = command.getSearchString();
+		ArrayList<String> searchTags = command.getTags();
+
 		ArrayList<Task> validTasks = new ArrayList<Task>();
 		ArrayList<Integer> validTasksAbsoluteIndices = new ArrayList<Integer>();
-		ArrayList<Task> allTasks = new ArrayList<Task>();
-		Iterator<Task> storageIterator = storage.iterator();
-		while (storageIterator.hasNext()) {
-			allTasks.add(storageIterator.next());
-		}
 
-		boolean shouldAdd = true;
-		for (int i = 0; i < allTasks.size(); i++) {
-			Task currentTask = allTasks.get(i);
-			for (String attribute : commandAttributes.keySet()) {
-				String keyword = commandAttributes.get(attribute);
-				if (!isWordInString(keyword, currentTask.get(attribute))) {
-					shouldAdd = false;
+		Iterator<Task> storageIterator = storage.iterator();
+		System.out.println(searchTags);
+		if (searchTags.size() > 0) {
+			boolean shouldAdd = true;
+			for (int i = 0; i < storage.size(); i++) {
+				Task currentTask = storageIterator.next();
+				for (String tag : searchTags) {
+					if (!isTagInTask(tag, currentTask)) {
+						shouldAdd = false;
+					}
+				}
+				if (shouldAdd) {
+					validTasks.add(currentTask);
+					validTasksAbsoluteIndices.add(i + 1);
+				}
+				shouldAdd = true;
+			}
+		} else {
+			for (int i = 0; i < storage.size(); i++) {
+				Task currentTask = storageIterator.next();
+				if (isWordInString(searchString, currentTask.getName())) {
+					validTasks.add(currentTask);
+					validTasksAbsoluteIndices.add(i + 1);
 				}
 			}
-			if (shouldAdd) {
-				validTasks.add(currentTask);
-				validTasksAbsoluteIndices.add(i + 1);
-			}
-			shouldAdd = true;
 		}
 
 		temporaryMapping = new HashMap<Integer, Integer>();
@@ -538,11 +551,12 @@ public class Logic {
 			temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
 		}
 		isDynamicIndex = true;
+		System.out.println(temporaryMapping);
 
 		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH);
-		
+
 		// TODO: add in checks that correspond to errors in Feedback
-		feedback.setDisplayMode(displayMode);
+		feedback.setDisplayMode(DisplayMode.SEARCH);
 		return feedback;
 	}
 
@@ -591,12 +605,22 @@ public class Logic {
 		return lowerCaseString.indexOf(lowerCaseWord) != -1;
 	}
 
+	public boolean isTagInTask(String tag, Task task) {
+		ArrayList<String> tags = task.getTags();
+		boolean result = false;
+		for(String string : tags){
+			if(tag.equalsIgnoreCase(string)){
+				result = true;
+			}
+		}
+		return result;
+	}
+
 	public static void main(String[] args) {
 		Logic logic;
 		try {
 			logic = new Logic();
-			
-			
+
 			Command displayCommand = new Command(CommandType.DISPLAY);
 			displayCommand.setDisplayMode(DisplayMode.ALL);
 
