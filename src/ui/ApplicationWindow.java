@@ -182,7 +182,6 @@ public class ApplicationWindow {
 		displayTitle.setFont(windowTitleFont);
 
 		defineTaskCompositeHeight();
-		displayTasksOnWindow();
 
 		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
@@ -201,8 +200,8 @@ public class ApplicationWindow {
 
 		enableNativeHook();
 
-		displayFeedback.setText(displayWelcomeMessage());
 		setWelcomePage();
+		displayFeedback.setText(displayWelcomeMessage());
 
 		helpDialog = new HelpDialog(shell);
 
