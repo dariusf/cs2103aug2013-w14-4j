@@ -67,28 +67,35 @@ public class Constants {
 	public static final String TASK_TYPE_UNTIMED = "untimed";
 
 	public static final String HELP_INSTRUCTIONS = "Refer to the help window.";
-	public static final String HELP_GENERAL = "Here are the available commands:\n"
-			+ "add: Add a new task\n"
-			+ "edit: Edit an existing task\n"
-			+ "done: Mark a task as done\n"
-			+ "finalise: Finalise the timing of a floating task\n"
-			+ "display: Display all tasks"
-			+ "delete: Delete an existing task\n"
-			+ "clear: Remove all tasks\n"
-			+ "search: Search for existing task(s)\n"
-			+ "sort: Sort the tasks based on dates\n"
-			+ "undo: Return to the previous edit\n"
-			+ "help: Brings up the help guide\n"
-			+ "help <command>: more details on the command";
+	public static final String HELP_GENERAL = "Here are the available commands:\n\n"
+			+ "add:      Adds a new task\n"
+			+ "edit:     Modifies a specified task\n"
+			+ "done:     Marks a specified task as done\n"
+			+ "finalise: Confirms the timing of a specified floating task\n"
+			+ "sort:     Organises the tasks by date order\n"
+			+ "delete:   Removes a specified task\n"
+			+ "clear:    Removes all tasks\n"
+			+ "display:  Shows all tasks\n"
+			+ "search:   Shows the task(s) matching the keyword(s)\n"
+			+ "undo:     Reverses the previous action\n"
+			+ "redo:     Reverses undo\n"
+			+ "help:     Brings up the help guide\n"
+			+ "help <command>: Explains the command in detail";
 	public static final String HELP_ADD = "Add Task:\n"
 			+ "Adds a new task into the database. You may add a timed task, untimed task, floating task or deadline task.\n\n"
 			+ "Command format: \n"
-			+ "add Perform April Fool's Prank in Office on 01/04 at 1200 #forfun: Adds a new timed task with the description 'Perform April Fool's Prank in Office' from 1200 to 1300 on 1/4 this year.\n"
+			+ "add Perform April Fool's Prank in Office on 01/04 at 1200 #forfun: Adds a new timed task with the description 'Perform April Fool's Prank in Office' from 1200 to 1300 on 1st April this year.\n"
 			+ "add Save Princess Peach by 22/12/2012: Adds a new deadline task with the description 'Save Princess Peach' before 2359 on 22/12/2012\n"
-			+ "add Meet Boss on 11:00 am or 12:00 pm: Adds a new floating task with the description 'Meet Boss' from 11 am to 12 pm or 12 pm to 1pm today.";
+			+ "add Meet Boss at 11am or 12pm: Adds a new floating task with the description 'Meet Boss' from 11am - 12pm or from 12pm - 1pm today.";
 	public static final String HELP_DISPLAY = "Display Task:\n"
-			+ "Displays all tasks in the database. \n\n" + "Command format: \n"
-			+ "display: List all tasks from the database.";
+			+ "Displays all tasks in the database. \n\n" 
+			+ "Command format: \n"
+			+ "1. display: Default case. Shows all undone task(s)\n"
+			+ "2. display all: Shows all task(s)\n"
+			+ "3. display <date>: Shows task(s) for the date\n"
+			+ "Dates available: today, tomorrow, 13/10\n"
+			+ "4. display <type>: Shows task(s) corresponding to the specified type\n"
+			+ "Types available: untimed, deadline, timed, floating, overdue, done(not implemented yet)";
 	public static final String HELP_HELP = "Display Help:\n"
 			+ "Displays help for specific command. Includes the description of the command as well as examples.\n\n"
 			+ "Command format: \n"
