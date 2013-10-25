@@ -21,7 +21,7 @@ public class DisplayLogic {
 	private DisplayStateHistory displayStateHistory;
 
 	private org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
-	
+
 	private int noOfTasksToday = 0;
 	private int noOfTasksRemaining = 0;
 	private ArrayList<Integer> numberOfTasksOnEachPage;
@@ -30,14 +30,15 @@ public class DisplayLogic {
 	private int taskCompositeIncrement = 0;
 	private int taskCompositeHeightForThreeLines = 0;
 
-	public DisplayLogic(Logic logic, DisplayMode displayMode, Composite displayTask, int pageNumber) {
+	public DisplayLogic(Logic logic, DisplayMode displayMode,
+			Composite displayTask, int pageNumber) {
 		this.logic = logic;
 		this.displayMode = displayMode;
 		this.displayTask = displayTask;
 		this.pageNumber = pageNumber;
 		this.displayStateHistory = new DisplayStateHistory();
 	}
-	
+
 	protected void setTaskCompositeHeight(int height) {
 		taskCompositeHeight = height;
 	}
@@ -49,25 +50,26 @@ public class DisplayLogic {
 	protected void setTaskCompositeHeightForThreeLines(int height) {
 		taskCompositeHeightForThreeLines = height;
 	}
-	
+
 	protected void setDisplayMode(DisplayMode displayMode) {
 		this.displayMode = displayMode;
 	}
-	
-	protected void setDisplayDateTime(org.joda.time.DateTime currentDisplayDateTime) {
+
+	protected void setDisplayDateTime(
+			org.joda.time.DateTime currentDisplayDateTime) {
 		this.currentDisplayDateTime = currentDisplayDateTime;
 	}
-	
+
 	protected void setPageNumber(int pageNumber) {
 		this.pageNumber = pageNumber;
 	}
-	
+
 	protected int getPageNumber() {
 		return pageNumber;
 	}
-	
+
 	protected DisplayMode getDisplayMode() {
-		//TODO: add in conditions to ensure that it is not null.
+		// TODO: add in conditions to ensure that it is not null.
 		return displayMode;
 	}
 
@@ -80,13 +82,13 @@ public class DisplayLogic {
 		noOfTasksToday = logic.getNumberOfTasksToday();
 		return noOfTasksToday;
 	}
-	
+
 	public String getDisplayWindowTitle() {
 		return determineTitle();
 	}
 
 	protected ArrayList<Integer> getNumberOfTasksForEachPage() {
-		determineNumberOfTasksForEachPage();
+		determineNumberOfTasksForEachPage(displayMode);
 		return numberOfTasksOnEachPage;
 	}
 
@@ -103,9 +105,9 @@ public class DisplayLogic {
 		}
 		return page;
 	}
-	
-	private void determineNumberOfTasksForEachPage() {
-		ArrayList<Task> taskList = logic.getTasksToDisplay();
+
+	private void determineNumberOfTasksForEachPage(DisplayMode displayMode) {
+		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
 		int numberOfTasks = taskList.size();
 		int[] heights = new int[numberOfTasks];
 		int index = 0;
@@ -150,7 +152,7 @@ public class DisplayLogic {
 			}
 		}
 	}
-	
+
 	private String determineTitle() {
 		switch (displayMode) {
 		case TODAY:
@@ -174,13 +176,14 @@ public class DisplayLogic {
 		case TODO:
 			return Constants.MODE_TODO;
 		case DATE:
-			// TODO: ensure that currentDisplayDateTime is set. otherwise will be defaulted to today.
+			// TODO: ensure that currentDisplayDateTime is set. otherwise will
+			// be defaulted to today.
 			return Constants.dateOnlyFormat.print(currentDisplayDateTime);
 		default:
 			return "Congrats! You have managed to break our application!";
 		}
 	}
-	
+
 	protected void displayOnWindow() {
 		if (pageNumber > numberOfTasksOnEachPage.size()) {
 			pageNumber = numberOfTasksOnEachPage.size();
@@ -195,22 +198,26 @@ public class DisplayLogic {
 		}
 
 		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
+		System.out.println(taskList);
 		int numberOfTasks = taskList.size();
 
-		Composite[] taskComposites = new Composite[numberOfTasks];
+		Composite[] taskComposites = new Composite[numberOfTasksOnEachPage
+				.get(pageNumber - 1)];
 
-		for (int i = 0; i < numberOfTasksOnEachPage.get(pageNumber - 1); i++) {
+		for (int i = 0; i < taskComposites.length; i++) {
 			taskComposites[i] = new TaskComposite(displayTask,
 					taskList.get(startingIndex + i), startingIndex + i + 1);
 		}
 	}
-	
-	protected void processFeedbackObject(Feedback feedbackObj, HelpDialog helpDialog){
+
+	protected void processFeedbackObject(Feedback feedbackObj,
+			HelpDialog helpDialog) {
 		switch (feedbackObj.getCommand()) {
 		case ADD:
-			this.setDisplayMode(DisplayMode.ALL);
+			this.setDisplayMode(DisplayMode.TODO);
 			this.setPageNumber(Integer.MAX_VALUE);
-			displayStateHistory.addDisplayState(DisplayMode.ALL, Integer.MAX_VALUE);
+			displayStateHistory.addDisplayState(DisplayMode.ALL,
+					Integer.MAX_VALUE);
 			break;
 		case EDIT:
 		case DELETE:
@@ -219,7 +226,8 @@ public class DisplayLogic {
 			if (!feedbackObj.isErrorMessage()) {
 				this.setPageNumber(getPage(feedbackObj.getTaskIndex()));
 			}
-			displayStateHistory.addDisplayState(this.getDisplayMode(), this.getPageNumber());
+			displayStateHistory.addDisplayState(this.getDisplayMode(),
+					this.getPageNumber());
 			break;
 		case DISPLAY:
 			this.setDisplayMode(feedbackObj.getDisplayMode());
@@ -227,7 +235,8 @@ public class DisplayLogic {
 				this.setDisplayDateTime(feedbackObj.getDisplayDate());
 			}
 			this.setPageNumber(1);
-			displayStateHistory.addDisplayState(this.getDisplayMode(), this.getPageNumber());
+			displayStateHistory.addDisplayState(this.getDisplayMode(),
+					this.getPageNumber());
 			break;
 		case SEARCH:
 			this.setPageNumber(1);
@@ -239,8 +248,9 @@ public class DisplayLogic {
 		case SORT:
 		case CLEAR:
 			this.setPageNumber(1);
-			this.setDisplayMode(DisplayMode.ALL);
-			displayStateHistory.addDisplayState(this.getDisplayMode(), this.getPageNumber());
+			this.setDisplayMode(DisplayMode.TODO);
+			displayStateHistory.addDisplayState(this.getDisplayMode(),
+					this.getPageNumber());
 			break;
 		case UNDO:
 			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());

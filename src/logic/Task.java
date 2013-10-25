@@ -368,6 +368,7 @@ public class Task implements Comparable<Task>, Cloneable {
 		int year = date.getYear();
 		int month = date.getMonthOfYear();
 		int day = date.getDayOfMonth();
+		
 		return dateToBeChecked.getYear() == year
 				&& dateToBeChecked.getMonthOfYear() == month
 				&& dateToBeChecked.getDayOfMonth() == day;

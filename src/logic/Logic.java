@@ -202,7 +202,7 @@ public class Logic {
 		int count = 0;
 		DateTime today = new DateTime();
 		for (Task task : storage) {
-			if (task.isOnDate(today)) {
+			if (!task.isDone() && task.isOnDate(today) ) {
 				count++;
 			}
 		}
@@ -447,26 +447,22 @@ public class Logic {
 	}
 
 	protected Feedback markDone(Command command) {
-		HashMap<String, String> commandAttributes = command
-				.getCommandAttributes();
-		int taskIndex = Integer.parseInt(commandAttributes
-				.get(Constants.DONE_ATT_LINE));
-		if (isDynamicIndex) {
-			taskIndex = temporaryMapping.get(taskIndex);
-		}
-
 		Feedback feedback = null;
-
-		if (taskIndex <= storage.size()) {
+		int taskIndex = command.getTaskIndex();
+		
+		if((isDynamicIndex && !temporaryMapping.containsKey(taskIndex)) || taskIndex > storage.size()){
+			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
+					CommandType.DONE);
+		} else {
+			if(isDynamicIndex){
+				taskIndex = temporaryMapping.get(taskIndex);
+			}
 			Task doneTask = storage.get(taskIndex);
 			doneTask.markDone();
 			storage.replace(taskIndex, doneTask);
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DONE);
 			feedback.setTaskIndex(taskIndex);
 			isDynamicIndex = false;
-		} else {
-			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
-					CommandType.DONE);
 		}
 
 		return feedback;
