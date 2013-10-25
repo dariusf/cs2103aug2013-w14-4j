@@ -495,6 +495,7 @@ public class ApplicationWindow {
 		
 		displayLogic.processFeedbackObject(feedbackObj, helpDialog);
 		
+		
 		displayTasksOnWindow();
 		displayTitle.setText(displayLogic.getDisplayWindowTitle());
 
