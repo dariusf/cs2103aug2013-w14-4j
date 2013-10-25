@@ -3,6 +3,8 @@ package storage;
 import java.util.Iterator;
 import java.util.List;
 
+import logic.Task;
+
 import com.rits.cloning.Cloner;
 
 public class ActionCapturer<E extends Comparable<E>> implements StorageBase<E> {
@@ -138,7 +140,7 @@ public class ActionCapturer<E extends Comparable<E>> implements StorageBase<E> {
 
 	@Override
 	public void remove(E item) {
-		E removedItem = cloner.deepClone(item);
+		E removedItem = (E) new Task((Task) item);
 		int index = realStorage.getIndex(item);
 		RemoveAction thisAction = new RemoveAction(index, removedItem);
 		realStorage.remove(item);
@@ -165,8 +167,9 @@ public class ActionCapturer<E extends Comparable<E>> implements StorageBase<E> {
 	
 	@Override
 	public E get(int index) {
-		E cloned = cloner.deepClone(realStorage.get(index));
-		return cloned;
+		Task task = new Task((Task) realStorage.get(index)) ;
+		E e = (E) task;
+		return e;
 	}
 	
 	@Override

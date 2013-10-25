@@ -4,6 +4,7 @@ import java.io.Console;
 import java.util.ArrayList;
 
 import org.eclipse.swt.widgets.Composite;
+import org.joda.time.DateTime;
 
 import com.joestelmach.natty.generated.DateParser_NumericRules.int_00_to_23_optional_prefix_return;
 
@@ -140,7 +141,7 @@ public class DisplayLogic {
 	}
 
 	private void determineNumberOfTasksForEachPage(DisplayMode displayMode) {
-		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
+		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
 		int numberOfTasks = taskList.size();
 		int[] heights = new int[numberOfTasks];
 		int index = 0;
@@ -228,7 +229,7 @@ public class DisplayLogic {
 			startingIndex += numberOfTasksOnEachPage.get(i);
 		}
 		
-		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
+		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
 
 		taskComposites = new Composite[numberOfTasksOnEachPage.get(pageNumber - 1)];
 
