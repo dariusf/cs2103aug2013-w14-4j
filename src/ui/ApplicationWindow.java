@@ -65,8 +65,6 @@ public class ApplicationWindow {
 	Font descriptionFont; // accessed by task composite
 	public Font pageNumberFont;
 	
-
-	public int defaultPageNumber = 1;
 	public static ApplicationWindow self; // singleton?
 	public boolean moving = false;
 
@@ -172,7 +170,7 @@ public class ApplicationWindow {
 		displayTask.setLayout(rowLayout);
 		displayTask.setBounds(32, 86, 425, 450);
 		
-		displayLogic = new DisplayLogic(logic, DisplayMode.TODO, displayTask, defaultPageNumber);		
+		displayLogic = new DisplayLogic(logic, DisplayMode.TODO, displayTask, Constants.DEFAULT_PAGE_NUMBER);		
 		
 		defineTaskCompositeHeight();
 		displayTasksOnWindow();
@@ -233,7 +231,7 @@ public class ApplicationWindow {
 
 		numberOfTasksOnEachPage = displayLogic.getNumberOfTasksForEachPage();
 		
-		displayLogic.displayOnWindow();
+		displayLogic.displayTasks();
 
 		displayPageNumber.setText("Page " + displayLogic.getPageNumber() + " of "
 				+ numberOfTasksOnEachPage.size());

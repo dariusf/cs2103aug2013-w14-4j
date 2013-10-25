@@ -17,7 +17,7 @@ public class DisplayLogic {
 	private Logic logic;
 	private DisplayMode displayMode;
 	private Composite displayTask;
-	private int pageNumber = 1;
+	private int pageNumber;
 	private DisplayStateHistory displayStateHistory;
 
 	private org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
@@ -65,6 +65,7 @@ public class DisplayLogic {
 	}
 
 	protected int getPageNumber() {
+		assert (pageNumber > 0);
 		return pageNumber;
 	}
 
@@ -184,7 +185,7 @@ public class DisplayLogic {
 		}
 	}
 
-	protected void displayOnWindow() {
+	protected void displayTasks() {
 		if (pageNumber > numberOfTasksOnEachPage.size()) {
 			pageNumber = numberOfTasksOnEachPage.size();
 		}
@@ -198,8 +199,6 @@ public class DisplayLogic {
 		}
 
 		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
-		System.out.println(taskList);
-		int numberOfTasks = taskList.size();
 
 		Composite[] taskComposites = new Composite[numberOfTasksOnEachPage
 				.get(pageNumber - 1)];
@@ -234,12 +233,12 @@ public class DisplayLogic {
 			if (this.getDisplayMode() == DisplayMode.DATE) {
 				this.setDisplayDateTime(feedbackObj.getDisplayDate());
 			}
-			this.setPageNumber(1);
+			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
 			displayStateHistory.addDisplayState(this.getDisplayMode(),
 					this.getPageNumber());
 			break;
 		case SEARCH:
-			this.setPageNumber(1);
+			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
 			this.setDisplayMode(DisplayMode.SEARCH);
 			break;
 		case GOTO:
@@ -247,7 +246,7 @@ public class DisplayLogic {
 			break;
 		case SORT:
 		case CLEAR:
-			this.setPageNumber(1);
+			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
 			this.setDisplayMode(DisplayMode.TODO);
 			displayStateHistory.addDisplayState(this.getDisplayMode(),
 					this.getPageNumber());
