@@ -2,8 +2,6 @@ package ui;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +17,6 @@ import common.*;
 
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
@@ -46,7 +43,7 @@ public class ApplicationWindow {
 			.getLogger(ApplicationWindow.class.getName());
 	static Shell shell; // accessed by task composite
 	public Text input;
-	public Text displayFeedback;
+	public StyledText displayFeedback;
 	public static Logic logic;
 	public Composite displayTask;
 	public StyledText displayPageNumber;
@@ -64,7 +61,7 @@ public class ApplicationWindow {
 	Font titleFont; // accessed by task composite
 	Font descriptionFont; // accessed by task composite
 	public Font pageNumberFont;
-	
+
 	public static ApplicationWindow self; // singleton?
 	public boolean moving = false;
 
@@ -169,9 +166,10 @@ public class ApplicationWindow {
 		rowLayout.pack = true;
 		displayTask.setLayout(rowLayout);
 		displayTask.setBounds(32, 86, 425, 450);
-		
-		displayLogic = new DisplayLogic(logic, DisplayMode.TODO, displayTask, Constants.DEFAULT_PAGE_NUMBER);		
-	
+
+		displayLogic = new DisplayLogic(logic, DisplayMode.TODO, displayTask,
+				Constants.DEFAULT_PAGE_NUMBER);
+
 		displayTitle = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.SINGLE);
 		displayTitle.setEnabled(false);
@@ -179,11 +177,11 @@ public class ApplicationWindow {
 		displayTitle.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
 		displayTitle.setLineAlignment(0, 1, SWT.LEFT);
 		displayTitle.setFont(windowTitleFont);
-		
+
 		defineTaskCompositeHeight();
-		displayTasksOnWindow();
-		
-		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+
+		displayFeedback = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		displayFeedback.setEnabled(false);
 		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
 		displayFeedback.setBounds(35, 558, 412, 40);
 
@@ -200,8 +198,8 @@ public class ApplicationWindow {
 
 		enableNativeHook();
 
-		displayFeedback.setText(displayWelcomeMessage());
 		setWelcomePage();
+		displayFeedback.setText(displayWelcomeMessage());
 
 		helpDialog = new HelpDialog(shell);
 
@@ -229,22 +227,21 @@ public class ApplicationWindow {
 		displayTask.setBounds(32, 86, 425, 450);
 
 		numberOfTasksOnEachPage = displayLogic.getNumberOfTasksForEachPage();
-		
+
 		displayLogic.displayTasks();
 
-		displayPageNumber.setText("Page " + displayLogic.getPageNumber() + " of "
-				+ numberOfTasksOnEachPage.size());
+		displayPageNumber.setText("Page " + displayLogic.getPageNumber()
+				+ " of " + numberOfTasksOnEachPage.size());
 		displayPageNumber.setLineAlignment(0, 1, SWT.CENTER);
 		displayPageNumber.setFont(pageNumberFont);
 
 		displayRemainingTaskCount.setText("Remaining: "
 				+ displayLogic.getNumberOfRemainingTasks());
-		displayTodayTaskCount
-				.setText("Today: " + displayLogic.getNumberOfTasksToday());
-		
+		displayTodayTaskCount.setText("Today: "
+				+ displayLogic.getNumberOfTasksToday());
+
 		displayTitle.setText(displayLogic.getDisplayWindowTitle());
 	}
-
 
 	public String displayWelcomeMessage() {
 		String welcomeMessage = Constants.WELCOME_MSG;
@@ -262,6 +259,14 @@ public class ApplicationWindow {
 
 			@Override
 			public void keyReleased(KeyEvent arg0) {
+				if (isKeyboardInput(arg0.keyCode)) {
+					userInput = input.getText();
+					ActiveFeedback activeFeedback = logic
+							.activeFeedback(userInput);
+					if (activeFeedback != null) {
+						processFeedback(activeFeedback);
+					}
+				}
 			}
 
 			@Override
@@ -293,23 +298,18 @@ public class ApplicationWindow {
 					executeUserInput(userInput);
 					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_UP) {
-					displayLogic.setPageNumber(Math.max(displayLogic.getPageNumber() - 1, 0));
+					displayLogic.setPageNumber(Math.max(
+							displayLogic.getPageNumber() - 1, 0));
 					displayTasksOnWindow();
 					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_DOWN) {
-					displayLogic.setPageNumber(Math.min(displayLogic.getPageNumber() + 1,
+					displayLogic.setPageNumber(Math.min(
+							displayLogic.getPageNumber() + 1,
 							numberOfTasksOnEachPage.size()));
 					displayTasksOnWindow();
 					logger.log(Level.INFO, generateLoggingString());
-				} else if (isKeyboardInput(arg0.keyCode)){
-					userInput = input.getText();
-					ActiveFeedback activeFeedback = logic.activeFeedback(userInput);
-					if (activeFeedback != null) {
-						processFeedback(activeFeedback);
-					}
 				}
 			}
-
 			private void processFeedback(ActiveFeedback activeFeedback) {
 				Command executedCommand = activeFeedback.getCommand();
 				int taskIndex = executedCommand.getTaskIndex();
@@ -359,8 +359,8 @@ public class ApplicationWindow {
 			}
 		});
 	}
-	
-	public boolean isKeyboardInput(int keyCode){
+
+	public boolean isKeyboardInput(int keyCode) {
 		return (keyCode < 127 && keyCode > 31) || keyCode == SWT.BS;
 	}
 
@@ -379,19 +379,22 @@ public class ApplicationWindow {
 	}
 
 	public void defineFont() {
-		boolean isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
+		boolean isWindows = System.getProperty("os.name").toLowerCase()
+				.indexOf("win") >= 0;
 		if (isWindows) {
 			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33,
 					SWT.NORMAL);
-			pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
+			pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13,
+					SWT.NORMAL);
 			indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
 			titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
-			descriptionFont = new Font(shell.getDisplay(), "Calibri", 9, SWT.NORMAL);
-		}
-		else {
+			descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
+					SWT.NORMAL);
+		} else {
 			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
 					SWT.NORMAL);
-			pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
+			pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18,
+					SWT.NORMAL);
 			indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
 			titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
 			descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
@@ -508,9 +511,9 @@ public class ApplicationWindow {
 
 		displayFeedback.setText(feedback);
 		input.setText("");
-		
+
 		displayLogic.processFeedback(feedbackObj, helpDialog);
-		
+
 		displayTasksOnWindow();
 
 		if (testMode) {
@@ -518,8 +521,8 @@ public class ApplicationWindow {
 		}
 		
 	}
-	
-	public void defineTaskCompositeHeight(){
+
+	public void defineTaskCompositeHeight() {
 		Command command1 = new Command(CommandType.ADD);
 		command1.setDescription("haha");
 		Task task1 = new Task(command1);
@@ -528,7 +531,7 @@ public class ApplicationWindow {
 		int taskCompositeHeight = taskComposite1.getSize().y;
 		displayLogic.setTaskCompositeHeight(taskCompositeHeight);
 		
-		
+
 		DateTime startDate1 = new DateTime(2013, 10, 30, 15, 0, 0);
 		DateTime endDate1 = new DateTime(2013, 10, 30, 16, 0, 0);
 		Interval interval1 = new Interval();
@@ -548,18 +551,20 @@ public class ApplicationWindow {
 		intervalList.add(interval1);
 		intervalList.add(interval2);
 		intervalList.add(interval3);
-		
+
 		task1.setType(Constants.TASK_TYPE_FLOATING);
 		task1.setPossibleTime(intervalList);
 		TaskComposite taskComposite2 = new TaskComposite(displayTask, task1, 1);
 		int taskComposite3LinesHeight = taskComposite2.getSize().y;
-		displayLogic.setTaskCompositeHeightForThreeLines(taskComposite3LinesHeight);
-		
+		displayLogic
+				.setTaskCompositeHeightForThreeLines(taskComposite3LinesHeight);
+
 		ArrayList<String> tags = new ArrayList<String>();
 		tags.add("TGIF");
 		task1.setTags(tags);
 		TaskComposite taskComposite3 = new TaskComposite(displayTask, task1, 1);
-		int taskCompositeIncrement =  taskComposite3.getSize().y-taskComposite3LinesHeight;
+		int taskCompositeIncrement = taskComposite3.getSize().y
+				- taskComposite3LinesHeight;
 		displayLogic.setTaskCompositeIncrement(taskCompositeIncrement);
 
 	}
