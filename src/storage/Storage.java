@@ -10,7 +10,7 @@ import java.util.List;
 import logic.Task;
 
 public class Storage implements Closeable, Iterable<Task> {
-	private ActionCapturer<Task> taskStorage;
+	private ActionCapturer<Task, RealStorage<Task>> taskStorage;
 	private final String fileName;
 	private boolean definingCustomAction;
 	
@@ -18,13 +18,23 @@ public class Storage implements Closeable, Iterable<Task> {
 		this.fileName = fileName;
 		File file = new File(fileName);
 		definingCustomAction = false;
+		class TaskCloner implements Cloner<Task> {
+			public Task clone(Task original) {
+				return new Task(original);
+			}
+		}
+		class StorageCloner implements Cloner<RealStorage<Task>> {
+			public RealStorage<Task> clone(RealStorage<Task> original) {
+				return new RealStorage<>(original);
+			}
+		}
 		try {
 			if (file.exists()) {
 				ArrayList<Task> taskList = Json.readFromFile(new File(fileName));
 				RealStorage<Task> taskSet = new RealStorage<>(taskList);
-				taskStorage = new ActionCapturer<>(taskSet);
+				taskStorage = new ActionCapturer<>(taskSet, new TaskCloner(), new StorageCloner());
 			} else {
-				taskStorage = new ActionCapturer<> (new RealStorage<Task> ());
+				taskStorage = new ActionCapturer<> (new RealStorage<Task>(), new TaskCloner(), new StorageCloner());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -36,10 +46,16 @@ public class Storage implements Closeable, Iterable<Task> {
 	}
 
 	private void finaliseActions() {
-		if (definingCustomAction) {
-			return;
+		if (!definingCustomAction) {
+			taskStorage.finaliseActions();
 		}
-		taskStorage.finaliseActions();
+		
+		try {
+			writeToFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void beginCustomActionSet() {
@@ -59,35 +75,17 @@ public class Storage implements Closeable, Iterable<Task> {
 	public void add(Task task) {
 		taskStorage.insert(taskStorage.size(), task);
 		finaliseActions();
-		try {
-			writeToFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public void remove(int index) {
 		index--;
 		taskStorage.remove(index);
 		finaliseActions();
-		try {
-			writeToFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public void remove(Task t) {
 		taskStorage.remove(t);
 		finaliseActions();
-		try {
-			writeToFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public void replace(int index, Task task) {
@@ -95,23 +93,11 @@ public class Storage implements Closeable, Iterable<Task> {
 		taskStorage.remove(index);
 		taskStorage.insert(index, task);
 		finaliseActions();
-		try {
-			writeToFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public void clear() {
 		taskStorage.setState(new ArrayList<Task>());
 		finaliseActions();
-		try {
-			writeToFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public Task get(int index) {

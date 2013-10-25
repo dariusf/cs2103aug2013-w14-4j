@@ -14,31 +14,21 @@
     <classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.workbench_3.103.1.v20120906-120042.jar" sourcepath="ECLIPSE_HOME/plugins/org.eclipse.ui.workbench_3.103.1.v20120906-120042.jar"/>
     <classpathentry kind="var" path="ECLIPSE_HOME/plugins/com.ibm.icu_4.4.2.v20110823.jar" sourcepath="ECLIPSE_HOME/plugins/com.ibm.icu_4.4.2.v20110823.jar"/>
     <classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.forms_3.5.200.v20120705-114351.jar" sourcepath="ECLIPSE_HOME/plugins/org.eclipse.ui.forms_3.5.200.v20120705-114351.jar"/>
-    <classpathentry kind="lib" path="lib/google-gson-2.2.4/gson-2.2.4.jar" sourcepath="lib/google-gson-2.2.4/gson-2.2.4-sources.jar">
-        <attributes>
-            <attribute name="javadoc_location" value="jar:platform:/resource/cs2103aug2013-w14-4j/lib/google-gson-2.2.4/gson-2.2.4-javadoc.jar!/"/>
-        </attributes>
-    </classpathentry>
-    <classpathentry kind="lib" path="lib/joda-time-2.3/joda-time-2.3.jar" sourcepath="lib/joda-time-2.3/joda-time-2.3-sources.jar">
-        <attributes>
-            <attribute name="javadoc_location" value="jar:platform:/resource/cs2103aug2013-w14-4j/lib/joda-time-2.3/joda-time-2.3-javadoc.jar!/"/>
-        </attributes>
-    </classpathentry>
+	<classpathentry kind="lib" path="lib/google-gson-2.2.4/gson-2.2.4.jar" sourcepath="lib/google-gson-2.2.4/gson-2.2.4-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/cs2103aug2013-w14-4j/lib/google-gson-2.2.4/gson-2.2.4-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/joda-time-2.3/joda-time-2.3.jar" sourcepath="lib/joda-time-2.3/joda-time-2.3-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/cs2103aug2013-w14-4j/lib/joda-time-2.3/joda-time-2.3-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/natty/antlr-runtime-3.2.jar"/>
 	<classpathentry kind="lib" path="lib/natty/ical4j-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/natty/natty-0.7.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/tween-engine-api-6.3.3/tween-engine-api.jar" sourcepath="lib/tween-engine-api-6.3.3/tween-engine-api-sources.jar"/>
-	<classpathentry kind="lib" path="lib/cloning/cloning-1.9.0.jar" sourcepath="lib/cloning/cloning-1.9.0-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/cs2103aug2013-w14-4j/lib/cloning/cloning-1.9.0-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Matt-Laptop/Dropbox/Eclipse Workspaces/Java Workspace/cs2103aug2013-w14-4j/lib/JNativeHook/JNativeHook.jar"/>
-	<classpathentry kind="lib" path="lib/objenesis/objenesis-2.1.jar" sourcepath="lib/objenesis/objenesis-2.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/cs2103aug2013-w14-4j/lib/objenesis/objenesis-2.1-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="lib/JNativeHook/JNativeHook.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

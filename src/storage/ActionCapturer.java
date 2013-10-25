@@ -3,14 +3,11 @@ package storage;
 import java.util.Iterator;
 import java.util.List;
 
-import logic.Task;
-
-import com.rits.cloning.Cloner;
-
-public class ActionCapturer<E extends Comparable<E>> implements StorageBase<E> {
+public class ActionCapturer<E extends Comparable<E>, T extends StorageBase<E>> implements StorageBase<E> {
 	
-	StorageBase<E> realStorage;
-	Cloner cloner;
+	T realStorage;
+	Cloner<E> itemCloner;
+	Cloner<T> storageCloner;
 	
 	private interface Action {
 		void undo();
@@ -58,10 +55,10 @@ public class ActionCapturer<E extends Comparable<E>> implements StorageBase<E> {
 	}
 	
 	private class StateAction implements Action {
-		StorageBase<E> previousState;
-		StorageBase<E> nextState;
+		T previousState;
+		T nextState;
 		
-		public StateAction(StorageBase<E> previousState, StorageBase<E> nextState) {
+		public StateAction(T previousState, T nextState) {
 			this.previousState = previousState;
 			this.nextState = nextState;
 		}
@@ -110,17 +107,12 @@ public class ActionCapturer<E extends Comparable<E>> implements StorageBase<E> {
 	DoublyLinkedList<Action> actionStack;
 	ActionSet currentActionSet;
 	
-	public ActionCapturer(StorageBase<E> realStorage) throws Exception {
-		if (realStorage instanceof ActionCapturer) {
-			throw new Exception("Cannot instantiate ActionCapturer with an ActionCapturer!");
-		}
+	public ActionCapturer(T realStorage, Cloner<E> itemCloner, Cloner<T> storageCloner) {
 		this.realStorage = realStorage;
 		this.actionStack = new DoublyLinkedList<>();
 		this.currentActionSet = new ActionSet();
-		this.cloner = new Cloner();
-		
-		cloner.setCloneAnonymousParent(false);
-		cloner.setNullTransient(true);
+		this.itemCloner = itemCloner;
+		this.storageCloner = storageCloner;
 	}
 
 	@Override
@@ -132,7 +124,7 @@ public class ActionCapturer<E extends Comparable<E>> implements StorageBase<E> {
 
 	@Override
 	public void remove(int index) {
-		E removedItem = cloner.deepClone(realStorage.get(index));
+		E removedItem = itemCloner.clone(realStorage.get(index));
 		RemoveAction thisAction = new RemoveAction(index, removedItem);
 		realStorage.remove(index);
 		currentActionSet.addAction(thisAction);
@@ -140,36 +132,34 @@ public class ActionCapturer<E extends Comparable<E>> implements StorageBase<E> {
 
 	@Override
 	public void remove(E item) {
-		E removedItem = (E) new Task((Task) item);
+		// TODO make sure to catch when the item does not exist
 		int index = realStorage.getIndex(item);
-		RemoveAction thisAction = new RemoveAction(index, removedItem);
+		RemoveAction thisAction = new RemoveAction(index, item);
 		realStorage.remove(item);
 		currentActionSet.addAction(thisAction);
 	}
 
 	@Override
 	public void setState(List<E> items) {
-		StorageBase<E> previousState = cloner.shallowClone(realStorage);
+		T previousState = storageCloner.clone(realStorage);
 		realStorage.setState(items);
-		StorageBase<E> nextState = cloner.shallowClone(realStorage);
+		T nextState = storageCloner.clone(realStorage);
 		StateAction thisAction = new StateAction(previousState, nextState);
 		currentActionSet.addAction(thisAction);
 	}
 	
 	@Override
 	public void sort () {
-		StorageBase<E> previousState = cloner.shallowClone(realStorage);
+		T previousState = storageCloner.clone(realStorage);
 		realStorage.sort();
-		StorageBase<E> nextState = cloner.shallowClone(realStorage);
+		T nextState = storageCloner.clone(realStorage);
 		StateAction thisAction = new StateAction(previousState, nextState);
 		currentActionSet.addAction(thisAction);
 	}
 	
 	@Override
 	public E get(int index) {
-		Task task = new Task((Task) realStorage.get(index)) ;
-		E e = (E) task;
-		return e;
+		return itemCloner.clone(realStorage.get(index));
 	}
 	
 	@Override
