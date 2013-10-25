@@ -165,7 +165,8 @@ public class ActionCapturer<E extends Comparable<E>> implements StorageBase<E> {
 	
 	@Override
 	public E get(int index) {
-		return cloner.deepClone(realStorage.get(index));
+		E cloned = cloner.deepClone(realStorage.get(index));
+		return cloned;
 	}
 	
 	@Override
