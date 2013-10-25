@@ -417,10 +417,10 @@ public class Parser {
 				command.setDisplayMode(DisplayMode.DATE);
 				command.setDisplayDateTime(((DateToken) currentToken).toDateTime());
 			} else {
-				command.setDisplayMode(DisplayMode.ALL);
+				command.setDisplayMode(DisplayMode.TODO);
 			}
 		} else {
-			command.setDisplayMode(DisplayMode.ALL);
+			command.setDisplayMode(DisplayMode.TODO);
 		}
 		
 		return command;

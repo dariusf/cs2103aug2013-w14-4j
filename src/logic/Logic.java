@@ -25,6 +25,7 @@ public class Logic {
 
 	public Logic() throws IOException {
 		storage = new Storage();
+		this.executeCommand("display");
 	}
 
 	public ActiveFeedback activeFeedback(String userInput) {
@@ -227,7 +228,7 @@ public class Logic {
 		return output;
 	}
 
-	public ArrayList<Task> getTaskToDisplay(DisplayMode displayMode) {
+	public ArrayList<Task> getTasksToDisplay(DisplayMode displayMode) {
 		Command displayCommand = new Command(CommandType.DISPLAY);
 		displayCommand.setDisplayMode(displayMode);
 		displayTasks(displayCommand);
@@ -251,6 +252,8 @@ public class Logic {
 			return task.isOnDate(displayDate);
 		case ALL:
 			return true;
+		case TODO:
+			return !task.isDone();
 		case TIMED:
 			return task.isTimedTask();
 		case DEADLINE:
@@ -260,9 +263,8 @@ public class Logic {
 		case UNTIMED:
 			return task.isUntimedTask();
 		case OVERDUE:
-			return task.isOverdue();
 		default:
-			return true;
+			return !task.isDone();
 		}
 	}
 

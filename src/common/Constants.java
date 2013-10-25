@@ -7,7 +7,7 @@ public class Constants {
 	public static final String APP_NAME = "Basket";
 
 	public static String WELCOME_MSG = "Welcome to Basket! \nType 'help' if you are unsure of what to do.";
-	public static String WELCOME_PAGE_DISPLAY = "display today";
+	public static String WELCOME_PAGE_DISPLAY = "display";
 
 	public static final String MSG_INVALID_FORMAT = "invalid command format: %1$s";
 	public static final String MSG_ADDED_LINE = "added to %1$s: \"%2$s\"";
@@ -163,5 +163,6 @@ public class Constants {
 	public static final String MODE_ALL = "All Tasks";
 	public static final String MODE_SEARCH = "Search Result";
 	public static final String MODE_OVERDUE = "Overdue Tasks";
+	public static final String MODE_TODO = "Todo";
 	
 }
