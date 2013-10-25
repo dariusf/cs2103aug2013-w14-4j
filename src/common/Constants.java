@@ -96,11 +96,11 @@ public class Constants {
 			+ "Dates available: today, tomorrow, 13/10\n"
 			+ "4. display <type>: Shows task(s) corresponding to the specified type\n"
 			+ "Types available: untimed, deadline, timed, floating, overdue, done(not implemented yet)";
-	public static final String HELP_HELP = "Display Help:\n"
-			+ "Displays help for specific command. Includes the description of the command as well as examples.\n\n"
+	public static final String HELP_HELP = "Help:\n"
+			+ "Displays help for a specific command. Includes the description of the command as well as examples.\n\n"
 			+ "Command format: \n"
-			+ "help: Provides a description of every command\n"
-			+ "help add: Provides a description of the 'add' command and some example usage";
+			+ "help: Provides a brief description of each command\n"
+			+ "help add: Provides a detailed description of the 'add' command and some sample usages";
 	public static final String HELP_SORT = "Sort Tasks:\n"
 			+ "Sorts all the tasks in the database based on the dates of the tasks, with the earliest one listed first.\n\n"
 			+ "Command format: \n" + "sort: Sorts the database";

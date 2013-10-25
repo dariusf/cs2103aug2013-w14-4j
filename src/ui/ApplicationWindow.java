@@ -43,7 +43,7 @@ public class ApplicationWindow {
 			.getLogger(ApplicationWindow.class.getName());
 	static Shell shell; // accessed by task composite
 	public Text input;
-	public Text displayFeedback;
+	public StyledText displayFeedback;
 	public static Logic logic;
 	public Composite displayTask;
 	public StyledText displayPageNumber;
@@ -180,7 +180,8 @@ public class ApplicationWindow {
 
 		defineTaskCompositeHeight();
 
-		displayFeedback = new Text(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		displayFeedback = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		displayFeedback.setEnabled(false);
 		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
 		displayFeedback.setBounds(35, 558, 412, 40);
 
