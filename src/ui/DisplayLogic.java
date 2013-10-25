@@ -54,28 +54,28 @@ public class DisplayLogic {
 	}
 	
 	private void setLogic(Logic logic) {
-		assert (this.logic != null);
+		assert (logic != null);
 		this.logic = logic;
 	}
 
 	protected void setDisplayMode(DisplayMode displayMode) {
-		assert (this.displayMode != null);
+		assert (displayMode != null);
 		this.displayMode = displayMode;
 	}
 	
 	private void setDisplayTask(Composite displayTask) {
-		assert (this.displayTask != null);
+		assert (displayTask != null);
 		this.displayTask = displayTask;
 	}
 
 	protected void setDisplayDateTime(
 			org.joda.time.DateTime currentDisplayDateTime) {
-		assert (this.currentDisplayDateTime != null);
+		assert (currentDisplayDateTime != null);
 		this.currentDisplayDateTime = currentDisplayDateTime;
 	}
 
 	protected void setPageNumber(int pageNumber) {
-		assert (this.pageNumber > 0);
+		assert (pageNumber > 0);
 		this.pageNumber = pageNumber;
 	}
 
