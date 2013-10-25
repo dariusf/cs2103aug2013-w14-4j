@@ -1,19 +1,14 @@
 package ui;
 
-import java.io.Console;
 import java.util.ArrayList;
-
 import org.eclipse.swt.widgets.Composite;
 import org.joda.time.DateTime;
-
-import com.joestelmach.natty.generated.DateParser_NumericRules.int_00_to_23_optional_prefix_return;
-
 import common.Constants;
 import common.DisplayMode;
-
 import logic.Feedback;
 import logic.Logic;
 import logic.Task;
+import org.joda.time.DateTime;
 
 public class DisplayLogic {
 
@@ -23,7 +18,7 @@ public class DisplayLogic {
 	private int pageNumber;
 	private DisplayStateHistory displayStateHistory;
 
-	private org.joda.time.DateTime currentDisplayDateTime = new org.joda.time.DateTime();
+	private DateTime currentDisplayDateTime = new DateTime();
 
 	private int noOfTasksToday = 0;
 	private int noOfTasksRemaining = 0;
@@ -33,159 +28,109 @@ public class DisplayLogic {
 	private int taskCompositeIncrement = 0;
 	private int taskCompositeHeightForThreeLines = 0;
 
-	private Composite[] taskComposites = null;
+	private TaskComposite[] taskComposites = null;
 
-	public DisplayLogic(Logic logic, DisplayMode displayMode,
-			Composite displayTask, int pageNumber) {
+	// A list of globol indices of tasks that should be highlighted on next display draw
+	private ArrayList<Integer> highlightedTasks = new ArrayList<Integer>();
+
+	public DisplayLogic(Logic logic, DisplayMode displayMode, Composite displayTask, int pageNumber) {
 		setLogic(logic);
 		setDisplayMode(displayMode);
 		setDisplayTask(displayTask);
 		setPageNumber(pageNumber);
 		this.displayStateHistory = new DisplayStateHistory();
 	}
+	
+	/**
+	 * Major functions
+	 */
 
-	protected void setTaskCompositeHeight(int height) {
-		assert (taskCompositeHeight >= 0);
-		taskCompositeHeight = height;
-	}
+	protected void displayTasks() {
+		if (pageNumber > numberOfTasksOnEachPage.size()) {
+			pageNumber = numberOfTasksOnEachPage.size();
+		}
+		if (pageNumber <= 0) {
+			pageNumber = 1;
+		}
 
-	protected void setTaskCompositeIncrement(int increment) {
-		assert (taskCompositeIncrement >= 0);
-		taskCompositeIncrement = increment;
-	}
+		int startingIndex = 0;
+		for (int i = 0; i < pageNumber - 1; i++) {
+			startingIndex += numberOfTasksOnEachPage.get(i);
+		}
 
-	protected void setTaskCompositeHeightForThreeLines(int height) {
-		assert (taskCompositeHeightForThreeLines >= 0);
-		taskCompositeHeightForThreeLines = height;
+		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
+
+		taskComposites = new TaskComposite[numberOfTasksOnEachPage.get(pageNumber - 1)];
+
+		for (int i = 0; i < taskComposites.length; i++) {
+			taskComposites[i] = new TaskComposite(displayTask, taskList.get(startingIndex + i), startingIndex + i + 1);
+		}
+
+		displayTask.pack();
+
+		// Display highlighted tasks on composite creation
+		highlightTasks(true);
 	}
 	
-	private void setLogic(Logic logic) {
-		assert (logic != null);
-		this.logic = logic;
-	}
-
-	protected void setDisplayMode(DisplayMode displayMode) {
-		assert (displayMode != null);
-		this.displayMode = displayMode;
+	protected void processFeedback(Feedback feedback, HelpDialog helpDialog) {
+		switch (feedback.getCommand()) {
+		case ADD:
+			this.setDisplayMode(DisplayMode.TODO);
+			this.setPageNumber(Integer.MAX_VALUE);
+			displayStateHistory.addDisplayState(DisplayMode.ALL, Integer.MAX_VALUE);
+			break;
+		case EDIT:
+		case DELETE:
+		case DONE:
+		case FINALISE:
+			if (!feedback.isErrorMessage()) {
+				this.setPageNumber(getPageOfTask(feedback.getTaskIndex()));
+			}
+			displayStateHistory.addDisplayState(this.getDisplayMode(),
+					this.getPageNumber());
+			break;
+		case DISPLAY:
+			this.setDisplayMode(feedback.getDisplayMode());
+			if (this.getDisplayMode() == DisplayMode.DATE) {
+				this.setDisplayDateTime(feedback.getDisplayDate());
+			}
+			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
+			displayStateHistory.addDisplayState(this.getDisplayMode(),
+					this.getPageNumber());
+			break;
+		case SEARCH:
+			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
+			this.setDisplayMode(DisplayMode.SEARCH);
+			break;
+		case GOTO:
+			this.setPageNumber(feedback.getGotoPage());
+			break;
+		case SORT:
+		case CLEAR:
+			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
+			this.setDisplayMode(DisplayMode.TODO);
+			displayStateHistory.addDisplayState(this.getDisplayMode(),
+					this.getPageNumber());
+			break;
+		case UNDO:
+			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
+			this.setPageNumber(displayStateHistory.getCurrentPageNumber());
+			displayStateHistory.undo();
+			break;
+		case REDO:
+			displayStateHistory.redo();
+			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
+			this.setPageNumber(displayStateHistory.getCurrentPageNumber());
+			break;
+		case HELP:
+			helpDialog.open(feedback);
+		case EXIT:
+		case INVALID:
+		default:
+			break;
+		}
 	}
 	
-	private void setDisplayTask(Composite displayTask) {
-		assert (displayTask != null);
-		this.displayTask = displayTask;
-	}
-
-	protected void setDisplayDateTime(
-			org.joda.time.DateTime currentDisplayDateTime) {
-		assert (currentDisplayDateTime != null);
-		this.currentDisplayDateTime = currentDisplayDateTime;
-	}
-
-	protected void setPageNumber(int pageNumber) {
-		assert (pageNumber > 0);
-		this.pageNumber = pageNumber;
-	}
-
-	protected int getPageNumber() {
-		assert (pageNumber > 0);
-		return pageNumber;
-	}
-
-	protected DisplayMode getDisplayMode() {
-		return displayMode;
-	}
-
-	protected int getNumberOfRemainingTasks() {
-		noOfTasksRemaining = logic.getNumberOfRemainingTasks();
-		assert (noOfTasksRemaining >= 0);
-		return noOfTasksRemaining;
-	}
-
-	protected int getNumberOfTasksToday() {
-		noOfTasksToday = logic.getNumberOfTasksToday();
-		assert (noOfTasksToday >= 0);
-		return noOfTasksToday;
-	}
-
-	public String getDisplayWindowTitle() {
-		return determineTitle();
-	}
-
-	protected ArrayList<Integer> getNumberOfTasksForEachPage() {
-		determineNumberOfTasksForEachPage(displayMode);
-		return numberOfTasksOnEachPage;
-	}
-
-	public int getPage(int index) {
-		int page = 1;
-		int count = 0;
-		for (int i = 0; i < numberOfTasksOnEachPage.size(); i++) {
-			count += numberOfTasksOnEachPage.get(i);
-			if (index <= count) {
-				return page;
-			} else {
-				page++;
-			}
-		}
-		return page;
-	}
-	
-	public Composite getCompositeByIndex (int index) {
-		assert getPageNumber() == getPage(index) : "Cannot get composite of task that isn't currently displayed";
-		int tasksOnThisPage = numberOfTasksOnEachPage.get(getPageNumber());
-		// get index of first task on this page
-		int indexOfFirstTask = 1;
-		for (int i=0; i<getPageNumber()-1; i++) {
-			indexOfFirstTask += numberOfTasksOnEachPage.get(i);
-		}
-		return taskComposites[index - indexOfFirstTask];
-	}
-
-	private void determineNumberOfTasksForEachPage(DisplayMode displayMode) {
-		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
-		int numberOfTasks = taskList.size();
-		int[] heights = new int[numberOfTasks];
-		int index = 0;
-		for (Task task : taskList) {
-			heights[index] = determineTaskHeight(task);
-			index++;
-		}
-
-
-		numberOfTasksOnEachPage = new ArrayList<>();
-		int currentCountOfTasks = 0;
-		int currentHeight = 0;
-		for (int i = 0; i < numberOfTasks; i++) {
-			if (currentHeight + heights[i] > 450) {
-				numberOfTasksOnEachPage.add(currentCountOfTasks);
-				currentCountOfTasks = 1;
-				currentHeight = heights[i];
-			} else {
-				currentCountOfTasks++;
-				currentHeight += heights[i];
-			}
-		}
-		numberOfTasksOnEachPage.add(currentCountOfTasks);
-		
-	}
-
-	private int determineTaskHeight(Task task) {
-		if (!task.isFloatingTask()) {
-			return taskCompositeHeight;
-		} else {
-			int numberOfSlots = task.getPossibleTime().size();
-			boolean hasTags = task.getTags().size() > 0;
-			int numberOfLines = numberOfSlots;
-			if (hasTags) {
-				numberOfLines++;
-			}
-			if (numberOfLines == 3) {
-				return taskCompositeHeightForThreeLines;
-			} else {
-				return (numberOfLines - 3) * taskCompositeIncrement
-						+ taskCompositeHeightForThreeLines;
-			}
-		}
-	}
 
 	private String determineTitle() {
 		switch (displayMode) {
@@ -216,89 +161,181 @@ public class DisplayLogic {
 		}
 	}
 	
-	protected void displayTasks() {
-		if (pageNumber > numberOfTasksOnEachPage.size()) {
-			pageNumber = numberOfTasksOnEachPage.size();
-		}
-		if (pageNumber <= 0) {
-			pageNumber = 1;
-		}
+	/**
+	 * Everything related to composites and pages
+	 */
+	
+	public boolean isTaskDisplayedCurrently(int index) {
+		return getPageNumber() == getPageOfTask(index);
+	}
 
-		int startingIndex = 0;
-		for (int i = 0; i < pageNumber - 1; i++) {
-			startingIndex += numberOfTasksOnEachPage.get(i);
+	public TaskComposite getCompositeLocal (int index) {
+		assert index >= 0 && index < taskComposites.length : "Invalid local composite index";
+		return taskComposites[index];
+	}
+	
+	public TaskComposite getCompositeGlobal (int index) {
+		assert isTaskDisplayedCurrently(index) : "Cannot get composite of task that isn't currently displayed";
+		int indexOfFirstTask = 1;
+		for (int i=0; i<getPageNumber()-1; i++) {
+			indexOfFirstTask += numberOfTasksOnEachPage.get(i);
 		}
-		
+		return taskComposites[index - indexOfFirstTask];
+	}
+	
+	public int getPageOfTask(int index) {
+		int page = 1;
+		int count = 0;
+		for (int i = 0; i < numberOfTasksOnEachPage.size(); i++) {
+			count += numberOfTasksOnEachPage.get(i);
+			if (index <= count) {
+				return page;
+			} else {
+				page++;
+			}
+		}
+		return page;
+	}
+	
+	protected ArrayList<Integer> getNumberOfTasksForEachPage() {
+		determineNumberOfTasksForEachPage(displayMode);
+		return numberOfTasksOnEachPage;
+	}
+	
+
+	private void determineNumberOfTasksForEachPage(DisplayMode displayMode) {
 		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
-
-		taskComposites = new Composite[numberOfTasksOnEachPage.get(pageNumber - 1)];
-
-		for (int i = 0; i < taskComposites.length; i++) {
-			taskComposites[i] = new TaskComposite(displayTask,
-					taskList.get(startingIndex + i), startingIndex + i + 1);
+		int numberOfTasks = taskList.size();
+		int[] heights = new int[numberOfTasks];
+		int index = 0;
+		for (Task task : taskList) {
+			heights[index] = determineTaskHeight(task);
+			index++;
 		}
-		
-		displayTask.pack();
+
+		numberOfTasksOnEachPage = new ArrayList<>();
+		int currentCountOfTasks = 0;
+		int currentHeight = 0;
+		for (int i = 0; i < numberOfTasks; i++) {
+			if (currentHeight + heights[i] > 450) {
+				numberOfTasksOnEachPage.add(currentCountOfTasks);
+				currentCountOfTasks = 1;
+				currentHeight = heights[i];
+			} else {
+				currentCountOfTasks++;
+				currentHeight += heights[i];
+			}
+		}
+		numberOfTasksOnEachPage.add(currentCountOfTasks);
+
 	}
 
-	protected void processFeedbackObject(Feedback feedbackObj,
-			HelpDialog helpDialog) {
-		switch (feedbackObj.getCommand()) {
-		case ADD:
-			this.setDisplayMode(DisplayMode.TODO);
-			this.setPageNumber(Integer.MAX_VALUE);
-			displayStateHistory.addDisplayState(DisplayMode.ALL,
-					Integer.MAX_VALUE);
-			break;
-		case EDIT:
-		case DELETE:
-		case DONE:
-		case FINALISE:
-			if (!feedbackObj.isErrorMessage()) {
-				this.setPageNumber(getPage(feedbackObj.getTaskIndex()));
+	private int determineTaskHeight(Task task) {
+		if (!task.isFloatingTask()) {
+			return taskCompositeHeight;
+		} else {
+			int numberOfSlots = task.getPossibleTime().size();
+			boolean hasTags = task.getTags().size() > 0;
+			int numberOfLines = numberOfSlots;
+			if (hasTags) {
+				numberOfLines++;
 			}
-			displayStateHistory.addDisplayState(this.getDisplayMode(),
-					this.getPageNumber());
-			break;
-		case DISPLAY:
-			this.setDisplayMode(feedbackObj.getDisplayMode());
-			if (this.getDisplayMode() == DisplayMode.DATE) {
-				this.setDisplayDateTime(feedbackObj.getDisplayDate());
+			if (numberOfLines == 3) {
+				return taskCompositeHeightForThreeLines;
+			} else {
+				return (numberOfLines - 3) * taskCompositeIncrement
+						+ taskCompositeHeightForThreeLines;
 			}
-			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
-			displayStateHistory.addDisplayState(this.getDisplayMode(),
-					this.getPageNumber());
-			break;
-		case SEARCH:
-			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
-			this.setDisplayMode(DisplayMode.SEARCH);
-			break;
-		case GOTO:
-			this.setPageNumber(feedbackObj.getGotoPage());
-			break;
-		case SORT:
-		case CLEAR:
-			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
-			this.setDisplayMode(DisplayMode.TODO);
-			displayStateHistory.addDisplayState(this.getDisplayMode(),
-					this.getPageNumber());
-			break;
-		case UNDO:
-			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
-			this.setPageNumber(displayStateHistory.getCurrentPageNumber());
-			displayStateHistory.undo();
-			break;
-		case REDO:
-			displayStateHistory.redo();
-			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
-			this.setPageNumber(displayStateHistory.getCurrentPageNumber());
-			break;
-		case HELP:
-			helpDialog.open(feedbackObj);
-		case EXIT:
-		case INVALID:
-		default:
+		}
+	}
+	
+	/**
+	 * Facilities for keeping track of highlighted tasks
+	 */
+	
+	public void clearHighlightedTasks () {
+		highlightTasks(false);
+		highlightedTasks.clear();
+	}
+
+	public void addHighlightedTask(int index) {
+		highlightedTasks.add(index);
+	}
+
+	private void highlightTasks(boolean on) {
+		for (Integer taskIndex : highlightedTasks) {
+			if (isTaskDisplayedCurrently(taskIndex)) {
+				getCompositeGlobal(taskIndex).setHighlighted(on);
+			}
 		}
 	}
 
+	/**
+	 * Getters and setters
+	 */
+	
+	protected void setPageNumber(int pageNumber) {
+		assert (pageNumber > 0);
+		this.pageNumber = pageNumber;
+	}
+
+	protected int getPageNumber() {
+		return pageNumber;
+	}
+
+	protected DisplayMode getDisplayMode() {
+		return displayMode;
+	}
+
+	protected int getNumberOfRemainingTasks() {
+		noOfTasksRemaining = logic.getNumberOfRemainingTasks();
+		assert (noOfTasksRemaining >= 0);
+		return noOfTasksRemaining;
+	}
+
+	protected int getNumberOfTasksToday() {
+		noOfTasksToday = logic.getNumberOfTasksToday();
+		assert (noOfTasksToday >= 0);
+		return noOfTasksToday;
+	}
+
+	public String getDisplayWindowTitle() {
+		return determineTitle();
+	}
+	
+	private void setLogic(Logic logic) {
+		assert (logic != null);
+		this.logic = logic;
+	}
+
+	protected void setDisplayMode(DisplayMode displayMode) {
+		assert (displayMode != null);
+		this.displayMode = displayMode;
+	}
+
+	private void setDisplayTask(Composite displayTask) {
+		assert (displayTask != null);
+		this.displayTask = displayTask;
+	}
+
+	protected void setDisplayDateTime(DateTime currentDisplayDateTime) {
+		assert (currentDisplayDateTime != null);
+		this.currentDisplayDateTime = currentDisplayDateTime;
+	}
+	
+
+	protected void setTaskCompositeHeight(int height) {
+		assert (taskCompositeHeight >= 0);
+		taskCompositeHeight = height;
+	}
+
+	protected void setTaskCompositeIncrement(int increment) {
+		assert (taskCompositeIncrement >= 0);
+		taskCompositeIncrement = increment;
+	}
+
+	protected void setTaskCompositeHeightForThreeLines(int height) {
+		assert (taskCompositeHeightForThreeLines >= 0);
+		taskCompositeHeightForThreeLines = height;
+	}
 }

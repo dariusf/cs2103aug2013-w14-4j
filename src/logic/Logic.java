@@ -69,8 +69,7 @@ public class Logic {
 	}
 
 	private ActiveFeedback activeEditTask(Command command) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ActiveFeedback(command);
 	}
 
 	private ActiveFeedback activeAddTask(Command command) {
