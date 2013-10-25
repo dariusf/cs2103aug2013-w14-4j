@@ -207,6 +207,8 @@ public class DisplayLogic {
 			taskComposites[i] = new TaskComposite(displayTask,
 					taskList.get(startingIndex + i), startingIndex + i + 1);
 		}
+		
+		displayTask.pack();
 	}
 
 	protected void processFeedbackObject(Feedback feedbackObj,
