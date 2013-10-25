@@ -59,17 +59,35 @@ public class Storage implements Closeable, Iterable<Task> {
 	public void add(Task task) {
 		taskStorage.insert(taskStorage.size(), task);
 		finaliseActions();
+		try {
+			writeToFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void remove(int index) {
 		index--;
 		taskStorage.remove(index);
 		finaliseActions();
+		try {
+			writeToFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void remove(Task t) {
 		taskStorage.remove(t);
 		finaliseActions();
+		try {
+			writeToFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void replace(int index, Task task) {
@@ -77,11 +95,23 @@ public class Storage implements Closeable, Iterable<Task> {
 		taskStorage.remove(index);
 		taskStorage.insert(index, task);
 		finaliseActions();
+		try {
+			writeToFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void clear() {
 		taskStorage.setState(new ArrayList<Task>());
 		finaliseActions();
+		try {
+			writeToFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public Task get(int index) {
