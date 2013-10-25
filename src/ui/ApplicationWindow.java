@@ -64,7 +64,7 @@ public class ApplicationWindow {
 	Font titleFont; // accessed by task composite
 	Font descriptionFont; // accessed by task composite
 	public Font pageNumberFont;
-	public DisplayStateHistory displayStateHistory;
+	
 
 	public int defaultPageNumber = 1;
 	public static ApplicationWindow self; // singleton?
@@ -92,7 +92,6 @@ public class ApplicationWindow {
 	 */
 	public void open() {
 		Display display = Display.getDefault();
-		displayStateHistory = new DisplayStateHistory();
 		createContents();
 		shell.open();
 		shell.layout();
@@ -173,7 +172,7 @@ public class ApplicationWindow {
 		displayTask.setLayout(rowLayout);
 		displayTask.setBounds(32, 86, 425, 450);
 		
-		displayLogic = new DisplayLogic(logic, DisplayMode.TODAY, displayTask, defaultPageNumber);		
+		displayLogic = new DisplayLogic(logic, DisplayMode.TODO, displayTask, defaultPageNumber);		
 		
 		defineTaskCompositeHeight();
 		displayTasksOnWindow();
@@ -249,19 +248,6 @@ public class ApplicationWindow {
 
 	}
 
-	public int getPage(int index) {
-		int page = 1;
-		int count = 0;
-		for (int i = 0; i < numberOfTasksOnEachPage.size(); i++) {
-			count += numberOfTasksOnEachPage.get(i);
-			if (index <= count) {
-				return page;
-			} else {
-				page++;
-			}
-		}
-		return page;
-	}
 
 	public String displayWelcomeMessage() {
 		String welcomeMessage = Constants.WELCOME_MSG;
@@ -506,60 +492,9 @@ public class ApplicationWindow {
 
 		displayFeedback.setText(feedback);
 		input.setText("");
-
-		switch (feedbackObj.getCommand()) {
-		case ADD:
-			displayLogic.setDisplayMode(DisplayMode.ALL);
-			displayLogic.setPageNumber(Integer.MAX_VALUE);
-			displayStateHistory.addDisplayState(DisplayMode.ALL, Integer.MAX_VALUE);
-			break;
-		case EDIT:
-		case DELETE:
-		case DONE:
-		case FINALISE:
-			if (!feedbackObj.isErrorMessage()) {
-				displayLogic.setPageNumber(getPage(feedbackObj.getTaskIndex()));
-			}
-			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
-			break;
-		case DISPLAY:
-			displayLogic.setDisplayMode(feedbackObj.getDisplayMode());
-			if (displayLogic.getDisplayMode() == DisplayMode.DATE) {
-				displayLogic.setDisplayDateTime(feedbackObj.getDisplayDate());
-			}
-			displayLogic.setPageNumber(defaultPageNumber);
-			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
-			break;
-		case SEARCH:
-			displayLogic.setPageNumber(defaultPageNumber);
-			displayLogic.setDisplayMode(DisplayMode.SEARCH);
-			break;
-		case GOTO:
-			displayLogic.setPageNumber(feedbackObj.getGotoPage());
-			break;
-		case SORT:
-		case CLEAR:
-			displayLogic.setPageNumber(defaultPageNumber);
-			displayLogic.setDisplayMode(DisplayMode.ALL);
-			displayStateHistory.addDisplayState(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
-			break;
-		case UNDO:
-			displayLogic.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
-			displayLogic.setPageNumber(displayStateHistory.getCurrentPageNumber());
-			displayStateHistory.undo();
-			break;
-		case REDO:
-			displayStateHistory.redo();
-			displayLogic.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
-			displayLogic.setPageNumber(displayStateHistory.getCurrentPageNumber());
-			break;
-		case HELP:
-			helpDialog.open(feedbackObj);
-		case EXIT:
-		case INVALID:
-		default:
-		}
-
+		
+		displayLogic.processFeedbackObject(feedbackObj, helpDialog);
+		
 		displayTasksOnWindow();
 		displayTitle.setText(displayLogic.getDisplayWindowTitle());
 
