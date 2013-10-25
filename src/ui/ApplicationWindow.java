@@ -516,11 +516,13 @@ public class ApplicationWindow {
 
 		try {
 			GlobalScreen.registerNativeHook();
-		} catch (NativeHookException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			GlobalScreen.getInstance().addNativeKeyListener(new NativeHook());
+		} catch (Exception e) {
+			// I can't actually fix this bug, because it is an OS level problem
+			System.err.println("Unable to initialise global hotkey!" +
+					"Please check your system accessibility settings!" +
+					"Basket will continue without hotkey.");
 		}
-		GlobalScreen.getInstance().addNativeKeyListener(new NativeHook());
 	}
 
 	public void executeUserInput(String userInput) {
