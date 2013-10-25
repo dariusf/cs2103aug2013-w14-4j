@@ -35,6 +35,7 @@ public class TaskComposite extends Composite {
 		RowData taskDescriptionLayoutData = new RowData(330, SWT.DEFAULT);
 
 		taskIndex = new StyledText(this, SWT.WRAP | SWT.READ_ONLY);
+		taskIndex.setEnabled(false);
 		taskIndex.setText(String.valueOf(index));
 		taskIndex.setFont(ApplicationWindow.self.indexFont);
 		taskIndex.setForeground(new Color(ApplicationWindow.self.shell.getDisplay(), 0x99, 0, 0));
@@ -99,11 +100,11 @@ public class TaskComposite extends Composite {
 		return taskName.getText();
 	}
 
-	public void setDescriptionName(String name) {
+	public void setDescription(String name) {
 		taskDescription.setText(name);
 	}
 
-	public String getDescriptionName(String name) {
+	public String getDescription(String name) {
 		return taskDescription.getText();
 	}
 	
