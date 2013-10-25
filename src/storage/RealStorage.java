@@ -14,14 +14,18 @@ import java.util.List;
 
 public class RealStorage<E extends Comparable<E>> implements StorageBase<E>{
 	
-	ArrayList<E> items;
+	private ArrayList<E> items;
 
 	public RealStorage () {
-		items = new ArrayList<>();
+		this.items = new ArrayList<>();
 	}
 	
 	public RealStorage (List<E> items) {
 		this.items = new ArrayList<>(items);
+	}
+	
+	public RealStorage (RealStorage<E> original) {
+		this.items = new ArrayList<>(original.items);
 	}
 
 	@Override
