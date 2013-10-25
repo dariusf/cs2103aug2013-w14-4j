@@ -2,6 +2,7 @@ package ui;
 
 import java.util.ArrayList;
 import org.eclipse.swt.widgets.Composite;
+import org.joda.time.DateTime;
 import common.Constants;
 import common.DisplayMode;
 import logic.Feedback;
@@ -57,7 +58,7 @@ public class DisplayLogic {
 			startingIndex += numberOfTasksOnEachPage.get(i);
 		}
 
-		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
+		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
 
 		taskComposites = new TaskComposite[numberOfTasksOnEachPage.get(pageNumber - 1)];
 
@@ -203,7 +204,7 @@ public class DisplayLogic {
 	
 
 	private void determineNumberOfTasksForEachPage(DisplayMode displayMode) {
-		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode);
+		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
 		int numberOfTasks = taskList.size();
 		int[] heights = new int[numberOfTasks];
 		int index = 0;
@@ -302,7 +303,6 @@ public class DisplayLogic {
 		return determineTitle();
 	}
 	
-
 	private void setLogic(Logic logic) {
 		assert (logic != null);
 		this.logic = logic;
