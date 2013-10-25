@@ -1,7 +1,6 @@
 package ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.eclipse.swt.widgets.Composite;
 
@@ -32,35 +31,51 @@ public class DisplayLogic {
 
 	public DisplayLogic(Logic logic, DisplayMode displayMode,
 			Composite displayTask, int pageNumber) {
-		this.logic = logic;
-		this.displayMode = displayMode;
-		this.displayTask = displayTask;
-		this.pageNumber = pageNumber;
+		setLogic(logic);
+		setDisplayMode(displayMode);
+		setDisplayTask(displayTask);
+		setPageNumber(pageNumber);
 		this.displayStateHistory = new DisplayStateHistory();
 	}
 
 	protected void setTaskCompositeHeight(int height) {
+		assert (taskCompositeHeight >= 0);
 		taskCompositeHeight = height;
 	}
 
 	protected void setTaskCompositeIncrement(int increment) {
+		assert (taskCompositeIncrement >= 0);
 		taskCompositeIncrement = increment;
 	}
 
 	protected void setTaskCompositeHeightForThreeLines(int height) {
+		assert (taskCompositeHeightForThreeLines >= 0);
 		taskCompositeHeightForThreeLines = height;
+	}
+	
+	private void setLogic(Logic logic) {
+		assert (this.logic != null);
+		this.logic = logic;
 	}
 
 	protected void setDisplayMode(DisplayMode displayMode) {
+		assert (this.displayMode != null);
 		this.displayMode = displayMode;
+	}
+	
+	private void setDisplayTask(Composite displayTask) {
+		assert (this.displayTask != null);
+		this.displayTask = displayTask;
 	}
 
 	protected void setDisplayDateTime(
 			org.joda.time.DateTime currentDisplayDateTime) {
+		assert (this.currentDisplayDateTime != null);
 		this.currentDisplayDateTime = currentDisplayDateTime;
 	}
 
 	protected void setPageNumber(int pageNumber) {
+		assert (this.pageNumber > 0);
 		this.pageNumber = pageNumber;
 	}
 
@@ -70,17 +85,18 @@ public class DisplayLogic {
 	}
 
 	protected DisplayMode getDisplayMode() {
-		// TODO: add in conditions to ensure that it is not null.
 		return displayMode;
 	}
 
 	protected int getNumberOfRemainingTasks() {
 		noOfTasksRemaining = logic.getNumberOfRemainingTasks();
+		assert (noOfTasksRemaining >= 0);
 		return noOfTasksRemaining;
 	}
 
 	protected int getNumberOfTasksToday() {
 		noOfTasksToday = logic.getNumberOfTasksToday();
+		assert (noOfTasksToday >= 0);
 		return noOfTasksToday;
 	}
 
@@ -116,7 +132,7 @@ public class DisplayLogic {
 			heights[index] = determineTaskHeight(task);
 			index++;
 		}
-		System.out.println(Arrays.toString(heights));
+//		System.out.println(Arrays.toString(heights));
 
 		numberOfTasksOnEachPage = new ArrayList<>();
 		int currentCountOfTasks = 0;
@@ -132,7 +148,7 @@ public class DisplayLogic {
 			}
 		}
 		numberOfTasksOnEachPage.add(currentCountOfTasks);
-		System.out.println(numberOfTasksOnEachPage);
+//		System.out.println(numberOfTasksOnEachPage);
 	}
 
 	private int determineTaskHeight(Task task) {
@@ -177,8 +193,6 @@ public class DisplayLogic {
 		case TODO:
 			return Constants.MODE_TODO;
 		case DATE:
-			// TODO: ensure that currentDisplayDateTime is set. otherwise will
-			// be defaulted to today.
 			return Constants.dateOnlyFormat.print(currentDisplayDateTime);
 		default:
 			return "Congrats! You have managed to break our application!";
