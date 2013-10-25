@@ -455,7 +455,7 @@ public class ApplicationWindow {
 			@Override
 			public void nativeKeyPressed(NativeKeyEvent e) {
 				if (e.getModifiers() == (NativeInputEvent.ALT_MASK + NativeInputEvent.CTRL_MASK)
-						&& e.getKeyCode() == NativeKeyEvent.VK_T) {
+						&& e.getKeyCode() == NativeKeyEvent.VK_Z) {
 					Display.getDefault().asyncExec(new UiUpdater());
 				}
 			}
