@@ -1,4 +1,50 @@
 
-add haha
-add haha from 10pm to 11pm
-add hahaha from 10pm to 11pm or 11pm to 12pm
+undo
+clear
+add new task 1
+add new task 2 from 10pm to 11pm 
+add new task 3 by 12pm
+add new task 4 by 26/10
+edit 4 editing task 4
+add new task 5 10am 10/11 or 11pm 09/11
+add new task 6 10pm or 11pm or 12pm tomorrow
+add new task 7 
+goto 1
+goto 2
+add new task 8 by 20/10 2359
+add new task 9 on 31/10 1100
+add new task 10 on 1 nov or 2 nov
+edit 7 by 10am
+edit 7 from 2pm to 3pm
+add new task 11 from 12pm to 3pm #yay
+add new task 12 #homework
+edit new task 11 at 1pm or 3pm
+add new task 13 #homework #yay
+delete 10
+undo
+undo
+redo
+finalise 11 2
+help
+search #homework
+search #yay
+search editing
+sort 
+undo
+redo
+done 2
+done 10
+clear done
+display today
+display tomorrow
+display 
+display all 
+display 13 oct
+display untimed
+display timed
+display deadline
+display floating
+display overdue
+done 7
+display done
+exit
