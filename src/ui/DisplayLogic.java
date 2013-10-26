@@ -1,7 +1,11 @@
 package ui;
 
 import java.util.ArrayList;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.joda.time.DateTime;
 import common.Constants;
 import common.DisplayMode;
@@ -14,73 +18,108 @@ public class DisplayLogic {
 
 	private Logic logic;
 	private DisplayMode displayMode;
-	private Composite displayTask;
+	private Composite taskDisplay;
 	private int pageNumber;
+	
+	
+	
 	private DisplayStateHistory displayStateHistory;
-
 	private DateTime currentDisplayDateTime = new DateTime();
-
 	private int noOfTasksToday = 0;
 	private int noOfTasksRemaining = 0;
 	private ArrayList<Integer> numberOfTasksOnEachPage;
-
 	private int taskCompositeHeight = 0;
 	private int taskCompositeIncrement = 0;
 	private int taskCompositeHeightForThreeLines = 0;
-
 	private TaskComposite[] taskComposites = null;
-
 	// A list of globol indices of tasks that should be highlighted on next display draw
 	private ArrayList<Integer> highlightedTasks = new ArrayList<Integer>();
+	
+	private boolean recreateTaskComposites = false;
 
-	public DisplayLogic(Logic logic, DisplayMode displayMode, Composite displayTask, int pageNumber) {
+	public DisplayLogic(Logic logic, DisplayMode displayMode, int pageNumber) {
 		setLogic(logic);
 		setDisplayMode(displayMode);
-		setDisplayTask(displayTask);
+		taskDisplay = new Composite(ApplicationWindow.shell, SWT.NONE);
+
+		determineNumberOfTasksForEachPage(displayMode);
 		setPageNumber(pageNumber);
+		
 		this.displayStateHistory = new DisplayStateHistory();
+	}
+	
+	/**
+	 * Functions relating to the task display
+	 */
+	
+	public void initialiseTaskDisplay() {
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.type = SWT.VERTICAL;
+		rowLayout.pack = true;
+		taskDisplay.setLayout(rowLayout);
+		taskDisplay.setBounds(32, 86, 425, 450);
+	}
+	
+	public void deleteTaskComposites() {
+		for (Control child : taskDisplay.getChildren()) {
+			child.dispose();
+		}
+	}
+	
+	public int getTaskDisplayHeight() {
+		return taskDisplay.getSize().y;
+	}
+	
+	public Composite getTaskDisplay() {
+		return taskDisplay;
 	}
 	
 	/**
 	 * Major functions
 	 */
-
-	protected void displayTasks() {
-		if (pageNumber > numberOfTasksOnEachPage.size()) {
-			pageNumber = numberOfTasksOnEachPage.size();
-		} else if (pageNumber <= 0) {
-			pageNumber = 1;
+	
+	public void refreshTaskDisplay() {
+		if (recreateTaskComposites) {
+			deleteTaskComposites();
+			initialiseTaskDisplay();
 		}
+		displayTasks();
+	}
+
+	public void displayTasks() {
+		
+		determineNumberOfTasksForEachPage(displayMode);
+		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
 
 		int startingIndex = 0;
-		for (int i = 0; i < pageNumber - 1; i++) {
+		for (int i = 0; i<pageNumber-1; ++i) {
 			startingIndex += numberOfTasksOnEachPage.get(i);
-		}
+ 		}
 
 		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
 
 		taskComposites = new TaskComposite[numberOfTasksOnEachPage.get(pageNumber - 1)];
 
 		for (int i = 0; i < taskComposites.length; i++) {
-			taskComposites[i] = new TaskComposite(displayTask, taskList.get(startingIndex + i), startingIndex + i + 1);
+			taskComposites[i] = new TaskComposite(taskDisplay, taskList.get(startingIndex + i), startingIndex + i + 1);
 		}
 
-		displayTask.pack();
+		taskDisplay.pack();
 
 		// Display highlighted tasks on composite creation
 		highlightTasks(true);
 	}
 	
-	protected void createNewPage() {
+	public void createNewPage() {
 		this.pageNumber = numberOfTasksOnEachPage.size()+1;
-		displayTask.pack();
+		taskDisplay.pack();
 	}
 	
-	protected void processFeedback(Feedback feedback, HelpDialog helpDialog) {
+	public void processFeedback(Feedback feedback, HelpDialog helpDialog) {
 		switch (feedback.getCommand()) {
 		case ADD:
 			this.setDisplayMode(DisplayMode.TODO);
-			this.setPageNumber(Integer.MAX_VALUE);
+			goToLastPage();
 			displayStateHistory.addDisplayState(DisplayMode.ALL, Integer.MAX_VALUE);
 			break;
 		case EDIT:
@@ -135,7 +174,6 @@ public class DisplayLogic {
 			break;
 		}
 	}
-	
 
 	private String determineTitle() {
 		switch (displayMode) {
@@ -181,6 +219,7 @@ public class DisplayLogic {
 	
 	public TaskComposite getCompositeGlobal (int index) {
 		assert isTaskDisplayedCurrently(index) : "Cannot get composite of task that isn't currently displayed";
+		assert index > 0 && index <= getTotalNumberOfComposites();
 		int indexOfFirstTask = 1;
 		for (int i=0; i<getPageNumber()-1; i++) {
 			indexOfFirstTask += numberOfTasksOnEachPage.get(i);
@@ -202,12 +241,13 @@ public class DisplayLogic {
 		return page;
 	}
 	
-	protected ArrayList<Integer> getNumberOfTasksForEachPage() {
+	public ArrayList<Integer> getNumberOfTasksPerPage() {
 		determineNumberOfTasksForEachPage(displayMode);
+		// TODO ^ don't have to do that calculation if it hasn't changed
 		return numberOfTasksOnEachPage;
 	}
 	
-	protected int getTotalNumberOfComposites() {
+	public int getTotalNumberOfComposites() {
 		int sum = 0;
 		for(Integer integer : numberOfTasksOnEachPage){
 			sum += integer;
@@ -242,7 +282,7 @@ public class DisplayLogic {
 
 	}
 
-	protected int determineTaskHeight(Task task) {
+	public int determineTaskHeight(Task task) {
 		if (!task.isFloatingTask()) {
 			return taskCompositeHeight;
 		} else {
@@ -271,6 +311,7 @@ public class DisplayLogic {
 	}
 
 	public void addHighlightedTask(int index) {
+		assert index > 0 && index <= getTotalNumberOfComposites();
 		highlightedTasks.add(index);
 	}
 
@@ -286,30 +327,41 @@ public class DisplayLogic {
 	 * Getters and setters
 	 */
 	
-	protected int getNumberOfPages() {
+	public int getNumberOfPages() {
 		return numberOfTasksOnEachPage.size();
 	}
 	
-	protected void setPageNumber(int pageNumber) {
-		assert (pageNumber > 0);
-		this.pageNumber = pageNumber;
+	public void setPageNumber(int pageNumber) {
+		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
+		if (this.pageNumber != pageNumber) {
+			recreateTaskComposites = true;
+			this.pageNumber = pageNumber;//Math.max(1, Math.min(pageNumber, numberOfTasksOnEachPage.size()));;
+		}
+	}
+	
+	public void goToLastPage() {
+		setPageNumber(numberOfTasksOnEachPage.size());
+	}
+	
+	public void goToFirstPage() {
+		setPageNumber(1);
 	}
 
-	protected int getPageNumber() {
+	public int getPageNumber() {
 		return pageNumber;
 	}
 
-	protected DisplayMode getDisplayMode() {
+	public DisplayMode getDisplayMode() {
 		return displayMode;
 	}
 
-	protected int getNumberOfRemainingTasks() {
+	public int getNumberOfRemainingTasks() {
 		noOfTasksRemaining = logic.getNumberOfRemainingTasks();
 		assert (noOfTasksRemaining >= 0);
 		return noOfTasksRemaining;
 	}
 
-	protected int getNumberOfTasksToday() {
+	public int getNumberOfTasksToday() {
 		noOfTasksToday = logic.getNumberOfTasksToday();
 		assert (noOfTasksToday >= 0);
 		return noOfTasksToday;
@@ -324,33 +376,33 @@ public class DisplayLogic {
 		this.logic = logic;
 	}
 
-	protected void setDisplayMode(DisplayMode displayMode) {
+	public void setDisplayMode(DisplayMode displayMode) {
 		assert (displayMode != null);
 		this.displayMode = displayMode;
 	}
 
-	private void setDisplayTask(Composite displayTask) {
-		assert (displayTask != null);
-		this.displayTask = displayTask;
-	}
+//	private void setDisplayTask(Composite displayTask) {
+//		assert (displayTask != null);
+//		this.taskDisplay = displayTask;
+//	}
 
-	protected void setDisplayDateTime(DateTime currentDisplayDateTime) {
+	public void setDisplayDateTime(DateTime currentDisplayDateTime) {
 		assert (currentDisplayDateTime != null);
 		this.currentDisplayDateTime = currentDisplayDateTime;
 	}
 	
 
-	protected void setTaskCompositeHeight(int height) {
+	public void setTaskCompositeHeight(int height) {
 		assert (taskCompositeHeight >= 0);
 		taskCompositeHeight = height;
 	}
 
-	protected void setTaskCompositeIncrement(int increment) {
+	public void setTaskCompositeIncrement(int increment) {
 		assert (taskCompositeIncrement >= 0);
 		taskCompositeIncrement = increment;
 	}
 
-	protected void setTaskCompositeHeightForThreeLines(int height) {
+	public void setTaskCompositeHeightForThreeLines(int height) {
 		assert (taskCompositeHeightForThreeLines >= 0);
 		taskCompositeHeightForThreeLines = height;
 	}

@@ -276,8 +276,6 @@ public class Parser {
 			
 			command.setTaskIndex(whichTask);
 			command.setTimeslotIndex(whichSlot);
-			command.setValue("finaliseIndex", Integer.toString(whichTask));
-			command.setValue("slotIndex", Integer.toString(whichSlot));
 			
 			return command;
 
@@ -378,7 +376,6 @@ public class Parser {
 		command.setIntervals(intervals);
 		command.setTags(tags);
 		command.setTaskIndex(taskIndex);
-		command.setValue("editIndex", Integer.toString(taskIndex));
 
 		return command;
 	}
@@ -389,7 +386,6 @@ public class Parser {
 		if (hasTokensLeft()) {
 			boolean clearDone = getCurrentToken().contents.equalsIgnoreCase("done");
 			command.setClearDone(clearDone);
-			command.setValue("clearDone", Boolean.toString(clearDone));
 		}
 
 		return command;
@@ -437,8 +433,6 @@ public class Parser {
 				commandType = tryFuzzyMatch(getCurrentToken().contents);
 				command.setHelpCommand(commandType);
 			}
-			command.setValue("helpCommand", getCurrentToken().contents);
-
 		}
 
 		return command;
@@ -465,7 +459,6 @@ public class Parser {
 
 			command = new Command(CommandType.SEARCH);
 			command.setSearchString(toSearch.toString().trim());
-			command.setValue(Constants.TASK_ATT_NAME, toSearch.toString().trim());
 		}
 		else if (firstToken instanceof TagToken) {
 			ArrayList<String> tags = new ArrayList<String>();
@@ -522,7 +515,6 @@ public class Parser {
 
 			Command command = new Command(commandType);
 			command.setTaskIndex(index);
-			command.setValue(commandType.toString().toLowerCase() + "Index", Integer.toString(index));
 			return command;
 		}
 		else {
