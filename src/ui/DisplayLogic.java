@@ -48,6 +48,10 @@ public class DisplayLogic {
 		this.displayStateHistory = new DisplayStateHistory();
 	}
 	
+	/**
+	 * Functions relating to the task display
+	 */
+	
 	public void initialiseTaskDisplay() {
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.type = SWT.VERTICAL;
