@@ -750,28 +750,36 @@ public class ApplicationWindow {
 		Interval interval2 = new Interval();
 		interval2.setStartDateTime(startDate2);
 		interval2.setEndDateTime(endDate2);
+		ArrayList<Interval> intervalList = new ArrayList<Interval>();
+		intervalList.add(interval1);
+		intervalList.add(interval2);
+		task1.setType(Constants.TASK_TYPE_FLOATING);
+		task1.setPossibleTime(intervalList);
+		TaskComposite taskComposite2 = new TaskComposite(displayLogic.getTaskDisplay(), task1, 1);
+		int taskComposite2LinesHeight = taskComposite2.getSize().y;
+		displayLogic
+		.setTaskCompositeHeightForTwoLines(taskComposite2LinesHeight);
+		System.out.println(taskComposite2LinesHeight);
+		
 		DateTime startDate3 = new DateTime(2013, 10, 30, 17, 0, 0);
 		DateTime endDate3 = new DateTime(2013, 10, 30, 18, 0, 0);
 		Interval interval3 = new Interval();
 		interval3.setStartDateTime(startDate3);
 		interval3.setEndDateTime(endDate3);
-		ArrayList<Interval> intervalList = new ArrayList<Interval>();
-		intervalList.add(interval1);
-		intervalList.add(interval2);
 		intervalList.add(interval3);
 
 		task1.setType(Constants.TASK_TYPE_FLOATING);
 		task1.setPossibleTime(intervalList);
-		TaskComposite taskComposite2 = new TaskComposite(displayLogic.getTaskDisplay(), task1, 1);
-		int taskComposite3LinesHeight = taskComposite2.getSize().y;
+		TaskComposite taskComposite3 = new TaskComposite(displayLogic.getTaskDisplay(), task1, 1);
+		int taskComposite3LinesHeight = taskComposite3.getSize().y;
 		displayLogic
 		.setTaskCompositeHeightForThreeLines(taskComposite3LinesHeight);
 
 		ArrayList<String> tags = new ArrayList<String>();
 		tags.add("TGIF");
 		task1.setTags(tags);
-		TaskComposite taskComposite3 = new TaskComposite(displayLogic.getTaskDisplay(), task1, 1);
-		int taskCompositeIncrement = taskComposite3.getSize().y
+		TaskComposite taskComposite4 = new TaskComposite(displayLogic.getTaskDisplay(), task1, 1);
+		int taskCompositeIncrement = taskComposite4.getSize().y
 				- taskComposite3LinesHeight;
 		displayLogic.setTaskCompositeIncrement(taskCompositeIncrement);
 
