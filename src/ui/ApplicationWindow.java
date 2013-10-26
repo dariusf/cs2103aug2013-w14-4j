@@ -20,19 +20,12 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.layout.*;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.joda.time.DateTime;
-
-import aurelienribon.tweenengine.BaseTween;
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.equations.Quad;
 
 import common.Constants;
 
@@ -47,7 +40,7 @@ public class ApplicationWindow {
 	public static Logic logic;
 	public StyledText displayPageNumber;
 	public Composite closeButton;
-//	public ArrayList<Integer> numberOfTasksOnEachPage;
+	//	public ArrayList<Integer> numberOfTasksOnEachPage;
 	public StyledText displayTitle;
 	public StyledText displayRemainingTaskCount;
 	public StyledText displayTodayTaskCount;
@@ -210,7 +203,7 @@ public class ApplicationWindow {
 		enableDrag();
 	}
 
-	public void displayTasks() {
+	public void updateTaskDisplay() {
 		displayLogic.refreshTaskDisplay();
 		updateTaskStatistics();
 	}
@@ -229,8 +222,8 @@ public class ApplicationWindow {
 
 		displayTitle.setText(displayLogic.getDisplayWindowTitle());
 	}
-	
-	
+
+
 
 	public String displayWelcomeMessage() {
 		String welcomeMessage = Constants.WELCOME_MSG;
@@ -287,13 +280,13 @@ public class ApplicationWindow {
 				} else if (arg0.keyCode == SWT.PAGE_UP) {
 					displayLogic.setPageNumber(Math.max(
 							displayLogic.getPageNumber() - 1, 1));
-					displayTasks();
+					updateTaskDisplay();
 					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_DOWN) {
 					displayLogic.setPageNumber(Math.min(
 							displayLogic.getPageNumber() + 1,
 							displayLogic.getNumberOfTasksPerPage().size()));
-					displayTasks();
+					updateTaskDisplay();
 					logger.log(Level.INFO, generateLoggingString());
 				}
 			}
@@ -311,249 +304,258 @@ public class ApplicationWindow {
 				switch (executedCommand.getCommandType()) {
 				case DONE:
 				case DELETE:
-					displayLogic.clearHighlightedTasks();
-					displayLogic.addHighlightedTask(taskIndex);
-					displayLogic.setPageNumber(displayLogic
-							.getPageOfTask(taskIndex));
-					displayTasks(); // TODO this needs to not recreate
-											// the whole list on every keypress
+					highlightTaskFeedback(taskIndex);
 					break;
 				case EDIT:
-					displayLogic.clearHighlightedTasks();
-					displayLogic.addHighlightedTask(taskIndex);
-					displayLogic.setPageNumber(displayLogic
-							.getPageOfTask(taskIndex));
-					displayTasks();
-					if (executedCommand.getTimeslotIndex() != -1) {
-						// TODO
-					} else {
-						String finalType = executedCommand.getTaskType();
-						if (!executedCommand.getDescription().isEmpty()) {
-							displayLogic.getCompositeGlobal(taskIndex)
-									.setTaskName(
-											executedCommand.getDescription());
-						}
-
-						StringBuilder descriptionBuilder = new StringBuilder();
-						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
-							descriptionBuilder.append("by "
-									+ Constants.fullDateTimeFormat
-											.print(executedCommand
-													.getDeadline()));
-						} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
-							Interval taskInterval = executedCommand
-									.getIntervals().get(0);
-							descriptionBuilder.append("from "
-									+ Constants.fullDateTimeFormat
-											.print(taskInterval
-													.getStartDateTime())
-									+ " to "
-									+ Constants.fullDateTimeFormat
-											.print(taskInterval
-													.getEndDateTime()));
-						} else if (finalType
-								.equals(Constants.TASK_TYPE_FLOATING)) {
-							descriptionBuilder.append("on ");
-							ArrayList<Interval> possibleIntervals = executedCommand
-									.getIntervals();
-							int index = 1;
-							for (Interval slot : possibleIntervals) {
-								descriptionBuilder.append("(");
-								descriptionBuilder.append(index);
-								descriptionBuilder.append(") ");
-								descriptionBuilder.append(Constants.fullDateTimeFormat
-										.print(slot.getStartDateTime()));
-								descriptionBuilder.append(" to ");
-								descriptionBuilder
-										.append(Constants.fullDateTimeFormat
-												.print(slot.getEndDateTime()));
-								if (index != possibleIntervals.size()) {
-									descriptionBuilder.append("\nor ");
-								}
-								index++;
-							}
-						}
-						ArrayList<String> tags = executedCommand.getTags();
-						if (tags.size() > 0) {
-							if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
-									| finalType
-											.equals(Constants.TASK_TYPE_TIMED)
-									| finalType
-											.equals(Constants.TASK_TYPE_FLOATING)) {
-								descriptionBuilder.append("\n");
-							}
-							for (String tag : tags) {
-								descriptionBuilder.append("#" + tag + " ");
-							}
-						}
-						if (!descriptionBuilder.toString().isEmpty()) {
-							displayLogic.getCompositeGlobal(taskIndex)
-									.setDescription(
-											descriptionBuilder.toString());
-						}
-						displayLogic.getCompositeGlobal(taskIndex).pack();
-					}
+					editTaskFeedback(executedCommand, taskIndex);
 					break;
 				case ADD:
-					if (dummyTaskComposite != null) {
-						dummyTaskComposite.dispose();
-					}
-
-					if (!executedCommand.isEmptyAddCommand()) {
-						displayLogic.clearHighlightedTasks();
-
-						displayLogic.setPageNumber(Integer.MAX_VALUE);
-						displayTasks();
-						Task dummyTask = new Task(executedCommand);
-
-						// Check if the tasks overflow
-						if (displayLogic.getTaskDisplayHeight()
-								+ displayLogic.determineTaskHeight(dummyTask) > 450) {
-
-							displayLogic.deleteTaskComposites();
-							int newLastPage = displayLogic.getNumberOfPages() + 1;
-							displayPageNumber.setText("Page " + newLastPage
-									+ " of " + newLastPage);
-							displayPageNumber.setAlignment(SWT.CENTER);
-						} else {
-							displayLogic.setPageNumber(Integer.MAX_VALUE);
-							displayTasks();
-						}
-
-						dummyTaskComposite = new TaskComposite(displayLogic.getTaskDisplay(),
-								dummyTask, displayLogic
-										.getTotalNumberOfComposites() + 1);
-
-						String finalType = executedCommand.getTaskType();
-						if (!executedCommand.getDescription().isEmpty()) {
-							dummyTaskComposite.setTaskName(executedCommand
-									.getDescription());
-						}
-						StringBuilder descriptionBuilder = new StringBuilder();
-						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
-							descriptionBuilder.append("by "
-									+ Constants.fullDateTimeFormat
-											.print(executedCommand
-													.getDeadline()));
-						} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
-							Interval taskInterval = executedCommand
-									.getIntervals().get(0);
-							descriptionBuilder.append("from "
-									+ Constants.fullDateTimeFormat
-											.print(taskInterval
-													.getStartDateTime())
-									+ " to "
-									+ Constants.fullDateTimeFormat
-											.print(taskInterval
-													.getEndDateTime()));
-						} else if (finalType
-								.equals(Constants.TASK_TYPE_FLOATING)) {
-							descriptionBuilder.append("on ");
-							ArrayList<Interval> possibleIntervals = executedCommand
-									.getIntervals();
-							int index = 1;
-							for (Interval slot : possibleIntervals) {
-								descriptionBuilder.append("(");
-								descriptionBuilder.append(index);
-								descriptionBuilder.append(") ");
-								descriptionBuilder.append(Constants.fullDateTimeFormat
-										.print(slot.getStartDateTime()));
-								descriptionBuilder.append(" to ");
-								descriptionBuilder
-										.append(Constants.fullDateTimeFormat
-												.print(slot.getEndDateTime()));
-								if (index != possibleIntervals.size()) {
-									descriptionBuilder.append("\nor ");
-								}
-								index++;
-							}
-						}
-						ArrayList<String> tags = executedCommand.getTags();
-						if (tags.size() > 0) {
-							if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
-									| finalType
-											.equals(Constants.TASK_TYPE_TIMED)
-									| finalType
-											.equals(Constants.TASK_TYPE_FLOATING)) {
-								descriptionBuilder.append("\n");
-							}
-							for (String tag : tags) {
-								descriptionBuilder.append("#" + tag + " ");
-							}
-						}
-						if (!descriptionBuilder.toString().isEmpty()) {
-							dummyTaskComposite
-									.setDescription(descriptionBuilder
-											.toString());
-						}
-						dummyTaskComposite.pack();
-						displayLogic.getTaskDisplay().pack();
-					} else {
-						displayLogic.clearHighlightedTasks();
-						displayTasks();
-						if (dummyTaskComposite != null) {
-							dummyTaskComposite.dispose();
-						}
-					}
-
-					System.out.println(displayLogic.getTaskDisplayHeight());
-
+					addTaskFeedback(executedCommand);
 					break;
 				case SEARCH:
-					// TODO: This solution is too cheapskate, will think of a better solution
-					if(!executedCommand.getSearchString().isEmpty() || !executedCommand.getTags().isEmpty()){
-						Feedback feedbackObj = logic.executeCommand(userInput);
-						String feedback = feedbackObj.toString();
-						setFeedbackColour(feedbackObj);
-						displayFeedback.setText(feedback);
-						displayLogic.processFeedback(feedbackObj, helpDialog);
-						displayTasks();
-					}
+					searchTaskFeedback(executedCommand);
 					break;
 				default:
-					System.out.println("here");
-					displayLogic.clearHighlightedTasks();
-					displayTasks();
-					if (dummyTaskComposite != null) {
-						dummyTaskComposite.dispose();
-					}
-					System.out
-							.println("Instant feedback not yet implemented for command "
-									+ executedCommand.getCommandType());
+					defaultFeedback();
 					break;
 				}
 			}
 
-			public void performTween() {
-				final int currentPosition = 296;
-				final int offset = 15;
-				final int duration = 20;
-				if (!moving) {
-					moving = true;
-					Tween.to(input, 0, duration)
-							.target(currentPosition - offset).ease(Quad.INOUT)
-							.start(InputAccessor.manager)
-							.setCallback(new TweenCallback() {
-								@Override
-								public void onEvent(int type,
-										BaseTween<?> source) {
-									Tween.to(input, 0, duration * 2)
-											.target(currentPosition + offset)
-											.start(InputAccessor.manager)
-											.setCallback(new TweenCallback() {
-												@Override
-												public void onEvent(int type,
-														BaseTween<?> source) {
-													Tween.to(input, 0, duration)
-															.target(currentPosition)
-															.start(InputAccessor.manager);
-													moving = false;
-												}
-											});
-								}
-							});
+			private void defaultFeedback() {
+				//					System.out.println("here");
+				displayLogic.clearHighlightedTasks();
+				updateTaskDisplay();
+				if (dummyTaskComposite != null) {
+					dummyTaskComposite.dispose();
+				}
+				//					System.out
+				//							.println("Instant feedback not yet implemented for command "
+				//									+ executedCommand.getCommandType());
+			}
+
+			private void searchTaskFeedback(Command executedCommand) {
+				// TODO: This solution is too cheapskate, will think of a better solution
+				if(!executedCommand.getSearchString().isEmpty() || !executedCommand.getTags().isEmpty()){
+					Feedback feedbackObj = logic.executeCommand(userInput);
+					String feedback = feedbackObj.toString();
+					setFeedbackColour(feedbackObj);
+					displayFeedback.setText(feedback);
+					displayLogic.processFeedback(feedbackObj, helpDialog);
+					updateTaskDisplay();
 				}
 			}
+
+			private void addTaskFeedback(Command executedCommand) {
+				if (dummyTaskComposite != null) {
+					dummyTaskComposite.dispose();
+				}
+
+				if (!executedCommand.isEmptyAddCommand()) {
+					displayLogic.clearHighlightedTasks();
+
+					displayLogic.setPageNumber(Integer.MAX_VALUE);
+					updateTaskDisplay();
+					Task dummyTask = new Task(executedCommand);
+
+					// Check if the tasks overflow
+					if (displayLogic.getTaskDisplayHeight()
+							+ displayLogic.determineTaskHeight(dummyTask) > 450) {
+
+						displayLogic.deleteTaskComposites();
+						int newLastPage = displayLogic.getNumberOfPages() + 1;
+						displayPageNumber.setText("Page " + newLastPage
+								+ " of " + newLastPage);
+						displayPageNumber.setAlignment(SWT.CENTER);
+					} else {
+						displayLogic.setPageNumber(Integer.MAX_VALUE);
+						updateTaskDisplay();
+					}
+
+					dummyTaskComposite = new TaskComposite(displayLogic.getTaskDisplay(),
+							dummyTask, displayLogic
+							.getTotalNumberOfComposites() + 1);
+
+					String finalType = executedCommand.getTaskType();
+					if (!executedCommand.getDescription().isEmpty()) {
+						dummyTaskComposite.setTaskName(executedCommand
+								.getDescription());
+					}
+					StringBuilder descriptionBuilder = new StringBuilder();
+					if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
+						descriptionBuilder.append("by "
+								+ Constants.fullDateTimeFormat
+								.print(executedCommand
+										.getDeadline()));
+					} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
+						Interval taskInterval = executedCommand
+								.getIntervals().get(0);
+						descriptionBuilder.append("from "
+								+ Constants.fullDateTimeFormat
+								.print(taskInterval
+										.getStartDateTime())
+										+ " to "
+										+ Constants.fullDateTimeFormat
+										.print(taskInterval
+												.getEndDateTime()));
+					} else if (finalType
+							.equals(Constants.TASK_TYPE_FLOATING)) {
+						descriptionBuilder.append("on ");
+						ArrayList<Interval> possibleIntervals = executedCommand
+								.getIntervals();
+						int index = 1;
+						for (Interval slot : possibleIntervals) {
+							descriptionBuilder.append("(");
+							descriptionBuilder.append(index);
+							descriptionBuilder.append(") ");
+							descriptionBuilder.append(Constants.fullDateTimeFormat
+									.print(slot.getStartDateTime()));
+							descriptionBuilder.append(" to ");
+							descriptionBuilder
+							.append(Constants.fullDateTimeFormat
+									.print(slot.getEndDateTime()));
+							if (index != possibleIntervals.size()) {
+								descriptionBuilder.append("\nor ");
+							}
+							index++;
+						}
+					}
+					ArrayList<String> tags = executedCommand.getTags();
+					if (tags.size() > 0) {
+						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
+								| finalType
+								.equals(Constants.TASK_TYPE_TIMED)
+								| finalType
+								.equals(Constants.TASK_TYPE_FLOATING)) {
+							descriptionBuilder.append("\n");
+						}
+						for (String tag : tags) {
+							descriptionBuilder.append("#" + tag + " ");
+						}
+					}
+					if (!descriptionBuilder.toString().isEmpty()) {
+						dummyTaskComposite
+						.setDescription(descriptionBuilder
+								.toString());
+					}
+					dummyTaskComposite.pack();
+					displayLogic.getTaskDisplay().pack();
+				} else {
+					defaultFeedback();
+				}
+
+				//					System.out.println(displayLogic.getTaskDisplayHeight());
+			}
+
+			private void editTaskFeedback(Command executedCommand, int taskIndex) {
+				highlightTaskFeedback(taskIndex);
+				if (executedCommand.getTimeslotIndex() != -1) {
+					// TODO
+				} else {
+					String finalType = executedCommand.getTaskType();
+					if (!executedCommand.getDescription().isEmpty()) {
+						displayLogic.getCompositeGlobal(taskIndex)
+						.setTaskName(
+								executedCommand.getDescription());
+					}
+
+					StringBuilder descriptionBuilder = new StringBuilder();
+					if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
+						descriptionBuilder.append("by "
+								+ Constants.fullDateTimeFormat
+								.print(executedCommand
+										.getDeadline()));
+					} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
+						Interval taskInterval = executedCommand
+								.getIntervals().get(0);
+						descriptionBuilder.append("from "
+								+ Constants.fullDateTimeFormat
+								.print(taskInterval
+										.getStartDateTime())
+										+ " to "
+										+ Constants.fullDateTimeFormat
+										.print(taskInterval
+												.getEndDateTime()));
+					} else if (finalType
+							.equals(Constants.TASK_TYPE_FLOATING)) {
+						descriptionBuilder.append("on ");
+						ArrayList<Interval> possibleIntervals = executedCommand
+								.getIntervals();
+						int index = 1;
+						for (Interval slot : possibleIntervals) {
+							descriptionBuilder.append("(");
+							descriptionBuilder.append(index);
+							descriptionBuilder.append(") ");
+							descriptionBuilder.append(Constants.fullDateTimeFormat
+									.print(slot.getStartDateTime()));
+							descriptionBuilder.append(" to ");
+							descriptionBuilder
+							.append(Constants.fullDateTimeFormat
+									.print(slot.getEndDateTime()));
+							if (index != possibleIntervals.size()) {
+								descriptionBuilder.append("\nor ");
+							}
+							index++;
+						}
+					}
+					ArrayList<String> tags = executedCommand.getTags();
+					if (tags.size() > 0) {
+						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
+								| finalType
+								.equals(Constants.TASK_TYPE_TIMED)
+								| finalType
+								.equals(Constants.TASK_TYPE_FLOATING)) {
+							descriptionBuilder.append("\n");
+						}
+						for (String tag : tags) {
+							descriptionBuilder.append("#" + tag + " ");
+						}
+					}
+					if (!descriptionBuilder.toString().isEmpty()) {
+						displayLogic.getCompositeGlobal(taskIndex)
+						.setDescription(
+								descriptionBuilder.toString());
+					}
+					displayLogic.getCompositeGlobal(taskIndex).pack();
+				}
+			}
+
+			private void highlightTaskFeedback(int taskIndex) {
+				displayLogic.clearHighlightedTasks();
+				displayLogic.addHighlightedTask(taskIndex);
+				displayLogic.setPageNumber(displayLogic.getPageOfTask(taskIndex));
+				updateTaskDisplay();
+			}
+
+//			public void performTween() {
+//				final int currentPosition = 296;
+//				final int offset = 15;
+//				final int duration = 20;
+//				if (!moving) {
+//					moving = true;
+//					Tween.to(input, 0, duration)
+//					.target(currentPosition - offset).ease(Quad.INOUT)
+//					.start(InputAccessor.manager)
+//					.setCallback(new TweenCallback() {
+//						@Override
+//						public void onEvent(int type,
+//								BaseTween<?> source) {
+//							Tween.to(input, 0, duration * 2)
+//							.target(currentPosition + offset)
+//							.start(InputAccessor.manager)
+//							.setCallback(new TweenCallback() {
+//								@Override
+//								public void onEvent(int type,
+//										BaseTween<?> source) {
+//									Tween.to(input, 0, duration)
+//									.target(currentPosition)
+//									.start(InputAccessor.manager);
+//									moving = false;
+//								}
+//							});
+//						}
+//					});
+//				}
+//			}
 		});
 	}
 
@@ -578,25 +580,25 @@ public class ApplicationWindow {
 	public void defineFont() {
 		boolean isWindows = System.getProperty("os.name").toLowerCase()
 				.indexOf("win") >= 0;
-		if (isWindows) {
-			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33,
-					SWT.NORMAL);
-			pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13,
-					SWT.NORMAL);
-			indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
-			titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
-			descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
-					SWT.NORMAL);
-		} else {
-			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
-					SWT.NORMAL);
-			pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18,
-					SWT.NORMAL);
-			indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
-			titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
-			descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
-					SWT.NORMAL);
-		}
+				if (isWindows) {
+					windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33,
+							SWT.NORMAL);
+					pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13,
+							SWT.NORMAL);
+					indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
+					titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
+					descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
+							SWT.NORMAL);
+				} else {
+					windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
+							SWT.NORMAL);
+					pageNumberFont = new Font(shell.getDisplay(), "Calibri", 18,
+							SWT.NORMAL);
+					indexFont = new Font(shell.getDisplay(), "Calibri", 60, SWT.NORMAL);
+					titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
+					descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
+							SWT.NORMAL);
+				}
 	}
 
 	public void enableDrag() {
@@ -713,7 +715,7 @@ public class ApplicationWindow {
 
 		displayLogic.processFeedback(feedbackObj, helpDialog);
 
-		displayTasks();
+		updateTaskDisplay();
 
 		if (testMode) {
 			logger.log(Level.INFO, generateLoggingString());
@@ -755,7 +757,7 @@ public class ApplicationWindow {
 		TaskComposite taskComposite2 = new TaskComposite(displayLogic.getTaskDisplay(), task1, 1);
 		int taskComposite3LinesHeight = taskComposite2.getSize().y;
 		displayLogic
-				.setTaskCompositeHeightForThreeLines(taskComposite3LinesHeight);
+		.setTaskCompositeHeightForThreeLines(taskComposite3LinesHeight);
 
 		ArrayList<String> tags = new ArrayList<String>();
 		tags.add("TGIF");
