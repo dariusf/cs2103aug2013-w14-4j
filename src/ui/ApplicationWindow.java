@@ -373,9 +373,10 @@ public class ApplicationWindow {
 								descriptionBuilder.append("#" + tag + " ");
 							}
 						}
-						displayLogic.getCompositeGlobal(taskIndex).setDescription(descriptionBuilder.toString());
+						if(!descriptionBuilder.toString().isEmpty()){
+							displayLogic.getCompositeGlobal(taskIndex).setDescription(descriptionBuilder.toString());
+						}
 						displayLogic.getCompositeGlobal(taskIndex).pack();
-					
 					}
 					break;
 				default:
