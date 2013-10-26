@@ -515,7 +515,7 @@ public class ApplicationWindow {
 
 					break;
 				case SEARCH:
-				
+					// TODO: This solution is too cheapskate, will think of a better solution
 					if(!executedCommand.getSearchString().isEmpty() || !executedCommand.getTags().isEmpty()){
 						Feedback feedbackObj = logic.executeCommand(userInput);
 						String feedback = feedbackObj.toString();
