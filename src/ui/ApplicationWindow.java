@@ -301,22 +301,26 @@ public class ApplicationWindow {
 				Command executedCommand = activeFeedback.getCommand();
 				int taskIndex = executedCommand.getTaskIndex();
 				
-				// check validity of indices
-				
-				if (!(taskIndex > 0 && taskIndex <= logic.getNumberOfTasks())) {
-					System.out.println("Invalid index. This should be replaced by kind of UI feedback");
-					return;
-				}
-				
-				// TODO timeslot index has to be checked lower down, inside edit and finalise
-
 				switch (executedCommand.getCommandType()) {
 				case DONE:
 				case DELETE:
-					highlightTaskFeedback(taskIndex);
+					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
+						highlightTaskFeedback(taskIndex);
+					}
+					else {
+						System.out.println("Invalid index. This should be replaced by kind of UI feedback");
+						return;
+					}
 					break;
 				case EDIT:
-					editTaskFeedback(executedCommand, taskIndex);
+					// TODO timeslot index has to be checked lower down, inside edit and finalise
+					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
+						editTaskFeedback(executedCommand, taskIndex);
+					}
+					else {
+						System.out.println("Invalid index. This should be replaced by kind of UI feedback");
+						return;
+					}
 					break;
 				case ADD:
 					addTaskFeedback(executedCommand);
