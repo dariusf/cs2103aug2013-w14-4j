@@ -87,6 +87,7 @@ public class DisplayLogic {
 		case DELETE:
 		case DONE:
 		case FINALISE:
+			highlightedTasks = new ArrayList<>();
 			if (!feedback.isErrorMessage()) {
 				this.setPageNumber(getPageOfTask(feedback.getTaskIndex()));
 			}
