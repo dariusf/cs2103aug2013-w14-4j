@@ -102,6 +102,7 @@ public class TaskComposite extends Composite {
 
 	public void setDescription(String name) {
 		taskDescription.setText(name);
+		taskDescription.pack();
 	}
 
 	public String getDescription(String name) {
