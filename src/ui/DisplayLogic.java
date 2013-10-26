@@ -91,6 +91,9 @@ public class DisplayLogic {
 	public void displayTasks() {
 		
 		determineNumberOfTasksForEachPage(displayMode);
+		if(pageNumber > numberOfTasksOnEachPage.size()) {
+			setPageNumber(numberOfTasksOnEachPage.size());
+		}
 		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
 
 		int startingIndex = 0;
