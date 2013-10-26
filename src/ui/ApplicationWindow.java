@@ -134,7 +134,7 @@ public class ApplicationWindow {
 		shell.setText(Constants.APP_NAME);
 		defineFont();
 
-		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
+		displayPageNumber = new StyledText(shell, SWT.READ_ONLY 
 				| SWT.SINGLE);
 		displayPageNumber.setEnabled(false);
 		displayPageNumber.setSize(105, 25);
@@ -186,7 +186,7 @@ public class ApplicationWindow {
 		enableWindowButton();
 
 		enableNativeHook();
-
+		
 		setWelcomePage();
 		displayFeedback.setText(displayWelcomeMessage());
 
@@ -200,12 +200,17 @@ public class ApplicationWindow {
 				logic.executeCommand("exit");
 			}
 		});
-
+		adjustPageNumberAlignment();
 		enableDrag();
+		
 	}
 
 	public void updateTaskDisplay() {
 		displayLogic.refreshTaskDisplay();
+		updateTaskStatistics();
+	}
+	
+	public void adjustPageNumberAlignment(){
 		updateTaskStatistics();
 	}
 
@@ -213,9 +218,9 @@ public class ApplicationWindow {
 		ArrayList<Integer> numberOfTasksOnEachPage = displayLogic.getNumberOfTasksPerPage();
 		displayPageNumber.setText("Page " + displayLogic.getPageNumber()
 				+ " of " + numberOfTasksOnEachPage.size());
-		displayPageNumber.setLineAlignment(0, 1, SWT.CENTER);
+		displayPageNumber.setAlignment(SWT.CENTER);
 		displayPageNumber.setFont(pageNumberFont);
-
+		
 		displayRemainingTaskCount.setText("Remaining: "
 				+ displayLogic.getNumberOfRemainingTasks());
 		displayTodayTaskCount.setText("Today: "
