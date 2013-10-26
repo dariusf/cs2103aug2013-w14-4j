@@ -261,6 +261,7 @@ public class Logic {
 		case UNTIMED:
 			return task.isUntimedTask();
 		case OVERDUE:
+			return task.isOverdue();
 		default:
 			return !task.isDone();
 		}
