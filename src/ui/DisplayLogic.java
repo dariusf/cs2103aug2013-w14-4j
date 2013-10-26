@@ -119,7 +119,7 @@ public class DisplayLogic {
 		switch (feedback.getCommand()) {
 		case ADD:
 			this.setDisplayMode(DisplayMode.TODO);
-			this.setPageNumber(Integer.MAX_VALUE);
+			goToLastPage();
 			displayStateHistory.addDisplayState(DisplayMode.ALL, Integer.MAX_VALUE);
 			break;
 		case EDIT:
@@ -331,13 +331,19 @@ public class DisplayLogic {
 	}
 	
 	protected void setPageNumber(int pageNumber) {
-//		assert (pageNumber > 0 && pageNumber <= ) : "Invalid page number " + pageNumber;
+		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
 		if (this.pageNumber != pageNumber) {
-			// The only time you will need to recreate composites is if the
-			// page number is changed
 			recreateTaskComposites = true;
-			this.pageNumber = Math.max(1, Math.min(pageNumber, numberOfTasksOnEachPage.size()));;
+			this.pageNumber = pageNumber;//Math.max(1, Math.min(pageNumber, numberOfTasksOnEachPage.size()));;
 		}
+	}
+	
+	public void goToLastPage() {
+		setPageNumber(numberOfTasksOnEachPage.size());
+	}
+	
+	public void goToFirstPage() {
+		setPageNumber(1);
 	}
 
 	protected int getPageNumber() {

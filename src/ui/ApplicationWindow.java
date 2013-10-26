@@ -243,8 +243,7 @@ public class ApplicationWindow {
 			public void keyReleased(KeyEvent arg0) {
 				if (isKeyboardInput(arg0.keyCode)) {
 					userInput = input.getText();
-					ActiveFeedback activeFeedback = logic
-							.activeFeedback(userInput);
+					ActiveFeedback activeFeedback = logic.activeFeedback(userInput);
 					processFeedback(activeFeedback);
 				}
 			}
@@ -353,21 +352,20 @@ public class ApplicationWindow {
 				if (!executedCommand.isEmptyAddCommand()) {
 					displayLogic.clearHighlightedTasks();
 
-					displayLogic.setPageNumber(Integer.MAX_VALUE);
+					displayLogic.goToLastPage();
 					updateTaskDisplay();
+
+					// Check if the tasks overflow if a new task is added
 					Task dummyTask = new Task(executedCommand);
-
-					// Check if the tasks overflow
-					if (displayLogic.getTaskDisplayHeight()
-							+ displayLogic.determineTaskHeight(dummyTask) > 450) {
-
+					boolean willOverflow = displayLogic.getTaskDisplayHeight() + displayLogic.determineTaskHeight(dummyTask) > 450;
+					
+					if (willOverflow) {
 						displayLogic.deleteTaskComposites();
-						int newLastPage = displayLogic.getNumberOfPages() + 1;
-						displayPageNumber.setText("Page " + newLastPage
-								+ " of " + newLastPage);
+						int newLastPageIndex = displayLogic.getNumberOfPages() + 1;
+						displayPageNumber.setText("Page " + newLastPageIndex + " of " + newLastPageIndex);
 						displayPageNumber.setAlignment(SWT.CENTER);
 					} else {
-						displayLogic.setPageNumber(Integer.MAX_VALUE);
+						displayLogic.goToLastPage();
 						updateTaskDisplay();
 					}
 
