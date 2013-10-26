@@ -68,13 +68,23 @@ public class DisplayLogic {
 	/**
 	 * Major functions
 	 */
+	
+	public void refreshTaskDisplay() {
+		deleteTaskComposites();
+		initialiseTaskDisplay();
+		displayTasks();
+	}
 
 	protected void displayTasks() {
-		if (pageNumber > numberOfTasksOnEachPage.size()) {
-			pageNumber = numberOfTasksOnEachPage.size();
-		} else if (pageNumber <= 0) {
-			pageNumber = 1;
-		}
+		
+		determineNumberOfTasksForEachPage(displayMode);
+		
+		assert pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size();
+//		if () {
+//			pageNumber = numberOfTasksOnEachPage.size();
+//		} else if (pageNumber <= 0) {
+//			pageNumber = 1;
+//		}
 
 		int startingIndex = 0;
 		for (int i = 0; i < pageNumber - 1; i++) {
@@ -226,7 +236,7 @@ public class DisplayLogic {
 		return page;
 	}
 	
-	protected ArrayList<Integer> getNumberOfTasksForEachPage() {
+	protected ArrayList<Integer> getNumberOfTasksPerPage() {
 		determineNumberOfTasksForEachPage(displayMode);
 		// TODO ^ don't have to do that calculation if it hasn't changed
 		return numberOfTasksOnEachPage;
@@ -354,10 +364,10 @@ public class DisplayLogic {
 		this.displayMode = displayMode;
 	}
 
-	private void setDisplayTask(Composite displayTask) {
-		assert (displayTask != null);
-		this.taskDisplay = displayTask;
-	}
+//	private void setDisplayTask(Composite displayTask) {
+//		assert (displayTask != null);
+//		this.taskDisplay = displayTask;
+//	}
 
 	protected void setDisplayDateTime(DateTime currentDisplayDateTime) {
 		assert (currentDisplayDateTime != null);
