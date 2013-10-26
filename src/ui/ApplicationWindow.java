@@ -45,10 +45,9 @@ public class ApplicationWindow {
 	public Text input;
 	public StyledText displayFeedback;
 	public static Logic logic;
-//	public Composite displayTask;
 	public StyledText displayPageNumber;
 	public Composite closeButton;
-	public ArrayList<Integer> numberOfTasksOnEachPage;
+//	public ArrayList<Integer> numberOfTasksOnEachPage;
 	public StyledText displayTitle;
 	public StyledText displayRemainingTaskCount;
 	public StyledText displayTodayTaskCount;
@@ -163,7 +162,7 @@ public class ApplicationWindow {
 
 		displayLogic = new DisplayLogic(logic, DisplayMode.TODO,
 				Constants.DEFAULT_PAGE_NUMBER);
-		displayLogic.initialiseDisplayTasks();
+		displayLogic.initialiseTaskDisplay();
 
 		displayTitle = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.SINGLE);
@@ -213,13 +212,11 @@ public class ApplicationWindow {
 
 	// TODO this needs to not recreate the whole list on every keypress
 	public void displayTasksOnWindow() {
-		for (Control child : displayLogic.getDisplayTask().getChildren()) {
-			child.dispose();
-		}
 		
-		displayLogic.initialiseDisplayTasks();
+		displayLogic.deleteTaskComposites();
+		displayLogic.initialiseTaskDisplay();
 
-		numberOfTasksOnEachPage = displayLogic.getNumberOfTasksForEachPage();
+		ArrayList<Integer> numberOfTasksOnEachPage = displayLogic.getNumberOfTasksForEachPage();
 
 		displayLogic.displayTasks();
 
@@ -296,7 +293,7 @@ public class ApplicationWindow {
 				} else if (arg0.keyCode == SWT.PAGE_DOWN) {
 					displayLogic.setPageNumber(Math.min(
 							displayLogic.getPageNumber() + 1,
-							numberOfTasksOnEachPage.size()));
+							displayLogic.getNumberOfTasksForEachPage().size()));
 					displayTasksOnWindow();
 					logger.log(Level.INFO, generateLoggingString());
 				}
@@ -411,11 +408,10 @@ public class ApplicationWindow {
 						Task dummyTask = new Task(executedCommand);
 
 						// Check if the tasks overflow
-						if (displayLogic.getDisplayTask().getSize().y
+						if (displayLogic.getTaskDisplayHeight()
 								+ displayLogic.determineTaskHeight(dummyTask) > 450) {
-							for (Control child : displayLogic.getDisplayTask().getChildren()) {
-								child.dispose();
-							}
+
+							displayLogic.deleteTaskComposites();
 							int newLastPage = displayLogic.getNumberOfPages() + 1;
 							displayPageNumber.setText("Page " + newLastPage
 									+ " of " + newLastPage);
@@ -425,7 +421,7 @@ public class ApplicationWindow {
 							displayTasksOnWindow();
 						}
 
-						dummyTaskComposite = new TaskComposite(displayLogic.getDisplayTask(),
+						dummyTaskComposite = new TaskComposite(displayLogic.getTaskDisplay(),
 								dummyTask, displayLogic
 										.getTotalNumberOfComposites() + 1);
 
@@ -492,7 +488,7 @@ public class ApplicationWindow {
 											.toString());
 						}
 						dummyTaskComposite.pack();
-						displayLogic.getDisplayTask().pack();
+						displayLogic.getTaskDisplay().pack();
 					} else {
 						displayLogic.clearHighlightedTasks();
 						displayTasksOnWindow();
@@ -501,7 +497,7 @@ public class ApplicationWindow {
 						}
 					}
 
-					System.out.println(displayLogic.getDisplayTask().getSize().y);
+					System.out.println(displayLogic.getTaskDisplayHeight());
 
 					break;
 				case SEARCH:
@@ -731,7 +727,7 @@ public class ApplicationWindow {
 		command1.setDescription("haha");
 		Task task1 = new Task(command1);
 		task1.setType(Constants.TASK_TYPE_UNTIMED);
-		TaskComposite taskComposite1 = new TaskComposite(displayLogic.getDisplayTask(), task1, 1);
+		TaskComposite taskComposite1 = new TaskComposite(displayLogic.getTaskDisplay(), task1, 1);
 		int taskCompositeHeight = taskComposite1.getSize().y;
 		displayLogic.setTaskCompositeHeight(taskCompositeHeight);
 
@@ -757,7 +753,7 @@ public class ApplicationWindow {
 
 		task1.setType(Constants.TASK_TYPE_FLOATING);
 		task1.setPossibleTime(intervalList);
-		TaskComposite taskComposite2 = new TaskComposite(displayLogic.getDisplayTask(), task1, 1);
+		TaskComposite taskComposite2 = new TaskComposite(displayLogic.getTaskDisplay(), task1, 1);
 		int taskComposite3LinesHeight = taskComposite2.getSize().y;
 		displayLogic
 				.setTaskCompositeHeightForThreeLines(taskComposite3LinesHeight);
@@ -765,7 +761,7 @@ public class ApplicationWindow {
 		ArrayList<String> tags = new ArrayList<String>();
 		tags.add("TGIF");
 		task1.setTags(tags);
-		TaskComposite taskComposite3 = new TaskComposite(displayLogic.getDisplayTask(), task1, 1);
+		TaskComposite taskComposite3 = new TaskComposite(displayLogic.getTaskDisplay(), task1, 1);
 		int taskCompositeIncrement = taskComposite3.getSize().y
 				- taskComposite3LinesHeight;
 		displayLogic.setTaskCompositeIncrement(taskCompositeIncrement);
@@ -777,7 +773,7 @@ public class ApplicationWindow {
 		stringBuilder.append(displayTitle.getText() + "\n");
 		stringBuilder.append(displayTodayTaskCount.getText() + "\n");
 		stringBuilder.append(displayRemainingTaskCount.getText() + "\n");
-		Control[] controls = displayLogic.getDisplayTask().getChildren();
+		Control[] controls = displayLogic.getTaskDisplay().getChildren();
 		for (Control control : controls) {
 			Composite taskComposite = (Composite) control;
 			Control[] taskControls = taskComposite.getChildren();
