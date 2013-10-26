@@ -94,12 +94,13 @@ public class DisplayLogic {
 		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
 
 		int startingIndex = 0;
+		System.out.println(pageNumber);
+		System.out.println(numberOfTasksOnEachPage);
 		for (int i = 0; i<pageNumber-1; ++i) {
 			startingIndex += numberOfTasksOnEachPage.get(i);
  		}
 
 		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
-
 		taskComposites = new TaskComposite[numberOfTasksOnEachPage.get(pageNumber - 1)];
 
 		for (int i = 0; i < taskComposites.length; i++) {
@@ -125,12 +126,19 @@ public class DisplayLogic {
 			displayStateHistory.addDisplayState(DisplayMode.ALL, Integer.MAX_VALUE);
 			break;
 		case EDIT:
-		case DELETE:
 		case DONE:
 		case FINALISE:
 			highlightedTasks = new ArrayList<>();
 			if (!feedback.isErrorMessage()) {
 				this.setPageNumber(getPageOfTask(feedback.getTaskIndex()));
+			}
+			displayStateHistory.addDisplayState(this.getDisplayMode(),
+					this.getPageNumber());
+			break;
+		case DELETE:
+			highlightedTasks = new ArrayList<>();
+			if (!feedback.isErrorMessage()) {
+				goToFirstPage();
 			}
 			displayStateHistory.addDisplayState(this.getDisplayMode(),
 					this.getPageNumber());
@@ -266,7 +274,7 @@ public class DisplayLogic {
 			heights[index] = determineTaskHeight(task);
 			index++;
 		}
-		System.out.println(Arrays.toString(heights));
+		
 		numberOfTasksOnEachPage = new ArrayList<>();
 		int currentCountOfTasks = 0;
 		int currentHeight = 0;
@@ -281,7 +289,7 @@ public class DisplayLogic {
 			}
 		}
 		numberOfTasksOnEachPage.add(currentCountOfTasks);
-
+		
 	}
 
 	public int determineTaskHeight(Task task) {
@@ -344,7 +352,7 @@ public class DisplayLogic {
 	}
 	
 	public void goToLastPage() {
-		setPageNumber(numberOfTasksOnEachPage.size());
+		setPageNumber(Integer.MAX_VALUE);
 	}
 	
 	public void goToFirstPage() {
