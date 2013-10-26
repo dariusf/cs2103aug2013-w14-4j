@@ -48,8 +48,7 @@ public class DisplayLogic {
 	protected void displayTasks() {
 		if (pageNumber > numberOfTasksOnEachPage.size()) {
 			pageNumber = numberOfTasksOnEachPage.size();
-		}
-		if (pageNumber <= 0) {
+		} else if (pageNumber <= 0) {
 			pageNumber = 1;
 		}
 
@@ -70,6 +69,11 @@ public class DisplayLogic {
 
 		// Display highlighted tasks on composite creation
 		highlightTasks(true);
+	}
+	
+	protected void createNewPage() {
+		this.pageNumber = numberOfTasksOnEachPage.size()+1;
+		displayTask.pack();
 	}
 	
 	protected void processFeedback(Feedback feedback, HelpDialog helpDialog) {
@@ -202,6 +206,13 @@ public class DisplayLogic {
 		return numberOfTasksOnEachPage;
 	}
 	
+	protected int getTotalNumberOfComposites() {
+		int sum = 0;
+		for(Integer integer : numberOfTasksOnEachPage){
+			sum += integer;
+		}
+		return sum;
+	}
 
 	private void determineNumberOfTasksForEachPage(DisplayMode displayMode) {
 		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
@@ -230,7 +241,7 @@ public class DisplayLogic {
 
 	}
 
-	private int determineTaskHeight(Task task) {
+	protected int determineTaskHeight(Task task) {
 		if (!task.isFloatingTask()) {
 			return taskCompositeHeight;
 		} else {
@@ -273,6 +284,10 @@ public class DisplayLogic {
 	/**
 	 * Getters and setters
 	 */
+	
+	protected int getNumberOfPages() {
+		return numberOfTasksOnEachPage.size();
+	}
 	
 	protected void setPageNumber(int pageNumber) {
 		assert (pageNumber > 0);

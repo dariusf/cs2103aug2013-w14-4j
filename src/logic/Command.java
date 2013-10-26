@@ -161,6 +161,11 @@ public class Command {
 			return Constants.TASK_TYPE_FLOATING;
 		}
 	}
+	
+	public boolean isEmptyAddCommand(){
+		assert (this.commandType == CommandType.ADD);
+		return this.description.isEmpty() && this.deadline == null && this.tags.isEmpty() && this.intervals.isEmpty();
+	}
 
 	@Override
 	public String toString() {
