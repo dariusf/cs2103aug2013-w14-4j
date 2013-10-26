@@ -65,16 +65,12 @@ public class Parser {
 	private int tokenCount = 0;
 	private int tokenPointer = 0;
 
-	boolean nextToken() {
-		int temp = tokenPointer;
+	void nextToken() {
 		tokenPointer = Math.min(tokenPointer + 1, tokenCount);
-		return temp != tokenPointer;
 	}
 
-	boolean previousToken() {
-		int temp = tokenPointer;
+	void previousToken() {
 		tokenPointer = Math.max(tokenPointer - 1, 0);
-		return temp != tokenPointer;
 	}
 
 	Token getCurrentToken() {
@@ -259,8 +255,9 @@ public class Parser {
 		if (hasTokensLeft()) {
 			try {
 				whichTask = Integer.parseInt(getCurrentToken().contents);
-
-				if (nextToken()) {
+				nextToken();
+				
+				if (hasTokensLeft()) {
 					try {
 						whichSlot = Integer.parseInt(getCurrentToken().contents);
 					} catch (NumberFormatException e) {
