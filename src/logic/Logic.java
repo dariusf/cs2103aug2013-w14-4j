@@ -39,7 +39,7 @@ public class Logic {
 		case DELETE:
 			return activeDeleteTask(command);
 		case DONE:
-			return activeMarkDone(userInput);
+			return activeMarkDone(command);
 		case FINALISE:
 			return activeFinalisaTask(command);
 		case SEARCH:
@@ -59,9 +59,8 @@ public class Logic {
 		return null;
 	}
 
-	private ActiveFeedback activeMarkDone(String userInput) {
-		// TODO Auto-generated method stub
-		return null;
+	private ActiveFeedback activeMarkDone(Command command) {
+		return new ActiveFeedback(command);
 	}
 
 	private ActiveFeedback activeDeleteTask(Command command) {

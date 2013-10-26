@@ -323,6 +323,7 @@ public class ApplicationWindow {
 				int taskIndex = executedCommand.getTaskIndex();
 
 				switch (executedCommand.getCommandType()) {
+				case DONE:
 				case DELETE:
 					displayLogic.clearHighlightedTasks();
 					displayLogic.addHighlightedTask(taskIndex);
