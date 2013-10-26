@@ -1,6 +1,9 @@
 package ui;
 
 import java.util.ArrayList;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.joda.time.DateTime;
 import common.Constants;
@@ -33,12 +36,24 @@ public class DisplayLogic {
 	// A list of globol indices of tasks that should be highlighted on next display draw
 	private ArrayList<Integer> highlightedTasks = new ArrayList<Integer>();
 
-	public DisplayLogic(Logic logic, DisplayMode displayMode, Composite displayTask, int pageNumber) {
+	public DisplayLogic(Logic logic, DisplayMode displayMode, int pageNumber) {
 		setLogic(logic);
 		setDisplayMode(displayMode);
-		setDisplayTask(displayTask);
+		displayTask = new Composite(ApplicationWindow.shell, SWT.NONE);
 		setPageNumber(pageNumber);
 		this.displayStateHistory = new DisplayStateHistory();
+	}
+	
+	public void initialiseDisplayTasks() {
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.type = SWT.VERTICAL;
+		rowLayout.pack = true;
+		displayTask.setLayout(rowLayout);
+		displayTask.setBounds(32, 86, 425, 450);
+	}
+	
+	public Composite getDisplayTask() {
+		return displayTask;
 	}
 	
 	/**
