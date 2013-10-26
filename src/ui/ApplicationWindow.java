@@ -374,6 +374,8 @@ public class ApplicationWindow {
 							}
 						}
 						displayLogic.getCompositeGlobal(taskIndex).setDescription(descriptionBuilder.toString());
+						displayLogic.getCompositeGlobal(taskIndex).pack();
+					
 					}
 					break;
 				default:
