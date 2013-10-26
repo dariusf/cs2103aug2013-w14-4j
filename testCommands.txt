@@ -18,7 +18,7 @@ edit 7 by 10am
 edit 7 from 2pm to 3pm
 add new task 11 from 12pm to 3pm #yay
 add new task 12 #homework
-edit new task 11 at 1pm or 3pm
+edit 11 at 1pm or 3pm
 add new task 13 #homework #yay
 delete 10
 undo
@@ -46,5 +46,7 @@ display deadline
 display floating
 display overdue
 done 7
+edit 7 this is invalid too
+finalise 7 1
 display done
 exit
