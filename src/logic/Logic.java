@@ -2,9 +2,12 @@ package logic;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Collections;
+import java.util.TreeMap;
 
 import org.joda.time.DateTime;
 
@@ -18,7 +21,7 @@ import storage.Storage;
 public class Logic {
 
 	protected Storage storage = null;
-	protected HashMap<Integer, Integer> temporaryMapping = new HashMap<Integer, Integer>();
+	protected TreeMap<Integer, Integer> temporaryMapping = new TreeMap<Integer, Integer>();
 	protected boolean isDynamicIndex = false;
 	protected boolean isDisplayHelp = false;
 	protected Command currentHelpCommand = null;
@@ -288,7 +291,7 @@ public class Logic {
 				}
 			}
 
-			temporaryMapping = new HashMap<Integer, Integer>();
+			temporaryMapping = new TreeMap<Integer, Integer>();
 			for (int i = 1; i <= validTasksAbsoluteIndices.size(); i++) {
 				temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
 			}
@@ -534,7 +537,7 @@ public class Logic {
 			}
 		}
 
-		temporaryMapping = new HashMap<Integer, Integer>();
+		temporaryMapping = new TreeMap<Integer, Integer>();
 		for (int i = 1; i <= validTasksAbsoluteIndices.size(); i++) {
 			temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
 		}
