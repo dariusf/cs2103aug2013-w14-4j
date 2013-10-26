@@ -318,17 +318,13 @@ public class Logic {
 	}
 
 	protected Feedback deleteTask(Command command) {
-		HashMap<String, String> commandAttributes = command
-				.getCommandAttributes();
-		int taskIndex = Integer.parseInt(commandAttributes
-				.get(Constants.DELETE_ATT_LINE));
+		int taskIndex = command.getTaskIndex();
 		if (isDynamicIndex) {
 			taskIndex = temporaryMapping.get(taskIndex);
 		}
 
 		Feedback feedback = null;
 		if (taskIndex <= storage.size()) {
-			String taskDescription = storage.get(taskIndex).getName();
 			storage.remove(taskIndex);
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
 			feedback.setTaskIndex(taskIndex);
@@ -343,10 +339,7 @@ public class Logic {
 
 	protected Feedback clearTasks(Command command) {
 		Feedback feedback = null;
-		HashMap<String, String> commandAttributes = command
-				.getCommandAttributes();
-		boolean isClearDone = Boolean.valueOf(commandAttributes
-				.get(Constants.CLEAR_ATT_DONE));
+		boolean isClearDone = command.getClearDone();
 
 		if (storage.size() > 0) {
 			if (isClearDone) {
@@ -378,11 +371,7 @@ public class Logic {
 
 	protected Feedback finaliseTask(Command command) {
 		Feedback feedback = null;
-		HashMap<String, String> commandAttributes = command
-				.getCommandAttributes();
-		int inputIndex = Integer.parseInt(commandAttributes
-				.get(Constants.FINALISE_ATT_LINE));
-		int taskIndex = inputIndex;
+		int taskIndex= command.getTaskIndex();
 
 		if (taskIndex > storage.size()
 				|| (isDynamicIndex && !temporaryMapping.containsKey(taskIndex))) {
@@ -391,7 +380,7 @@ public class Logic {
 		}
 
 		if (isDynamicIndex && temporaryMapping.containsKey(taskIndex)) {
-			taskIndex = temporaryMapping.get(inputIndex);
+			taskIndex = temporaryMapping.get(taskIndex);
 		}
 
 		Task taskToEdit = storage.get(taskIndex);
@@ -400,8 +389,7 @@ public class Logic {
 					CommandType.FINALISE);
 		}
 
-		int taskSlotIndex = Integer.parseInt(commandAttributes
-				.get(Constants.FINALISE_ATT_INDEX));
+		int taskSlotIndex = command.getTimeslotIndex();
 		List<Interval> oldIntervalList = taskToEdit.getPossibleTime();
 		if (taskSlotIndex > oldIntervalList.size()) {
 			return new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR,
