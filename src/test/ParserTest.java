@@ -756,4 +756,45 @@ public class ParserTest {
 		gotten = new Parser().parse("delete askldjas");
 		assertEquals(gotten, expected);
 	}
+	
+	@Test
+	public void finaliseCommandTests() {
+		Command expected, gotten;
+		
+		// Too few arguments
+		expected = new Command(CommandType.INVALID);
+		expected.setInvalidCommandReason(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+		gotten = new Parser().parse("finalise 1");
+		assertEquals(gotten, expected);
+
+		expected = new Command(CommandType.INVALID);
+		expected.setInvalidCommandReason(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+		gotten = new Parser().parse("finalise");
+		assertEquals(gotten, expected);
+
+		// Proper format
+		expected = new Command(CommandType.FINALISE);
+		expected.setTaskIndex(12);
+		expected.setTimeslotIndex(13);
+		gotten = new Parser().parse("finalise 12 13");
+		assertEquals(gotten, expected);
+
+		// Gibberish at the end is ignored
+		expected = new Command(CommandType.FINALISE);
+		expected.setTaskIndex(12);
+		expected.setTimeslotIndex(13);
+		gotten = new Parser().parse("finalise 12 13 asdkj");
+		assertEquals(gotten, expected);
+
+		// Invalid number formats
+		expected = new Command(CommandType.INVALID);
+		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_TASK_INDEX);
+		gotten = new Parser().parse("finalise 1askdj 1");
+		assertEquals(gotten, expected);
+
+		expected = new Command(CommandType.INVALID);
+		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_TIMESLOT_INDEX);
+		gotten = new Parser().parse("finalise 1 1askdj");
+		assertEquals(gotten, expected);
+	}
 }
