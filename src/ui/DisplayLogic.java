@@ -219,6 +219,7 @@ public class DisplayLogic {
 	
 	public TaskComposite getCompositeGlobal (int index) {
 		assert isTaskDisplayedCurrently(index) : "Cannot get composite of task that isn't currently displayed";
+		assert index > 0 && index <= getTotalNumberOfComposites();
 		int indexOfFirstTask = 1;
 		for (int i=0; i<getPageNumber()-1; i++) {
 			indexOfFirstTask += numberOfTasksOnEachPage.get(i);
@@ -310,6 +311,7 @@ public class DisplayLogic {
 	}
 
 	public void addHighlightedTask(int index) {
+		assert index > 0 && index <= getTotalNumberOfComposites();
 		highlightedTasks.add(index);
 	}
 

@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.Checkbox;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -299,6 +300,15 @@ public class ApplicationWindow {
 
 				Command executedCommand = activeFeedback.getCommand();
 				int taskIndex = executedCommand.getTaskIndex();
+				
+				// check validity of indices
+				
+				if (!(taskIndex > 0 && taskIndex <= logic.getNumberOfTasks())) {
+					System.out.println("Invalid index. This should be replaced by kind of UI feedback");
+					return;
+				}
+				
+				// TODO timeslot index has to be checked lower down, inside edit and finalise
 
 				switch (executedCommand.getCommandType()) {
 				case DONE:
