@@ -50,8 +50,7 @@ public class Logic {
 	}
 
 	private ActiveFeedback activeSearchTasks(Command command) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ActiveFeedback(command);
 	}
 
 	private ActiveFeedback activeFinalisaTask(Command command) {

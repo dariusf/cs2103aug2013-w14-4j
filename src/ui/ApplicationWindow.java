@@ -514,6 +514,17 @@ public class ApplicationWindow {
 					System.out.println(displayTask.getSize().y);
 
 					break;
+				case SEARCH:
+				
+					if(!executedCommand.getSearchString().isEmpty() || !executedCommand.getTags().isEmpty()){
+						Feedback feedbackObj = logic.executeCommand(userInput);
+						String feedback = feedbackObj.toString();
+						setFeedbackColour(feedbackObj);
+						displayFeedback.setText(feedback);
+						displayLogic.processFeedback(feedbackObj, helpDialog);
+						displayTasksOnWindow();
+					}
+					break;
 				default:
 					System.out.println("here");
 					displayLogic.clearHighlightedTasks();
