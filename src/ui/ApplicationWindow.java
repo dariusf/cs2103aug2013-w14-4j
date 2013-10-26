@@ -210,16 +210,13 @@ public class ApplicationWindow {
 		enableDrag();
 	}
 
-	// TODO this needs to not recreate the whole list on every keypress
-	public void displayTasksOnWindow() {
-		
-		displayLogic.deleteTaskComposites();
-		displayLogic.initialiseTaskDisplay();
+	public void displayTasks() {
+		displayLogic.refreshTaskDisplay();
+		updateTaskStatistics();
+	}
 
-		ArrayList<Integer> numberOfTasksOnEachPage = displayLogic.getNumberOfTasksForEachPage();
-
-		displayLogic.displayTasks();
-
+	private void updateTaskStatistics() {
+		ArrayList<Integer> numberOfTasksOnEachPage = displayLogic.getNumberOfTasksPerPage();
 		displayPageNumber.setText("Page " + displayLogic.getPageNumber()
 				+ " of " + numberOfTasksOnEachPage.size());
 		displayPageNumber.setLineAlignment(0, 1, SWT.CENTER);
@@ -232,6 +229,8 @@ public class ApplicationWindow {
 
 		displayTitle.setText(displayLogic.getDisplayWindowTitle());
 	}
+	
+	
 
 	public String displayWelcomeMessage() {
 		String welcomeMessage = Constants.WELCOME_MSG;
@@ -288,13 +287,13 @@ public class ApplicationWindow {
 				} else if (arg0.keyCode == SWT.PAGE_UP) {
 					displayLogic.setPageNumber(Math.max(
 							displayLogic.getPageNumber() - 1, 0));
-					displayTasksOnWindow();
+					displayTasks();
 					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_DOWN) {
 					displayLogic.setPageNumber(Math.min(
 							displayLogic.getPageNumber() + 1,
-							displayLogic.getNumberOfTasksForEachPage().size()));
-					displayTasksOnWindow();
+							displayLogic.getNumberOfTasksPerPage().size()));
+					displayTasks();
 					logger.log(Level.INFO, generateLoggingString());
 				}
 			}
@@ -316,7 +315,7 @@ public class ApplicationWindow {
 					displayLogic.addHighlightedTask(taskIndex);
 					displayLogic.setPageNumber(displayLogic
 							.getPageOfTask(taskIndex));
-					displayTasksOnWindow(); // TODO this needs to not recreate
+					displayTasks(); // TODO this needs to not recreate
 											// the whole list on every keypress
 					break;
 				case EDIT:
@@ -324,7 +323,7 @@ public class ApplicationWindow {
 					displayLogic.addHighlightedTask(taskIndex);
 					displayLogic.setPageNumber(displayLogic
 							.getPageOfTask(taskIndex));
-					displayTasksOnWindow();
+					displayTasks();
 					if (executedCommand.getTimeslotIndex() != -1) {
 						// TODO
 					} else {
@@ -404,7 +403,7 @@ public class ApplicationWindow {
 						displayLogic.clearHighlightedTasks();
 
 						displayLogic.setPageNumber(Integer.MAX_VALUE);
-						displayTasksOnWindow();
+						displayTasks();
 						Task dummyTask = new Task(executedCommand);
 
 						// Check if the tasks overflow
@@ -418,7 +417,7 @@ public class ApplicationWindow {
 							displayPageNumber.setAlignment(SWT.CENTER);
 						} else {
 							displayLogic.setPageNumber(Integer.MAX_VALUE);
-							displayTasksOnWindow();
+							displayTasks();
 						}
 
 						dummyTaskComposite = new TaskComposite(displayLogic.getTaskDisplay(),
@@ -491,7 +490,7 @@ public class ApplicationWindow {
 						displayLogic.getTaskDisplay().pack();
 					} else {
 						displayLogic.clearHighlightedTasks();
-						displayTasksOnWindow();
+						displayTasks();
 						if (dummyTaskComposite != null) {
 							dummyTaskComposite.dispose();
 						}
@@ -508,13 +507,13 @@ public class ApplicationWindow {
 						setFeedbackColour(feedbackObj);
 						displayFeedback.setText(feedback);
 						displayLogic.processFeedback(feedbackObj, helpDialog);
-						displayTasksOnWindow();
+						displayTasks();
 					}
 					break;
 				default:
 					System.out.println("here");
 					displayLogic.clearHighlightedTasks();
-					displayTasksOnWindow();
+					displayTasks();
 					if (dummyTaskComposite != null) {
 						dummyTaskComposite.dispose();
 					}
@@ -714,7 +713,7 @@ public class ApplicationWindow {
 
 		displayLogic.processFeedback(feedbackObj, helpDialog);
 
-		displayTasksOnWindow();
+		displayTasks();
 
 		if (testMode) {
 			logger.log(Level.INFO, generateLoggingString());
