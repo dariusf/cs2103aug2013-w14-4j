@@ -73,8 +73,7 @@ public class Logic {
 	}
 
 	private ActiveFeedback activeAddTask(Command command) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ActiveFeedback(command);
 	}
 
 	public Feedback executeCommand(String userCommand) {
@@ -210,7 +209,7 @@ public class Logic {
 
 	public ArrayList<Task> getTasksToDisplay() {
 		ArrayList<Task> output = new ArrayList<Task>();
-		System.out.println(temporaryMapping);
+	
 		if (!isDynamicIndex) {
 			Iterator<Task> storageIterator = storage.iterator();
 			while (storageIterator.hasNext()) {
@@ -283,7 +282,7 @@ public class Logic {
 		if (displayMode != DisplayMode.SEARCH) {
 			for (int i = 0; i < allTasks.size(); i++) {
 				Task currentTask = allTasks.get(i);
-				System.out.println(currentTask);
+				
 				if (displayCondition(command, currentTask)) {
 					validTasks.add(currentTask);
 					validTasksAbsoluteIndices.add(i + 1);
@@ -510,7 +509,7 @@ public class Logic {
 		ArrayList<Integer> validTasksAbsoluteIndices = new ArrayList<Integer>();
 
 		Iterator<Task> storageIterator = storage.iterator();
-		System.out.println(searchTags);
+		
 		if (searchTags.size() > 0) {
 			boolean shouldAdd = true;
 			for (int i = 0; i < storage.size(); i++) {
@@ -541,7 +540,7 @@ public class Logic {
 			temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
 		}
 		isDynamicIndex = true;
-		System.out.println(temporaryMapping);
+	
 
 		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH);
 
