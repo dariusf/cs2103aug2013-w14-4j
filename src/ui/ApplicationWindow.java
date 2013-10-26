@@ -335,10 +335,45 @@ public class ApplicationWindow {
 						// TODO
 					}
 					else {
+						String finalType = executedCommand.getTaskType();
 						if (!executedCommand.getDescription().isEmpty()) {
 							displayLogic.getCompositeGlobal(taskIndex).setTaskName(executedCommand.getDescription());
 						}
-						// TODO other info
+						
+						StringBuilder descriptionBuilder = new StringBuilder();
+						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
+							descriptionBuilder.append("by " + Constants.fullDateTimeFormat.print(executedCommand.getDeadline()));
+						} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
+							Interval taskInterval = executedCommand.getIntervals().get(0);
+							descriptionBuilder.append("from " + Constants.fullDateTimeFormat.print(taskInterval.getStartDateTime())
+									+ " to " + Constants.fullDateTimeFormat.print(taskInterval.getEndDateTime()));
+						} else if (finalType.equals(Constants.TASK_TYPE_FLOATING)) {
+							descriptionBuilder.append("on ");
+							ArrayList<Interval> possibleIntervals = executedCommand.getIntervals();
+							int index = 1;
+							for (Interval slot : possibleIntervals) {
+								descriptionBuilder.append("(");
+								descriptionBuilder.append(index);
+								descriptionBuilder.append(") ");
+								descriptionBuilder.append(Constants.fullDateTimeFormat.print(slot.getStartDateTime()));
+								descriptionBuilder.append(" to ");
+								descriptionBuilder.append(Constants.fullDateTimeFormat.print(slot.getEndDateTime()));
+								if (index != possibleIntervals.size()) {
+									descriptionBuilder.append("\nor ");
+								}
+								index++;
+							}
+						}
+						ArrayList<String> tags = executedCommand.getTags();
+						if (tags.size() > 0) {
+							if (finalType.equals(Constants.TASK_TYPE_DEADLINE) | finalType.equals(Constants.TASK_TYPE_TIMED) | finalType.equals(Constants.TASK_TYPE_FLOATING)) {
+								descriptionBuilder.append("\n");
+							}
+							for (String tag : tags) {
+								descriptionBuilder.append("#" + tag + " ");
+							}
+						}
+						displayLogic.getCompositeGlobal(taskIndex).setDescription(descriptionBuilder.toString());
 					}
 					break;
 				default:
