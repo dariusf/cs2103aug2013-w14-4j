@@ -797,4 +797,39 @@ public class ParserTest {
 		gotten = new Parser().parse("finalise 1 1askdj");
 		assertEquals(gotten, expected);
 	}
+	
+	@Test
+	public void fuzzyMatchingTests() {
+		
+//		INVALID,
+//		ADD, EDIT, DISPLAY, DELETE, CLEAR, EXIT, GOTO,
+//		SORT, SEARCH, UNDO, FINALISE, HELP, DONE, REDO;
+
+		Command expected, gotten;
+		
+		assertEquals(new Parser().parse("qwe").getCommandType(), CommandType.INVALID);
+		assertEquals(new Parser().parse("zxc").getCommandType(), CommandType.INVALID);
+
+		assertEquals(new Parser().parse("ad").getCommandType(), CommandType.ADD);
+		assertEquals(new Parser().parse("sad").getCommandType(), CommandType.ADD);
+		assertEquals(new Parser().parse("asd").getCommandType(), CommandType.ADD);
+		assertEquals(new Parser().parse("ass").getCommandType(), CommandType.ADD);
+		assertEquals(new Parser().parse("dad").getCommandType(), CommandType.ADD);
+		assertEquals(new Parser().parse("addd").getCommandType(), CommandType.ADD);
+		assertEquals(new Parser().parse("daa").getCommandType(), CommandType.INVALID);
+
+		assertEquals(new Parser().parse("del 1").getCommandType(), CommandType.DELETE);
+		assertEquals(new Parser().parse("dele 1").getCommandType(), CommandType.DELETE);
+		assertEquals(new Parser().parse("delet 1").getCommandType(), CommandType.DELETE);
+		assertEquals(new Parser().parse("deleet 1").getCommandType(), CommandType.DELETE);
+		assertEquals(new Parser().parse("deeelt 1").getCommandType(), CommandType.DELETE);
+		assertEquals(new Parser().parse("deleeete 1").getCommandType(), CommandType.DELETE);
+
+		assertEquals(new Parser().parse("de 1").getCommandType(), CommandType.DONE);
+		assertEquals(new Parser().parse("dne 1").getCommandType(), CommandType.DONE);
+		assertEquals(new Parser().parse("don 1").getCommandType(), CommandType.DONE);
+		assertEquals(new Parser().parse("doone 1").getCommandType(), CommandType.DONE);
+		assertEquals(new Parser().parse("doon 1").getCommandType(), CommandType.DONE);
+
+	}
 }
