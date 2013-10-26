@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.joda.time.DateTime;
 import common.Constants;
 import common.DisplayMode;
@@ -17,43 +18,51 @@ public class DisplayLogic {
 
 	private Logic logic;
 	private DisplayMode displayMode;
-	private Composite displayTask;
+	private Composite taskDisplay;
 	private int pageNumber;
+	
+	
+	
 	private DisplayStateHistory displayStateHistory;
-
 	private DateTime currentDisplayDateTime = new DateTime();
-
 	private int noOfTasksToday = 0;
 	private int noOfTasksRemaining = 0;
 	private ArrayList<Integer> numberOfTasksOnEachPage;
-
 	private int taskCompositeHeight = 0;
 	private int taskCompositeIncrement = 0;
 	private int taskCompositeHeightForThreeLines = 0;
-
 	private TaskComposite[] taskComposites = null;
-
 	// A list of globol indices of tasks that should be highlighted on next display draw
 	private ArrayList<Integer> highlightedTasks = new ArrayList<Integer>();
 
 	public DisplayLogic(Logic logic, DisplayMode displayMode, int pageNumber) {
 		setLogic(logic);
 		setDisplayMode(displayMode);
-		displayTask = new Composite(ApplicationWindow.shell, SWT.NONE);
+		taskDisplay = new Composite(ApplicationWindow.shell, SWT.NONE);
 		setPageNumber(pageNumber);
 		this.displayStateHistory = new DisplayStateHistory();
 	}
 	
-	public void initialiseDisplayTasks() {
+	public void initialiseTaskDisplay() {
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.type = SWT.VERTICAL;
 		rowLayout.pack = true;
-		displayTask.setLayout(rowLayout);
-		displayTask.setBounds(32, 86, 425, 450);
+		taskDisplay.setLayout(rowLayout);
+		taskDisplay.setBounds(32, 86, 425, 450);
 	}
 	
-	public Composite getDisplayTask() {
-		return displayTask;
+	public void deleteTaskComposites() {
+		for (Control child : taskDisplay.getChildren()) {
+			child.dispose();
+		}
+	}
+	
+	public int getTaskDisplayHeight() {
+		return taskDisplay.getSize().y;
+	}
+	
+	public Composite getTaskDisplay() {
+		return taskDisplay;
 	}
 	
 	/**
@@ -77,10 +86,10 @@ public class DisplayLogic {
 		taskComposites = new TaskComposite[numberOfTasksOnEachPage.get(pageNumber - 1)];
 
 		for (int i = 0; i < taskComposites.length; i++) {
-			taskComposites[i] = new TaskComposite(displayTask, taskList.get(startingIndex + i), startingIndex + i + 1);
+			taskComposites[i] = new TaskComposite(taskDisplay, taskList.get(startingIndex + i), startingIndex + i + 1);
 		}
 
-		displayTask.pack();
+		taskDisplay.pack();
 
 		// Display highlighted tasks on composite creation
 		highlightTasks(true);
@@ -88,7 +97,7 @@ public class DisplayLogic {
 	
 	protected void createNewPage() {
 		this.pageNumber = numberOfTasksOnEachPage.size()+1;
-		displayTask.pack();
+		taskDisplay.pack();
 	}
 	
 	protected void processFeedback(Feedback feedback, HelpDialog helpDialog) {
@@ -219,6 +228,7 @@ public class DisplayLogic {
 	
 	protected ArrayList<Integer> getNumberOfTasksForEachPage() {
 		determineNumberOfTasksForEachPage(displayMode);
+		// TODO ^ don't have to do that calculation if it hasn't changed
 		return numberOfTasksOnEachPage;
 	}
 	
@@ -346,7 +356,7 @@ public class DisplayLogic {
 
 	private void setDisplayTask(Composite displayTask) {
 		assert (displayTask != null);
-		this.displayTask = displayTask;
+		this.taskDisplay = displayTask;
 	}
 
 	protected void setDisplayDateTime(DateTime currentDisplayDateTime) {
