@@ -14,39 +14,37 @@ import java.util.List;
 
 public class RealStorage<E extends Comparable<E>> implements StorageBase<E>{
 	
-	ArrayList<E> items;
-	int size;
+	private ArrayList<E> items;
 
 	public RealStorage () {
-		items = new ArrayList<>();
-		size = 0;
+		this.items = new ArrayList<>();
 	}
 	
 	public RealStorage (List<E> items) {
 		this.items = new ArrayList<>(items);
-		this.size = items.size();
+	}
+	
+	public RealStorage (RealStorage<E> original) {
+		this.items = new ArrayList<>(original.items);
 	}
 
 	@Override
 	public void insert(int index, E item) {
-		if(index == size) {
+		if(index == items.size()) {
 			items.add(item);
 		} else {
 			items.add(index, item);
 		}
-		size++;
 	}
 
 	@Override
 	public void remove(int index) {
 		items.remove(index);
-		size--;
 	}
 
 	@Override
 	public void remove(E item) {
 		items.remove(item);
-		size--;
 	}
 
 	@Override
@@ -66,7 +64,7 @@ public class RealStorage<E extends Comparable<E>> implements StorageBase<E>{
 
 	@Override
 	public int size() {
-		return size;
+		return items.size();
 	}
 
 	@Override
