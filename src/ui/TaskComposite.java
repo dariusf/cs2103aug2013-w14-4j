@@ -60,7 +60,8 @@ public class TaskComposite extends Composite {
 				SWT.READ_ONLY);
 		taskDescription.setText(task.getInfoString());
 		taskDescription.setFont(ApplicationWindow.self.descriptionFont);
-
+		
+		
 		if (task.isDone()) {
 			StyleRange style1 = new StyleRange();
 			style1.start = 0;

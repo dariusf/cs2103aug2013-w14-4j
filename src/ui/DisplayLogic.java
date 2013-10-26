@@ -1,6 +1,7 @@
 package ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
@@ -21,8 +22,6 @@ public class DisplayLogic {
 	private Composite taskDisplay;
 	private int pageNumber;
 	
-	
-	
 	private DisplayStateHistory displayStateHistory;
 	private DateTime currentDisplayDateTime = new DateTime();
 	private int noOfTasksToday = 0;
@@ -30,6 +29,9 @@ public class DisplayLogic {
 	private ArrayList<Integer> numberOfTasksOnEachPage;
 	private int taskCompositeHeight = 0;
 	private int taskCompositeIncrement = 0;
+	private int taskCompositeHeightForTwoLines = 0;
+
+
 	private int taskCompositeHeightForThreeLines = 0;
 	private TaskComposite[] taskComposites = null;
 	// A list of globol indices of tasks that should be highlighted on next display draw
@@ -264,7 +266,7 @@ public class DisplayLogic {
 			heights[index] = determineTaskHeight(task);
 			index++;
 		}
-
+		System.out.println(Arrays.toString(heights));
 		numberOfTasksOnEachPage = new ArrayList<>();
 		int currentCountOfTasks = 0;
 		int currentHeight = 0;
@@ -292,7 +294,9 @@ public class DisplayLogic {
 			if (hasTags) {
 				numberOfLines++;
 			}
-			if (numberOfLines == 3) {
+			if(numberOfLines == 2){
+				return taskCompositeHeightForTwoLines;
+			} if (numberOfLines == 3) {
 				return taskCompositeHeightForThreeLines;
 			} else {
 				return (numberOfLines - 3) * taskCompositeIncrement
@@ -396,7 +400,7 @@ public class DisplayLogic {
 		assert (taskCompositeHeight >= 0);
 		taskCompositeHeight = height;
 	}
-
+	
 	public void setTaskCompositeIncrement(int increment) {
 		assert (taskCompositeIncrement >= 0);
 		taskCompositeIncrement = increment;
@@ -405,5 +409,13 @@ public class DisplayLogic {
 	public void setTaskCompositeHeightForThreeLines(int height) {
 		assert (taskCompositeHeightForThreeLines >= 0);
 		taskCompositeHeightForThreeLines = height;
+	}
+	
+	public int getTaskCompositeHeightForTwoLines() {
+		return taskCompositeHeightForTwoLines;
+	}
+
+	public void setTaskCompositeHeightForTwoLines(int taskCompositeHeightForTwoLines) {
+		this.taskCompositeHeightForTwoLines = taskCompositeHeightForTwoLines;
 	}
 }
