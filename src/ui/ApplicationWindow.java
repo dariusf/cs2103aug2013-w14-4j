@@ -52,6 +52,7 @@ public class ApplicationWindow {
 	public StyledText displayTitle;
 	public StyledText displayRemainingTaskCount;
 	public StyledText displayTodayTaskCount;
+	public TaskComposite dummyTaskComposite;
 
 	public static HelpDialog helpDialog;
 	public static DisplayLogic displayLogic;
@@ -180,7 +181,8 @@ public class ApplicationWindow {
 
 		defineTaskCompositeHeight();
 
-		displayFeedback = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		displayFeedback = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
+				| SWT.MULTI);
 		displayFeedback.setEnabled(false);
 		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
 		displayFeedback.setBounds(35, 558, 412, 40);
@@ -215,7 +217,7 @@ public class ApplicationWindow {
 		enableDrag();
 	}
 
-	 // TODO this needs to not recreate the whole list on every keypress
+	// TODO this needs to not recreate the whole list on every keypress
 	public void displayTasksOnWindow() {
 		for (Control child : displayTask.getChildren()) {
 			child.dispose();
@@ -262,7 +264,8 @@ public class ApplicationWindow {
 			public void keyReleased(KeyEvent arg0) {
 				if (isKeyboardInput(arg0.keyCode)) {
 					userInput = input.getText();
-					ActiveFeedback activeFeedback = logic.activeFeedback(userInput);
+					ActiveFeedback activeFeedback = logic
+							.activeFeedback(userInput);
 					processFeedback(activeFeedback);
 				}
 			}
@@ -308,9 +311,9 @@ public class ApplicationWindow {
 					logger.log(Level.INFO, generateLoggingString());
 				}
 			}
-			
+
 			private void processFeedback(ActiveFeedback activeFeedback) {
-				
+
 				if (activeFeedback == null) {
 					displayLogic.clearHighlightedTasks();
 					return;
@@ -318,46 +321,65 @@ public class ApplicationWindow {
 
 				Command executedCommand = activeFeedback.getCommand();
 				int taskIndex = executedCommand.getTaskIndex();
-				
+
 				switch (executedCommand.getCommandType()) {
 				case DELETE:
 					displayLogic.clearHighlightedTasks();
 					displayLogic.addHighlightedTask(taskIndex);
-					displayLogic.setPageNumber(displayLogic.getPageOfTask(taskIndex));
-					displayTasksOnWindow(); // TODO this needs to not recreate the whole list on every keypress
+					displayLogic.setPageNumber(displayLogic
+							.getPageOfTask(taskIndex));
+					displayTasksOnWindow(); // TODO this needs to not recreate
+											// the whole list on every keypress
 					break;
 				case EDIT:
 					displayLogic.clearHighlightedTasks();
 					displayLogic.addHighlightedTask(taskIndex);
-					displayLogic.setPageNumber(displayLogic.getPageOfTask(taskIndex));
+					displayLogic.setPageNumber(displayLogic
+							.getPageOfTask(taskIndex));
 					displayTasksOnWindow();
 					if (executedCommand.getTimeslotIndex() != -1) {
 						// TODO
-					}
-					else {
+					} else {
 						String finalType = executedCommand.getTaskType();
 						if (!executedCommand.getDescription().isEmpty()) {
-							displayLogic.getCompositeGlobal(taskIndex).setTaskName(executedCommand.getDescription());
+							displayLogic.getCompositeGlobal(taskIndex)
+									.setTaskName(
+											executedCommand.getDescription());
 						}
-						
+
 						StringBuilder descriptionBuilder = new StringBuilder();
 						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
-							descriptionBuilder.append("by " + Constants.fullDateTimeFormat.print(executedCommand.getDeadline()));
+							descriptionBuilder.append("by "
+									+ Constants.fullDateTimeFormat
+											.print(executedCommand
+													.getDeadline()));
 						} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
-							Interval taskInterval = executedCommand.getIntervals().get(0);
-							descriptionBuilder.append("from " + Constants.fullDateTimeFormat.print(taskInterval.getStartDateTime())
-									+ " to " + Constants.fullDateTimeFormat.print(taskInterval.getEndDateTime()));
-						} else if (finalType.equals(Constants.TASK_TYPE_FLOATING)) {
+							Interval taskInterval = executedCommand
+									.getIntervals().get(0);
+							descriptionBuilder.append("from "
+									+ Constants.fullDateTimeFormat
+											.print(taskInterval
+													.getStartDateTime())
+									+ " to "
+									+ Constants.fullDateTimeFormat
+											.print(taskInterval
+													.getEndDateTime()));
+						} else if (finalType
+								.equals(Constants.TASK_TYPE_FLOATING)) {
 							descriptionBuilder.append("on ");
-							ArrayList<Interval> possibleIntervals = executedCommand.getIntervals();
+							ArrayList<Interval> possibleIntervals = executedCommand
+									.getIntervals();
 							int index = 1;
 							for (Interval slot : possibleIntervals) {
 								descriptionBuilder.append("(");
 								descriptionBuilder.append(index);
 								descriptionBuilder.append(") ");
-								descriptionBuilder.append(Constants.fullDateTimeFormat.print(slot.getStartDateTime()));
+								descriptionBuilder.append(Constants.fullDateTimeFormat
+										.print(slot.getStartDateTime()));
 								descriptionBuilder.append(" to ");
-								descriptionBuilder.append(Constants.fullDateTimeFormat.print(slot.getEndDateTime()));
+								descriptionBuilder
+										.append(Constants.fullDateTimeFormat
+												.print(slot.getEndDateTime()));
 								if (index != possibleIntervals.size()) {
 									descriptionBuilder.append("\nor ");
 								}
@@ -366,21 +388,141 @@ public class ApplicationWindow {
 						}
 						ArrayList<String> tags = executedCommand.getTags();
 						if (tags.size() > 0) {
-							if (finalType.equals(Constants.TASK_TYPE_DEADLINE) | finalType.equals(Constants.TASK_TYPE_TIMED) | finalType.equals(Constants.TASK_TYPE_FLOATING)) {
+							if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
+									| finalType
+											.equals(Constants.TASK_TYPE_TIMED)
+									| finalType
+											.equals(Constants.TASK_TYPE_FLOATING)) {
 								descriptionBuilder.append("\n");
 							}
 							for (String tag : tags) {
 								descriptionBuilder.append("#" + tag + " ");
 							}
 						}
-						if(!descriptionBuilder.toString().isEmpty()){
-							displayLogic.getCompositeGlobal(taskIndex).setDescription(descriptionBuilder.toString());
+						if (!descriptionBuilder.toString().isEmpty()) {
+							displayLogic.getCompositeGlobal(taskIndex)
+									.setDescription(
+											descriptionBuilder.toString());
 						}
 						displayLogic.getCompositeGlobal(taskIndex).pack();
 					}
 					break;
+				case ADD:
+					if (dummyTaskComposite != null) {
+						dummyTaskComposite.dispose();
+					}
+
+					if (!executedCommand.isEmptyAddCommand()) {
+						displayLogic.clearHighlightedTasks();
+
+						displayLogic.setPageNumber(Integer.MAX_VALUE);
+						displayTasksOnWindow();
+						Task dummyTask = new Task(executedCommand);
+
+						// Check if the tasks overflow
+						if (displayTask.getSize().y
+								+ displayLogic.determineTaskHeight(dummyTask) > 450) {
+							for (Control child : displayTask.getChildren()) {
+								child.dispose();
+							}
+							int newLastPage = displayLogic.getNumberOfPages() + 1;
+							displayPageNumber.setText("Page " + newLastPage
+									+ " of " + newLastPage);
+							displayPageNumber.setAlignment(SWT.CENTER);
+						} else {
+							displayLogic.setPageNumber(Integer.MAX_VALUE);
+							displayTasksOnWindow();
+						}
+
+						dummyTaskComposite = new TaskComposite(displayTask,
+								dummyTask, displayLogic
+										.getTotalNumberOfComposites() + 1);
+
+						String finalType = executedCommand.getTaskType();
+						if (!executedCommand.getDescription().isEmpty()) {
+							dummyTaskComposite.setTaskName(executedCommand
+									.getDescription());
+						}
+						StringBuilder descriptionBuilder = new StringBuilder();
+						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
+							descriptionBuilder.append("by "
+									+ Constants.fullDateTimeFormat
+											.print(executedCommand
+													.getDeadline()));
+						} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
+							Interval taskInterval = executedCommand
+									.getIntervals().get(0);
+							descriptionBuilder.append("from "
+									+ Constants.fullDateTimeFormat
+											.print(taskInterval
+													.getStartDateTime())
+									+ " to "
+									+ Constants.fullDateTimeFormat
+											.print(taskInterval
+													.getEndDateTime()));
+						} else if (finalType
+								.equals(Constants.TASK_TYPE_FLOATING)) {
+							descriptionBuilder.append("on ");
+							ArrayList<Interval> possibleIntervals = executedCommand
+									.getIntervals();
+							int index = 1;
+							for (Interval slot : possibleIntervals) {
+								descriptionBuilder.append("(");
+								descriptionBuilder.append(index);
+								descriptionBuilder.append(") ");
+								descriptionBuilder.append(Constants.fullDateTimeFormat
+										.print(slot.getStartDateTime()));
+								descriptionBuilder.append(" to ");
+								descriptionBuilder
+										.append(Constants.fullDateTimeFormat
+												.print(slot.getEndDateTime()));
+								if (index != possibleIntervals.size()) {
+									descriptionBuilder.append("\nor ");
+								}
+								index++;
+							}
+						}
+						ArrayList<String> tags = executedCommand.getTags();
+						if (tags.size() > 0) {
+							if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
+									| finalType
+											.equals(Constants.TASK_TYPE_TIMED)
+									| finalType
+											.equals(Constants.TASK_TYPE_FLOATING)) {
+								descriptionBuilder.append("\n");
+							}
+							for (String tag : tags) {
+								descriptionBuilder.append("#" + tag + " ");
+							}
+						}
+						if (!descriptionBuilder.toString().isEmpty()) {
+							dummyTaskComposite
+									.setDescription(descriptionBuilder
+											.toString());
+						}
+						dummyTaskComposite.pack();
+						displayTask.pack();
+					} else {
+						displayLogic.clearHighlightedTasks();
+						displayTasksOnWindow();
+						if (dummyTaskComposite != null) {
+							dummyTaskComposite.dispose();
+						}
+					}
+
+					System.out.println(displayTask.getSize().y);
+
+					break;
 				default:
-					System.out.println("Instant feedback not yet implemented for command " + executedCommand.getCommandType());
+					System.out.println("here");
+					displayLogic.clearHighlightedTasks();
+					displayTasksOnWindow();
+					if (dummyTaskComposite != null) {
+						dummyTaskComposite.dispose();
+					}
+					System.out
+							.println("Instant feedback not yet implemented for command "
+									+ executedCommand.getCommandType());
 					break;
 				}
 			}
@@ -557,9 +699,9 @@ public class ApplicationWindow {
 			GlobalScreen.getInstance().addNativeKeyListener(new NativeHook());
 		} catch (Exception e) {
 			// I can't actually fix this bug, because it is an OS level problem
-			System.err.println("Unable to initialise global hotkey!" +
-					"Please check your system accessibility settings!" +
-					"Basket will continue without hotkey.");
+			System.err.println("Unable to initialise global hotkey!"
+					+ "Please check your system accessibility settings!"
+					+ "Basket will continue without hotkey.");
 		}
 	}
 
@@ -579,7 +721,7 @@ public class ApplicationWindow {
 		if (testMode) {
 			logger.log(Level.INFO, generateLoggingString());
 		}
-		
+
 	}
 
 	public void defineTaskCompositeHeight() {
@@ -590,7 +732,6 @@ public class ApplicationWindow {
 		TaskComposite taskComposite1 = new TaskComposite(displayTask, task1, 1);
 		int taskCompositeHeight = taskComposite1.getSize().y;
 		displayLogic.setTaskCompositeHeight(taskCompositeHeight);
-		
 
 		DateTime startDate1 = new DateTime(2013, 10, 30, 15, 0, 0);
 		DateTime endDate1 = new DateTime(2013, 10, 30, 16, 0, 0);
