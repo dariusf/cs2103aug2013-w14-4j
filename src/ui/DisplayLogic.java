@@ -34,13 +34,17 @@ public class DisplayLogic {
 	private TaskComposite[] taskComposites = null;
 	// A list of globol indices of tasks that should be highlighted on next display draw
 	private ArrayList<Integer> highlightedTasks = new ArrayList<Integer>();
+	
+	private boolean recreateTaskComposites = false;
 
 	public DisplayLogic(Logic logic, DisplayMode displayMode, int pageNumber) {
 		setLogic(logic);
 		setDisplayMode(displayMode);
 		taskDisplay = new Composite(ApplicationWindow.shell, SWT.NONE);
+
 		determineNumberOfTasksForEachPage(displayMode);
 		setPageNumber(pageNumber);
+		
 		this.displayStateHistory = new DisplayStateHistory();
 	}
 	
@@ -71,26 +75,22 @@ public class DisplayLogic {
 	 */
 	
 	public void refreshTaskDisplay() {
-		deleteTaskComposites();
-		initialiseTaskDisplay();
+		if (recreateTaskComposites) {
+			deleteTaskComposites();
+			initialiseTaskDisplay();
+		}
 		displayTasks();
 	}
 
 	protected void displayTasks() {
 		
 		determineNumberOfTasksForEachPage(displayMode);
-		
-		
-//		if () {
-//			pageNumber = numberOfTasksOnEachPage.size();
-//		} else if (pageNumber <= 0) {
-//			pageNumber = 1;
-//		}
+		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
 
 		int startingIndex = 0;
-		for (int i = 0; i < pageNumber - 1; i++) {
+		for (int i = 0; i<pageNumber-1; ++i) {
 			startingIndex += numberOfTasksOnEachPage.get(i);
-		}
+ 		}
 
 		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
 
@@ -327,8 +327,13 @@ public class DisplayLogic {
 	}
 	
 	protected void setPageNumber(int pageNumber) {
-		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size());
-		this.pageNumber = pageNumber;
+//		assert (pageNumber > 0 && pageNumber <= ) : "Invalid page number " + pageNumber;
+		if (this.pageNumber != pageNumber) {
+			// The only time you will need to recreate composites is if the
+			// page number is changed
+			recreateTaskComposites = true;
+			this.pageNumber = Math.max(1, Math.min(pageNumber, numberOfTasksOnEachPage.size()));;
+		}
 	}
 
 	protected int getPageNumber() {
