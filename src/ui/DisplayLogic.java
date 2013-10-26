@@ -39,6 +39,7 @@ public class DisplayLogic {
 		setLogic(logic);
 		setDisplayMode(displayMode);
 		taskDisplay = new Composite(ApplicationWindow.shell, SWT.NONE);
+		determineNumberOfTasksForEachPage(displayMode);
 		setPageNumber(pageNumber);
 		this.displayStateHistory = new DisplayStateHistory();
 	}
@@ -79,7 +80,7 @@ public class DisplayLogic {
 		
 		determineNumberOfTasksForEachPage(displayMode);
 		
-		assert pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size();
+		
 //		if () {
 //			pageNumber = numberOfTasksOnEachPage.size();
 //		} else if (pageNumber <= 0) {
@@ -326,7 +327,7 @@ public class DisplayLogic {
 	}
 	
 	protected void setPageNumber(int pageNumber) {
-		assert (pageNumber > 0);
+		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size());
 		this.pageNumber = pageNumber;
 	}
 

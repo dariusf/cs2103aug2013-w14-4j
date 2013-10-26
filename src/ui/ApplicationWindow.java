@@ -286,7 +286,7 @@ public class ApplicationWindow {
 					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_UP) {
 					displayLogic.setPageNumber(Math.max(
-							displayLogic.getPageNumber() - 1, 0));
+							displayLogic.getPageNumber() - 1, 1));
 					displayTasks();
 					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_DOWN) {
