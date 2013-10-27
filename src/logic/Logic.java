@@ -36,30 +36,30 @@ public class Logic {
 		return new ActiveFeedback(command);
 	}
 
-//	private ActiveFeedback activeSearchTasks(Command command) {
-//		return new ActiveFeedback(command);
-//	}
-//
-//	private ActiveFeedback activeFinalisaTask(Command command) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	private ActiveFeedback activeMarkDone(Command command) {
-//		return new ActiveFeedback(command);
-//	}
-//
-//	private ActiveFeedback activeDeleteTask(Command command) {
-//		return new ActiveFeedback(command);
-//	}
-//
-//	private ActiveFeedback activeEditTask(Command command) {
-//		return new ActiveFeedback(command);
-//	}
-//
-//	private ActiveFeedback activeAddTask(Command command) {
-//		return new ActiveFeedback(command);
-//	}
+	// private ActiveFeedback activeSearchTasks(Command command) {
+	// return new ActiveFeedback(command);
+	// }
+	//
+	// private ActiveFeedback activeFinalisaTask(Command command) {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// private ActiveFeedback activeMarkDone(Command command) {
+	// return new ActiveFeedback(command);
+	// }
+	//
+	// private ActiveFeedback activeDeleteTask(Command command) {
+	// return new ActiveFeedback(command);
+	// }
+	//
+	// private ActiveFeedback activeEditTask(Command command) {
+	// return new ActiveFeedback(command);
+	// }
+	//
+	// private ActiveFeedback activeAddTask(Command command) {
+	// return new ActiveFeedback(command);
+	// }
 
 	public Feedback executeCommand(String userCommand) {
 		Command command = new Parser().parse(userCommand);
@@ -134,13 +134,17 @@ public class Logic {
 
 		if (finaliseIndex > 0) {
 			List<Interval> possibleIntervals = taskToEdit.getPossibleTime();
-			if(finaliseIndex > possibleIntervals.size()){
-				feedback = new Feedback (Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR, CommandType.EDIT);
-			} else if (command.getIntervals().isEmpty()){
-				feedback = new Feedback (Constants.SC_EMPTY_DESCRIPTION_ERROR, CommandType.EDIT);
+			if (finaliseIndex > possibleIntervals.size()) {
+				feedback = new Feedback(
+						Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR,
+						CommandType.EDIT);
+			} else if (command.getIntervals().isEmpty()) {
+				feedback = new Feedback(Constants.SC_EMPTY_DESCRIPTION_ERROR,
+						CommandType.EDIT);
 			} else {
 				possibleIntervals.remove(finaliseIndex - 1);
-				possibleIntervals.add(finaliseIndex-1, command.getIntervals().get(0));
+				possibleIntervals.add(finaliseIndex - 1, command.getIntervals()
+						.get(0));
 				taskToEdit.setPossibleTime(possibleIntervals);
 				storage.replace(taskIndex, taskToEdit);
 				if (isTaskOver(taskToEdit)) {
@@ -148,7 +152,8 @@ public class Logic {
 							CommandType.EDIT);
 					feedback.setTaskIndex(taskIndex);
 				} else {
-					feedback = new Feedback(Constants.SC_SUCCESS, CommandType.EDIT);
+					feedback = new Feedback(Constants.SC_SUCCESS,
+							CommandType.EDIT);
 					feedback.setTaskIndex(taskIndex);
 				}
 			}
@@ -192,7 +197,11 @@ public class Logic {
 	}
 
 	public int getNumberOfTasks() {
-		return storage.size();
+		if (isDynamicIndex) {
+			return temporaryMapping.keySet().size();
+		} else {
+			return storage.size();
+		}
 	}
 
 	public int getNumberOfRemainingTasks() {
@@ -264,6 +273,8 @@ public class Logic {
 			return true;
 		case TODO:
 			return !task.isDone();
+		case DONE:
+			return task.isDone();
 		case TIMED:
 			return task.isTimedTask();
 		case DEADLINE:

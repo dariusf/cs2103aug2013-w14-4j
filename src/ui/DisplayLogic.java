@@ -193,6 +193,8 @@ public class DisplayLogic {
 		switch (displayMode) {
 		case TODAY:
 			return Constants.MODE_TODAY;
+		case DONE:
+			return Constants.MODE_DONE;
 		case TOMORROW:
 			return Constants.MODE_TOMORROW;
 		case DEADLINE:

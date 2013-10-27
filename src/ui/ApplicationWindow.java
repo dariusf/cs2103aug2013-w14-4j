@@ -108,7 +108,6 @@ public class ApplicationWindow {
 			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -327,7 +326,7 @@ public class ApplicationWindow {
 				case EDIT:
 					// TODO timeslot index has to be checked lower down, inside
 					// edit and finalise
-					// TODO logic.getNumberOfTasks does not return the current number of tasks
+				
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						editTaskFeedback(executedCommand, taskIndex);
 					} else {
