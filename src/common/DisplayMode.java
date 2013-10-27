@@ -1,7 +1,7 @@
 package common;
 
 public enum DisplayMode {
-	TODAY, TOMORROW, DEADLINE, TIMED, FLOATING, UNTIMED, ALL, SEARCH, OVERDUE, DATE, INVALID, TODO;
+	TODAY, TOMORROW, DEADLINE, TIMED, FLOATING, UNTIMED, ALL, SEARCH, OVERDUE, DATE, INVALID, TODO, DONE;
 	
 	public static DisplayMode fromString(String displayString) {
 		try {
