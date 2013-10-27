@@ -1,14 +1,10 @@
 package logic;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.joda.time.DateTime;
-
 import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
 import common.InvalidCommandReason;
-
 
 public class Command {
 	private CommandType commandType = null;
@@ -28,14 +24,8 @@ public class Command {
 	private InvalidCommandReason invalidCommandReason;
 	private DisplayMode displayMode;
 	private DateTime displayDateTime = null;
-	
-	
-	// TODO: remove
-	@Deprecated
-	private HashMap<String, String> commandAttributes = null;
-	
+		
 	public Command(CommandType type){
-		commandAttributes = new HashMap<String, String>();
 		commandType = type;
 	}
 
@@ -130,18 +120,6 @@ public class Command {
 	public void setInvalidCommandReason(InvalidCommandReason invalidCommandReason) {
 		this.invalidCommandReason = invalidCommandReason;
 	}
-
-	// TODO: remove
-	@Deprecated
-	public HashMap<String, String> getCommandAttributes(){
-		return commandAttributes;
-	}
-	
-	// TODO: remove
-	@Deprecated
-	public void setValue(String attribute, String value){
-		commandAttributes.put(attribute, value);
-	}
 	
 	// TODO: might want to move to a higher level,
 	// this is just here for now to illustrate how these
@@ -167,17 +145,18 @@ public class Command {
 		return this.description.isEmpty() && this.deadline == null && this.tags.isEmpty() && this.intervals.isEmpty();
 	}
 
+
 	@Override
 	public String toString() {
 		return "Command [commandType=" + commandType + ", description="
 				+ description + ", deadline=" + deadline + ", intervals="
 				+ intervals + ", tags=" + tags + ", taskIndex=" + taskIndex
-				+ ", finaliseIndex=" + timeslotIndex + ", displayDateTime="
-				+ displayDateTime + ", clearDone=" + clearDone
-				+ ", helpCommand=" + helpCommand + ", searchString="
-				+ searchString + ", displayMode="
-						+ displayMode+ ", invalidCommandReason="
-				+ invalidCommandReason + "]";
+				+ ", pageIndex=" + pageIndex + ", timeslotIndex="
+				+ timeslotIndex + ", clearDone=" + clearDone + ", helpCommand="
+				+ helpCommand + ", searchString=" + searchString
+				+ ", invalidCommandReason=" + invalidCommandReason
+				+ ", displayMode=" + displayMode + ", displayDateTime="
+				+ displayDateTime + "]";
 	}
 
 	@Override
