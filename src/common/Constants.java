@@ -210,7 +210,7 @@ public class Constants {
 	public static final String MODE_ALL = "All Tasks";
 	public static final String MODE_SEARCH = "Search Result";
 	public static final String MODE_OVERDUE = "Overdue Tasks";
-	public static final String MODE_TODO = "Undone Tasks";
+	public static final String MODE_TODO = "Todo";
 	
 	public static final int DEFAULT_PAGE_NUMBER = 1;
 }

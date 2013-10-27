@@ -158,7 +158,10 @@ public class DisplayLogic {
 			this.setDisplayMode(DisplayMode.SEARCH);
 			break;
 		case GOTO:
-			this.setPageNumber(feedback.getGotoPage());
+			if (!feedback.isErrorMessage()) {
+				this.setPageNumber(feedback.getGotoPage());
+			}
+		
 			break;
 		case SORT:
 		case CLEAR:

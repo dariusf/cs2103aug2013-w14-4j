@@ -303,7 +303,7 @@ public class ApplicationWindow {
 
 				Command executedCommand = activeFeedback.getCommand();
 				int taskIndex = executedCommand.getTaskIndex();
-
+				
 				switch (executedCommand.getCommandType()) {
 				case DONE:
 				case DELETE:
@@ -315,9 +315,19 @@ public class ApplicationWindow {
 						return;
 					}
 					break;
+				case FINALISE:
+					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
+						finaliseTaskFeedback(executedCommand, taskIndex);
+					} else {
+						System.out
+								.println("Invalid index. This should be replaced by kind of UI feedback");
+						return;
+					}
+					break;
 				case EDIT:
 					// TODO timeslot index has to be checked lower down, inside
 					// edit and finalise
+					// TODO logic.getNumberOfTasks does not return the current number of tasks
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						editTaskFeedback(executedCommand, taskIndex);
 					} else {
@@ -332,12 +342,13 @@ public class ApplicationWindow {
 				case SEARCH:
 					searchTaskFeedback(executedCommand);
 					break;
+				case INVALID:
 				default:
 					defaultFeedback();
 					break;
 				}
 			}
-
+			
 			private void defaultFeedback() {
 				// System.out.println("here");
 				displayLogic.clearHighlightedTasks();
@@ -560,6 +571,14 @@ public class ApplicationWindow {
 								.setDescription(descriptionBuilder.toString());
 					}
 					displayLogic.getCompositeGlobal(taskIndex).pack();
+				}
+			}
+
+			private void finaliseTaskFeedback(Command executedCommand, int taskIndex){
+				highlightTaskFeedback(taskIndex);
+				if(executedCommand.getTimeslotIndex() > 0){
+					displayLogic.getCompositeGlobal(taskIndex)
+					.highlightLine(executedCommand.getTimeslotIndex());
 				}
 			}
 
