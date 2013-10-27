@@ -250,7 +250,7 @@ public class Parser {
 	}
 		
 	private Command createFinaliseCommand(CommandType commandType) {
-		int whichTask, whichSlot;
+		int whichTask = -1, whichSlot = -1;
 		
 		if (hasTokensLeft()) {
 			try {
@@ -263,9 +263,6 @@ public class Parser {
 					} catch (NumberFormatException e) {
 						return invalidCommand(InvalidCommandReason.INVALID_TIMESLOT_INDEX);
 					}
-				}
-				else {
-					return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
 				}
 
 			} catch (NumberFormatException e) {
