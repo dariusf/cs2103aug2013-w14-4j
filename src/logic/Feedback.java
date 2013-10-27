@@ -129,6 +129,9 @@ public class Feedback {
 		case Constants.SC_REDO_NO_PRIOR_STATE_ERROR :
 			isError = true;
 			break;
+		case Constants.SC_INVALID_PAGE_INDEX :
+			isError = true;
+			break;
 		default:
 			assert isError = false;
 		}

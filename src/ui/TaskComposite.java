@@ -135,4 +135,9 @@ public class TaskComposite extends Composite {
 			setBackground(null);
 		}
 	}
+	
+	public void highlightLine(int line){
+		taskDescription.setLineBackground(line-1, 1, new Color(ApplicationWindow.self.shell.getDisplay(),
+				0x00, 0xdd, 0x00));
+	}
 }

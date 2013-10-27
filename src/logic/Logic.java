@@ -33,49 +33,33 @@ public class Logic {
 
 	public ActiveFeedback activeFeedback(String userInput) {
 		Command command = new Parser().parse(userInput);
-		CommandType commandType = command.getCommandType();
-		switch (commandType) {
-		case ADD:
-			return activeAddTask(command);
-		case EDIT:
-			return activeEditTask(command);
-		case DELETE:
-			return activeDeleteTask(command);
-		case DONE:
-			return activeMarkDone(command);
-		case FINALISE:
-			return activeFinalisaTask(command);
-		case SEARCH:
-			return activeSearchTasks(command);
-		default:
-			return null;
-		}
-	}
-
-	private ActiveFeedback activeSearchTasks(Command command) {
 		return new ActiveFeedback(command);
 	}
 
-	private ActiveFeedback activeFinalisaTask(Command command) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private ActiveFeedback activeMarkDone(Command command) {
-		return new ActiveFeedback(command);
-	}
-
-	private ActiveFeedback activeDeleteTask(Command command) {
-		return new ActiveFeedback(command);
-	}
-
-	private ActiveFeedback activeEditTask(Command command) {
-		return new ActiveFeedback(command);
-	}
-
-	private ActiveFeedback activeAddTask(Command command) {
-		return new ActiveFeedback(command);
-	}
+//	private ActiveFeedback activeSearchTasks(Command command) {
+//		return new ActiveFeedback(command);
+//	}
+//
+//	private ActiveFeedback activeFinalisaTask(Command command) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	private ActiveFeedback activeMarkDone(Command command) {
+//		return new ActiveFeedback(command);
+//	}
+//
+//	private ActiveFeedback activeDeleteTask(Command command) {
+//		return new ActiveFeedback(command);
+//	}
+//
+//	private ActiveFeedback activeEditTask(Command command) {
+//		return new ActiveFeedback(command);
+//	}
+//
+//	private ActiveFeedback activeAddTask(Command command) {
+//		return new ActiveFeedback(command);
+//	}
 
 	public Feedback executeCommand(String userCommand) {
 		Command command = new Parser().parse(userCommand);
@@ -444,7 +428,7 @@ public class Logic {
 		Feedback feedback = null;
 		int pageIndex = command.getPageIndex();
 
-		if (pageIndex != 0) {
+		if (pageIndex > 0) {
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.GOTO);
 			feedback.setGotoPage(pageIndex);
 		} else {
