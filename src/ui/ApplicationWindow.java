@@ -112,23 +112,130 @@ public class ApplicationWindow {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	private double sqr (double i) {
+		return i * i;
+	}
+	
+	/**
+	 * Constructs a point array representing a rounded rectangle. 
+	 * The implementation can be imagined as a large oval, with top, bottom and sides chopped off
+	 * 
+	 * @param windowWidth
+	 * @param windowHeight
+	 * @param ovalX
+	 * @param ovalY
+	 * @return
+	 */
+	private int[] roundedRectangle (int windowWidth, int windowHeight, int ovalX, int ovalY) {
+		assert(windowWidth > 0);
+		assert(windowHeight > 0);
+		assert(ovalX > 0);
+		assert(ovalY > 0);
+		
+		class Point {
+			double x;
+			double y;
+			
+			public Point(double x, double y) {
+				this.x = x;
+				this.y = y;
+			}
+			
+			void offset(double xOffset, double yOffset) { //shifts this point by the specified offset
+				x += xOffset;
+				y += yOffset;
+			}
+		}
+		
+		class PointOperations {
+			int[] flatten (Point[] points) {
+				int[] result = new int[points.length * 2];
+				for(int i = 0; i < points.length; i++) {
+					result[i * 2] = (int) points[i].x;
+					result[i * 2 + 1] = (int) points[i].y;
+				}
+				return result;
+			}
+			
+			// mirrors all points along the X axis and joins the two together to form a line
+			Point[] mirrorX (Point[] points) {
+				Point[] result = new Point[points.length * 2];
+				for (int i = 0; i < points.length; i++) {
+					Point currentPoint = points[i];
+					Point reflectedPoint = new Point(-currentPoint.x, currentPoint.y);
+					result[i] = currentPoint;
+					result[result.length - 1 - i] = reflectedPoint;
+				}
+				return result;
+			}
+			
+			Point[] mirrorY (Point[] points) {
+				Point[] result = new Point[points.length * 2];
+				for (int i = 0; i < points.length; i++) {
+					Point currentPoint = points[i];
+					Point reflectedPoint = new Point(currentPoint.x, -currentPoint.y);
+					result[i] = currentPoint;
+					result[result.length - 1 - i] = reflectedPoint;
+				}
+				return result;
+			}
+		}
+		
+		PointOperations pointManipulator = new PointOperations();
+		Point[] quarterArc = new Point[ovalX + 1];
+		
+		// eqn: (x^2)/(ovalX^2) + (y^2)/(ovalY^2) = 1
+		for (int i = 0; i <= ovalX; i++) {
+			double xCoord = i;
+			double yCoord = Math.sqrt(1 - (sqr(xCoord)/sqr(ovalX))) * (sqr(ovalY));
+			quarterArc[quarterArc.length - 1 - i] = new Point(xCoord, yCoord);
+		}
+		
+		Point[] oval = pointManipulator.mirrorY(pointManipulator.mirrorX(quarterArc));
+		for (Point point : oval) {
+			point.offset(windowWidth / 2, windowHeight / 2); // shift oval to center on window
+			
+			if (point.x < 0) {
+				point.x = 0;
+			} else if (point.x > windowWidth) {
+				point.x = windowWidth;
+			}
+			
+			if (point.y < 0) {
+				point.y = 0;
+			} else if (point.y > windowHeight) {
+				point.y = windowHeight;
+			}
+		}
+		return pointManipulator.flatten(oval);
+	}
 
 	/**
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
 		shell = new Shell(SWT.NO_TRIM | SWT.DRAG);
+		
 		shell.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
 				"/image/basketIcon.jpg"));
+		
 		ImageData backgroundData = new ImageData(getClass()
 				.getResourceAsStream("/image/background.png"));
-		int whitePixel = backgroundData.palette
-				.getPixel(new RGB(255, 255, 255));
-		backgroundData.transparentPixel = whitePixel;
 		Image transparentBackgroundImage = new Image(Display.getCurrent(),
 				backgroundData);
 		shell.setBackgroundImage(transparentBackgroundImage);
 		shell.setBackgroundMode(SWT.INHERIT_FORCE);
+		
+//		Region shellRegion = new Region();
+//		shellRegion.add(roundedRectangle(482, 681, 400, 600));
+//		shell.setRegion(shellRegion);
+//		
+//		Rectangle size = shellRegion.getBounds();
+//		
+//		shell.setSize(size.width, size.height);
+		
 		shell.setSize(482, 681);
 		shell.setText(Constants.APP_NAME);
 		defineFont();
@@ -200,7 +307,6 @@ public class ApplicationWindow {
 		});
 		adjustPageNumberAlignment();
 		enableDrag();
-
 	}
 
 	public void updateTaskDisplay() {
