@@ -34,7 +34,7 @@ public class DisplayLogic {
 
 	private int taskCompositeHeightForThreeLines = 0;
 	private TaskComposite[] taskComposites = null;
-	// A list of globol indices of tasks that should be highlighted on next display draw
+	// A list of global indices of tasks that should be highlighted on next display draw
 	private ArrayList<Integer> highlightedTasks = new ArrayList<Integer>();
 	
 	private boolean recreateTaskComposites = false;

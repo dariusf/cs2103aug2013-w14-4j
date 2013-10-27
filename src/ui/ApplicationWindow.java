@@ -371,7 +371,7 @@ public class ApplicationWindow {
 
 				if (!executedCommand.isEmptyAddCommand()) {
 					displayLogic.clearHighlightedTasks();
-
+					
 					displayLogic.goToLastPage();
 					updateTaskDisplay();
 
@@ -395,6 +395,8 @@ public class ApplicationWindow {
 							.getTaskDisplay(), dummyTask, displayLogic
 							.getTotalNumberOfComposites() + 1);
 
+					dummyTaskComposite.setHighlighted(true);
+					
 					String finalType = executedCommand.getTaskType();
 					if (!executedCommand.getDescription().isEmpty()) {
 						dummyTaskComposite.setTaskName(executedCommand
