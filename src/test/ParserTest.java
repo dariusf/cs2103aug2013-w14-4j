@@ -762,8 +762,8 @@ public class ParserTest {
 		Command expected, gotten;
 		
 		// Too few arguments
-		expected = new Command(CommandType.INVALID);
-		expected.setInvalidCommandReason(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+		expected = new Command(CommandType.FINALISE);
+		expected.setTaskIndex(1);
 		gotten = new Parser().parse("finalise 1");
 		assertEquals(gotten, expected);
 
