@@ -38,15 +38,15 @@ public class TaskComposite extends Composite {
 		taskIndex.setEnabled(false);
 		taskIndex.setText(String.valueOf(index));
 		taskIndex.setFont(ApplicationWindow.self.indexFont);
-		taskIndex.setForeground(new Color(ApplicationWindow.self.shell.getDisplay(), 0x99, 0, 0));
+		taskIndex.setForeground(new Color(ApplicationWindow.self.shell
+				.getDisplay(), 0x99, 0, 0));
 		taskIndex.setLineAlignment(0, 1, SWT.RIGHT);
 		taskIndex.setLayoutData(taskIndexLayoutData);
 
 		Composite paddingComposite = new Composite(this, SWT.NONE);
 		paddingComposite.setLayoutData(paddingLayoutData);
 
-		Composite taskDetailsComposite = new Composite(this,
-				SWT.NONE);
+		Composite taskDetailsComposite = new Composite(this, SWT.NONE);
 		taskDetailsComposite.setLayoutData(taskDescriptionLayoutData);
 		taskDetailsComposite.setLayout(innerRowLayout);
 
@@ -56,12 +56,10 @@ public class TaskComposite extends Composite {
 
 		taskName.setLayoutData(taskDescriptionLayoutData);
 
-		taskDescription = new StyledText(taskDetailsComposite,
-				SWT.READ_ONLY);
+		taskDescription = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
 		taskDescription.setText(task.getInfoString());
 		taskDescription.setFont(ApplicationWindow.self.descriptionFont);
-		
-		
+
 		if (task.isDone()) {
 			StyleRange style1 = new StyleRange();
 			style1.start = 0;
@@ -69,7 +67,8 @@ public class TaskComposite extends Composite {
 			style1.strikeout = true;
 			taskName.setStyleRange(style1);
 		} else if (task.isOverdue()) {
-			taskName.setForeground(new Color(ApplicationWindow.self.shell.getDisplay(), 0x99, 0, 0));
+			taskName.setForeground(new Color(ApplicationWindow.self.shell
+					.getDisplay(), 0x99, 0, 0));
 		}
 
 		taskDetailsComposite.pack();
@@ -85,8 +84,7 @@ public class TaskComposite extends Composite {
 		int result = -1;
 		try {
 			result = Integer.parseInt(taskIndex.getText());
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			assert false : "Invaild task index text stored";
 		}
 		assert result >= 0;
@@ -106,15 +104,34 @@ public class TaskComposite extends Composite {
 		taskDescription.pack();
 	}
 
+	public void setDescriptionAtLine(String description, int line) {
+		String[] currentDescription = taskDescription.getText().split("\n");
+		if (line <= currentDescription.length) {
+			currentDescription[line - 1] = description;
+			StringBuilder builder = new StringBuilder();
+
+			for (String string : currentDescription) {
+				if (builder.length() > 0) {
+					builder.append("\n");
+				}
+				builder.append(string);
+			}
+
+			String newString = builder.toString();
+			taskDescription.setText(newString);
+			taskDescription.pack();
+		}
+	}
+
 	public String getDescription(String name) {
 		return taskDescription.getText();
 	}
-	
+
 	public void setHighlighted(boolean highlighted) {
 		if (highlighted) {
-			setBackground(new Color(ApplicationWindow.self.shell.getDisplay(), 0xdd, 0xdd, 0xdd));
-		}
-		else {
+			setBackground(new Color(ApplicationWindow.self.shell.getDisplay(),
+					0xdd, 0xdd, 0xdd));
+		} else {
 			setBackground(null);
 		}
 	}
