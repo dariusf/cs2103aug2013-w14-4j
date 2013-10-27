@@ -138,9 +138,6 @@ public class DisplayLogic {
 			break;
 		case DELETE:
 			highlightedTasks = new ArrayList<>();
-			if (!feedback.isErrorMessage()) {
-				goToFirstPage();
-			}
 			displayStateHistory.addDisplayState(this.getDisplayMode(),
 					this.getPageNumber());
 			break;
@@ -171,14 +168,14 @@ public class DisplayLogic {
 					this.getPageNumber());
 			break;
 		case UNDO:
-			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
-			this.setPageNumber(displayStateHistory.getCurrentPageNumber());
-			displayStateHistory.undo();
+//			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
+//			this.setPageNumber(displayStateHistory.getCurrentPageNumber());
+//			displayStateHistory.undo();
 			break;
 		case REDO:
-			displayStateHistory.redo();
-			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
-			this.setPageNumber(displayStateHistory.getCurrentPageNumber());
+//			displayStateHistory.redo();
+//			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
+//			this.setPageNumber(displayStateHistory.getCurrentPageNumber());
 			break;
 		case HELP:
 			helpDialog.open(feedback);
