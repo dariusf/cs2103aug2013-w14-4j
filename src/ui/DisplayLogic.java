@@ -97,8 +97,6 @@ public class DisplayLogic {
 		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
 
 		int startingIndex = 0;
-		System.out.println(pageNumber);
-		System.out.println(numberOfTasksOnEachPage);
 		for (int i = 0; i<pageNumber-1; ++i) {
 			startingIndex += numberOfTasksOnEachPage.get(i);
  		}
