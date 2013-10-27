@@ -2,6 +2,7 @@ package ui;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,7 +109,6 @@ public class ApplicationWindow {
 			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -416,29 +416,28 @@ public class ApplicationWindow {
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						highlightTaskFeedback(taskIndex);
 					} else {
-						System.out
-								.println("Invalid index. This should be replaced by kind of UI feedback");
-						return;
+						displayFeedback.setText("Task index is not valid!");
+						displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
 					}
 					break;
 				case FINALISE:
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						finaliseTaskFeedback(executedCommand, taskIndex);
 					} else {
-						System.out
-								.println("Invalid index. This should be replaced by kind of UI feedback");
+						displayFeedback.setText("Task index is not valid!");
+						displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
 						return;
 					}
 					break;
 				case EDIT:
 					// TODO timeslot index has to be checked lower down, inside
 					// edit and finalise
-					// TODO logic.getNumberOfTasks does not return the current number of tasks
+				
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						editTaskFeedback(executedCommand, taskIndex);
 					} else {
-						System.out
-								.println("Invalid index. This should be replaced by kind of UI feedback");
+						displayFeedback.setText("Task index is not valid!");
+						displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
 						return;
 					}
 					break;
@@ -462,9 +461,14 @@ public class ApplicationWindow {
 				if (dummyTaskComposite != null) {
 					dummyTaskComposite.dispose();
 				}
-				// System.out
-				// .println("Instant feedback not yet implemented for command "
-				// + executedCommand.getCommandType());
+				if(Math.random() < 0.05){
+					int index = new Random().nextInt(Constants.RANDOM_JOKES.length);
+					displayFeedback.setText(Constants.RANDOM_JOKES[index]);
+					displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+				} else {
+					displayFeedback.setText(Constants.MSG_ENTER_COMMAND);
+					displayFeedback.setForeground(new Color(shell.getDisplay(), 0, 0x66, 0));
+				}
 			}
 
 			private void searchTaskFeedback(Command executedCommand) {
@@ -923,7 +927,7 @@ public class ApplicationWindow {
 		int taskComposite2LinesHeight = taskComposite2.getSize().y;
 		displayLogic
 				.setTaskCompositeHeightForTwoLines(taskComposite2LinesHeight);
-		System.out.println(taskComposite2LinesHeight);
+	
 
 		DateTime startDate3 = new DateTime(2013, 10, 30, 17, 0, 0);
 		DateTime endDate3 = new DateTime(2013, 10, 30, 18, 0, 0);
