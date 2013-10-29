@@ -27,7 +27,6 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.joda.time.DateTime;
-import org.omg.CORBA.PRIVATE_MEMBER;
 
 import common.Constants;
 import common.undo.Action;
