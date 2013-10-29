@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
+import common.undo.ActionStack;
 
 import parser.Parser;
 import storage.Storage;
@@ -25,6 +26,7 @@ public class Logic {
 	protected boolean isDynamicIndex = false;
 	protected boolean isDisplayHelp = false;
 	protected Command currentHelpCommand = null;
+	protected ActionStack actionStack = ActionStack.getInstance();
 
 	public Logic() throws IOException {
 		storage = new Storage();
@@ -498,7 +500,8 @@ public class Logic {
 	protected Feedback undoState() {
 		Feedback feedback = null;
 		try {
-			storage.undo();
+			actionStack.flushCurrentActionSet();
+			actionStack.undo();
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.UNDO);
 		} catch (Exception e) {
 			feedback = new Feedback(Constants.SC_UNDO_NO_PRIOR_STATE_ERROR,
@@ -511,7 +514,8 @@ public class Logic {
 	protected Feedback redoState() {
 		Feedback feedback = null;
 		try {
-			storage.redo();
+			actionStack.flushCurrentActionSet();
+			actionStack.redo();
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.REDO);
 		} catch (Exception e) {
 			feedback = new Feedback(Constants.SC_REDO_NO_PRIOR_STATE_ERROR,

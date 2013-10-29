@@ -124,7 +124,6 @@ public class DisplayLogic {
 		case ADD:
 			this.setDisplayMode(DisplayMode.TODO);
 			goToLastPage();
-			displayStateHistory.addDisplayState(DisplayMode.ALL, Integer.MAX_VALUE);
 			break;
 		case EDIT:
 		case DONE:
@@ -133,13 +132,9 @@ public class DisplayLogic {
 			if (!feedback.isErrorMessage()) {
 				this.setPageNumber(getPageOfTask(feedback.getTaskIndex()));
 			}
-			displayStateHistory.addDisplayState(this.getDisplayMode(),
-					this.getPageNumber());
 			break;
 		case DELETE:
 			highlightedTasks = new ArrayList<>();
-			displayStateHistory.addDisplayState(this.getDisplayMode(),
-					this.getPageNumber());
 			break;
 		case DISPLAY:
 			this.setDisplayMode(feedback.getDisplayMode());
@@ -147,8 +142,6 @@ public class DisplayLogic {
 				this.setDisplayDateTime(feedback.getDisplayDate());
 			}
 			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
-			displayStateHistory.addDisplayState(this.getDisplayMode(),
-					this.getPageNumber());
 			break;
 		case SEARCH:
 			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
@@ -158,14 +151,11 @@ public class DisplayLogic {
 			if (!feedback.isErrorMessage()) {
 				this.setPageNumber(feedback.getGotoPage());
 			}
-		
 			break;
 		case SORT:
 		case CLEAR:
 			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
 			this.setDisplayMode(DisplayMode.TODO);
-			displayStateHistory.addDisplayState(this.getDisplayMode(),
-					this.getPageNumber());
 			break;
 		case UNDO:
 //			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());

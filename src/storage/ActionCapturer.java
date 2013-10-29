@@ -3,16 +3,16 @@ package storage;
 import java.util.Iterator;
 import java.util.List;
 
+import common.undo.Action;
+import common.undo.ActionStack;
+import common.undo.DoublyLinkedList;
+
 public class ActionCapturer<E extends Comparable<E>, T extends StorageBase<E>> implements StorageBase<E> {
 	
 	T realStorage;
 	Cloner<E> itemCloner;
 	Cloner<T> storageCloner;
-	
-	private interface Action {
-		void undo();
-		void redo();
-	}
+	ActionStack actionStack;
 	
 	private class InsertAction implements Action {
 		int index;
@@ -73,53 +73,19 @@ public class ActionCapturer<E extends Comparable<E>, T extends StorageBase<E>> i
 			realStorage = nextState;
 		}
 	}
-	
-	private class ActionSet implements Action {
-		DoublyLinkedList<Action> set;
-		
-		public ActionSet() {
-			set = new DoublyLinkedList<>();
-		}
-		
-		public void addAction (Action action) {
-			set.push(action);
-		}
 
-		@Override
-		public void undo() {
-			while (set.hasNext()) {
-				set.next().undo();
-			}
-		}
-
-		@Override
-		public void redo() {
-			while (set.hasPrevious()) {
-				set.previous().redo();
-			}
-		}
-		
-		public boolean isEmpty() {
-			return (!set.hasNext() && !set.hasPrevious());
-		}
-	}
-	
-	DoublyLinkedList<Action> actionStack;
-	ActionSet currentActionSet;
-	
 	public ActionCapturer(T realStorage, Cloner<E> itemCloner, Cloner<T> storageCloner) {
 		this.realStorage = realStorage;
-		this.actionStack = new DoublyLinkedList<>();
-		this.currentActionSet = new ActionSet();
 		this.itemCloner = itemCloner;
 		this.storageCloner = storageCloner;
+		this.actionStack = ActionStack.getInstance();
 	}
 
 	@Override
 	public void insert(int index, E item) {
 		InsertAction thisAction = new InsertAction(index, item);
 		realStorage.insert(index, item);
-		currentActionSet.addAction(thisAction);
+		actionStack.add(thisAction);
 	}
 
 	@Override
@@ -127,7 +93,7 @@ public class ActionCapturer<E extends Comparable<E>, T extends StorageBase<E>> i
 		E removedItem = itemCloner.clone(realStorage.get(index));
 		RemoveAction thisAction = new RemoveAction(index, removedItem);
 		realStorage.remove(index);
-		currentActionSet.addAction(thisAction);
+		actionStack.add(thisAction);
 	}
 
 	@Override
@@ -136,7 +102,7 @@ public class ActionCapturer<E extends Comparable<E>, T extends StorageBase<E>> i
 		int index = realStorage.getIndex(item);
 		RemoveAction thisAction = new RemoveAction(index, item);
 		realStorage.remove(item);
-		currentActionSet.addAction(thisAction);
+		actionStack.add(thisAction);
 	}
 
 	@Override
@@ -145,7 +111,7 @@ public class ActionCapturer<E extends Comparable<E>, T extends StorageBase<E>> i
 		realStorage.setState(items);
 		T nextState = storageCloner.clone(realStorage);
 		StateAction thisAction = new StateAction(previousState, nextState);
-		currentActionSet.addAction(thisAction);
+		actionStack.add(thisAction);
 	}
 	
 	@Override
@@ -154,7 +120,7 @@ public class ActionCapturer<E extends Comparable<E>, T extends StorageBase<E>> i
 		realStorage.sort();
 		T nextState = storageCloner.clone(realStorage);
 		StateAction thisAction = new StateAction(previousState, nextState);
-		currentActionSet.addAction(thisAction);
+		actionStack.add(thisAction);
 	}
 	
 	@Override
@@ -175,47 +141,5 @@ public class ActionCapturer<E extends Comparable<E>, T extends StorageBase<E>> i
 	@Override
 	public int size() {
 		return realStorage.size();
-	}
-	
-	private void noPendingActionsCheck () throws Exception {
-		if (!currentActionSet.isEmpty()) {
-			throw new Exception("Current action stack contains unfinalised actions!" +
-					"Please finalise them before undo/redo.");
-		}
-	}
-	
-	public void undo () throws Exception {
-		if (!isUndoable()) {
-			throw new Exception("No actions in stack!");
-		}
-		
-		noPendingActionsCheck();
-		actionStack.next().undo();
-	}
-	
-	public void redo () throws Exception {
-		if (!isRedoable()) {
-			throw new Exception("No actions in stack!");
-		}
-		
-		noPendingActionsCheck();
-		actionStack.previous().redo();
-	}
-	
-	public boolean isUndoable() {
-		return actionStack.hasNext();
-	}
-	
-	public boolean isRedoable() {
-		return actionStack.hasPrevious();
-	}
-	
-	public void finaliseActions() {
-		if (currentActionSet.isEmpty()) {
-			return;
-		}
-		
-		actionStack.pushHere(currentActionSet);
-		currentActionSet = new ActionSet();
 	}
 }
