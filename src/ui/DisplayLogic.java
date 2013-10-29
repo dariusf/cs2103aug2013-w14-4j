@@ -152,7 +152,7 @@ public class DisplayLogic {
 				this.setPageNumber(feedback.getGotoPage());
 			}
 			break;
-		case SORT:
+		
 		case CLEAR:
 			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
 			this.setDisplayMode(DisplayMode.TODO);
@@ -166,6 +166,9 @@ public class DisplayLogic {
 //			displayStateHistory.redo();
 //			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
 //			this.setPageNumber(displayStateHistory.getCurrentPageNumber());
+			break;
+		case SORT:
+			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
 			break;
 		case HELP:
 			helpDialog.open(feedback);
