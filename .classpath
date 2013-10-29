@@ -26,6 +26,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/tween-engine-api-6.3.3/tween-engine-api.jar" sourcepath="lib/tween-engine-api-6.3.3/tween-engine-api-sources.jar"/>
-	<classpathentry kind="lib" path="lib/JNativeHook/JNativeHook.jar"/>
+	<classpathentry kind="lib" path="lib/JNativeHook/JNativeHook113.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
