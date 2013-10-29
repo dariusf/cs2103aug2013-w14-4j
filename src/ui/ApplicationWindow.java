@@ -27,8 +27,11 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.joda.time.DateTime;
+import org.omg.CORBA.PRIVATE_MEMBER;
 
 import common.Constants;
+import common.undo.Action;
+import common.undo.ActionStack;
 
 public class ApplicationWindow {
 
@@ -849,8 +852,8 @@ public class ApplicationWindow {
 
 			@Override
 			public void nativeKeyPressed(NativeKeyEvent e) {
-				if (e.getModifiers() == (NativeInputEvent.ALT_MASK + NativeInputEvent.CTRL_MASK)
-						&& e.getKeyCode() == NativeKeyEvent.VK_Z) {
+				if (e.getModifiers() == (NativeInputEvent.SHIFT_MASK)
+						&& e.getKeyCode() == NativeKeyEvent.VK_F1) {
 					Display.getDefault().asyncExec(new UiUpdater());
 				}
 			}
@@ -864,9 +867,8 @@ public class ApplicationWindow {
 			public void nativeKeyTyped(NativeKeyEvent e) {
 				// do nothing
 			}
-
 		}
-
+		
 		try {
 			GlobalScreen.registerNativeHook();
 			GlobalScreen.getInstance().addNativeKeyListener(new NativeHook());
@@ -879,6 +881,57 @@ public class ApplicationWindow {
 	}
 
 	public void executeUserInput(String userInput) {
+		class StartDisplayAction implements Action {
+			
+			DisplayMode mode;
+			int pageNumber;
+			
+			public StartDisplayAction(DisplayMode mode, int pageNumber) {
+				this.mode = mode;
+				this.pageNumber = pageNumber;
+			}
+
+			@Override
+			public void undo() {
+				displayLogic.setDisplayMode(mode);
+				displayLogic.setPageNumber(pageNumber);
+			}
+
+			@Override
+			public void redo() {
+				// do nothing
+			}
+			
+		}
+		
+		class EndDisplayAction implements Action {
+			
+			DisplayMode mode;
+			int pageNumber;
+			
+			public EndDisplayAction(DisplayMode mode, int pageNumber) {
+				this.mode = mode;
+				this.pageNumber = pageNumber;
+			}
+
+			@Override
+			public void undo() {
+				// do nothing
+			}
+
+			@Override
+			public void redo() {
+				displayLogic.setDisplayMode(mode);
+				displayLogic.setPageNumber(pageNumber);
+			}
+			
+		}
+		
+		ActionStack actionStack = ActionStack.getInstance();
+		
+		StartDisplayAction originalDisplayStateAction = new StartDisplayAction(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
+		actionStack.add(originalDisplayStateAction);
+		
 		Feedback feedbackObj = logic.executeCommand(userInput);
 
 		String feedback = feedbackObj.toString();
@@ -888,6 +941,15 @@ public class ApplicationWindow {
 		input.setText("");
 
 		displayLogic.processFeedback(feedbackObj, helpDialog);
+		
+		EndDisplayAction currentDisplayStateAction = new EndDisplayAction(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
+		actionStack.add(currentDisplayStateAction);
+		
+		if(isStateChangingOperation(feedbackObj.getCommand())) {
+			actionStack.finaliseActions();
+		} else {
+			actionStack.flushCurrentActionSet();
+		}
 
 		updateTaskDisplay();
 
@@ -895,6 +957,16 @@ public class ApplicationWindow {
 			logger.log(Level.INFO, generateLoggingString());
 		}
 
+	}
+	
+	private boolean isStateChangingOperation(CommandType command) {
+		return (command == CommandType.ADD ||
+				command == CommandType.DELETE ||
+				command == CommandType.CLEAR ||
+				command == CommandType.DONE ||
+				command == CommandType.EDIT ||
+				command == CommandType.FINALISE ||
+				command == CommandType.SORT);
 	}
 
 	public void defineTaskCompositeHeight() {

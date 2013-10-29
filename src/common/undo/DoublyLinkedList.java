@@ -1,4 +1,4 @@
-package storage;
+package common.undo;
 
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -114,6 +114,7 @@ public class DoublyLinkedList<E> implements ListIterator<E> {
 	public void push(E item) {
 		add(item);
 		previousNode = headNode;
+		index = 0;
 	}
 	
 	public void pushHere(E item) {
