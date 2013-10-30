@@ -300,7 +300,13 @@ public class Task implements Comparable<Task>, Cloneable {
 
 	@Override
 	public int compareTo(Task o) {
-		if (isDeadlineTask() && o.isDeadlineTask()) {
+		 if (isUntimedTask() && o.isUntimedTask()) {
+			return getName().compareTo(o.getName());
+		} else if (isUntimedTask() && !o.isUntimedTask()) {
+			return -1;
+		} else if (!isUntimedTask() && o.isUntimedTask()) {
+			return 1;
+		} else if (isDeadlineTask() && o.isDeadlineTask()) {
 			return deadline.compareTo(o.getDeadline());
 		} else if (isDeadlineTask() && o.isTimedTask()) {
 			return deadline.compareTo(o.getStartTime());
@@ -320,14 +326,11 @@ public class Task implements Comparable<Task>, Cloneable {
 			return getEarliestTime(getPossibleTime()).compareTo(
 					o.getStartTime());
 		} else if (isDeadlineTask() && o.isFloatingTask()) {
-			getEarliestTime(getPossibleTime()).compareTo(
+			return getEarliestTime(getPossibleTime()).compareTo(
 					getEarliestTime(o.getPossibleTime()));
-		} else if (isUntimedTask()) {
-			return -1;
 		} else {
-			return 1;
+			return 0;
 		}
-		return 0;
 	}
 
 	public DateTime getEarliestTime(List<Interval> list) {
