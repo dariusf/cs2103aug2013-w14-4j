@@ -37,7 +37,7 @@ public class Task implements Comparable<Task>, Cloneable {
 			tags = command.getTags();
 		}
 	}
-	
+
 	public Task(Task task) {
 		this.setName(new String(task.name));
 		this.setTags(new ArrayList<String>(task.tags));
@@ -52,9 +52,9 @@ public class Task implements Comparable<Task>, Cloneable {
 		} else if (this.type.equals(Constants.TASK_TYPE_FLOATING)) {
 			this.possibleIntervals = duplicatePossibleIntervals(task.possibleIntervals);
 		}
-		
+
 	}
-	
+
 	public Task() {
 
 	}
@@ -170,7 +170,8 @@ public class Task implements Comparable<Task>, Cloneable {
 		if (isDeadlineTask()) {
 			output.append("by " + Constants.fullDateTimeFormat.print(deadline));
 		} else if (isTimedTask()) {
-			output.append("from " + Constants.fullDateTimeFormat.print(getStartTime())
+			output.append("from "
+					+ Constants.fullDateTimeFormat.print(getStartTime())
 					+ " to " + Constants.fullDateTimeFormat.print(getEndTime()));
 		} else if (isFloatingTask()) {
 			output.append("on ");
@@ -179,9 +180,11 @@ public class Task implements Comparable<Task>, Cloneable {
 				output.append("(");
 				output.append(index);
 				output.append(") ");
-				output.append(Constants.fullDateTimeFormat.print(slot.getStartDateTime()));
+				output.append(Constants.fullDateTimeFormat.print(slot
+						.getStartDateTime()));
 				output.append(" to ");
-				output.append(Constants.fullDateTimeFormat.print(slot.getEndDateTime()));
+				output.append(Constants.fullDateTimeFormat.print(slot
+						.getEndDateTime()));
 				if (index != possibleIntervals.size()) {
 					output.append("\nor ");
 				}
@@ -244,9 +247,11 @@ public class Task implements Comparable<Task>, Cloneable {
 		output.append(name);
 
 		if (isDeadlineTask()) {
-			output.append(" before " + Constants.fullDateTimeFormat.print(deadline));
+			output.append(" before "
+					+ Constants.fullDateTimeFormat.print(deadline));
 		} else if (isTimedTask()) {
-			output.append(" from " + Constants.fullDateTimeFormat.print(getStartTime())
+			output.append(" from "
+					+ Constants.fullDateTimeFormat.print(getStartTime())
 					+ " to " + Constants.fullDateTimeFormat.print(getEndTime()));
 		} else if (isFloatingTask()) {
 			output.append(" on ");
@@ -255,9 +260,11 @@ public class Task implements Comparable<Task>, Cloneable {
 				output.append("(");
 				output.append(index);
 				output.append(") ");
-				output.append(Constants.fullDateTimeFormat.print(slot.getStartDateTime()));
+				output.append(Constants.fullDateTimeFormat.print(slot
+						.getStartDateTime()));
 				output.append(" to ");
-				output.append(Constants.fullDateTimeFormat.print(slot.getEndDateTime()));
+				output.append(Constants.fullDateTimeFormat.print(slot
+						.getEndDateTime()));
 				if (index != possibleIntervals.size()) {
 					output.append(" or ");
 				}
@@ -283,8 +290,6 @@ public class Task implements Comparable<Task>, Cloneable {
 		// TODO Auto-generated method stub
 		return super.equals(obj);
 	}
-
-	
 
 	public Interval getInterval() {
 		return interval;
@@ -322,6 +327,8 @@ public class Task implements Comparable<Task>, Cloneable {
 		} else if (isDeadlineTask() && o.isFloatingTask()) {
 			getEarliestTime(getPossibleTime()).compareTo(
 					getEarliestTime(o.getPossibleTime()));
+		} else if (isUntimedTask() && o.isUntimedTask()) {
+			return 1;
 		} else if (isUntimedTask()) {
 			return -1;
 		} else {
@@ -366,35 +373,35 @@ public class Task implements Comparable<Task>, Cloneable {
 			return false;
 		}
 	}
-	
+
 	protected boolean isDateTimeOnDate(DateTime dateToBeChecked, DateTime date) {
 		int year = date.getYear();
 		int month = date.getMonthOfYear();
 		int day = date.getDayOfMonth();
-		
+
 		return dateToBeChecked.getYear() == year
 				&& dateToBeChecked.getMonthOfYear() == month
 				&& dateToBeChecked.getDayOfMonth() == day;
 	}
-	
+
 	protected boolean isIntervalOnDate(Interval interval, DateTime date) {
 		DateTime startTime = interval.getStartDateTime();
 		DateTime endTime = interval.getEndDateTime();
 		return (startTime.compareTo(date) <= 0 && endTime.compareTo(date) >= 0)
-				|| (isDateTimeOnDate(date, startTime)
-						|| isDateTimeOnDate(date, endTime));
+				|| (isDateTimeOnDate(date, startTime) || isDateTimeOnDate(date,
+						endTime));
 	}
-	
+
 	protected boolean isFloatingTaskOnDate(DateTime date) {
 		boolean isSlotOnDate = false;
-		for(Interval interval : possibleIntervals){
-			if(isIntervalOnDate(interval, date)){
+		for (Interval interval : possibleIntervals) {
+			if (isIntervalOnDate(interval, date)) {
 				isSlotOnDate = true;
 			}
 		}
 		return isSlotOnDate;
 	}
-	
+
 	protected boolean isFloatingTaskOver(List<Interval> possibleTime) {
 		boolean isAllSlotOver = true;
 		for (Interval slot : possibleTime) {
@@ -408,10 +415,11 @@ public class Task implements Comparable<Task>, Cloneable {
 	protected boolean isTimePastAlready(DateTime time) {
 		return time.compareTo(new DateTime()) < 0;
 	}
-	
-	public ArrayList<Interval> duplicatePossibleIntervals(List<Interval> possibleIntervals2){
+
+	public ArrayList<Interval> duplicatePossibleIntervals(
+			List<Interval> possibleIntervals2) {
 		ArrayList<Interval> cloned = new ArrayList<>();
-		for(Interval interval : possibleIntervals2){
+		for (Interval interval : possibleIntervals2) {
 			cloned.add(new Interval(interval));
 		}
 		return cloned;
