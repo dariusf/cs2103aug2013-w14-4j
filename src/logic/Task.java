@@ -227,19 +227,19 @@ public class Task implements Comparable<Task>, Cloneable {
 	}
 
 	public boolean isTimedTask() {
-		return this.type.equals(Constants.TASK_TYPE_TIMED);
+		return type.equals(Constants.TASK_TYPE_TIMED);
 	}
 
 	public boolean isDeadlineTask() {
-		return this.type.equals(Constants.TASK_TYPE_DEADLINE);
+		return type.equals(Constants.TASK_TYPE_DEADLINE);
 	}
 
 	public boolean isFloatingTask() {
-		return this.type.equals(Constants.TASK_TYPE_FLOATING);
+		return type.equals(Constants.TASK_TYPE_FLOATING);
 	}
 
 	public boolean isUntimedTask() {
-		return this.type.equals(Constants.TASK_TYPE_UNTIMED);
+		return type.equals(Constants.TASK_TYPE_UNTIMED);
 	}
 
 	public String toString() {
@@ -308,9 +308,9 @@ public class Task implements Comparable<Task>, Cloneable {
 		 if (isUntimedTask() && o.isUntimedTask()) {
 			return getName().compareTo(o.getName());
 		} else if (isUntimedTask() && !o.isUntimedTask()) {
-			return -1;
-		} else if (!isUntimedTask() && o.isUntimedTask()) {
 			return 1;
+		} else if (!isUntimedTask() && o.isUntimedTask()) {
+			return -1;
 		} else if (isDeadlineTask() && o.isDeadlineTask()) {
 			return deadline.compareTo(o.getDeadline());
 		} else if (isDeadlineTask() && o.isTimedTask()) {
@@ -333,8 +333,6 @@ public class Task implements Comparable<Task>, Cloneable {
 		} else if (isDeadlineTask() && o.isFloatingTask()) {
 			return getEarliestTime(getPossibleTime()).compareTo(
 					getEarliestTime(o.getPossibleTime()));
-		} else if (isUntimedTask() && o.isUntimedTask()) {
-			return 1;
 		} else {
 			return 0;
 		}
