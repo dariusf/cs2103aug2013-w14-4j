@@ -40,10 +40,6 @@ public class Storage implements Closeable, Iterable<Task> {
 		}
 	}
 	
-	public Storage() throws IOException {
-		this("default.txt");
-	}
-	
 	public void sort() {
 		taskStorage.sort();
 	}

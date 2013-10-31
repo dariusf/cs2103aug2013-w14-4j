@@ -7,6 +7,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class Constants {
 	public static final String APP_NAME = "Basket";
+	public static final String DEFAULT_FILENAME = "default.txt";
 
 	public static String WELCOME_MSG = "Welcome to Basket! \nType 'help' if you are unsure of what to do.";
 	public static String WELCOME_PAGE_DISPLAY = "display";

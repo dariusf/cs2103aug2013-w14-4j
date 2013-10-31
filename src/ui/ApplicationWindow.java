@@ -240,7 +240,8 @@ public class ApplicationWindow {
 		
 		shell.setSize(482, 681);
 		shell.setText(Constants.APP_NAME);
-		defineFont();
+		// TODO Please change this value to 1 when you compile for use on your computers.
+		defineFont(0.85);
 
 		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.SINGLE);
 		displayPageNumber.setEnabled(false);
@@ -753,17 +754,17 @@ public class ApplicationWindow {
 		}
 	}
 
-	public void defineFont() {
+	public void defineFont(double scaling) {
 		boolean isWindows = System.getProperty("os.name").toLowerCase()
 				.indexOf("win") >= 0;
 		if (isWindows) {
-			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 33,
+			windowTitleFont = new Font(shell.getDisplay(), "Calibri", (int) (33 * scaling),
 					SWT.NORMAL);
-			pageNumberFont = new Font(shell.getDisplay(), "Calibri", 13,
+			pageNumberFont = new Font(shell.getDisplay(), "Calibri", (int) (13 * scaling),
 					SWT.NORMAL);
-			indexFont = new Font(shell.getDisplay(), "Calibri", 45, SWT.NORMAL);
-			titleFont = new Font(shell.getDisplay(), "Calibri", 18, SWT.NORMAL);
-			descriptionFont = new Font(shell.getDisplay(), "Calibri", 9,
+			indexFont = new Font(shell.getDisplay(), "Calibri", (int) (45 * scaling), SWT.NORMAL);
+			titleFont = new Font(shell.getDisplay(), "Calibri", (int) (18 * scaling), SWT.NORMAL);
+			descriptionFont = new Font(shell.getDisplay(), "Calibri", (int) (9 * scaling),
 					SWT.NORMAL);
 		} else {
 			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,

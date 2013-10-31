@@ -1,12 +1,10 @@
 package logic;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Collections;
 import java.util.TreeMap;
 
 import org.joda.time.DateTime;
@@ -27,9 +25,11 @@ public class Logic {
 	protected boolean isDisplayHelp = false;
 	protected Command currentHelpCommand = null;
 	protected ActionStack actionStack = ActionStack.getInstance();
+	
+	private FileWriter inputLogger;
 
 	public Logic() throws IOException {
-		storage = new Storage();
+		storage = new Storage(Constants.DEFAULT_FILENAME);
 		this.executeCommand("display");
 	}
 
@@ -62,8 +62,41 @@ public class Logic {
 	// private ActiveFeedback activeAddTask(Command command) {
 	// return new ActiveFeedback(command);
 	// }
+	
+	private void logCommand (String commandString) {
+		if(inputLogger == null) {
+			try {
+				inputLogger = new FileWriter("inputLog.txt", true);
+				inputLogger.append(new DateTime().toString(Constants.DATE_TIME_FORMAT) + "\n\n");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		try {
+			inputLogger.append(commandString + "\n");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	private void endLogging() {
+		if (inputLogger != null) {
+			try {
+				inputLogger.append("\n" + "End of log." + "\n" + 
+								new DateTime().toString(Constants.DATE_TIME_FORMAT) + "\n\n-----------------------\n\n");
+				inputLogger.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
 
 	public Feedback executeCommand(String userCommand) {
+		logCommand(userCommand);
 		Command command = new Parser().parse(userCommand);
 		CommandType commandType = command.getCommandType();
 
@@ -77,6 +110,7 @@ public class Logic {
 		case CLEAR:
 			return clearTasks(command);
 		case EXIT:
+			endLogging();
 			exitProgram();
 		case SEARCH:
 			return searchTasks(command);

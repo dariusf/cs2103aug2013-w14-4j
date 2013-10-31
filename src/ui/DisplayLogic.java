@@ -22,7 +22,6 @@ public class DisplayLogic {
 	private Composite taskDisplay;
 	private int pageNumber;
 	
-	private DisplayStateHistory displayStateHistory;
 	private DateTime currentDisplayDateTime = new DateTime();
 	private int noOfTasksToday = 0;
 	private int noOfTasksRemaining = 0;
@@ -46,8 +45,6 @@ public class DisplayLogic {
 
 		determineNumberOfTasksForEachPage(displayMode);
 		setPageNumber(pageNumber);
-		
-		this.displayStateHistory = new DisplayStateHistory();
 	}
 	
 	/**
@@ -126,7 +123,9 @@ public class DisplayLogic {
 			goToLastPage();
 			break;
 		case EDIT:
+			// fallthrough
 		case DONE:
+			// fallthrough
 		case FINALISE:
 			highlightedTasks = new ArrayList<>();
 			if (!feedback.isErrorMessage()) {
@@ -158,15 +157,9 @@ public class DisplayLogic {
 			this.setDisplayMode(DisplayMode.TODO);
 			break;
 		case UNDO:
-//			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
-//			this.setPageNumber(displayStateHistory.getCurrentPageNumber());
-//			displayStateHistory.undo();
-			break;
+			// fallthrough
 		case REDO:
-//			displayStateHistory.redo();
-//			this.setDisplayMode(displayStateHistory.getCurrentDisplayMode());
-//			this.setPageNumber(displayStateHistory.getCurrentPageNumber());
-			break;
+			// fallthrough
 		case SORT:
 			this.setPageNumber(Constants.DEFAULT_PAGE_NUMBER);
 			break;
@@ -348,7 +341,7 @@ public class DisplayLogic {
 	}
 	
 	public void goToLastPage() {
-		setPageNumber(Integer.MAX_VALUE);
+		setPageNumber(getNumberOfPages());
 	}
 	
 	public void goToFirstPage() {
