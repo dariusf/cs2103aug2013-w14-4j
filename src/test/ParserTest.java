@@ -569,6 +569,20 @@ public class ParserTest {
 		expected.setIntervals(intervals);
 		gotten = new Parser().parse("add go home next month");
 		assertEquals(gotten, expected);
+		
+		// Missing next keyword
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("month");
+		gotten = new Parser().parse("add month");
+		assertEquals(gotten, expected);
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("week");
+		gotten = new Parser().parse("add week");
+		assertEquals(gotten, expected);
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("year");
+		gotten = new Parser().parse("add year");
+		assertEquals(gotten, expected);
 
 		// Fortnight
 		expected = new Command(CommandType.ADD);
