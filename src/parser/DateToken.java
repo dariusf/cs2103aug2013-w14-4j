@@ -23,7 +23,7 @@ public class DateToken extends Token {
 	private static final String REGEX_STANDARD_DATE = "(0?[1-9]|[12][0-9]|3[01])[-/](1[012]|0?[1-9])([-/]((19|20)?[0-9][0-9]))?";
 	private static Pattern standardDate = Pattern.compile(REGEX_STANDARD_DATE, Pattern.CASE_INSENSITIVE);
 			
-	private static final String REGEX_RELATIVE_DATE = "(next[ ]+)?(week|year|month|fortnight)";
+	private static final String REGEX_RELATIVE_DATE = "(next[ ]+)(week|year|month|fortnight)";
 	private static Pattern relativeDate = Pattern.compile(REGEX_RELATIVE_DATE, Pattern.CASE_INSENSITIVE);
 
 	private static final String REGEX_RELATIVE_DAY_DATE = "((this|next|last)[ ]+)?(((mon|tues|wednes|thurs|fri|satur|sun)day)|mon|tues|tue|wed|thurs|thu|fri|sat|sun)";
