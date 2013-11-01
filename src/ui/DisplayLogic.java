@@ -340,7 +340,7 @@ public class DisplayLogic {
 	}
 	
 	public void setPageNumber(int pageNumber) {
-		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
+//		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
 		if (this.pageNumber != pageNumber) {
 			recreateTaskComposites = true;
 			this.pageNumber = pageNumber;//Math.max(1, Math.min(pageNumber, numberOfTasksOnEachPage.size()));;
