@@ -605,6 +605,50 @@ public class ParserTest {
 		expected.setIntervals(intervals);
 		gotten = new Parser().parse("add go home next fortnight 1pm");
 		assertEquals(gotten, expected);
+
+		// Invalid dates (30th Feb, 33th Jan, 31 June, etc.)
+		expected = new Command(CommandType.INVALID);
+		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_DATE);
+		gotten = new Parser().parse("add task 30 feb");
+		assertEquals(gotten, expected);
+
+		expected = new Command(CommandType.INVALID);
+		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_DATE);
+		gotten = new Parser().parse("add task 29 feb"); // year is implicitly 2013
+		assertEquals(gotten, expected);
+		
+		expected = new Command(CommandType.INVALID);
+		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_DATE);
+		gotten = new Parser().parse("add task 31 june");
+		assertEquals(gotten, expected);
+
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("task 33 jan");
+		gotten = new Parser().parse("add task 33 jan");
+		assertEquals(gotten, expected);
+
+		// Leap year
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("task");
+		intervals = new ArrayList<>();
+		start = now.withDate(2012, 2, 29).withTime(0, 0, 0, 0);
+		end = start.withTime(23, 59, 0, 0);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add task 29 feb 12");
+		assertEquals(gotten, expected);
+		
+//		expected = new Command(CommandType.INVALID);
+//		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_DATE);
+//		
+//		expected.setDescription("go home");
+//		intervals = new ArrayList<>();
+//		start = now.plusWeeks(2).withTime(13, 0, 0, 0);
+//		end = start.plusHours(1);
+//		intervals.add(new Interval(start, end));
+//		expected.setIntervals(intervals);
+//		gotten = new Parser().parse("add go home next fortnight 1pm");
+//		assertEquals(gotten, expected);
 	}
 
 	@Test
@@ -819,7 +863,7 @@ public class ParserTest {
 //		ADD, EDIT, DISPLAY, DELETE, CLEAR, EXIT, GOTO,
 //		SORT, SEARCH, UNDO, FINALISE, HELP, DONE, REDO;
 
-		Command expected, gotten;
+//		Command expected, gotten;
 		
 		assertEquals(new Parser().parse("qwe").getCommandType(), CommandType.INVALID);
 		assertEquals(new Parser().parse("zxc").getCommandType(), CommandType.INVALID);

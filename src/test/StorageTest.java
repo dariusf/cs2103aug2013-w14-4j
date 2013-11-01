@@ -168,7 +168,7 @@ public class StorageTest {
 		Storage testStorage = new Storage("newtest.txt");
 		testStorage.add(deadlineTask);
 		assertTrue(areTasksEqual(deadlineTask, testStorage.get(1)));
-		testStorage.undo();
+//		testStorage.undo();
 		assertTrue(testStorage.isEmpty());
 		
 		testStorage.close();
