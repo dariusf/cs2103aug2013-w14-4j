@@ -275,7 +275,7 @@ public class DateToken extends Token {
 			assert false : "Invalid month of year " + month;
 		}
 		
-		if (!valid) throw new IllegalArgumentException("Invalid day " + day + " of month " + month);
+		if (!valid) throw new IllegalDateException("Invalid day " + day + " of month " + month);
 		
 		this.day = day;
 		this.month = month;
