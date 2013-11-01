@@ -395,7 +395,8 @@ public class Logic {
 
 	protected Feedback clearTasks(Command command) {
 		Feedback feedback = null;
-		boolean isClearDone = command.getClearDone();
+		
+		boolean isClearDone = false; //command.getClearDone();
 
 		if (storage.size() > 0) {
 			if (isClearDone) {
