@@ -57,7 +57,8 @@ public class ApplicationWindow {
 	Font titleFont; // accessed by task composite
 	Font descriptionFont; // accessed by task composite
 	public Font pageNumberFont;
-
+	public Font inputFont;
+	
 	public static ApplicationWindow self; // singleton?
 	public boolean moving = false;
 
@@ -218,7 +219,7 @@ public class ApplicationWindow {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shell = new Shell(SWT.NO_TRIM | SWT.DRAG);
+		shell = new Shell(SWT.NO_TRIM | SWT.DRAG | SWT.ON_TOP);
 		
 		shell.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
 				"/image/basketIcon.jpg"));
@@ -284,6 +285,7 @@ public class ApplicationWindow {
 
 		input = new Text(shell, SWT.BORDER);
 		input.setFocus();
+		input.setFont(inputFont);
 		input.setBounds(20, 608, 442, 50);
 		input.setBackground(SWTResourceManager.getColor(255, 255, 255));
 
@@ -766,6 +768,7 @@ public class ApplicationWindow {
 			titleFont = new Font(shell.getDisplay(), "Calibri", (int) (18 * scaling), SWT.NORMAL);
 			descriptionFont = new Font(shell.getDisplay(), "Calibri", (int) (9 * scaling),
 					SWT.NORMAL);
+			inputFont = new Font(shell.getDisplay(), "Calibri", 17, SWT.NORMAL);
 		} else {
 			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
 					SWT.NORMAL);
