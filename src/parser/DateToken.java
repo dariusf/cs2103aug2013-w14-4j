@@ -22,7 +22,7 @@ public class DateToken extends Token {
 
 	private static final String REGEX_STANDARD_DATE = "(0?[1-9]|[12][0-9]|3[01])[-/](1[012]|0?[1-9])([-/]((19|20)?[0-9][0-9]))?";
 	private static Pattern standardDate = Pattern.compile(REGEX_STANDARD_DATE, Pattern.CASE_INSENSITIVE);
-			
+
 	private static final String REGEX_RELATIVE_DATE = "(next[ ]+)(week|year|month|fortnight)";
 	private static Pattern relativeDate = Pattern.compile(REGEX_RELATIVE_DATE, Pattern.CASE_INSENSITIVE);
 
@@ -78,9 +78,11 @@ public class DateToken extends Token {
 			now = now.plusWeeks(1);
 		}
 
-		day = now.getDayOfMonth();
-		month = now.getMonthOfYear();
-		year = now.getYear();
+		int day = now.getDayOfMonth();
+		int month = now.getMonthOfYear();
+		int year = now.getYear();
+		
+		setDate(day, month, year);
 
 		return true;
 	}
@@ -99,11 +101,13 @@ public class DateToken extends Token {
 		// 4: year
 		// 5: <fragment>
 		
-		day = Integer.parseInt(matcher.group(2));
-		month = monthNumber(matcher.group(3));
+		int day = Integer.parseInt(matcher.group(2));
+		int month = monthNumber(matcher.group(3));
 		DateTime now = nowStub == null ? new DateTime() : nowStub;
-		year = matcher.group(4) == null ? now.getYear() : checkYear(Integer.parseInt(matcher.group(4)));
+		int year = matcher.group(4) == null ? now.getYear() : checkYear(Integer.parseInt(matcher.group(4)));
 
+		setDate(day, month, year);
+		
 		return true;
 	}
 	
@@ -119,29 +123,32 @@ public class DateToken extends Token {
 		
 		String dateString = matcher.group(1).toLowerCase();
 		DateTime now = nowStub == null ? new DateTime() : nowStub;
+		int day = 0, month = 0, year = 0;
 		
 		switch (dateString) {
 		case "today":
-			year = now.getYear();
-			month = now.getMonthOfYear();
 			day = now.getDayOfMonth();
+			month = now.getMonthOfYear();
+			year = now.getYear();
 			break;
 		case "tomorrow":
 		case "tmr":
 		case "tmrw":
 			now = now.plusDays(1);
-			year = now.getYear();
-			month = now.getMonthOfYear();
 			day = now.getDayOfMonth();
+			month = now.getMonthOfYear();
+			year = now.getYear();
 			break;
 		case "halloween":
-			year = now.getYear();
-			month = 10;
 			day = 31;
+			month = 10;
+			year = now.getYear();
 			break;
 		default:
 			assert false : "Error in DateToken logic";
 		}
+		
+		setDate(day, month, year);
 
 		return true;
 	}
@@ -177,9 +184,12 @@ public class DateToken extends Token {
 			// "this" is not caught; same effect as qualifier being null
 		}
 		
-		year = date.getYear();
-		month = date.getMonthOfYear();
-		day = date.getDayOfMonth();
+		
+		int day = date.getDayOfMonth();
+		int month = date.getMonthOfYear();
+		int year = date.getYear();
+
+		setDate(day, month, year);
 
 		return true;
 	}
@@ -197,8 +207,9 @@ public class DateToken extends Token {
 		// 4: year
 		// 5: first 2 digits of year
 
-		day = Integer.parseInt(matcher.group(1));
-		month = Integer.parseInt(matcher.group(2));
+		int day = Integer.parseInt(matcher.group(1));
+		int month = Integer.parseInt(matcher.group(2));
+		int year;
 		String yearString = matcher.group(4);
 		if (yearString == null) {
 			year = Calendar.getInstance().get(Calendar.YEAR);
@@ -206,6 +217,8 @@ public class DateToken extends Token {
 		else {
 			year = checkYear(Integer.parseInt(yearString));
 		}
+		
+		setDate(day, month, year);
 
 		return true;
 	}
@@ -228,6 +241,45 @@ public class DateToken extends Token {
 
 	public static void setNowStub(DateTime now) {
 		nowStub = now;
+	}
+	
+	private void setDate(int day, int month, int year) {
+		assert year > 999 && year < 10000 : "Year " + year + " should only be 4 digits long";
+		assert day >= 1 && day <= 31 : "Day " + day + " should be within [1, 31]";
+		assert month >= 1 && month <= 12 : "Month " + month + " should be within [1, 12]";
+		
+		boolean valid = true;
+		
+		switch (month) {
+		case DateTimeConstants.JANUARY:
+		case DateTimeConstants.MARCH:
+		case DateTimeConstants.MAY:
+		case DateTimeConstants.JULY:
+		case DateTimeConstants.AUGUST:
+		case DateTimeConstants.OCTOBER:
+		case DateTimeConstants.DECEMBER:
+			valid = day >= 1 && day <= 31;
+			break;
+		case DateTimeConstants.FEBRUARY:
+			boolean isLeapYear = new DateTime(year, 1, 1, 0, 0, 0, 0).year().isLeap();
+			int lastDayOfMonth = isLeapYear ? 29 : 28;
+			valid = day >= 1 && day <= lastDayOfMonth;
+			break;
+		case DateTimeConstants.APRIL:
+		case DateTimeConstants.JUNE:
+		case DateTimeConstants.SEPTEMBER:
+		case DateTimeConstants.NOVEMBER:
+			valid = day >= 1 && day <= 30;
+			break;
+		default:
+			assert false : "Invalid month of year " + month;
+		}
+		
+		if (!valid) throw new IllegalArgumentException("Invalid day " + day + " of month " + month);
+		
+		this.day = day;
+		this.month = month;
+		this.year = year;
 	}
 	
 	private int checkYear (int year) {
