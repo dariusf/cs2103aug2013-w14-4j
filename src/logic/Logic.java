@@ -9,6 +9,7 @@ import java.util.TreeMap;
 
 import org.joda.time.DateTime;
 
+import common.ClearMode;
 import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
@@ -395,33 +396,63 @@ public class Logic {
 
 	protected Feedback clearTasks(Command command) {
 		Feedback feedback = null;
+		ClearMode clearMode = command.getClearMode();
+		DateTime now = new DateTime(); // or stub
 		
-		boolean isClearDone = false; //command.getClearDone();
-
 		if (storage.size() > 0) {
-			if (isClearDone) {
+			if (clearMode == ClearMode.ALL) {
+				storage.clear();
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
+				isDynamicIndex = false;
+			}
+			else {
 				Iterator<Task> tasksIterator = storage.iterator();
 				ArrayList<Task> doneTasks = new ArrayList<>();
 
 				while (tasksIterator.hasNext()) {
+					
 					Task currentTask = tasksIterator.next();
-					if (currentTask.getDone()) {
+					boolean condition = false;
+					
+					switch (clearMode) {
+					case DEADLINE:
+						condition = currentTask.isDeadlineTask();
+						break;
+					case TIMED:
+						condition = currentTask.isTimedTask();
+						break;
+					case FLOATING:
+						condition = currentTask.isFloatingTask();
+						break;
+					case UNTIMED:
+						condition = currentTask.isUntimedTask();
+						break;
+					case OVERDUE:
+						condition = currentTask.isDeadlineTask() && currentTask.getDeadline().isBefore(now);
+						break;
+					case DATE:
+						condition = currentTask.getStartTime().dayOfYear().equals(command.getClearDateTime().dayOfYear());
+						break;
+					case DONE:
+						condition = currentTask.isDone();
+						break;
+					case INVALID:
+						assert false : "Invalid clear mode, either an error in above or parser logic";
+					default:
+						assert false : "Error in clear mode logic";
+					}
+					
+					if (condition) {
 						doneTasks.add(currentTask);
 					}
 				}
 
 				storage.removeSet(doneTasks);
-				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE,
-						CommandType.CLEAR);
-				isDynamicIndex = false;
-			} else {
-				storage.clear();
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
+				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE, CommandType.CLEAR);
 				isDynamicIndex = false;
 			}
 		} else {
-			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
-					CommandType.CLEAR);
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR, CommandType.CLEAR);
 		}
 		return feedback;
 	}
