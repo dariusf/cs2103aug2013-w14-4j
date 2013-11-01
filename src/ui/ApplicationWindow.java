@@ -884,6 +884,7 @@ public class ApplicationWindow {
 	}
 
 	public void executeUserInput(String userInput) {
+		
 		class StartDisplayAction implements Action {
 			
 			DisplayMode mode;
@@ -930,6 +931,8 @@ public class ApplicationWindow {
 			
 		}
 		
+		if(!userInput.isEmpty()){
+		
 		ActionStack actionStack = ActionStack.getInstance();
 		
 		StartDisplayAction originalDisplayStateAction = new StartDisplayAction(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
@@ -959,7 +962,7 @@ public class ApplicationWindow {
 		if (testMode) {
 			logger.log(Level.INFO, generateLoggingString());
 		}
-
+		}
 	}
 	
 	private boolean isStateChangingOperation(CommandType command) {
