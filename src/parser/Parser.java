@@ -98,11 +98,15 @@ public class Parser {
 			return invalidCommand(InvalidCommandReason.EMPTY_COMMAND);
 		}
 
-		tokenize(userInput);
+		try {
+			tokenize(userInput);
+		} catch (IllegalArgumentException e) {
+			return invalidCommand(InvalidCommandReason.INVALID_DATE);
+		}
 		return constructCommand();
 	}
 
-	private void tokenize(String userInput) {
+	private void tokenize(String userInput) throws IllegalArgumentException {
 		try {
 			Lexer lexer = new Lexer(new ByteArrayInputStream(userInput.getBytes("UTF-8")));
 
