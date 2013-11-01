@@ -385,23 +385,23 @@ public class Parser {
 	private Command createClearCommand() {
 		Command command = new Command(CommandType.CLEAR);
 		
-		if (hasTokensLeft()) {
-			Token currentToken = getCurrentToken();
-			
-			ClearMode clearMode = ClearMode.fromString(currentToken.contents);
-			
-			if (clearMode != ClearMode.INVALID && clearMode != ClearMode.DATE) {
-				command.setClearMode(clearMode);
-			}
-			else if (currentToken instanceof DateToken){
-				command.setClearMode(ClearMode.DATE);
-				command.setClearDateTime(((DateToken) currentToken).toDateTime());
-			} else {
-				command.setClearMode(ClearMode.ALL);
-			}
-		} else {
-			command.setClearMode(ClearMode.ALL);
-		}
+        if (hasTokensLeft()) {
+            Token currentToken = getCurrentToken();
+            
+            ClearMode clearMode = ClearMode.fromString(currentToken.contents);
+            
+            if (clearMode != ClearMode.INVALID && clearMode != ClearMode.DATE) {
+                command.setClearMode(clearMode);
+            }
+            else if (currentToken instanceof DateToken){
+            	command.setClearMode(ClearMode.DATE);
+                command.setClearDateTime(((DateToken) currentToken).toDateTime());
+            } else {
+                command.setClearMode(ClearMode.ALL);
+            }
+        } else {
+            command.setClearMode(ClearMode.ALL);
+        }
 
 		return command;
 	}
