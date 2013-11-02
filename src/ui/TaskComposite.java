@@ -6,13 +6,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import sun.nio.cs.ext.TIS_620;
-
-import com.sun.accessibility.internal.resources.accessibility;
 
 public class TaskComposite extends Composite {
 
@@ -27,12 +27,12 @@ public class TaskComposite extends Composite {
 
 		// 340 is the fixed width and 69 is the fixed height. use SWT.default if
 		// you do not want to fix the lengths.
-		this.setLayoutData(new RowData(415, SWT.DEFAULT));
+		this.setLayoutData(new RowData(425, SWT.DEFAULT));
 		this.setLayout(innerRowLayout);
 
 		RowData taskIndexLayoutData = new RowData(60, 73);
 		RowData paddingLayoutData = new RowData(8, SWT.DEFAULT);
-		RowData taskDescriptionLayoutData = new RowData(330, SWT.DEFAULT);
+		RowData taskDescriptionLayoutData = new RowData(340, SWT.DEFAULT);
 
 		taskIndex = new StyledText(this, SWT.WRAP | SWT.READ_ONLY);
 		taskIndex.setEnabled(false);
@@ -48,13 +48,11 @@ public class TaskComposite extends Composite {
 
 		Composite taskDetailsComposite = new Composite(this, SWT.NONE);
 		taskDetailsComposite.setLayoutData(taskDescriptionLayoutData);
-		taskDetailsComposite.setLayout(innerRowLayout);
+		taskDetailsComposite.setLayout(new GridLayout());
 
 		taskName = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
-		taskName.setText(task.getName());
 		taskName.setFont(ApplicationWindow.self.titleFont);
-
-		taskName.setLayoutData(taskDescriptionLayoutData);
+		this.setTaskName(task.getName());
 
 		taskDescription = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
 		taskDescription.setText(task.getInfoString());
@@ -93,6 +91,25 @@ public class TaskComposite extends Composite {
 
 	public void setTaskName(String name) {
 		taskName.setText(name);
+		this.pack();
+		int xSize = taskName.getSize().x;
+		boolean isWindows = System.getProperty("os.name").toLowerCase()
+				.indexOf("win") >= 0;
+
+		if (xSize > 330) {
+			if (isWindows) {
+				int newFontSize = Math.max(330 * 18 / xSize, 12);
+				Font newFont = new Font(taskName.getDisplay(), "Calibri",
+						newFontSize, SWT.NORMAL);
+				taskName.setFont(newFont);
+			} else {
+				int newFontSize = Math.max(330 * 24 / xSize, 12);
+				Font newFont = new Font(taskName.getDisplay(), "Calibri",
+						newFontSize, SWT.NORMAL);
+				taskName.setFont(newFont);
+			}
+
+		}
 	}
 
 	public String getTaskName(String name) {
@@ -135,9 +152,28 @@ public class TaskComposite extends Composite {
 			setBackground(null);
 		}
 	}
-	
-	public void highlightLine(int line){
-		taskDescription.setLineBackground(line-1, 1, new Color(ApplicationWindow.self.shell.getDisplay(),
-				0x00, 0xdd, 0x00));
+
+	public void highlightLine(int line) {
+		taskDescription.setLineBackground(line - 1, 1, new Color(
+				ApplicationWindow.self.shell.getDisplay(), 0x00, 0xdd, 0x00));
+	}
+
+	public boolean isTagged() {
+		String[] taskDescriptionArray = taskDescription.getText().split("/n");
+		if (taskDescriptionArray.length > 0) {
+			String lastLine = taskDescriptionArray[taskDescriptionArray.length - 1];
+			return lastLine.startsWith("#");
+		}
+		return false;
+	}
+
+	public String getTags() {
+		if (isTagged()) {
+			String[] taskDescriptionArray = taskDescription.getText().split(
+					"/n");
+			return taskDescriptionArray[taskDescriptionArray.length - 1];
+		} else {
+			return "";
+		}
 	}
 }
