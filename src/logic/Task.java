@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -62,7 +63,7 @@ public class Task implements Comparable<Task>, Cloneable {
 	private String tagsToString() {
 		StringBuilder output = new StringBuilder();
 		for (String tag : tags) {
-			output.append("#" + tag + " ");
+			output.append(tag + " ");
 		}
 		return output.toString();
 	}
@@ -164,15 +165,78 @@ public class Task implements Comparable<Task>, Cloneable {
 	public DateTime getDeadline() {
 		return deadline;
 	}
+	
+	private static DateTimeFormatter pickDateFormatter(DateTime dateTime) {
+		DateTime now = new DateTime(); // or stub
+		if (dateTime.year().equals(now.year())) {
+			return Constants.simpleDateFormat;
+		} else {
+			return Constants.verboseDateFormat;
+		}
+	}
+	
+	private static DateTimeFormatter pickTimeFormatter(DateTime dateTime) {
+		if (dateTime.getMinuteOfHour() == 0) {
+			return Constants.simpleTimeFormat;
+		} else {
+			return Constants.verboseTimeFormat;
+		}
+	}
+	
+	private static String formatDateHalf(DateTime dateTime) {
+		DateTimeFormatter dateFormatter = pickDateFormatter(dateTime);
+		DateTime now = new DateTime(); // or stub
+		
+		if (now.getYear()+1 == dateTime.getYear()) {
+			return ", next year";
+		}
+		else if (now.dayOfYear().equals(dateTime.dayOfYear())) {
+			return ", today";
+		}
+		else if (now.plusDays(1).dayOfYear().equals(dateTime.dayOfYear())) {
+			return ", tomorrow";
+		}
+		else if (now.minusDays(1).dayOfYear().equals(dateTime.dayOfYear())) {
+			return ", yesterday";
+		}
+		else if (now.minusDays(2).dayOfYear().equals(dateTime.dayOfYear())) {
+			return ", the day before";
+		}
+		else if (dateTime.isAfter(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
+				&& dateTime.isBefore(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
+			return ", next " + dateTime.dayOfWeek().getAsShortText();
+		}
+		else if (dateTime.isAfter(now.minusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
+				&& dateTime.isBefore(now.minusWeeks(1).withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
+			return ", last " + dateTime.dayOfWeek().getAsShortText();
+		}
+		else {
+			return " on " + dateFormatter.print(dateTime);
+		}
+	}
+	
+	public static String format(DateTime dateTime) {
+		DateTimeFormatter timeFormatter = pickTimeFormatter(dateTime);
+		return timeFormatter.print(dateTime) + formatDateHalf(dateTime);
+	}
+	
+	public static String intervalFormat(DateTime start, DateTime end) {
+		if (start.dayOfYear().equals(end.dayOfYear())) {
+			DateTimeFormatter startTimeFormatter = pickTimeFormatter(start);
+			DateTimeFormatter endTimeFormatter = pickTimeFormatter(end);
+			return startTimeFormatter.print(start) + " to " + endTimeFormatter.print(end) + formatDateHalf(start);
+		}
+		else {
+			return format(start) + " to " + format(end);
+		}
+	}
 
 	public String getInfoString() {
 		StringBuilder output = new StringBuilder();
 		if (isDeadlineTask()) {
-			output.append("by " + Constants.fullDateTimeFormat.print(deadline));
+			output.append("by " + format(deadline));
 		} else if (isTimedTask()) {
-			output.append("from "
-					+ Constants.fullDateTimeFormat.print(getStartTime())
-					+ " to " + Constants.fullDateTimeFormat.print(getEndTime()));
+			output.append("from " + intervalFormat(getStartTime(), getEndTime()));
 		} else if (isFloatingTask()) {
 			output.append("on ");
 			int index = 1;
@@ -180,11 +244,7 @@ public class Task implements Comparable<Task>, Cloneable {
 				output.append("(");
 				output.append(index);
 				output.append(") ");
-				output.append(Constants.fullDateTimeFormat.print(slot
-						.getStartDateTime()));
-				output.append(" to ");
-				output.append(Constants.fullDateTimeFormat.print(slot
-						.getEndDateTime()));
+				output.append(intervalFormat(slot.getStartDateTime(), slot.getEndDateTime()));
 				if (index != possibleIntervals.size()) {
 					output.append("\nor ");
 				}
@@ -196,7 +256,7 @@ public class Task implements Comparable<Task>, Cloneable {
 				output.append("\n");
 			}
 			for (String tag : tags) {
-				output.append("#" + tag + " ");
+				output.append(tag + " ");
 			}
 		}
 		return output.toString();
