@@ -98,7 +98,7 @@ public class TaskComposite extends Composite {
 
 		if (xSize > 330) {
 			if (isWindows) {
-				int newFontSize = Math.max(330 * 18 / xSize, 12);
+				int newFontSize = Math.max(330 * 18 / xSize, 9);
 				Font newFont = new Font(taskName.getDisplay(), "Calibri",
 						newFontSize, SWT.NORMAL);
 				taskName.setFont(newFont);
