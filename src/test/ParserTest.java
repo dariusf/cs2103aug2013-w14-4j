@@ -835,6 +835,28 @@ public class ParserTest {
 	}
 	
 	@Test
+	public void gotoCommandTests() {
+		Command expected, actual;
+		
+		expected = new Command(CommandType.GOTO);
+		actual = new Parser().parse("goto");
+		assertEquals(expected, actual);
+
+		expected = new Command(CommandType.GOTO);
+		actual = new Parser().parse("goto #1234");
+		assertEquals(expected, actual);
+
+		expected = new Command(CommandType.GOTO);
+		actual = new Parser().parse("goto what");
+		assertEquals(expected, actual);
+
+		expected = new Command(CommandType.GOTO);
+		expected.setPageIndex(1);
+		actual = new Parser().parse("goto 1");
+		assertEquals(expected, actual);
+	}
+	
+	@Test
 	public void searchCommandTests() {
 		Command expected, actual;
 		ArrayList<String> tags;
