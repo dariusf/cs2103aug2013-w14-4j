@@ -530,7 +530,6 @@ public class ApplicationWindow {
 			}
 			
 			private void defaultFeedback() {
-				// System.out.println("here");
 				displayLogic.clearHighlightedTasks();
 				updateTaskDisplay();
 				if (dummyTaskComposite != null) {
@@ -541,7 +540,7 @@ public class ApplicationWindow {
 					displayFeedback.setText(Constants.RANDOM_JOKES[index]);
 					displayFeedback.setForeground(red);
 				} else {
-					displayFeedback.setText(Constants.MSG_ENTER_COMMAND);
+					displayFeedback.setText(Constants.MSG_AVAILABLE_COMMANDS);
 					displayFeedback.setForeground(green);
 				}
 			}
