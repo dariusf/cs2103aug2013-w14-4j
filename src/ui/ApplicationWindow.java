@@ -579,18 +579,12 @@ public class ApplicationWindow {
 					}
 					StringBuilder descriptionBuilder = new StringBuilder();
 					if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
-						descriptionBuilder.append("by "
-								+ Constants.fullDateTimeFormat
-										.print(executedCommand.getDeadline()));
+						descriptionBuilder.append("by " + Task.format(executedCommand.getDeadline()));
 					} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
 						Interval taskInterval = executedCommand.getIntervals()
 								.get(0);
 						descriptionBuilder.append("from "
-								+ Constants.fullDateTimeFormat
-										.print(taskInterval.getStartDateTime())
-								+ " to "
-								+ Constants.fullDateTimeFormat
-										.print(taskInterval.getEndDateTime()));
+								+ Task.intervalFormat(taskInterval.getStartDateTime(), taskInterval.getEndDateTime()));
 					} else if (finalType.equals(Constants.TASK_TYPE_FLOATING)) {
 						descriptionBuilder.append("on ");
 						ArrayList<Interval> possibleIntervals = executedCommand
@@ -601,12 +595,7 @@ public class ApplicationWindow {
 							descriptionBuilder.append(index);
 							descriptionBuilder.append(") ");
 							descriptionBuilder
-									.append(Constants.fullDateTimeFormat
-											.print(slot.getStartDateTime()));
-							descriptionBuilder.append(" to ");
-							descriptionBuilder
-									.append(Constants.fullDateTimeFormat
-											.print(slot.getEndDateTime()));
+									.append(Task.intervalFormat(slot.getStartDateTime(), slot.getEndDateTime()));
 							if (index != possibleIntervals.size()) {
 								descriptionBuilder.append("\nor ");
 							}
@@ -622,7 +611,7 @@ public class ApplicationWindow {
 							descriptionBuilder.append("\n");
 						}
 						for (String tag : tags) {
-							descriptionBuilder.append("#" + tag + " ");
+							descriptionBuilder.append(tag + " ");
 						}
 					}
 					if (!descriptionBuilder.toString().isEmpty()) {
@@ -720,8 +709,9 @@ public class ApplicationWindow {
 					String currentTags = currentComposite.getTags();
 					ArrayList<String> newTags = executedCommand.getTags();
 					String combinedTags = currentTags;
+					// TODO use stringbuilder
 					for(String tag : newTags){
-						combinedTags = combinedTags + "#" + tag + " ";
+						combinedTags = combinedTags + tag + " ";
 					}
 
 					if (!combinedTags.isEmpty()) {
