@@ -170,9 +170,10 @@ public class Feedback {
 		case EXIT :
 			System.exit(0);
 		default :
-			throw new Error(Constants.MSG_UNRECOGNISED_COMMAND);
+			return "This should not happen!";
 		}
 	}
+	
 
 	private String addFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
@@ -274,7 +275,23 @@ public class Feedback {
 	private String invalidFeedback() {
 		if (statusCode == Constants.SC_INVALID_COMMAND_ERROR) {
 			statusMessage = "Error: Invalid command!";
-		} else {
+		} else if (statusCode == Constants.SC_EMPTY_COMMAND_ERROR){
+			statusMessage = "Error: No command entered!";
+		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX_ERROR){
+			statusMessage = "Error: Page index is invalid!!";
+		} else if (statusCode == Constants.SC_INVALID_DATE_ERROR){
+			statusMessage = "Error: Date is invalid!";
+		} else if (statusCode == Constants.SC_UNRECOGNIZED_COMMAND_ERROR){
+			statusMessage = "Error: Command is not recognised!";
+		} else if (statusCode == Constants.SC_TOO_FEW_ARGUMENTS_ERROR){
+			statusMessage = "Error: Command is not in the right format!";
+		} else if (statusCode == Constants.SC_INVALID_TIMESLOT_INDEX_ERROR){
+			statusMessage = "Error: Timeslot index is invalid!";
+		} else if (statusCode == Constants.SC_INVALID_SEARCH_PARAMETERS_ERROR){
+			statusMessage = "Error: Search parameter(s) is/are invalid!";
+		}  else if (statusCode == Constants.SC_INVALID_TASK_INDEX_ERROR){
+			statusMessage = "Error: Task index is invalid!";
+		}else {
 			statusMessage = "Error: Invalid command (this should not happen!)";
 		}
 		return statusMessage;
