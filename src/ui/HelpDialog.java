@@ -198,9 +198,8 @@ public class HelpDialog extends Dialog {
 		StyleRange styleRange;
 		int startIndex = helpString.indexOf("\n");
 		int colonIndex = helpString.indexOf(":");
-		int newSectionIndex = helpString.indexOf("\n\n"); 
 
-		while (startIndex != -1 && colonIndex != -1 && colonIndex < newSectionIndex) {
+		while (startIndex != -1 && colonIndex != -1) {
 			styleRange = new StyleRange();
 			styleRange.start = startIndex + 1;
 			styleRange.length = colonIndex - startIndex;
