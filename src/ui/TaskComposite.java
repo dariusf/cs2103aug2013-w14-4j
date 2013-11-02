@@ -13,6 +13,7 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import sun.misc.GC.LatencyRequest;
 
 public class TaskComposite extends Composite {
 
@@ -53,7 +54,6 @@ public class TaskComposite extends Composite {
 		taskName = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
 		taskName.setFont(ApplicationWindow.self.titleFont);
 		this.setTaskName(task.getName());
-
 
 		taskDescription = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
 		taskDescription.setText(task.getInfoString());
@@ -96,18 +96,20 @@ public class TaskComposite extends Composite {
 		int xSize = taskName.getSize().x;
 		boolean isWindows = System.getProperty("os.name").toLowerCase()
 				.indexOf("win") >= 0;
-	
-		if(xSize > 330){
+
+		if (xSize > 330) {
 			if (isWindows) {
-				int newFontSize = Math.max(330  * 18 / xSize, 12) ;
-				Font newFont = new Font(taskName.getDisplay(), "Calibri", newFontSize, SWT.NORMAL);
+				int newFontSize = Math.max(330 * 18 / xSize, 12);
+				Font newFont = new Font(taskName.getDisplay(), "Calibri",
+						newFontSize, SWT.NORMAL);
 				taskName.setFont(newFont);
 			} else {
-				int newFontSize = Math.max(330  * 24 / xSize, 12) ;
-				Font newFont = new Font(taskName.getDisplay(), "Calibri", newFontSize, SWT.NORMAL);
+				int newFontSize = Math.max(330 * 24 / xSize, 12);
+				Font newFont = new Font(taskName.getDisplay(), "Calibri",
+						newFontSize, SWT.NORMAL);
 				taskName.setFont(newFont);
 			}
-			
+
 		}
 	}
 
@@ -151,9 +153,28 @@ public class TaskComposite extends Composite {
 			setBackground(null);
 		}
 	}
-	
-	public void highlightLine(int line){
-		taskDescription.setLineBackground(line-1, 1, new Color(ApplicationWindow.self.shell.getDisplay(),
-				0x00, 0xdd, 0x00));
+
+	public void highlightLine(int line) {
+		taskDescription.setLineBackground(line - 1, 1, new Color(
+				ApplicationWindow.self.shell.getDisplay(), 0x00, 0xdd, 0x00));
+	}
+
+	public boolean isTagged() {
+		String[] taskDescriptionArray = taskDescription.getText().split("/n");
+		if (taskDescriptionArray.length > 0) {
+			String lastLine = taskDescriptionArray[taskDescriptionArray.length - 1];
+			return lastLine.startsWith("#");
+		}
+		return false;
+	}
+
+	public String getTags() {
+		if (isTagged()) {
+			String[] taskDescriptionArray = taskDescription.getText().split(
+					"/n");
+			return taskDescriptionArray[taskDescriptionArray.length - 1];
+		} else {
+			return "";
+		}
 	}
 }
