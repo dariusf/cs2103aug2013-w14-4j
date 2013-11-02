@@ -31,7 +31,6 @@ public class HelpDialog extends Dialog {
 
 	public void open(Feedback feedbackObj) {
 		Shell parent = getParent();
-		System.out.println(parent.getBounds().x);
 		final Shell dialog = new Shell(parent);
 		display = parent.getDisplay();
 
