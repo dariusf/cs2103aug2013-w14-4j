@@ -91,7 +91,7 @@ public class Constants {
 			+ "* Choose a 'date' to display task(s) for the date\n"
 			+ "  ** Dates available: today, tomorrow, 13/10\n"
 			+ "* Choose a 'type' to display task(s) corresponding to the specified type\n"
-			+ "  ** Types available: untimed, deadline, timed, floating, overdue, done(not implemented yet)\n\n"
+			+ "  ** Types available: untimed, deadline, timed, floating, overdue, done\n\n"
 			+ "Examples:\n" + "display all\n" + "display 25 Oct\n"
 			+ "display overdue";
 	public static final String HELP_HELP = "Help\n"
