@@ -1,7 +1,5 @@
 package common;
 
-import java.util.ArrayList;
-
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
