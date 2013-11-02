@@ -513,17 +513,16 @@ public class ApplicationWindow {
 				case DELETE :
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						highlightTaskFeedback(taskIndex);
-					} else {
-						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(red);
+					} else if (taskIndex != -1){
+						displayInvalidIndexAsFeedback();
 					}
+					//TODO: find a way to display error message if user actually types -1...
 					break;
 				case FINALISE :
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						finaliseTaskFeedback(executedCommand, taskIndex);
-					} else {
-						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(red);
+					} else if (taskIndex != -1) {
+						displayInvalidIndexAsFeedback();
 						return;
 					}
 					break;
@@ -533,9 +532,8 @@ public class ApplicationWindow {
 				
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						editTaskFeedback(executedCommand, taskIndex);
-					} else {
-						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(red);
+					} else if (taskIndex != -1) {
+						displayInvalidIndexAsFeedback();
 						return;
 					}
 					break;
@@ -551,6 +549,11 @@ public class ApplicationWindow {
 					defaultFeedback();
 					break;
 				}
+			}
+
+			private void displayInvalidIndexAsFeedback() {
+				displayFeedback.setText("Task index is not valid!");
+				displayFeedback.setForeground(red);
 			}
 			
 			private void defaultFeedback() {
