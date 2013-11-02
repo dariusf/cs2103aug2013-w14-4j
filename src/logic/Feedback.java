@@ -42,7 +42,7 @@ public class Feedback {
 	}
 
 	public void setStatusCode(int status) {
-		assert (status <= 110) && (status >= 10);
+		assert (status <= 120) && (status >= 10);
 		statusCode = status;
 		setIsError(statusCode);
 	}
@@ -77,63 +77,10 @@ public class Feedback {
 	}
 	
 	private void setIsError(int statusCode) {
-		switch (statusCode) {
-		case Constants.SC_SUCCESS :
+		if (statusCode < 20 && statusCode >= 10) {
 			isError = false;
-			break;
-		case Constants.SC_SUCCESS_TASK_OVERDUE :
-			isError = false;
-			break;
-		case Constants.SC_SUCCESS_CLEAR_DONE :
-			isError = false;
-			break;
-		case Constants.SC_INVALID_COMMAND_ERROR :
+		} else {
 			isError = true;
-			break;
-		case Constants.SC_EMPTY_DESCRIPTION_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_NO_TASK_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_NO_ID_INDICATED_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_TASK_ALREADY_FINALISED_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_TASK_ALREADY_DONE_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_NO_ID_INDICATED_TIME_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_SEARCH_KEYWORD_MISSING_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_FINALISE_TYPE_MISMATCH_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_UNDO_NO_PRIOR_STATE_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_REDO_NO_PRIOR_STATE_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_INVALID_PAGE_INDEX :
-			isError = true;
-			break;
-		default:
-			assert isError = false;
 		}
 	}
 
