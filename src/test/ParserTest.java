@@ -264,6 +264,18 @@ public class ParserTest {
 		gotten = new Parser().parse("add event today");
 		assertEquals(gotten, expected);
 		
+		// tonight
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("event");
+		intervals = new ArrayList<>();
+		start = now.withTime(0, 0, 0, 0);
+		end = now.withTime(23, 59, 0, 0);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		gotten = new Parser().parse("add event tonight");
+		assertEquals(gotten, expected);
+		assertEquals(new Parser().parse("add event tonight"), new Parser().parse("add event today"));
+
 		// tomorrow
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
