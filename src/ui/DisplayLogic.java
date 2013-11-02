@@ -56,7 +56,7 @@ public class DisplayLogic {
 		rowLayout.type = SWT.VERTICAL;
 		rowLayout.pack = true;
 		taskDisplay.setLayout(rowLayout);
-		taskDisplay.setBounds(32, 86, 425, 450);
+		taskDisplay.setBounds(32, 86, 435, 450);
 	}
 	
 	public void deleteTaskComposites() {
