@@ -157,7 +157,7 @@ public class Parser {
 		case DONE:
 			return createTaskIndexCommand(commandType);
 		case FINALISE:
-			return createFinaliseCommand(commandType);
+			return createFinaliseCommand();
 		case SEARCH:
 			return createSearchStringCommand();
 		case HELP:
@@ -254,36 +254,35 @@ public class Parser {
 		return commandType;
 	}
 		
-	private Command createFinaliseCommand(CommandType commandType) {
+	private Command createFinaliseCommand() {
 		int whichTask = -1, whichSlot = -1;
 		
+		Command command = new Command(CommandType.FINALISE);
+
 		if (hasTokensLeft()) {
 			try {
 				whichTask = Integer.parseInt(getCurrentToken().contents);
+				command.setTaskIndex(whichTask);
 				nextToken();
 				
 				if (hasTokensLeft()) {
 					try {
 						whichSlot = Integer.parseInt(getCurrentToken().contents);
 					} catch (NumberFormatException e) {
-						return invalidCommand(InvalidCommandReason.INVALID_TIMESLOT_INDEX);
+						return command;
 					}
 				}
 
 			} catch (NumberFormatException e) {
-				return invalidCommand(InvalidCommandReason.INVALID_TASK_INDEX);
+				return command;
 			}
 
-			Command command = new Command(commandType);
-			
-			command.setTaskIndex(whichTask);
 			command.setTimeslotIndex(whichSlot);
-			
 			return command;
 
 		}
 		else {
-			return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+			return new Command(CommandType.FINALISE);
 		}
 	}
 
@@ -293,16 +292,16 @@ public class Parser {
 			try {
 				taskIndex = Integer.parseInt(getCurrentToken().contents);
 			} catch (NumberFormatException e) {
-				return invalidCommand(InvalidCommandReason.INVALID_TASK_INDEX);
+				return new Command(CommandType.EDIT);
 			}
 			nextToken();
-			
-			// check if the second index is numerical; if it is, the edit
-			// command is being applied to a floating task
-			
+						
 			if (hasTokensLeft()) {
+				Token currentToken = getCurrentToken();
 				try {
-					timeslotIndex = Integer.parseInt(getCurrentToken().contents);
+					// if the next token is numerical, edit is being applied
+					// to a timeslot
+					timeslotIndex = Integer.parseInt(currentToken.contents);
 					nextToken();
 					return createEditTimeslotCommand();
 				} catch (NumberFormatException e) {
@@ -316,7 +315,7 @@ public class Parser {
 			}
 		}
 		else {
-			return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+			return new Command(CommandType.EDIT);
 		}
 	}
 
@@ -454,8 +453,7 @@ public class Parser {
 		Command command;
 		
 		if (!hasTokensLeft()) {
-			command = new Command(CommandType.INVALID);
-			command.setInvalidCommandReason(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+			command = new Command(CommandType.SEARCH);
 			return command;
 		}
 		
@@ -487,8 +485,7 @@ public class Parser {
 			command.setTags(tags);
 		}
 		else {
-			command = new Command(CommandType.INVALID);
-			command.setInvalidCommandReason(InvalidCommandReason.INVALID_SEARCH_PARAMETERS);
+			command = new Command(CommandType.SEARCH);
 		}
 		
 		return command;
@@ -499,38 +496,40 @@ public class Parser {
 	}
 
 	private Command createPageIndexCommand(CommandType commandType) {
+		Command command = new Command(commandType);
+
 		if (hasTokensLeft()) {
 			int index;
 			try {
 				index = Integer.parseInt(getCurrentToken().contents);
 			} catch (NumberFormatException e) {
-				return invalidCommand(InvalidCommandReason.INVALID_PAGE_INDEX);
+				return command;
 			}
 
-			Command command = new Command(commandType);
 			command.setPageIndex(index);
 			return command;
 		}
 		else {
-			return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+			return command;
 		}
 	}
 
 	private Command createTaskIndexCommand(CommandType commandType) {
+		Command command = new Command(commandType);
+		
 		if (hasTokensLeft()) {
 			int index;
 			try {
 				index = Integer.parseInt(getCurrentToken().contents);
 			} catch (NumberFormatException e) {
-				return invalidCommand(InvalidCommandReason.INVALID_TASK_INDEX);
+				return command;
 			}
 
-			Command command = new Command(commandType);
 			command.setTaskIndex(index);
 			return command;
 		}
 		else {
-			return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+			return command;
 		}
 	}
 
