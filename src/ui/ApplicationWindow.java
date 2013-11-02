@@ -60,6 +60,7 @@ public class ApplicationWindow {
 	
 	public Color green;
 	public Color red;
+	public Color blue;
 	
 	public static ApplicationWindow self; // singleton?
 	public boolean moving = false;
@@ -292,6 +293,7 @@ public class ApplicationWindow {
 		
 		red = new Color(shell.getDisplay(), 0x99, 0, 0);
 		green = new Color(shell.getDisplay(), 0, 0x66, 0);
+		blue = SWTResourceManager.getColor(102, 0, 255);
 
 		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.SINGLE);
 		displayPageNumber.setEnabled(false);
@@ -541,7 +543,7 @@ public class ApplicationWindow {
 					displayFeedback.setForeground(red);
 				} else {
 					displayFeedback.setText(Constants.MSG_AVAILABLE_COMMANDS);
-					displayFeedback.setForeground(green);
+					displayFeedback.setForeground(blue);
 				}
 			}
 

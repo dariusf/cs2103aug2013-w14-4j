@@ -168,6 +168,7 @@ public class Constants {
 			+ "Perform this action if you wish to close the application.\n\n"
 			+ "Command format:\n" + "'exit'";
 
+	// Please keep success code numbers between 10 and 19.
 	public static final int SC_SUCCESS = 10;
 	public static final int SC_SUCCESS_TASK_OVERDUE = 11;
 	public static final int SC_SUCCESS_CLEAR_DONE = 12;
