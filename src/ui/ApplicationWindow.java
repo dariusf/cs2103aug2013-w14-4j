@@ -43,7 +43,6 @@ public class ApplicationWindow {
 	public static Logic logic;
 	public StyledText displayPageNumber;
 	public Composite closeButton;
-	// public ArrayList<Integer> numberOfTasksOnEachPage;
 	public StyledText displayTitle;
 	public StyledText displayRemainingTaskCount;
 	public StyledText displayTodayTaskCount;
@@ -99,12 +98,45 @@ public class ApplicationWindow {
 	}
 
 	private void centerShellWithRespectToScreen(Display display) {
-		Monitor primary = display.getPrimaryMonitor ();
-		Rectangle bounds = primary.getBounds ();
-		Rectangle rect = shell.getBounds ();
-		int x = bounds.x + (bounds.width - rect.width) / 2;
-		int y = bounds.y + (bounds.height - rect.height) / 2;
-		shell.setLocation (x, y);
+		Monitor primary = display.getPrimaryMonitor();
+		
+		Rectangle monitorBounds = primary.getBounds();
+		Rectangle shellBounds = shell.getBounds();
+		
+		int x = calculateXCoordinateForShellPosition(monitorBounds, shellBounds);
+		int y = calculateYCoordinateForShellPosition(monitorBounds, shellBounds);
+
+		shell.setLocation(x, y);
+	}
+
+	private int calculateYCoordinateForShellPosition(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		int difference = calculateDifferenceInHeight(monitorBounds, shellBounds);
+		int heightOffset = calculateHalfOfNumber(difference);
+		int yCoordinate = monitorBounds.y + heightOffset;
+		return yCoordinate;
+	}
+
+	private int calculateDifferenceInHeight(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		return monitorBounds.height - shellBounds.height;
+	}
+
+	private int calculateXCoordinateForShellPosition(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		int difference = calculateDifferenceInWidth(monitorBounds, shellBounds);
+		int widthOffset = calculateHalfOfNumber(difference);
+		int xCoordinate = monitorBounds.x + widthOffset;
+		return xCoordinate;
+	}
+
+	private int calculateDifferenceInWidth(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		return monitorBounds.width - shellBounds.width;
+	}
+
+	private int calculateHalfOfNumber(int difference) {
+		return difference / 2;
 	}
 
 	private void runTest(Display display) {
@@ -208,7 +240,7 @@ public class ApplicationWindow {
 		
 		Point[] oval = pointManipulator.mirrorY(pointManipulator.mirrorX(quarterArc));
 		for (Point point : oval) {
-			point.offset(windowWidth / 2, windowHeight / 2); // shift oval to center on window
+			point.offset(calculateHalfOfNumber(windowWidth), calculateHalfOfNumber(windowHeight)); // shift oval to center on window
 			
 			if (point.x < 0) {
 				point.x = 0;
