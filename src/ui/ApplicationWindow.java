@@ -358,7 +358,7 @@ public class ApplicationWindow {
 		shell.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent e) {
-				logic.executeCommand("exit");
+				logic.executeCommand(Constants.COMMAND_EXIT);
 			}
 		});
 		adjustPageNumberAlignment();
@@ -895,7 +895,7 @@ public class ApplicationWindow {
 					Point offset = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
 
 					if (offset.x > 455 && offset.y < 27) {
-						executeUserInput("exit");
+						executeUserInput(Constants.COMMAND_EXIT);
 					} else if (offset.x > 433 && offset.y < 27) {
 						shell.setMinimized(true);
 					}
