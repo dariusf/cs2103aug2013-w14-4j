@@ -453,8 +453,7 @@ public class Parser {
 		Command command;
 		
 		if (!hasTokensLeft()) {
-			command = new Command(CommandType.INVALID);
-			command.setInvalidCommandReason(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+			command = new Command(CommandType.SEARCH);
 			return command;
 		}
 		
@@ -486,8 +485,7 @@ public class Parser {
 			command.setTags(tags);
 		}
 		else {
-			command = new Command(CommandType.INVALID);
-			command.setInvalidCommandReason(InvalidCommandReason.INVALID_SEARCH_PARAMETERS);
+			command = new Command(CommandType.SEARCH);
 		}
 		
 		return command;
