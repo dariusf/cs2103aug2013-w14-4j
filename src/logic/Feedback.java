@@ -169,7 +169,6 @@ public class Feedback {
 			return gotoFeedback();
 		case EXIT :
 			return exitFeedback();
-//			System.exit(0);
 		default :
 			return "This should not happen!";
 		}

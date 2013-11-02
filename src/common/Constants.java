@@ -216,5 +216,5 @@ public class Constants {
 	public static final int DEFAULT_PAGE_NUMBER = 1;
 
 	public static final String[] RANDOM_JOKES = { "Why do Java Programmers wear glasses?\nBecause they don't see sharp.", "What is the object-oriented way to\nbecome wealthy? Inheritance.", "[\"hip\", \"hip\"]\n(Get it?)", "Is it a boy or a girl?\nTrue", "Why did the programmer quit his job?\nBecause he didn't get arrays.", "Why did the integer drown?\nBecause it couldn't float!"};
-	public static final String MSG_ENTER_COMMAND = "Listening to command...";
+	public static final String MSG_AVAILABLE_COMMANDS = "Commands available: add|edit|display|sort|search finalise|help|goto|undo|redo|clear|done|exit";
 }
