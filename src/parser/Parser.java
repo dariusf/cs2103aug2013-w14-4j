@@ -496,20 +496,21 @@ public class Parser {
 	}
 
 	private Command createPageIndexCommand(CommandType commandType) {
+		Command command = new Command(commandType);
+
 		if (hasTokensLeft()) {
 			int index;
 			try {
 				index = Integer.parseInt(getCurrentToken().contents);
 			} catch (NumberFormatException e) {
-				return invalidCommand(InvalidCommandReason.INVALID_PAGE_INDEX);
+				return command;
 			}
 
-			Command command = new Command(commandType);
 			command.setPageIndex(index);
 			return command;
 		}
 		else {
-			return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+			return command;
 		}
 	}
 
