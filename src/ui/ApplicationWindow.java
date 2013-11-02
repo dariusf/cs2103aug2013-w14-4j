@@ -165,129 +165,13 @@ public class ApplicationWindow {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	private double sqr (double i) {
-		return i * i;
-	}
-	
-	/**
-	 * Constructs a point array representing a rounded rectangle. 
-	 * The implementation can be imagined as a large oval, with top, bottom and sides chopped off
-	 * 
-	 * @param windowWidth
-	 * @param windowHeight
-	 * @param ovalX
-	 * @param ovalY
-	 * @return
-	 */
-	private int[] roundedRectangle (int windowWidth, int windowHeight, int ovalX, int ovalY) {
-		assert(windowWidth > 0);
-		assert(windowHeight > 0);
-		assert(ovalX > 0);
-		assert(ovalY > 0);
-		
-		class Point {
-			double x;
-			double y;
-			
-			public Point(double x, double y) {
-				this.x = x;
-				this.y = y;
-			}
-			
-			void offset(double xOffset, double yOffset) { //shifts this point by the specified offset
-				x += xOffset;
-				y += yOffset;
-			}
-		}
-		
-		class PointOperations {
-			int[] flatten (Point[] points) {
-				int[] result = new int[points.length * 2];
-				for(int i = 0; i < points.length; i++) {
-					result[i * 2] = (int) points[i].x;
-					result[i * 2 + 1] = (int) points[i].y;
-				}
-				return result;
-			}
-			
-			// mirrors all points along the X axis and joins the two together to form a line
-			Point[] mirrorX (Point[] points) {
-				Point[] result = new Point[points.length * 2];
-				for (int i = 0; i < points.length; i++) {
-					Point currentPoint = points[i];
-					Point reflectedPoint = new Point(-currentPoint.x, currentPoint.y);
-					result[i] = currentPoint;
-					result[result.length - 1 - i] = reflectedPoint;
-				}
-				return result;
-			}
-			
-			Point[] mirrorY (Point[] points) {
-				Point[] result = new Point[points.length * 2];
-				for (int i = 0; i < points.length; i++) {
-					Point currentPoint = points[i];
-					Point reflectedPoint = new Point(currentPoint.x, -currentPoint.y);
-					result[i] = currentPoint;
-					result[result.length - 1 - i] = reflectedPoint;
-				}
-				return result;
-			}
-		}
-		
-		PointOperations pointManipulator = new PointOperations();
-		Point[] quarterArc = new Point[ovalX + 1];
-		
-		// eqn: (x^2)/(ovalX^2) + (y^2)/(ovalY^2) = 1
-		for (int i = 0; i <= ovalX; i++) {
-			double xCoord = i;
-			double yCoord = Math.sqrt(1 - (sqr(xCoord)/sqr(ovalX))) * (sqr(ovalY));
-			quarterArc[quarterArc.length - 1 - i] = new Point(xCoord, yCoord);
-		}
-		
-		Point[] oval = pointManipulator.mirrorY(pointManipulator.mirrorX(quarterArc));
-		for (Point point : oval) {
-			point.offset(calculateHalfOfNumber(windowWidth), calculateHalfOfNumber(windowHeight)); // shift oval to center on window
-			
-			if (point.x < 0) {
-				point.x = 0;
-			} else if (point.x > windowWidth) {
-				point.x = windowWidth;
-			}
-			
-			if (point.y < 0) {
-				point.y = 0;
-			} else if (point.y > windowHeight) {
-				point.y = windowHeight;
-			}
-		}
-		return pointManipulator.flatten(oval);
-	}
+
 
 	/**
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shell = new Shell(SWT.NO_TRIM | SWT.DRAG | SWT.ON_TOP);
-		
-		shell.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
-				"/image/basketIcon.jpg"));
-		
-		ImageData backgroundData = new ImageData(getClass()
-				.getResourceAsStream("/image/background.png"));
-		Image transparentBackgroundImage = new Image(Display.getCurrent(),
-				backgroundData);
-		shell.setBackgroundImage(transparentBackgroundImage);
-		shell.setBackgroundMode(SWT.INHERIT_FORCE);
-		
-//		Region shellRegion = new Region();
-//		shellRegion.add(roundedRectangle(482, 681, 400, 600));
-//		shell.setRegion(shellRegion);
-//		
-//		Rectangle size = shellRegion.getBounds();
-//		
-//		shell.setSize(size.width, size.height);
+		loadShell();
 		
 		shell.setSize(482, 681);
 		shell.setText(Constants.APP_NAME);
@@ -372,6 +256,83 @@ public class ApplicationWindow {
 		});
 		adjustPageNumberAlignment();
 		enableDrag();
+	}
+	
+	public void loadShell() {
+		shell = new Shell(Display.getDefault(), SWT.NO_TRIM | SWT.ON_TOP);
+
+		shell.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
+				"/image/basketIcon.png"));
+
+		final Image image = SWTResourceManager.getImage(
+				ApplicationWindow.class, "/image/background.png");
+		Region region = new Region();
+		final ImageData imageData = image.getImageData();
+		if (imageData.alphaData != null) {
+			Rectangle pixel = new Rectangle(0, 0, 1, 1);
+			for (int y = 0; y < imageData.height; y++) {
+				for (int x = 0; x < imageData.width; x++) {
+					if (imageData.getAlpha(x, y) == 255) {
+						pixel.x = imageData.x + x;
+						pixel.y = imageData.y + y;
+						region.add(pixel);
+					}
+				}
+			}
+		} else {
+			ImageData mask = imageData.getTransparencyMask();
+			Rectangle pixel = new Rectangle(0, 0, 1, 1);
+			for (int y = 0; y < mask.height; y++) {
+				for (int x = 0; x < mask.width; x++) {
+					if (mask.getPixel(x, y) != 0) {
+						pixel.x = imageData.x + x;
+						pixel.y = imageData.y + y;
+						region.add(pixel);
+					}
+				}
+			}
+		}
+		shell.setRegion(region);
+
+		Listener l = new Listener() {
+			int startX, startY;
+
+			public void handleEvent(Event e) {
+				if (e.type == SWT.KeyDown && e.character == SWT.ESC) {
+					shell.dispose();
+				}
+				if (e.type == SWT.MouseDown && e.button == 1) {
+					startX = e.x;
+					startY = e.y;
+				}
+				if (e.type == SWT.MouseMove && (e.stateMask & SWT.BUTTON1) != 0) {
+					Point p = shell.toDisplay(e.x, e.y);
+					p.x -= startX;
+					p.y -= startY;
+					shell.setLocation(p);
+				}
+				if (e.type == SWT.Paint) {
+					e.gc.drawImage(image, imageData.x, imageData.y);
+				}
+			}
+		};
+		shell.addListener(SWT.KeyDown, l);
+		shell.addListener(SWT.MouseDown, l);
+		shell.addListener(SWT.MouseMove, l);
+		shell.addListener(SWT.Paint, l);
+
+		shell.setSize(imageData.x + imageData.width, imageData.y
+				+ imageData.height);
+
+		ImageData backgroundData = new ImageData(getClass()
+				.getResourceAsStream("/image/background.png"));
+		Image transparentBackgroundImage = new Image(Display.getCurrent(),
+				backgroundData);
+		shell.setBackgroundImage(transparentBackgroundImage);
+		shell.setBackgroundMode(SWT.INHERIT_FORCE);
+
+		shell.setSize(482, 681);
+		shell.setText(Constants.APP_NAME);
 	}
 
 	public void updateTaskDisplay() {
@@ -515,17 +476,16 @@ public class ApplicationWindow {
 				case DELETE :
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						highlightTaskFeedback(taskIndex);
-					} else {
-						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(red);
+					} else if (taskIndex != -1){
+						displayInvalidIndexAsFeedback();
 					}
+					//TODO: find a way to display error message if user actually types -1...
 					break;
 				case FINALISE :
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						finaliseTaskFeedback(executedCommand, taskIndex);
-					} else {
-						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(red);
+					} else if (taskIndex != -1) {
+						displayInvalidIndexAsFeedback();
 						return;
 					}
 					break;
@@ -535,9 +495,8 @@ public class ApplicationWindow {
 				
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						editTaskFeedback(executedCommand, taskIndex);
-					} else {
-						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(red);
+					} else if (taskIndex != -1) {
+						displayInvalidIndexAsFeedback();
 						return;
 					}
 					break;
@@ -553,6 +512,11 @@ public class ApplicationWindow {
 					defaultFeedback();
 					break;
 				}
+			}
+
+			private void displayInvalidIndexAsFeedback() {
+				displayFeedback.setText("Task index is not valid!");
+				displayFeedback.setForeground(red);
 			}
 			
 			private void defaultFeedback() {
@@ -617,18 +581,12 @@ public class ApplicationWindow {
 					}
 					StringBuilder descriptionBuilder = new StringBuilder();
 					if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
-						descriptionBuilder.append("by "
-								+ Constants.fullDateTimeFormat
-										.print(executedCommand.getDeadline()));
+						descriptionBuilder.append("by " + Task.format(executedCommand.getDeadline()));
 					} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
 						Interval taskInterval = executedCommand.getIntervals()
 								.get(0);
 						descriptionBuilder.append("from "
-								+ Constants.fullDateTimeFormat
-										.print(taskInterval.getStartDateTime())
-								+ " to "
-								+ Constants.fullDateTimeFormat
-										.print(taskInterval.getEndDateTime()));
+								+ Task.intervalFormat(taskInterval.getStartDateTime(), taskInterval.getEndDateTime()));
 					} else if (finalType.equals(Constants.TASK_TYPE_FLOATING)) {
 						descriptionBuilder.append("on ");
 						ArrayList<Interval> possibleIntervals = executedCommand
@@ -639,12 +597,7 @@ public class ApplicationWindow {
 							descriptionBuilder.append(index);
 							descriptionBuilder.append(") ");
 							descriptionBuilder
-									.append(Constants.fullDateTimeFormat
-											.print(slot.getStartDateTime()));
-							descriptionBuilder.append(" to ");
-							descriptionBuilder
-									.append(Constants.fullDateTimeFormat
-											.print(slot.getEndDateTime()));
+									.append(Task.intervalFormat(slot.getStartDateTime(), slot.getEndDateTime()));
 							if (index != possibleIntervals.size()) {
 								descriptionBuilder.append("\nor ");
 							}
@@ -660,7 +613,7 @@ public class ApplicationWindow {
 							descriptionBuilder.append("\n");
 						}
 						for (String tag : tags) {
-							descriptionBuilder.append("#" + tag + " ");
+							descriptionBuilder.append(tag + " ");
 						}
 					}
 					if (!descriptionBuilder.toString().isEmpty()) {
@@ -758,8 +711,9 @@ public class ApplicationWindow {
 					String currentTags = currentComposite.getTags();
 					ArrayList<String> newTags = executedCommand.getTags();
 					String combinedTags = currentTags;
+					// TODO use stringbuilder
 					for(String tag : newTags){
-						combinedTags = combinedTags + "#" + tag + " ";
+						combinedTags = combinedTags + tag + " ";
 					}
 
 					if (!combinedTags.isEmpty()) {
