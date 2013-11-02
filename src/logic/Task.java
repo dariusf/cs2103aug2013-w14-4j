@@ -63,7 +63,7 @@ public class Task implements Comparable<Task>, Cloneable {
 	private String tagsToString() {
 		StringBuilder output = new StringBuilder();
 		for (String tag : tags) {
-			output.append("#" + tag + " ");
+			output.append(tag + " ");
 		}
 		return output.toString();
 	}
@@ -256,7 +256,7 @@ public class Task implements Comparable<Task>, Cloneable {
 				output.append("\n");
 			}
 			for (String tag : tags) {
-				output.append("#" + tag + " ");
+				output.append(tag + " ");
 			}
 		}
 		return output.toString();

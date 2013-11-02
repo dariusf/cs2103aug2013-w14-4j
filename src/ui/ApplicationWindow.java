@@ -647,7 +647,7 @@ public class ApplicationWindow {
 							descriptionBuilder.append("\n");
 						}
 						for (String tag : tags) {
-							descriptionBuilder.append("#" + tag + " ");
+							descriptionBuilder.append(tag + " ");
 						}
 					}
 					if (!descriptionBuilder.toString().isEmpty()) {
@@ -745,8 +745,9 @@ public class ApplicationWindow {
 					String currentTags = currentComposite.getTags();
 					ArrayList<String> newTags = executedCommand.getTags();
 					String combinedTags = currentTags;
+					// TODO use stringbuilder
 					for(String tag : newTags){
-						combinedTags = combinedTags + "#" + tag + " ";
+						combinedTags = combinedTags + tag + " ";
 					}
 
 					if (!combinedTags.isEmpty()) {
