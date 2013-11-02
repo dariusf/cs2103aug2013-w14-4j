@@ -5,7 +5,6 @@ import java.util.List;
 
 import common.undo.Action;
 import common.undo.ActionStack;
-import common.undo.DoublyLinkedList;
 
 public class ActionCapturer<E extends Comparable<E>, T extends StorageBase<E>> implements StorageBase<E> {
 	

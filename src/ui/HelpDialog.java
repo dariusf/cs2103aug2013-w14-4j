@@ -1,5 +1,7 @@
 package ui;
 
+import java.util.EventListener;
+
 import logic.Feedback;
 
 import org.eclipse.swt.widgets.Dialog;
@@ -12,9 +14,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import com.sun.xml.internal.ws.Closeable;
 
 import common.CommandType;
 import common.Constants;
@@ -24,6 +30,8 @@ public class HelpDialog extends Dialog {
 	Display display;
 	StyledText helpText;
 	boolean isGeneralHelp = false;
+	private Shell dialog;
+	boolean isOpen = false;
 
 	public HelpDialog(Shell parent) {
 		super(parent);
@@ -31,7 +39,7 @@ public class HelpDialog extends Dialog {
 
 	public void open(Feedback feedbackObj) {
 		Shell parent = getParent();
-		final Shell dialog = new Shell(parent);
+		dialog = new Shell(parent);
 		display = parent.getDisplay();
 
 		dialog.setSize(420, 420);
@@ -77,12 +85,13 @@ public class HelpDialog extends Dialog {
 		}
 
 		dialog.open();
+		isOpen = true;
 
 		Listener listener = new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				if (event.widget == closeButton) {
-					dialog.close();
+					close();
 				}
 			}
 		};
@@ -96,7 +105,13 @@ public class HelpDialog extends Dialog {
 
 		orange.dispose();
 	}
-
+	
+	public void close () {
+		if (isOpen) {
+			dialog.close();
+		}
+		isOpen = false;
+	}
 	private int calculateYCoordinateForShellPosition(
 			Rectangle parentShellBounds) {
 		int parentYCoordinate = parentShellBounds.y;

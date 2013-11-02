@@ -1,7 +1,6 @@
 package ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
@@ -13,7 +12,6 @@ import common.DisplayMode;
 import logic.Feedback;
 import logic.Logic;
 import logic.Task;
-import org.joda.time.DateTime;
 
 public class DisplayLogic {
 

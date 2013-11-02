@@ -47,10 +47,10 @@ public class ApplicationWindow {
 	public StyledText displayRemainingTaskCount;
 	public StyledText displayTodayTaskCount;
 	public TaskComposite dummyTaskComposite;
-
+	
 	public static HelpDialog helpDialog;
 	public static DisplayLogic displayLogic;
-
+	
 	public Font windowTitleFont;
 	Font indexFont; // accessed by task composite
 	Font titleFont; // accessed by task composite
@@ -67,7 +67,7 @@ public class ApplicationWindow {
 	
 	private static Tray tray;
 	private static TrayItem trayIcon;
-
+	
 	/**
 	 * Launch the application.
 	 * 
@@ -489,6 +489,8 @@ public class ApplicationWindow {
 					executeUserInput("display timed");
 				} else if (arg0.keyCode == SWT.F11) {
 					executeUserInput("display floating");
+				} else if (arg0.keyCode == SWT.ESC) {
+					helpDialog.close();
 				}
 			}
 
