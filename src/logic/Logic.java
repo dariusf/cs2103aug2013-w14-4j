@@ -112,8 +112,7 @@ public class Logic {
 		case CLEAR:
 			return clearTasks(command);
 		case EXIT:
-			endLogging();
-			exitProgram();
+			return exit();
 		case SEARCH:
 			return searchTasks(command);
 		case UNDO:
@@ -674,14 +673,18 @@ public class Logic {
 		return feedback;
 	}
 
-	protected void exitProgram() {
+	protected Feedback exit() {
+		endLogging();
+		
+		Feedback feedback = new Feedback(Constants.SC_SUCCESS, CommandType.EXIT);
+
 		try {
 			storage.close();
-			System.exit(0);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return feedback;
 	}
 
 	protected boolean isTaskOver(Task task) {
