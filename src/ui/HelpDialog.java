@@ -6,12 +6,14 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import common.CommandType;
@@ -29,11 +31,22 @@ public class HelpDialog extends Dialog {
 
 	public void open(Feedback feedbackObj) {
 		Shell parent = getParent();
+		System.out.println(parent.getBounds().x);
 		final Shell dialog = new Shell(parent);
 		display = parent.getDisplay();
 
 		dialog.setSize(420, 420);
 		dialog.setText("Help");
+		
+		Monitor primary = display.getPrimaryMonitor();
+		
+		Rectangle monitorBounds = primary.getBounds();
+		Rectangle parentShellBounds = parent.getBounds();
+		Rectangle helpShellBounds = dialog.getBounds();
+		
+		int x = calculateXCoordinateForShellPosition(parentShellBounds, monitorBounds, helpShellBounds);
+		int y = calculateYCoordinateForShellPosition(parentShellBounds);
+		dialog.setLocation(x, y);
 
 		final Button closeButton = new Button(dialog, SWT.NONE);
 		closeButton.setBounds(148, 357, 118, 25);
@@ -83,6 +96,49 @@ public class HelpDialog extends Dialog {
 		}
 
 		orange.dispose();
+	}
+
+	private int calculateYCoordinateForShellPosition(
+			Rectangle parentShellBounds) {
+		int parentYCoordinate = parentShellBounds.y;
+		int yCoordinate = parentYCoordinate;
+		
+		return yCoordinate;
+	}
+
+	private int calculateXCoordinateForShellPosition(
+			Rectangle parentShellBounds, Rectangle monitorBounds, Rectangle helpShellBounds) {
+		int parentWidth = parentShellBounds.width;
+		int parentXCoordinate = parentShellBounds.x;
+		int monitorWidth = monitorBounds.width;
+		int helpShellWidth = helpShellBounds.width;
+		int xCoordinate;
+		boolean positionHelpOnRight = isShellInViewOnRight(parentWidth, parentXCoordinate, monitorWidth, helpShellWidth);
+		
+		if (positionHelpOnRight) {
+			xCoordinate = parentXCoordinate + parentWidth;
+		} else {
+			xCoordinate = parentXCoordinate - helpShellWidth;
+		}
+		
+		return xCoordinate;
+	}
+
+	private boolean isShellInViewOnRight(int parentWidth, int parentXCoordinate, int monitorWidth, int helpShellWidth) {
+		boolean exceeds = isTotalWidthGreaterThanMonitorWidth(parentWidth, parentXCoordinate, monitorWidth,
+				helpShellWidth);
+		if (exceeds) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private boolean isTotalWidthGreaterThanMonitorWidth(int parentWidth,
+			int parentXCoordinate, int monitorWidth, int helpShellWidth) {
+		int totalWidth = parentWidth + parentXCoordinate + helpShellWidth;
+		boolean totalWidthExceedsMonitorWidth = monitorWidth < totalWidth;
+		return totalWidthExceedsMonitorWidth;
 	}
 
 	private String getHelpText(CommandType helpCommandType) {
