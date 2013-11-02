@@ -762,7 +762,7 @@ public class ApplicationWindow {
 					SWT.NORMAL);
 			pageNumberFont = new Font(shell.getDisplay(), "Calibri", (int) (13 * scaling),
 					SWT.NORMAL);
-			indexFont = new Font(shell.getDisplay(), "Calibri", (int) (45 * scaling), SWT.NORMAL);
+			indexFont = new Font(shell.getDisplay(), "Calibri", (int) (40 * scaling), SWT.NORMAL);
 			titleFont = new Font(shell.getDisplay(), "Calibri", (int) (18 * scaling), SWT.NORMAL);
 			descriptionFont = new Font(shell.getDisplay(), "Calibri", (int) (9 * scaling),
 					SWT.NORMAL);
