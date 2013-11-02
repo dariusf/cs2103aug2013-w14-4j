@@ -721,6 +721,16 @@ public class ParserTest {
 		expected.setTimeslotIndex(1);
 		gotten = new Parser().parse("edit 1 1");
 		assertEquals(gotten, expected);
+		
+		// Making sure hashtags aren't mistakenly considered indices
+		expected = new Command(CommandType.EDIT);
+		ArrayList<String> tags = new ArrayList<String>();
+		tags.add("#1234");
+		expected.setTags(tags);
+		expected.setDescription("sup");
+		expected.setTaskIndex(1);
+		gotten = new Parser().parse("edit 1 #1234 sup");
+		assertEquals(gotten, expected);
 
 		// Empty timeslot
 		expected = new Command(CommandType.EDIT);
