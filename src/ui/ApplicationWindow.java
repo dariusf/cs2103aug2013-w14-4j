@@ -60,7 +60,7 @@ public class ApplicationWindow {
 	
 	public Color green;
 	public Color red;
-	public Color blue;
+	public Color purple;
 	
 	public static ApplicationWindow self; // singleton?
 	public boolean moving = false;
@@ -293,7 +293,7 @@ public class ApplicationWindow {
 		
 		red = new Color(shell.getDisplay(), 0x99, 0, 0);
 		green = new Color(shell.getDisplay(), 0, 0x66, 0);
-		blue = SWTResourceManager.getColor(102, 0, 255);
+		purple = SWTResourceManager.getColor(102, 0, 255);
 
 		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.SINGLE);
 		displayPageNumber.setEnabled(false);
@@ -331,7 +331,6 @@ public class ApplicationWindow {
 		displayFeedback = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.MULTI);
 		displayFeedback.setEnabled(false);
-		displayFeedback.setForeground(red);
 		displayFeedback.setBounds(35, 558, 412, 40);
 
 		input = new Text(shell, SWT.BORDER);
@@ -350,6 +349,7 @@ public class ApplicationWindow {
 
 		setWelcomePage();
 		displayFeedback.setText(displayWelcomeMessage());
+		displayFeedback.setForeground(purple);
 
 		helpDialog = new HelpDialog(shell);
 
@@ -392,6 +392,12 @@ public class ApplicationWindow {
 
 	public String displayWelcomeMessage() {
 		String welcomeMessage = Constants.WELCOME_MSG;
+		if(Math.random() < 0.05){
+			int index = new Random().nextInt(Constants.RANDOM_JOKES.length);
+			welcomeMessage = Constants.RANDOM_JOKES[index];
+		} else {
+			welcomeMessage = Constants.MSG_AVAILABLE_COMMANDS;
+		}
 		return welcomeMessage;
 	}
 
@@ -486,8 +492,13 @@ public class ApplicationWindow {
 
 				Command executedCommand = activeFeedback.getCommand();
 				int taskIndex = executedCommand.getTaskIndex();
-				
-				switch (executedCommand.getCommandType()) {
+				CommandType command = executedCommand.getCommandType();
+				displayFeedback.setForeground(purple);
+				System.out.println(command);
+				ContextualHelp contextualHelp = new ContextualHelp(command);
+				displayFeedback.setText(contextualHelp.toString());
+				System.out.println(contextualHelp.toString());
+				switch (command) {
 				case DONE :
 					break;
 				case DELETE :
@@ -539,18 +550,6 @@ public class ApplicationWindow {
 				if (dummyTaskComposite != null) {
 					dummyTaskComposite.dispose();
 				}
-				if(Math.random() < 0.05){
-					int index = new Random().nextInt(Constants.RANDOM_JOKES.length);
-					displayFeedback.setText(Constants.RANDOM_JOKES[index]);
-					displayFeedback.setForeground(red);
-				} else {
-					displayAvailableCommandsInFeedback();
-				}
-			}
-
-			private void displayAvailableCommandsInFeedback() {
-				displayFeedback.setText(Constants.MSG_AVAILABLE_COMMANDS);
-				displayFeedback.setForeground(blue);
 			}
 
 			private void searchTaskFeedback(Command executedCommand) {

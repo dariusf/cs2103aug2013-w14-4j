@@ -61,6 +61,7 @@ public class Feedback {
 	}
 
 	public void setCommand(CommandType command) {
+		assert command != null;
 		feedbackCommand = command;
 	}
 
