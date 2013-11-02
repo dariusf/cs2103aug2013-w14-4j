@@ -402,6 +402,28 @@ public class ApplicationWindow {
 							.getNumberOfTasksPerPage().size()));
 					updateTaskDisplay();
 					logger.log(Level.INFO, generateLoggingString());
+				} else if (arg0.keyCode == SWT.F1) {
+					executeUserInput("help");
+				} else if (arg0.keyCode == SWT.F2) {
+					executeUserInput("display");
+				} else if (arg0.keyCode == SWT.F3) {
+					executeUserInput("display today");
+				} else if (arg0.keyCode == SWT.F4) {
+					executeUserInput("display tomorrow");
+				} else if (arg0.keyCode == SWT.F5) {
+					executeUserInput("display all");
+				} else if (arg0.keyCode == SWT.F6) {
+					executeUserInput("display done");
+				} else if (arg0.keyCode == SWT.F7) {
+					executeUserInput("display overdue");
+				} else if (arg0.keyCode == SWT.F8) {
+					executeUserInput("display untimed");
+				} else if (arg0.keyCode == SWT.F9) {
+					executeUserInput("display deadline");
+				} else if (arg0.keyCode == SWT.F10) {
+					executeUserInput("display timed");
+				} else if (arg0.keyCode == SWT.F11) {
+					executeUserInput("display floating");
 				}
 			}
 
