@@ -58,6 +58,9 @@ public class ApplicationWindow {
 	public Font pageNumberFont;
 	public Font inputFont;
 	
+	public Color green;
+	public Color red;
+	
 	public static ApplicationWindow self; // singleton?
 	public boolean moving = false;
 
@@ -95,6 +98,7 @@ public class ApplicationWindow {
 				display.sleep();
 			}
 		}
+		display.dispose();
 	}
 
 	private void centerShellWithRespectToScreen(Display display) {
@@ -285,6 +289,9 @@ public class ApplicationWindow {
 		shell.setText(Constants.APP_NAME);
 		// TODO Please change this value to 1 when you compile for use on your computers.
 		defineFont(0.85);
+		
+		red = new Color(shell.getDisplay(), 0x99, 0, 0);
+		green = new Color(shell.getDisplay(), 0, 0x66, 0);
 
 		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.SINGLE);
 		displayPageNumber.setEnabled(false);
@@ -313,7 +320,7 @@ public class ApplicationWindow {
 				| SWT.SINGLE);
 		displayTitle.setEnabled(false);
 		displayTitle.setBounds(36, 23, 311, 50);
-		displayTitle.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+		displayTitle.setForeground(red);
 		displayTitle.setLineAlignment(0, 1, SWT.LEFT);
 		displayTitle.setFont(windowTitleFont);
 
@@ -322,7 +329,7 @@ public class ApplicationWindow {
 		displayFeedback = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.MULTI);
 		displayFeedback.setEnabled(false);
-		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
+		displayFeedback.setForeground(red);
 		displayFeedback.setBounds(35, 558, 412, 40);
 
 		input = new Text(shell, SWT.BORDER);
@@ -432,7 +439,6 @@ public class ApplicationWindow {
 					inputHistory.addInput(userInput);
 
 					executeUserInput(userInput);
-					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_UP) {
 					displayLogic.setPageNumber(Math.max(
 							displayLogic.getPageNumber() - 1, 1));
@@ -486,7 +492,7 @@ public class ApplicationWindow {
 						highlightTaskFeedback(taskIndex);
 					} else {
 						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+						displayFeedback.setForeground(red);
 					}
 					break;
 				case FINALISE:
@@ -494,7 +500,7 @@ public class ApplicationWindow {
 						finaliseTaskFeedback(executedCommand, taskIndex);
 					} else {
 						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+						displayFeedback.setForeground(red);
 						return;
 					}
 					break;
@@ -506,7 +512,7 @@ public class ApplicationWindow {
 						editTaskFeedback(executedCommand, taskIndex);
 					} else {
 						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+						displayFeedback.setForeground(red);
 						return;
 					}
 					break;
@@ -533,10 +539,10 @@ public class ApplicationWindow {
 				if(Math.random() < 0.05){
 					int index = new Random().nextInt(Constants.RANDOM_JOKES.length);
 					displayFeedback.setText(Constants.RANDOM_JOKES[index]);
-					displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+					displayFeedback.setForeground(red);
 				} else {
 					displayFeedback.setText(Constants.MSG_ENTER_COMMAND);
-					displayFeedback.setForeground(new Color(shell.getDisplay(), 0, 0x66, 0));
+					displayFeedback.setForeground(green);
 				}
 			}
 
@@ -815,9 +821,6 @@ public class ApplicationWindow {
 	 * @param feedbackObj
 	 */
 	protected void setFeedbackColour(Feedback feedbackObj) {
-		Color green = new Color(shell.getDisplay(), 0, 0x66, 0);
-		Color red = new Color(shell.getDisplay(), 0x99, 0, 0);
-
 		if (feedbackObj.isErrorMessage()) {
 			displayFeedback.setForeground(red);
 		} else if (!feedbackObj.isErrorMessage()) {
@@ -891,11 +894,8 @@ public class ApplicationWindow {
 					Point offset = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
 
 					if (offset.x > 455 && offset.y < 27) {
-
-						logic.executeCommand("exit");
-						shell.dispose();
+						executeUserInput("exit");
 					} else if (offset.x > 433 && offset.y < 27) {
-
 						shell.setMinimized(true);
 					}
 				}
@@ -999,38 +999,46 @@ public class ApplicationWindow {
 			}
 			
 		}
-		
-		if(!userInput.isEmpty()){
-		
-		ActionStack actionStack = ActionStack.getInstance();
-		
-		StartDisplayAction originalDisplayStateAction = new StartDisplayAction(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
-		actionStack.add(originalDisplayStateAction);
-		
-		Feedback feedbackObj = logic.executeCommand(userInput);
 
-		String feedback = feedbackObj.toString();
-		setFeedbackColour(feedbackObj);
+		if (!userInput.isEmpty()) {
 
-		displayFeedback.setText(feedback);
-		input.setText("");
+			ActionStack actionStack = ActionStack.getInstance();
 
-		displayLogic.processFeedback(feedbackObj, helpDialog);
-		
-		EndDisplayAction currentDisplayStateAction = new EndDisplayAction(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
-		actionStack.add(currentDisplayStateAction);
-		
-		if(isStateChangingOperation(feedbackObj.getCommand())) {
-			actionStack.finaliseActions();
-		} else {
-			actionStack.flushCurrentActionSet();
-		}
+			StartDisplayAction originalDisplayStateAction = new StartDisplayAction(
+					displayLogic.getDisplayMode(), displayLogic.getPageNumber());
+			actionStack.add(originalDisplayStateAction);
 
-		updateTaskDisplay();
+			Feedback feedbackObj = logic.executeCommand(userInput);
 
-		if (testMode) {
-			logger.log(Level.INFO, generateLoggingString());
-		}
+			if (feedbackObj.getCommand() == CommandType.EXIT) {
+				shell.dispose();
+			} else {
+
+				String feedback = feedbackObj.toString();
+				setFeedbackColour(feedbackObj);
+
+				displayFeedback.setText(feedback);
+				input.setText("");
+
+				displayLogic.processFeedback(feedbackObj, helpDialog);
+
+				EndDisplayAction currentDisplayStateAction = new EndDisplayAction(
+						displayLogic.getDisplayMode(),
+						displayLogic.getPageNumber());
+				actionStack.add(currentDisplayStateAction);
+
+				if (isStateChangingOperation(feedbackObj.getCommand())) {
+					actionStack.finaliseActions();
+				} else {
+					actionStack.flushCurrentActionSet();
+				}
+
+				updateTaskDisplay();
+
+				if (testMode) {
+					logger.log(Level.INFO, generateLoggingString());
+				}
+			}
 		}
 	}
 	

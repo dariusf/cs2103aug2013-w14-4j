@@ -168,12 +168,12 @@ public class Feedback {
 		case GOTO :
 			return gotoFeedback();
 		case EXIT :
-			System.exit(0);
+			return exitFeedback();
+//			System.exit(0);
 		default :
 			return "This should not happen!";
 		}
 	}
-	
 
 	private String addFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
@@ -373,6 +373,15 @@ public class Feedback {
 			statusMessage = "Error: Invalid page " + gotoPage;
 		} else {
 			statusMessage = "Error: Invalid goto (this should not happen!)";
+		}
+		return statusMessage;
+	}
+
+	private String exitFeedback() {
+		if (statusCode == Constants.SC_SUCCESS) {
+			statusMessage = "Exiting...";
+		} else {
+			statusMessage = "Error: Cannot exit (this should not happen!)";
 		}
 		return statusMessage;
 	}
