@@ -28,12 +28,12 @@ public class TaskComposite extends Composite {
 
 		// 340 is the fixed width and 69 is the fixed height. use SWT.default if
 		// you do not want to fix the lengths.
-		this.setLayoutData(new RowData(415, SWT.DEFAULT));
+		this.setLayoutData(new RowData(425, SWT.DEFAULT));
 		this.setLayout(innerRowLayout);
 
 		RowData taskIndexLayoutData = new RowData(60, 73);
 		RowData paddingLayoutData = new RowData(8, SWT.DEFAULT);
-		RowData taskDescriptionLayoutData = new RowData(330, SWT.DEFAULT);
+		RowData taskDescriptionLayoutData = new RowData(340, SWT.DEFAULT);
 
 		taskIndex = new StyledText(this, SWT.WRAP | SWT.READ_ONLY);
 		taskIndex.setEnabled(false);
