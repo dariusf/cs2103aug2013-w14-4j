@@ -293,7 +293,7 @@ public class Parser {
 			try {
 				taskIndex = Integer.parseInt(getCurrentToken().contents);
 			} catch (NumberFormatException e) {
-				return invalidCommand(InvalidCommandReason.INVALID_TASK_INDEX);
+				return new Command(CommandType.EDIT);
 			}
 			nextToken();
 			
@@ -316,7 +316,7 @@ public class Parser {
 			}
 		}
 		else {
-			return invalidCommand(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+			return new Command(CommandType.EDIT);
 		}
 	}
 
