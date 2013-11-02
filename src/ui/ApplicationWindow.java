@@ -494,10 +494,10 @@ public class ApplicationWindow {
 				int taskIndex = executedCommand.getTaskIndex();
 				CommandType command = executedCommand.getCommandType();
 				displayFeedback.setForeground(purple);
-				System.out.println(command);
+
 				ContextualHelp contextualHelp = new ContextualHelp(command);
 				displayFeedback.setText(contextualHelp.toString());
-				System.out.println(contextualHelp.toString());
+
 				switch (command) {
 				case DONE :
 					break;
