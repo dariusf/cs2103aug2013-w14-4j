@@ -143,15 +143,16 @@ public class HelpDialog extends Dialog {
 		StyleRange styleRange;
 		int startIndex = helpString.indexOf("\n");
 		int colonIndex = helpString.indexOf(":");
+		int newSectionIndex = helpString.indexOf("\n\n"); 
 
-		while (startIndex != -1) {
+		while (startIndex != -1 && colonIndex != -1 && colonIndex < newSectionIndex) {
 			styleRange = new StyleRange();
 			styleRange.start = startIndex + 1;
 			styleRange.length = colonIndex - startIndex;
 			styleRange.fontStyle = SWT.BOLD;
 			helpText.setStyleRange(styleRange);
-			startIndex = helpString.indexOf("\n", startIndex + 1);
 			colonIndex = helpString.indexOf(":", colonIndex + 1);
+			startIndex = helpString.indexOf("\n", startIndex + 1);
 		}
 
 		isGeneralHelp = false;
