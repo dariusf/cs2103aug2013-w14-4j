@@ -85,6 +85,7 @@ public class ApplicationWindow {
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
+		centerShellWithRespectToScreen(display);
 		shell.open();
 		shell.layout();
 		if (testMode) {
@@ -95,6 +96,15 @@ public class ApplicationWindow {
 				display.sleep();
 			}
 		}
+	}
+
+	private void centerShellWithRespectToScreen(Display display) {
+		Monitor primary = display.getPrimaryMonitor ();
+		Rectangle bounds = primary.getBounds ();
+		Rectangle rect = shell.getBounds ();
+		int x = bounds.x + (bounds.width - rect.width) / 2;
+		int y = bounds.y + (bounds.height - rect.height) / 2;
+		shell.setLocation (x, y);
 	}
 
 	private void runTest(Display display) {
