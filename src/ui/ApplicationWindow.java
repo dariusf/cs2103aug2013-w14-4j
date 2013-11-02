@@ -591,6 +591,7 @@ public class ApplicationWindow {
 
 			private void editTaskFeedback(Command executedCommand, int taskIndex) {
 				highlightTaskFeedback(taskIndex);
+				TaskComposite currentComposite = displayLogic.getCompositeGlobal(taskIndex);
 				if (executedCommand.getTimeslotIndex() != -1) {
 					if (executedCommand.getTimeslotIndex() > 0) {
 						int timeSlot = executedCommand.getTimeslotIndex();
@@ -607,7 +608,7 @@ public class ApplicationWindow {
 										+ Constants.fullDateTimeFormat
 												.print(interval
 														.getEndDateTime());
-								displayLogic.getCompositeGlobal(taskIndex)
+								currentComposite
 										.setDescriptionAtLine(description,
 												timeSlot);
 							} else {
@@ -619,7 +620,7 @@ public class ApplicationWindow {
 										+ Constants.fullDateTimeFormat
 												.print(interval
 														.getEndDateTime());
-								displayLogic.getCompositeGlobal(taskIndex)
+								currentComposite
 										.setDescriptionAtLine(description,
 												timeSlot);
 							}
@@ -629,7 +630,7 @@ public class ApplicationWindow {
 					String finalType = executedCommand.getTaskType();
 
 					if (!executedCommand.getDescription().isEmpty()) {
-						displayLogic.getCompositeGlobal(taskIndex).setTaskName(
+						currentComposite.setTaskName(
 								executedCommand.getDescription());
 					}
 
@@ -669,23 +670,27 @@ public class ApplicationWindow {
 							index++;
 						}
 					}
-					ArrayList<String> tags = executedCommand.getTags();
-					if (tags.size() > 0) {
+					String currentTags = currentComposite.getTags();
+					ArrayList<String> newTags = executedCommand.getTags();
+					String combinedTags = currentTags;
+					for(String tag : newTags){
+						combinedTags = combinedTags + "#" + tag + " ";
+					}
+
+					if (!combinedTags.isEmpty()) {
 						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
 								| finalType.equals(Constants.TASK_TYPE_TIMED)
 								| finalType
 										.equals(Constants.TASK_TYPE_FLOATING)) {
 							descriptionBuilder.append("\n");
 						}
-						for (String tag : tags) {
-							descriptionBuilder.append("#" + tag + " ");
-						}
+						descriptionBuilder.append(combinedTags);
 					}
 					if (!descriptionBuilder.toString().isEmpty()) {
-						displayLogic.getCompositeGlobal(taskIndex)
+						currentComposite
 								.setDescription(descriptionBuilder.toString());
 					}
-					displayLogic.getCompositeGlobal(taskIndex).pack();
+					currentComposite.pack();
 				}
 			}
 
