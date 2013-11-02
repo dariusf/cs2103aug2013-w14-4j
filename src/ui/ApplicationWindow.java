@@ -7,8 +7,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.sound.midi.VoiceStatus;
-
 import logic.ActiveFeedback;
 import logic.Command;
 import logic.Feedback;
@@ -920,6 +918,7 @@ public class ApplicationWindow {
 			shell.setVisible(false);
 		} else {
 			shell.setVisible(true);
+			input.setFocus();
 		}
 	}
 
