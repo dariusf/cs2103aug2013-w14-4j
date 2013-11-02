@@ -9,9 +9,11 @@ import java.util.TreeMap;
 
 import org.joda.time.DateTime;
 
+import common.ClearMode;
 import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
+import common.InvalidCommandReason;
 import common.undo.ActionStack;
 
 import parser.Parser;
@@ -110,8 +112,7 @@ public class Logic {
 		case CLEAR:
 			return clearTasks(command);
 		case EXIT:
-			endLogging();
-			exitProgram();
+			return exit();
 		case SEARCH:
 			return searchTasks(command);
 		case UNDO:
@@ -131,9 +132,43 @@ public class Logic {
 		case GOTO:
 			return gotoPage(command);
 		default:
-			return new Feedback(Constants.SC_INVALID_COMMAND_ERROR,
-					CommandType.INVALID);
+			return invalidCommand(command);
 		}
+	}
+	
+	public Feedback invalidCommand(Command command){
+		InvalidCommandReason error = command.getInvalidCommandReason();
+		Feedback feedback = null;
+		switch (error) {
+		case EMPTY_COMMAND:
+			feedback = new Feedback(Constants.SC_EMPTY_COMMAND_ERROR, CommandType.INVALID);
+			break;
+		case INVALID_DATE:
+			feedback = new Feedback(Constants.SC_INVALID_DATE_ERROR, CommandType.INVALID);
+			break;
+		case INVALID_PAGE_INDEX:
+			feedback = new Feedback(Constants.SC_INVALID_PAGE_INDEX_ERROR, CommandType.INVALID);
+			break;
+		case INVALID_SEARCH_PARAMETERS:
+			feedback = new Feedback(Constants.SC_INVALID_SEARCH_PARAMETERS_ERROR, CommandType.INVALID);
+			break;
+		case INVALID_TASK_INDEX:
+			feedback = new Feedback(Constants.SC_INVALID_TASK_INDEX_ERROR, CommandType.INVALID);
+			break;
+		case INVALID_TIMESLOT_INDEX:
+			feedback = new Feedback(Constants.SC_INVALID_TIMESLOT_INDEX_ERROR, CommandType.INVALID);
+			break;
+		case TOO_FEW_ARGUMENTS:
+			feedback = new Feedback(Constants.SC_TOO_FEW_ARGUMENTS_ERROR, CommandType.INVALID);
+			break;
+		case UNRECOGNIZED_COMMAND:
+			feedback = new Feedback(Constants.SC_UNRECOGNIZED_COMMAND_ERROR, CommandType.INVALID);
+			break;
+		default:
+			feedback = new Feedback(Constants.SC_INVALID_COMMAND_ERROR, CommandType.INVALID);
+			break;
+		}
+		return feedback;
 	}
 
 	public Feedback addTask(Command command) {
@@ -395,32 +430,63 @@ public class Logic {
 
 	protected Feedback clearTasks(Command command) {
 		Feedback feedback = null;
-		boolean isClearDone = command.getClearDone();
-
+		ClearMode clearMode = command.getClearMode();
+		DateTime now = new DateTime(); // or stub
+		
 		if (storage.size() > 0) {
-			if (isClearDone) {
+			if (clearMode == ClearMode.ALL) {
+				storage.clear();
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
+				isDynamicIndex = false;
+			}
+			else {
 				Iterator<Task> tasksIterator = storage.iterator();
 				ArrayList<Task> doneTasks = new ArrayList<>();
 
 				while (tasksIterator.hasNext()) {
+					
 					Task currentTask = tasksIterator.next();
-					if (currentTask.getDone()) {
+					boolean condition = false;
+					
+					switch (clearMode) {
+					case DEADLINE:
+						condition = currentTask.isDeadlineTask();
+						break;
+					case TIMED:
+						condition = currentTask.isTimedTask();
+						break;
+					case FLOATING:
+						condition = currentTask.isFloatingTask();
+						break;
+					case UNTIMED:
+						condition = currentTask.isUntimedTask();
+						break;
+					case OVERDUE:
+						condition = currentTask.isDeadlineTask() && currentTask.getDeadline().isBefore(now);
+						break;
+					case DATE:
+						condition = currentTask.getStartTime().dayOfYear().equals(command.getClearDateTime().dayOfYear());
+						break;
+					case DONE:
+						condition = currentTask.isDone();
+						break;
+					case INVALID:
+						assert false : "Invalid clear mode, either an error in above or parser logic";
+					default:
+						assert false : "Error in clear mode logic";
+					}
+					
+					if (condition) {
 						doneTasks.add(currentTask);
 					}
 				}
 
 				storage.removeSet(doneTasks);
-				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE,
-						CommandType.CLEAR);
-				isDynamicIndex = false;
-			} else {
-				storage.clear();
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
+				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE, CommandType.CLEAR);
 				isDynamicIndex = false;
 			}
 		} else {
-			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
-					CommandType.CLEAR);
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR, CommandType.CLEAR);
 		}
 		return feedback;
 	}
@@ -607,14 +673,18 @@ public class Logic {
 		return feedback;
 	}
 
-	protected void exitProgram() {
+	protected Feedback exit() {
+		endLogging();
+		
+		Feedback feedback = new Feedback(Constants.SC_SUCCESS, CommandType.EXIT);
+
 		try {
 			storage.close();
-			System.exit(0);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return feedback;
 	}
 
 	protected boolean isTaskOver(Task task) {

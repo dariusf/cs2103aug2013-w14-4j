@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
+import common.ClearMode;
 import common.InvalidCommandReason;
 
 public class Command {
@@ -18,12 +19,13 @@ public class Command {
 	private int pageIndex = -1;
 	private int timeslotIndex = -1;
 	
-	private boolean clearDone = false;
+	private ClearMode clearMode;
 	private CommandType helpCommand;
 	private String searchString = "";
 	private InvalidCommandReason invalidCommandReason;
 	private DisplayMode displayMode;
 	private DateTime displayDateTime = null;
+	private DateTime clearDateTime = null;
 		
 	public Command(CommandType type){
 		commandType = type;
@@ -88,15 +90,7 @@ public class Command {
 	public void setDisplayDateTime(DateTime searchDateTime) {
 		this.displayDateTime = searchDateTime;
 	}
-	
-	public boolean getClearDone() {
-		return clearDone;
-	}
-
-	public void setClearDone(boolean clearDone) {
-		this.clearDone = clearDone;
-	}
-	
+		
 	public CommandType getHelpCommand() {
 		return helpCommand;
 	}
@@ -145,6 +139,37 @@ public class Command {
 		return this.description.isEmpty() && this.deadline == null && this.tags.isEmpty() && this.intervals.isEmpty();
 	}
 
+	public DisplayMode getDisplayMode() {
+		return displayMode;
+	}
+
+	public void setDisplayMode(DisplayMode displayMode) {
+		this.displayMode = displayMode;
+	}
+
+	public ClearMode getClearMode() {
+		return clearMode;
+	}
+
+	public void setClearMode(ClearMode clearMode) {
+		this.clearMode = clearMode;
+	}
+
+	public int getPageIndex() {
+		return pageIndex;
+	}
+
+	public void setPageIndex(int pageIndex) {
+		this.pageIndex = pageIndex;
+	}
+
+	public DateTime getClearDateTime() {
+		return clearDateTime;
+	}
+
+	public void setClearDateTime(DateTime clearDateTime) {
+		this.clearDateTime = clearDateTime;
+	}
 
 	@Override
 	public String toString() {
@@ -152,11 +177,11 @@ public class Command {
 				+ description + ", deadline=" + deadline + ", intervals="
 				+ intervals + ", tags=" + tags + ", taskIndex=" + taskIndex
 				+ ", pageIndex=" + pageIndex + ", timeslotIndex="
-				+ timeslotIndex + ", clearDone=" + clearDone + ", helpCommand="
+				+ timeslotIndex + ", clearMode=" + clearMode + ", helpCommand="
 				+ helpCommand + ", searchString=" + searchString
 				+ ", invalidCommandReason=" + invalidCommandReason
 				+ ", displayMode=" + displayMode + ", displayDateTime="
-				+ displayDateTime + "]";
+				+ displayDateTime + ", clearDateTime=" + clearDateTime + "]";
 	}
 
 	@Override
@@ -168,7 +193,12 @@ public class Command {
 		if (getClass() != obj.getClass())
 			return false;
 		Command other = (Command) obj;
-		if (clearDone != other.clearDone)
+		if (clearDateTime == null) {
+			if (other.clearDateTime != null)
+				return false;
+		} else if (!clearDateTime.equals(other.clearDateTime))
+			return false;
+		if (clearMode != other.clearMode)
 			return false;
 		if (commandType != other.commandType)
 			return false;
@@ -187,7 +217,7 @@ public class Command {
 				return false;
 		} else if (!displayDateTime.equals(other.displayDateTime))
 			return false;
-		if (timeslotIndex != other.timeslotIndex)
+		if (displayMode != other.displayMode)
 			return false;
 		if (helpCommand != other.helpCommand)
 			return false;
@@ -197,6 +227,8 @@ public class Command {
 		} else if (!intervals.equals(other.intervals))
 			return false;
 		if (invalidCommandReason != other.invalidCommandReason)
+			return false;
+		if (pageIndex != other.pageIndex)
 			return false;
 		if (searchString == null) {
 			if (other.searchString != null)
@@ -210,22 +242,9 @@ public class Command {
 			return false;
 		if (taskIndex != other.taskIndex)
 			return false;
+		if (timeslotIndex != other.timeslotIndex)
+			return false;
 		return true;
 	}
-
-	public DisplayMode getDisplayMode() {
-		return displayMode;
-	}
-
-	public void setDisplayMode(DisplayMode displayMode) {
-		this.displayMode = displayMode;
-	}
-
-	public int getPageIndex() {
-		return pageIndex;
-	}
-
-	public void setPageIndex(int pageIndex) {
-		this.pageIndex = pageIndex;
-	}
+	
 }

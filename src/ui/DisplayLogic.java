@@ -56,7 +56,7 @@ public class DisplayLogic {
 		rowLayout.type = SWT.VERTICAL;
 		rowLayout.pack = true;
 		taskDisplay.setLayout(rowLayout);
-		taskDisplay.setBounds(32, 86, 425, 450);
+		taskDisplay.setBounds(32, 86, 435, 450);
 	}
 	
 	public void deleteTaskComposites() {
@@ -333,7 +333,7 @@ public class DisplayLogic {
 	}
 	
 	public void setPageNumber(int pageNumber) {
-		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
+//		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
 		if (this.pageNumber != pageNumber) {
 			recreateTaskComposites = true;
 			this.pageNumber = pageNumber;//Math.max(1, Math.min(pageNumber, numberOfTasksOnEachPage.size()));;

@@ -42,7 +42,7 @@ public class Feedback {
 	}
 
 	public void setStatusCode(int status) {
-		assert (status <= 110) && (status >= 10);
+		assert (status <= 120) && (status >= 10);
 		statusCode = status;
 		setIsError(statusCode);
 	}
@@ -77,63 +77,10 @@ public class Feedback {
 	}
 	
 	private void setIsError(int statusCode) {
-		switch (statusCode) {
-		case Constants.SC_SUCCESS :
+		if (statusCode < 20 && statusCode >= 10) {
 			isError = false;
-			break;
-		case Constants.SC_SUCCESS_TASK_OVERDUE :
-			isError = false;
-			break;
-		case Constants.SC_SUCCESS_CLEAR_DONE :
-			isError = false;
-			break;
-		case Constants.SC_INVALID_COMMAND_ERROR :
+		} else {
 			isError = true;
-			break;
-		case Constants.SC_EMPTY_DESCRIPTION_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_NO_TASK_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_NO_ID_INDICATED_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_TASK_ALREADY_FINALISED_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_TASK_ALREADY_DONE_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_NO_ID_INDICATED_TIME_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_SEARCH_KEYWORD_MISSING_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_FINALISE_TYPE_MISMATCH_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_UNDO_NO_PRIOR_STATE_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_REDO_NO_PRIOR_STATE_ERROR :
-			isError = true;
-			break;
-		case Constants.SC_INVALID_PAGE_INDEX :
-			isError = true;
-			break;
-		default:
-			assert isError = false;
 		}
 	}
 
@@ -168,9 +115,9 @@ public class Feedback {
 		case GOTO :
 			return gotoFeedback();
 		case EXIT :
-			System.exit(0);
+			return exitFeedback();
 		default :
-			throw new Error(Constants.MSG_UNRECOGNISED_COMMAND);
+			return "This should not happen!";
 		}
 	}
 
@@ -274,7 +221,23 @@ public class Feedback {
 	private String invalidFeedback() {
 		if (statusCode == Constants.SC_INVALID_COMMAND_ERROR) {
 			statusMessage = "Error: Invalid command!";
-		} else {
+		} else if (statusCode == Constants.SC_EMPTY_COMMAND_ERROR){
+			statusMessage = "Error: No command entered!";
+		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX_ERROR){
+			statusMessage = "Error: Page index is invalid!!";
+		} else if (statusCode == Constants.SC_INVALID_DATE_ERROR){
+			statusMessage = "Error: Date is invalid!";
+		} else if (statusCode == Constants.SC_UNRECOGNIZED_COMMAND_ERROR){
+			statusMessage = "Error: Command is not recognised!";
+		} else if (statusCode == Constants.SC_TOO_FEW_ARGUMENTS_ERROR){
+			statusMessage = "Error: Command is not in the right format!";
+		} else if (statusCode == Constants.SC_INVALID_TIMESLOT_INDEX_ERROR){
+			statusMessage = "Error: Timeslot index is invalid!";
+		} else if (statusCode == Constants.SC_INVALID_SEARCH_PARAMETERS_ERROR){
+			statusMessage = "Error: Search parameter(s) is/are invalid!";
+		}  else if (statusCode == Constants.SC_INVALID_TASK_INDEX_ERROR){
+			statusMessage = "Error: Task index is invalid!";
+		}else {
 			statusMessage = "Error: Invalid command (this should not happen!)";
 		}
 		return statusMessage;
@@ -356,6 +319,15 @@ public class Feedback {
 			statusMessage = "Error: Invalid page " + gotoPage;
 		} else {
 			statusMessage = "Error: Invalid goto (this should not happen!)";
+		}
+		return statusMessage;
+	}
+
+	private String exitFeedback() {
+		if (statusCode == Constants.SC_SUCCESS) {
+			statusMessage = "Exiting...";
+		} else {
+			statusMessage = "Error: Cannot exit (this should not happen!)";
 		}
 		return statusMessage;
 	}

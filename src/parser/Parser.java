@@ -8,6 +8,7 @@ import logic.Command;
 import logic.Interval;
 import org.joda.time.DateTime;
 
+import common.ClearMode;
 import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
@@ -98,11 +99,15 @@ public class Parser {
 			return invalidCommand(InvalidCommandReason.EMPTY_COMMAND);
 		}
 
-		tokenize(userInput);
+		try {
+			tokenize(userInput);
+		} catch (IllegalDateException e) {
+			return invalidCommand(InvalidCommandReason.INVALID_DATE);
+		}
 		return constructCommand();
 	}
 
-	private void tokenize(String userInput) {
+	private void tokenize(String userInput) throws IllegalDateException {
 		try {
 			Lexer lexer = new Lexer(new ByteArrayInputStream(userInput.getBytes("UTF-8")));
 
@@ -379,11 +384,24 @@ public class Parser {
 
 	private Command createClearCommand() {
 		Command command = new Command(CommandType.CLEAR);
-
-		if (hasTokensLeft()) {
-			boolean clearDone = getCurrentToken().contents.equalsIgnoreCase("done");
-			command.setClearDone(clearDone);
-		}
+		
+        if (hasTokensLeft()) {
+            Token currentToken = getCurrentToken();
+            
+            ClearMode clearMode = ClearMode.fromString(currentToken.contents);
+            
+            if (clearMode != ClearMode.INVALID && clearMode != ClearMode.DATE) {
+                command.setClearMode(clearMode);
+            }
+            else if (currentToken instanceof DateToken){
+            	command.setClearMode(ClearMode.DATE);
+                command.setClearDateTime(((DateToken) currentToken).toDateTime());
+            } else {
+                command.setClearMode(ClearMode.ALL);
+            }
+        } else {
+            command.setClearMode(ClearMode.ALL);
+        }
 
 		return command;
 	}
@@ -394,16 +412,13 @@ public class Parser {
 
 		if (hasTokensLeft()) {
 			Token currentToken = getCurrentToken();
-//			String content = currentToken.contents;
 			
 			DisplayMode displayMode = DisplayMode.fromString(currentToken.contents);
-//			DateToken displayDateToken = new DateToken("today");
 			
-			if (displayMode != DisplayMode.INVALID && displayMode != DisplayMode.DATE && displayMode != DisplayMode.SEARCH){
+			if (displayMode != DisplayMode.INVALID && displayMode != DisplayMode.DATE && displayMode != DisplayMode.SEARCH) {
 				command.setDisplayMode(displayMode);
 			}
 			else if (currentToken instanceof DateToken){
-//				displayDateToken = new DateToken(content);
 				command.setDisplayMode(DisplayMode.DATE);
 				command.setDisplayDateTime(((DateToken) currentToken).toDateTime());
 			} else {

@@ -43,7 +43,6 @@ public class ApplicationWindow {
 	public static Logic logic;
 	public StyledText displayPageNumber;
 	public Composite closeButton;
-	// public ArrayList<Integer> numberOfTasksOnEachPage;
 	public StyledText displayTitle;
 	public StyledText displayRemainingTaskCount;
 	public StyledText displayTodayTaskCount;
@@ -57,7 +56,12 @@ public class ApplicationWindow {
 	Font titleFont; // accessed by task composite
 	Font descriptionFont; // accessed by task composite
 	public Font pageNumberFont;
-
+	public Font inputFont;
+	
+	public Color green;
+	public Color red;
+	public Color blue;
+	
 	public static ApplicationWindow self; // singleton?
 	public boolean moving = false;
 
@@ -84,6 +88,7 @@ public class ApplicationWindow {
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
+		centerShellWithRespectToScreen(display);
 		shell.open();
 		shell.layout();
 		if (testMode) {
@@ -94,6 +99,49 @@ public class ApplicationWindow {
 				display.sleep();
 			}
 		}
+		display.dispose();
+	}
+
+	private void centerShellWithRespectToScreen(Display display) {
+		Monitor primary = display.getPrimaryMonitor();
+		
+		Rectangle monitorBounds = primary.getBounds();
+		Rectangle shellBounds = shell.getBounds();
+		
+		int x = calculateXCoordinateForShellPosition(monitorBounds, shellBounds);
+		int y = calculateYCoordinateForShellPosition(monitorBounds, shellBounds);
+
+		shell.setLocation(x, y);
+	}
+
+	private int calculateYCoordinateForShellPosition(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		int difference = calculateDifferenceInHeight(monitorBounds, shellBounds);
+		int heightOffset = calculateHalfOfNumber(difference);
+		int yCoordinate = monitorBounds.y + heightOffset;
+		return yCoordinate;
+	}
+
+	private int calculateDifferenceInHeight(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		return monitorBounds.height - shellBounds.height;
+	}
+
+	private int calculateXCoordinateForShellPosition(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		int difference = calculateDifferenceInWidth(monitorBounds, shellBounds);
+		int widthOffset = calculateHalfOfNumber(difference);
+		int xCoordinate = monitorBounds.x + widthOffset;
+		return xCoordinate;
+	}
+
+	private int calculateDifferenceInWidth(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		return monitorBounds.width - shellBounds.width;
+	}
+
+	private int calculateHalfOfNumber(int difference) {
+		return difference / 2;
 	}
 
 	private void runTest(Display display) {
@@ -197,7 +245,7 @@ public class ApplicationWindow {
 		
 		Point[] oval = pointManipulator.mirrorY(pointManipulator.mirrorX(quarterArc));
 		for (Point point : oval) {
-			point.offset(windowWidth / 2, windowHeight / 2); // shift oval to center on window
+			point.offset(calculateHalfOfNumber(windowWidth), calculateHalfOfNumber(windowHeight)); // shift oval to center on window
 			
 			if (point.x < 0) {
 				point.x = 0;
@@ -218,7 +266,7 @@ public class ApplicationWindow {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shell = new Shell(SWT.NO_TRIM | SWT.DRAG);
+		shell = new Shell(SWT.NO_TRIM | SWT.DRAG | SWT.ON_TOP);
 		
 		shell.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
 				"/image/basketIcon.jpg"));
@@ -241,7 +289,11 @@ public class ApplicationWindow {
 		shell.setSize(482, 681);
 		shell.setText(Constants.APP_NAME);
 		// TODO Please change this value to 1 when you compile for use on your computers.
-		defineFont(0.85);
+		defineFont(1);
+		
+		red = new Color(shell.getDisplay(), 0x99, 0, 0);
+		green = new Color(shell.getDisplay(), 0, 0x66, 0);
+		blue = SWTResourceManager.getColor(102, 0, 255);
 
 		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.SINGLE);
 		displayPageNumber.setEnabled(false);
@@ -270,7 +322,7 @@ public class ApplicationWindow {
 				| SWT.SINGLE);
 		displayTitle.setEnabled(false);
 		displayTitle.setBounds(36, 23, 311, 50);
-		displayTitle.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+		displayTitle.setForeground(red);
 		displayTitle.setLineAlignment(0, 1, SWT.LEFT);
 		displayTitle.setFont(windowTitleFont);
 
@@ -279,11 +331,12 @@ public class ApplicationWindow {
 		displayFeedback = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
 				| SWT.MULTI);
 		displayFeedback.setEnabled(false);
-		displayFeedback.setForeground(SWTResourceManager.getColor(0x99, 0, 0));
+		displayFeedback.setForeground(red);
 		displayFeedback.setBounds(35, 558, 412, 40);
 
 		input = new Text(shell, SWT.BORDER);
 		input.setFocus();
+		input.setFont(inputFont);
 		input.setBounds(20, 608, 442, 50);
 		input.setBackground(SWTResourceManager.getColor(255, 255, 255));
 
@@ -305,7 +358,7 @@ public class ApplicationWindow {
 		shell.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent e) {
-				logic.executeCommand("exit");
+				logic.executeCommand(Constants.COMMAND_EXIT);
 			}
 		});
 		adjustPageNumberAlignment();
@@ -388,7 +441,6 @@ public class ApplicationWindow {
 					inputHistory.addInput(userInput);
 
 					executeUserInput(userInput);
-					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.PAGE_UP) {
 					displayLogic.setPageNumber(Math.max(
 							displayLogic.getPageNumber() - 1, 1));
@@ -400,6 +452,28 @@ public class ApplicationWindow {
 							.getNumberOfTasksPerPage().size()));
 					updateTaskDisplay();
 					logger.log(Level.INFO, generateLoggingString());
+				} else if (arg0.keyCode == SWT.F1) {
+					executeUserInput("help");
+				} else if (arg0.keyCode == SWT.F2) {
+					executeUserInput("display");
+				} else if (arg0.keyCode == SWT.F3) {
+					executeUserInput("display today");
+				} else if (arg0.keyCode == SWT.F4) {
+					executeUserInput("display tomorrow");
+				} else if (arg0.keyCode == SWT.F5) {
+					executeUserInput("display all");
+				} else if (arg0.keyCode == SWT.F6) {
+					executeUserInput("display done");
+				} else if (arg0.keyCode == SWT.F7) {
+					executeUserInput("display overdue");
+				} else if (arg0.keyCode == SWT.F8) {
+					executeUserInput("display untimed");
+				} else if (arg0.keyCode == SWT.F9) {
+					executeUserInput("display deadline");
+				} else if (arg0.keyCode == SWT.F10) {
+					executeUserInput("display timed");
+				} else if (arg0.keyCode == SWT.F11) {
+					executeUserInput("display floating");
 				}
 			}
 
@@ -414,25 +488,26 @@ public class ApplicationWindow {
 				int taskIndex = executedCommand.getTaskIndex();
 				
 				switch (executedCommand.getCommandType()) {
-				case DONE:
-				case DELETE:
+				case DONE :
+					break;
+				case DELETE :
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						highlightTaskFeedback(taskIndex);
 					} else {
 						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+						displayFeedback.setForeground(red);
 					}
 					break;
-				case FINALISE:
+				case FINALISE :
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						finaliseTaskFeedback(executedCommand, taskIndex);
 					} else {
 						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+						displayFeedback.setForeground(red);
 						return;
 					}
 					break;
-				case EDIT:
+				case EDIT :
 					// TODO timeslot index has to be checked lower down, inside
 					// edit and finalise
 				
@@ -440,17 +515,18 @@ public class ApplicationWindow {
 						editTaskFeedback(executedCommand, taskIndex);
 					} else {
 						displayFeedback.setText("Task index is not valid!");
-						displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+						displayFeedback.setForeground(red);
 						return;
 					}
 					break;
-				case ADD:
+				case ADD :
 					addTaskFeedback(executedCommand);
 					break;
-				case SEARCH:
+				case SEARCH :
 					searchTaskFeedback(executedCommand);
 					break;
-				case INVALID:
+				case INVALID :
+					break;
 				default:
 					defaultFeedback();
 					break;
@@ -458,7 +534,6 @@ public class ApplicationWindow {
 			}
 			
 			private void defaultFeedback() {
-				// System.out.println("here");
 				displayLogic.clearHighlightedTasks();
 				updateTaskDisplay();
 				if (dummyTaskComposite != null) {
@@ -467,11 +542,15 @@ public class ApplicationWindow {
 				if(Math.random() < 0.05){
 					int index = new Random().nextInt(Constants.RANDOM_JOKES.length);
 					displayFeedback.setText(Constants.RANDOM_JOKES[index]);
-					displayFeedback.setForeground(new Color(shell.getDisplay(), 0x99, 0, 0));
+					displayFeedback.setForeground(red);
 				} else {
-					displayFeedback.setText(Constants.MSG_ENTER_COMMAND);
-					displayFeedback.setForeground(new Color(shell.getDisplay(), 0, 0x66, 0));
+					displayAvailableCommandsInFeedback();
 				}
+			}
+
+			private void displayAvailableCommandsInFeedback() {
+				displayFeedback.setText(Constants.MSG_AVAILABLE_COMMANDS);
+				displayFeedback.setForeground(blue);
 			}
 
 			private void searchTaskFeedback(Command executedCommand) {
@@ -583,12 +662,11 @@ public class ApplicationWindow {
 				} else {
 					defaultFeedback();
 				}
-
-				// System.out.println(displayLogic.getTaskDisplayHeight());
 			}
 
 			private void editTaskFeedback(Command executedCommand, int taskIndex) {
 				highlightTaskFeedback(taskIndex);
+				TaskComposite currentComposite = displayLogic.getCompositeGlobal(taskIndex);
 				if (executedCommand.getTimeslotIndex() != -1) {
 					if (executedCommand.getTimeslotIndex() > 0) {
 						int timeSlot = executedCommand.getTimeslotIndex();
@@ -605,7 +683,7 @@ public class ApplicationWindow {
 										+ Constants.fullDateTimeFormat
 												.print(interval
 														.getEndDateTime());
-								displayLogic.getCompositeGlobal(taskIndex)
+								currentComposite
 										.setDescriptionAtLine(description,
 												timeSlot);
 							} else {
@@ -617,7 +695,7 @@ public class ApplicationWindow {
 										+ Constants.fullDateTimeFormat
 												.print(interval
 														.getEndDateTime());
-								displayLogic.getCompositeGlobal(taskIndex)
+								currentComposite
 										.setDescriptionAtLine(description,
 												timeSlot);
 							}
@@ -627,7 +705,7 @@ public class ApplicationWindow {
 					String finalType = executedCommand.getTaskType();
 
 					if (!executedCommand.getDescription().isEmpty()) {
-						displayLogic.getCompositeGlobal(taskIndex).setTaskName(
+						currentComposite.setTaskName(
 								executedCommand.getDescription());
 					}
 
@@ -667,23 +745,27 @@ public class ApplicationWindow {
 							index++;
 						}
 					}
-					ArrayList<String> tags = executedCommand.getTags();
-					if (tags.size() > 0) {
+					String currentTags = currentComposite.getTags();
+					ArrayList<String> newTags = executedCommand.getTags();
+					String combinedTags = currentTags;
+					for(String tag : newTags){
+						combinedTags = combinedTags + "#" + tag + " ";
+					}
+
+					if (!combinedTags.isEmpty()) {
 						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
 								| finalType.equals(Constants.TASK_TYPE_TIMED)
 								| finalType
 										.equals(Constants.TASK_TYPE_FLOATING)) {
 							descriptionBuilder.append("\n");
 						}
-						for (String tag : tags) {
-							descriptionBuilder.append("#" + tag + " ");
-						}
+						descriptionBuilder.append(combinedTags);
 					}
 					if (!descriptionBuilder.toString().isEmpty()) {
-						displayLogic.getCompositeGlobal(taskIndex)
+						currentComposite
 								.setDescription(descriptionBuilder.toString());
 					}
-					displayLogic.getCompositeGlobal(taskIndex).pack();
+					currentComposite.pack();
 				}
 			}
 
@@ -744,9 +826,6 @@ public class ApplicationWindow {
 	 * @param feedbackObj
 	 */
 	protected void setFeedbackColour(Feedback feedbackObj) {
-		Color green = new Color(shell.getDisplay(), 0, 0x66, 0);
-		Color red = new Color(shell.getDisplay(), 0x99, 0, 0);
-
 		if (feedbackObj.isErrorMessage()) {
 			displayFeedback.setForeground(red);
 		} else if (!feedbackObj.isErrorMessage()) {
@@ -766,6 +845,7 @@ public class ApplicationWindow {
 			titleFont = new Font(shell.getDisplay(), "Calibri", (int) (18 * scaling), SWT.NORMAL);
 			descriptionFont = new Font(shell.getDisplay(), "Calibri", (int) (9 * scaling),
 					SWT.NORMAL);
+			inputFont = new Font(shell.getDisplay(), "Calibri", 17, SWT.NORMAL);
 		} else {
 			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
 					SWT.NORMAL);
@@ -783,13 +863,13 @@ public class ApplicationWindow {
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				switch (event.type) {
-				case SWT.MouseDown:
+				case SWT.MouseDown :
 					Point pt1 = shell.toDisplay(0, 0);
 					Point pt2 = Display.getCurrent().getCursorLocation();
 					offset[0] = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
 
 					break;
-				case SWT.MouseMove:
+				case SWT.MouseMove :
 					if (offset[0] != null) {
 						Point pt = offset[0];
 						Point newMouseLoc = Display.getCurrent()
@@ -798,7 +878,7 @@ public class ApplicationWindow {
 								- pt.y);
 					}
 					break;
-				case SWT.MouseUp:
+				case SWT.MouseUp :
 					offset[0] = null;
 					break;
 				}
@@ -819,11 +899,8 @@ public class ApplicationWindow {
 					Point offset = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
 
 					if (offset.x > 455 && offset.y < 27) {
-
-						logic.executeCommand("exit");
-						shell.dispose();
+						executeUserInput(Constants.COMMAND_EXIT);
 					} else if (offset.x > 433 && offset.y < 27) {
-
 						shell.setMinimized(true);
 					}
 				}
@@ -881,6 +958,7 @@ public class ApplicationWindow {
 	}
 
 	public void executeUserInput(String userInput) {
+		
 		class StartDisplayAction implements Action {
 			
 			DisplayMode mode;
@@ -926,37 +1004,47 @@ public class ApplicationWindow {
 			}
 			
 		}
-		
-		ActionStack actionStack = ActionStack.getInstance();
-		
-		StartDisplayAction originalDisplayStateAction = new StartDisplayAction(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
-		actionStack.add(originalDisplayStateAction);
-		
-		Feedback feedbackObj = logic.executeCommand(userInput);
 
-		String feedback = feedbackObj.toString();
-		setFeedbackColour(feedbackObj);
+		if (!userInput.isEmpty()) {
 
-		displayFeedback.setText(feedback);
-		input.setText("");
+			ActionStack actionStack = ActionStack.getInstance();
 
-		displayLogic.processFeedback(feedbackObj, helpDialog);
-		
-		EndDisplayAction currentDisplayStateAction = new EndDisplayAction(displayLogic.getDisplayMode(), displayLogic.getPageNumber());
-		actionStack.add(currentDisplayStateAction);
-		
-		if(isStateChangingOperation(feedbackObj.getCommand())) {
-			actionStack.finaliseActions();
-		} else {
-			actionStack.flushCurrentActionSet();
+			StartDisplayAction originalDisplayStateAction = new StartDisplayAction(
+					displayLogic.getDisplayMode(), displayLogic.getPageNumber());
+			actionStack.add(originalDisplayStateAction);
+
+			Feedback feedbackObj = logic.executeCommand(userInput);
+
+			if (feedbackObj.getCommand() == CommandType.EXIT) {
+				shell.dispose();
+			} else {
+
+				String feedback = feedbackObj.toString();
+				setFeedbackColour(feedbackObj);
+
+				displayFeedback.setText(feedback);
+				input.setText("");
+
+				displayLogic.processFeedback(feedbackObj, helpDialog);
+
+				EndDisplayAction currentDisplayStateAction = new EndDisplayAction(
+						displayLogic.getDisplayMode(),
+						displayLogic.getPageNumber());
+				actionStack.add(currentDisplayStateAction);
+
+				if (isStateChangingOperation(feedbackObj.getCommand())) {
+					actionStack.finaliseActions();
+				} else {
+					actionStack.flushCurrentActionSet();
+				}
+
+				updateTaskDisplay();
+
+				if (testMode) {
+					logger.log(Level.INFO, generateLoggingString());
+				}
+			}
 		}
-
-		updateTaskDisplay();
-
-		if (testMode) {
-			logger.log(Level.INFO, generateLoggingString());
-		}
-
 	}
 	
 	private boolean isStateChangingOperation(CommandType command) {

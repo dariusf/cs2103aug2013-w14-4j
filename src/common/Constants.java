@@ -1,7 +1,5 @@
 package common;
 
-import java.util.ArrayList;
-
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -70,7 +68,22 @@ public class Constants {
 			+ "goto:      Jumps to the specified page\n"
 			+ "undo:     Reverses the previous action\n"
 			+ "redo:      Reverses undo\n"
-			+ "help <command>: Explains the command in detail";
+			+ "help <command>: Explains the command in detail\n\n"
+			+ "Hotkeys\n"
+			+ "Pageup: - Navigates to previous page\n"
+			+ "Pagedown: - Navigates to next page\n"
+			+ "F1: opens help window\n"
+			+ "F2: displays\n"
+			+ "F3: displays tasks today\n"
+			+ "F4: displays tasks tomorrow\n"
+			+ "F5: displays all tasks\n"
+			+ "F6: displays completed tasks\n"
+			+ "F7: displays overdue tasks\n"
+			+ "F8: displays untimed tasks\n"
+			+ "F9: displays deadlines\n"
+			+ "F10: displays timed tasks\n"
+			+ "F11: displays floating tasks\n"
+			+ "ESC: closes help window";
 	public static final String HELP_ADD = "Adding a Task\n"
 			+ "You may add a timed task, untimed task, floating task or deadline task.\n\n"
 			+ "Command format:\n"
@@ -91,7 +104,7 @@ public class Constants {
 			+ "* Choose a 'date' to display task(s) for the date\n"
 			+ "  ** Dates available: today, tomorrow, 13/10\n"
 			+ "* Choose a 'type' to display task(s) corresponding to the specified type\n"
-			+ "  ** Types available: untimed, deadline, timed, floating, overdue, done(not implemented yet)\n\n"
+			+ "  ** Types available: untimed, deadline, timed, floating, overdue, done\n\n"
 			+ "Examples:\n" + "display all\n" + "display 25 Oct\n"
 			+ "display overdue";
 	public static final String HELP_HELP = "Help\n"
@@ -153,10 +166,19 @@ public class Constants {
 			+ "Perform this action if you wish to close the application.\n\n"
 			+ "Command format:\n" + "'exit'";
 
+	// Please keep success code numbers between 10 and 19.
 	public static final int SC_SUCCESS = 10;
 	public static final int SC_SUCCESS_TASK_OVERDUE = 11;
 	public static final int SC_SUCCESS_CLEAR_DONE = 12;
 	public static final int SC_INVALID_COMMAND_ERROR = 20;
+	public static final int SC_EMPTY_COMMAND_ERROR = 21;
+	public static final int SC_UNRECOGNIZED_COMMAND_ERROR = 22;
+	public static final int SC_TOO_FEW_ARGUMENTS_ERROR = 23;
+	public static final int SC_INVALID_PAGE_INDEX_ERROR = 24;
+	public static final int SC_INVALID_SEARCH_PARAMETERS_ERROR = 25;
+	public static final int SC_INVALID_TASK_INDEX_ERROR = 26;
+	public static final int SC_INVALID_DATE_ERROR = 27;
+	public static final int SC_INVALID_TIMESLOT_INDEX_ERROR = 28;
 	public static final int SC_EMPTY_DESCRIPTION_ERROR = 30;
 	public static final int SC_UNRECOGNISED_ATTRIBUTE_ERROR = 31;
 	public static final int SC_INTEGER_OUT_OF_BOUNDS_ERROR = 41;
@@ -193,5 +215,5 @@ public class Constants {
 	public static final int DEFAULT_PAGE_NUMBER = 1;
 
 	public static final String[] RANDOM_JOKES = { "Why do Java Programmers wear glasses?\nBecause they don't see sharp.", "What is the object-oriented way to\nbecome wealthy? Inheritance.", "[\"hip\", \"hip\"]\n(Get it?)", "Is it a boy or a girl?\nTrue", "Why did the programmer quit his job?\nBecause he didn't get arrays.", "Why did the integer drown?\nBecause it couldn't float!"};
-	public static final String MSG_ENTER_COMMAND = "Listening to command...";
+	public static final String MSG_AVAILABLE_COMMANDS = "Commands available: add|edit|display|sort|search finalise|help|goto|undo|redo|clear|done|exit";
 }
