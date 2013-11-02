@@ -289,7 +289,7 @@ public class ApplicationWindow {
 		shell.setSize(482, 681);
 		shell.setText(Constants.APP_NAME);
 		// TODO Please change this value to 1 when you compile for use on your computers.
-		defineFont(0.85);
+		defineFont(1);
 		
 		red = new Color(shell.getDisplay(), 0x99, 0, 0);
 		green = new Color(shell.getDisplay(), 0, 0x66, 0);
@@ -488,8 +488,9 @@ public class ApplicationWindow {
 				int taskIndex = executedCommand.getTaskIndex();
 				
 				switch (executedCommand.getCommandType()) {
-				case DONE:
-				case DELETE:
+				case DONE :
+					break;
+				case DELETE :
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						highlightTaskFeedback(taskIndex);
 					} else {
@@ -497,7 +498,7 @@ public class ApplicationWindow {
 						displayFeedback.setForeground(red);
 					}
 					break;
-				case FINALISE:
+				case FINALISE :
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
 						finaliseTaskFeedback(executedCommand, taskIndex);
 					} else {
@@ -506,7 +507,7 @@ public class ApplicationWindow {
 						return;
 					}
 					break;
-				case EDIT:
+				case EDIT :
 					// TODO timeslot index has to be checked lower down, inside
 					// edit and finalise
 				
@@ -518,13 +519,14 @@ public class ApplicationWindow {
 						return;
 					}
 					break;
-				case ADD:
+				case ADD :
 					addTaskFeedback(executedCommand);
 					break;
-				case SEARCH:
+				case SEARCH :
 					searchTaskFeedback(executedCommand);
 					break;
-				case INVALID:
+				case INVALID :
+					break;
 				default:
 					defaultFeedback();
 					break;
@@ -542,9 +544,13 @@ public class ApplicationWindow {
 					displayFeedback.setText(Constants.RANDOM_JOKES[index]);
 					displayFeedback.setForeground(red);
 				} else {
-					displayFeedback.setText(Constants.MSG_AVAILABLE_COMMANDS);
-					displayFeedback.setForeground(blue);
+					displayAvailableCommandsInFeedback();
 				}
+			}
+
+			private void displayAvailableCommandsInFeedback() {
+				displayFeedback.setText(Constants.MSG_AVAILABLE_COMMANDS);
+				displayFeedback.setForeground(blue);
 			}
 
 			private void searchTaskFeedback(Command executedCommand) {
@@ -656,8 +662,6 @@ public class ApplicationWindow {
 				} else {
 					defaultFeedback();
 				}
-
-				// System.out.println(displayLogic.getTaskDisplayHeight());
 			}
 
 			private void editTaskFeedback(Command executedCommand, int taskIndex) {
@@ -859,13 +863,13 @@ public class ApplicationWindow {
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				switch (event.type) {
-				case SWT.MouseDown:
+				case SWT.MouseDown :
 					Point pt1 = shell.toDisplay(0, 0);
 					Point pt2 = Display.getCurrent().getCursorLocation();
 					offset[0] = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
 
 					break;
-				case SWT.MouseMove:
+				case SWT.MouseMove :
 					if (offset[0] != null) {
 						Point pt = offset[0];
 						Point newMouseLoc = Display.getCurrent()
@@ -874,7 +878,7 @@ public class ApplicationWindow {
 								- pt.y);
 					}
 					break;
-				case SWT.MouseUp:
+				case SWT.MouseUp :
 					offset[0] = null;
 					break;
 				}
