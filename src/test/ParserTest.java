@@ -802,14 +802,12 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Missing index
-		expected = new Command(CommandType.INVALID);
-		expected.setInvalidCommandReason(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+		expected = new Command(CommandType.DELETE);
 		gotten = new Parser().parse("delete");
 		assertEquals(gotten, expected);
 
 		// Invalid format
-		expected = new Command(CommandType.INVALID);
-		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_TASK_INDEX);
+		expected = new Command(CommandType.DELETE);
 		gotten = new Parser().parse("delete askldjas");
 		assertEquals(gotten, expected);
 	}
@@ -871,7 +869,6 @@ public class ParserTest {
 		assertEquals(new Parser().parse("ass").getCommandType(), CommandType.ADD);
 		assertEquals(new Parser().parse("dad").getCommandType(), CommandType.ADD);
 		assertEquals(new Parser().parse("addd").getCommandType(), CommandType.ADD);
-		assertEquals(new Parser().parse("daa").getCommandType(), CommandType.INVALID);
 
 		assertEquals(new Parser().parse("del 1").getCommandType(), CommandType.DELETE);
 		assertEquals(new Parser().parse("dele 1").getCommandType(), CommandType.DELETE);
@@ -880,6 +877,7 @@ public class ParserTest {
 		assertEquals(new Parser().parse("deeelt 1").getCommandType(), CommandType.DELETE);
 		assertEquals(new Parser().parse("deleeete 1").getCommandType(), CommandType.DELETE);
 
+		assertEquals(new Parser().parse("daa").getCommandType(), CommandType.DONE);
 		assertEquals(new Parser().parse("de 1").getCommandType(), CommandType.DONE);
 		assertEquals(new Parser().parse("dne 1").getCommandType(), CommandType.DONE);
 		assertEquals(new Parser().parse("don 1").getCommandType(), CommandType.DONE);
