@@ -7,6 +7,8 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.sound.midi.VoiceStatus;
+
 import logic.ActiveFeedback;
 import logic.Command;
 import logic.Feedback;
@@ -64,6 +66,9 @@ public class ApplicationWindow {
 	
 	public static ApplicationWindow self; // singleton?
 	public boolean moving = false;
+	
+	private static Tray tray;
+	private static TrayItem trayIcon;
 
 	/**
 	 * Launch the application.
@@ -338,6 +343,12 @@ public class ApplicationWindow {
 		input.setFont(inputFont);
 		input.setBounds(20, 608, 442, 50);
 		input.setBackground(SWTResourceManager.getColor(255, 255, 255));
+		
+		tray = shell.getDisplay().getSystemTray();
+		trayIcon = new TrayItem(tray, SWT.NONE);
+		trayIcon.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
+				"/image/basketIcon.jpg"));
+		enableTraySelection();
 
 		// Tween.registerAccessor(Text.class, new InputAccessor());
 
@@ -458,7 +469,7 @@ public class ApplicationWindow {
 							.getNumberOfTasksPerPage().size()));
 					updateTaskDisplay();
 					logger.log(Level.INFO, generateLoggingString());
-				} else if (arg0.keyCode == SWT.F1) {
+				} else if (arg0.keyCode == SWT.F1 && arg0.stateMask != SWT.SHIFT) {
 					executeUserInput("help");
 				} else if (arg0.keyCode == SWT.F2) {
 					executeUserInput("display");
@@ -888,6 +899,29 @@ public class ApplicationWindow {
 		shell.addListener(SWT.MouseUp, listener);
 		shell.addListener(SWT.MouseMove, listener);
 	}
+	
+	public void enableTraySelection() {
+		trayIcon.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				toggleMinimizeState();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				toggleMinimizeState();
+			}
+		});
+	}
+	
+	public void toggleMinimizeState() {
+		if (shell.getVisible()) {
+			shell.setVisible(false);
+		} else {
+			shell.setVisible(true);
+		}
+	}
 
 	public void enableWindowButton() {
 		Listener listener = new Listener() {
@@ -900,7 +934,7 @@ public class ApplicationWindow {
 					if (offset.x > 455 && offset.y < 27) {
 						executeUserInput(Constants.COMMAND_EXIT);
 					} else if (offset.x > 433 && offset.y < 27) {
-						shell.setMinimized(true);
+						toggleMinimizeState();
 					}
 				}
 
@@ -915,11 +949,7 @@ public class ApplicationWindow {
 
 			@Override
 			public void run() {
-				if (shell.getMinimized()) {
-					shell.setMinimized(false);
-				} else {
-					shell.setMinimized(true);
-				}
+				toggleMinimizeState();
 			}
 
 		}
@@ -1016,6 +1046,8 @@ public class ApplicationWindow {
 
 			if (feedbackObj.getCommand() == CommandType.EXIT) {
 				shell.dispose();
+				trayIcon.dispose();
+				tray.dispose();
 			} else {
 
 				String feedback = feedbackObj.toString();
