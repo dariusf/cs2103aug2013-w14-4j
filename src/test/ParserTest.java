@@ -663,8 +663,7 @@ public class ParserTest {
 		StateDeadline.setNowStub(now);
 		
 		// Insufficient parameters
-		expected = new Command(CommandType.INVALID);
-		expected.setInvalidCommandReason(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+		expected = new Command(CommandType.EDIT);
 		gotten = new Parser().parse("edit");
 		assertEquals(gotten, expected);
 		
