@@ -824,8 +824,7 @@ public class ParserTest {
 		gotten = new Parser().parse("finalise 1");
 		assertEquals(gotten, expected);
 
-		expected = new Command(CommandType.INVALID);
-		expected.setInvalidCommandReason(InvalidCommandReason.TOO_FEW_ARGUMENTS);
+		expected = new Command(CommandType.FINALISE);
 		gotten = new Parser().parse("finalise");
 		assertEquals(gotten, expected);
 
@@ -844,13 +843,12 @@ public class ParserTest {
 		assertEquals(gotten, expected);
 
 		// Invalid number formats
-		expected = new Command(CommandType.INVALID);
-		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_TASK_INDEX);
+		expected = new Command(CommandType.FINALISE);
 		gotten = new Parser().parse("finalise 1askdj 1");
 		assertEquals(gotten, expected);
 
-		expected = new Command(CommandType.INVALID);
-		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_TIMESLOT_INDEX);
+		expected = new Command(CommandType.FINALISE);
+		expected.setTaskIndex(1);
 		gotten = new Parser().parse("finalise 1 1askdj");
 		assertEquals(gotten, expected);
 	}
