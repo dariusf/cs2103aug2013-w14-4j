@@ -157,6 +157,14 @@ public class Constants {
 	public static final int SC_SUCCESS_TASK_OVERDUE = 11;
 	public static final int SC_SUCCESS_CLEAR_DONE = 12;
 	public static final int SC_INVALID_COMMAND_ERROR = 20;
+	public static final int SC_EMPTY_COMMAND_ERROR = 21;
+	public static final int SC_UNRECOGNIZED_COMMAND_ERROR = 22;
+	public static final int SC_TOO_FEW_ARGUMENTS_ERROR = 23;
+	public static final int SC_INVALID_PAGE_INDEX_ERROR = 24;
+	public static final int SC_INVALID_SEARCH_PARAMETERS_ERROR = 25;
+	public static final int SC_INVALID_TASK_INDEX_ERROR = 26;
+	public static final int SC_INVALID_DATE_ERROR = 27;
+	public static final int SC_INVALID_TIMESLOT_INDEX_ERROR = 28;
 	public static final int SC_EMPTY_DESCRIPTION_ERROR = 30;
 	public static final int SC_UNRECOGNISED_ATTRIBUTE_ERROR = 31;
 	public static final int SC_INTEGER_OUT_OF_BOUNDS_ERROR = 41;

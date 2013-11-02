@@ -13,6 +13,7 @@ import common.ClearMode;
 import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
+import common.InvalidCommandReason;
 import common.undo.ActionStack;
 
 import parser.Parser;
@@ -132,9 +133,43 @@ public class Logic {
 		case GOTO:
 			return gotoPage(command);
 		default:
-			return new Feedback(Constants.SC_INVALID_COMMAND_ERROR,
-					CommandType.INVALID);
+			return invalidCommand(command);
 		}
+	}
+	
+	public Feedback invalidCommand(Command command){
+		InvalidCommandReason error = command.getInvalidCommandReason();
+		Feedback feedback = null;
+		switch (error) {
+		case EMPTY_COMMAND:
+			feedback = new Feedback(Constants.SC_EMPTY_COMMAND_ERROR, CommandType.INVALID);
+			break;
+		case INVALID_DATE:
+			feedback = new Feedback(Constants.SC_INVALID_DATE_ERROR, CommandType.INVALID);
+			break;
+		case INVALID_PAGE_INDEX:
+			feedback = new Feedback(Constants.SC_INVALID_PAGE_INDEX_ERROR, CommandType.INVALID);
+			break;
+		case INVALID_SEARCH_PARAMETERS:
+			feedback = new Feedback(Constants.SC_INVALID_SEARCH_PARAMETERS_ERROR, CommandType.INVALID);
+			break;
+		case INVALID_TASK_INDEX:
+			feedback = new Feedback(Constants.SC_INVALID_TASK_INDEX_ERROR, CommandType.INVALID);
+			break;
+		case INVALID_TIMESLOT_INDEX:
+			feedback = new Feedback(Constants.SC_INVALID_TIMESLOT_INDEX_ERROR, CommandType.INVALID);
+			break;
+		case TOO_FEW_ARGUMENTS:
+			feedback = new Feedback(Constants.SC_TOO_FEW_ARGUMENTS_ERROR, CommandType.INVALID);
+			break;
+		case UNRECOGNIZED_COMMAND:
+			feedback = new Feedback(Constants.SC_UNRECOGNIZED_COMMAND_ERROR, CommandType.INVALID);
+			break;
+		default:
+			feedback = new Feedback(Constants.SC_INVALID_COMMAND_ERROR, CommandType.INVALID);
+			break;
+		}
+		return feedback;
 	}
 
 	public Feedback addTask(Command command) {

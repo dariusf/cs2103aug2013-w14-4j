@@ -13,7 +13,6 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import sun.misc.GC.LatencyRequest;
 
 public class TaskComposite extends Composite {
 
