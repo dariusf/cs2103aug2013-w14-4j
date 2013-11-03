@@ -229,7 +229,7 @@ public class ApplicationWindow {
 		tray = shell.getDisplay().getSystemTray();
 		trayIcon = new TrayItem(tray, SWT.NONE);
 		trayIcon.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
-				"/image/basketIcon.jpg"));
+				"/image/basketIcon.gif"));
 		enableTraySelection();
 
 		// Tween.registerAccessor(Text.class, new InputAccessor());
@@ -262,7 +262,7 @@ public class ApplicationWindow {
 		shell = new Shell(Display.getDefault(), SWT.NO_TRIM | SWT.ON_TOP);
 
 		shell.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
-				"/image/basketIcon.png"));
+				"/image/basketIcon.gif"));
 
 		final Image image = SWTResourceManager.getImage(
 				ApplicationWindow.class, "/image/background.png");
