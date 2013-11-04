@@ -252,6 +252,7 @@ public class ApplicationWindow {
 			@Override
 			public void shellClosed(ShellEvent e) {
 				logic.executeCommand(Constants.COMMAND_EXIT);
+				System.exit(0);
 			}
 		});
 		adjustPageNumberAlignment();
@@ -888,6 +889,7 @@ public class ApplicationWindow {
 
 					if (offset.x > 455 && offset.y < 27) {
 						executeUserInput(Constants.COMMAND_EXIT);
+						System.exit(0);
 					} else if (offset.x > 433 && offset.y < 27) {
 						toggleMinimizeState();
 					}
@@ -1003,6 +1005,7 @@ public class ApplicationWindow {
 				shell.dispose();
 				trayIcon.dispose();
 				tray.dispose();
+				System.exit(0);
 			} else {
 
 				String feedback = feedbackObj.toString();
