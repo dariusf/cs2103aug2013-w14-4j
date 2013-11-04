@@ -311,7 +311,7 @@ public class Logic {
 		int inputIndex = command.getTaskIndex();
 		int taskIndex = inputIndex;
 
-		if (inputIndex > storage.size()
+		if (inputIndex > storage.size() || inputIndex <= 0
 				|| (isDynamicIndex && !temporaryMapping.containsKey(inputIndex))) {
 			return new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
 					CommandType.EDIT);
