@@ -252,6 +252,7 @@ public class ApplicationWindow {
 			@Override
 			public void shellClosed(ShellEvent e) {
 				logic.executeCommand(Constants.COMMAND_EXIT);
+				System.exit(0);
 			}
 		});
 		adjustPageNumberAlignment();
@@ -872,6 +873,7 @@ public class ApplicationWindow {
 	public void toggleMinimizeState() {
 		if (shell.getVisible()) {
 			shell.setVisible(false);
+			logic.forceFileWrite();
 		} else {
 			shell.setVisible(true);
 			input.setFocus();
@@ -888,6 +890,7 @@ public class ApplicationWindow {
 
 					if (offset.x > 455 && offset.y < 27) {
 						executeUserInput(Constants.COMMAND_EXIT);
+						System.exit(0);
 					} else if (offset.x > 433 && offset.y < 27) {
 						toggleMinimizeState();
 					}
@@ -920,14 +923,10 @@ public class ApplicationWindow {
 			}
 
 			@Override
-			public void nativeKeyReleased(NativeKeyEvent e) {
-				// do nothing
-			}
+			public void nativeKeyReleased(NativeKeyEvent e) { /* do nothing */ }
 
 			@Override
-			public void nativeKeyTyped(NativeKeyEvent e) {
-				// do nothing
-			}
+			public void nativeKeyTyped(NativeKeyEvent e) { /* do nothing */ }
 		}
 		
 		try {
@@ -1003,6 +1002,7 @@ public class ApplicationWindow {
 				shell.dispose();
 				trayIcon.dispose();
 				tray.dispose();
+				System.exit(0);
 			} else {
 
 				String feedback = feedbackObj.toString();
@@ -1020,6 +1020,7 @@ public class ApplicationWindow {
 
 				if (isStateChangingOperation(feedbackObj.getCommand())) {
 					actionStack.finaliseActions();
+					logic.notifyStorage();
 				} else {
 					actionStack.flushCurrentActionSet();
 				}

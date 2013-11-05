@@ -6,13 +6,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.Timer;
+import java.util.TimerTask;
 
 import logic.Task;
 
 public class Storage implements Closeable, Iterable<Task> {
+	class Switch {
+		boolean switchState = false;
+		
+		synchronized void turnOn () { switchState = true; }
+		synchronized void turnOff () { switchState = false; }
+		synchronized void flip () { switchState = switchState & false; }
+		boolean isOn() { return (switchState == true); }
+		boolean isOff() { return (switchState == false); }
+		boolean getState() { return switchState; }
+	}
+	
 	private ActionCapturer<Task, RealStorage<Task>> taskStorage;
 	private final String fileName;
+	private Switch hasEditSwitch = new Switch();
+	private Timer writeTimer;
 	
 	public Storage(String fileName) throws IOException {
 		this.fileName = fileName;
@@ -38,6 +52,20 @@ public class Storage implements Closeable, Iterable<Task> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		writeTimer = new Timer(true);
+		writeTimer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				if(hasEditSwitch.isOn()) {
+					try {
+						writeToFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}, 30000, 30000);
 	}
 	
 	public void sort() {
@@ -46,11 +74,13 @@ public class Storage implements Closeable, Iterable<Task> {
 	
 	public void add(Task task) {
 		taskStorage.insert(taskStorage.size(), task);
+		hasEditSwitch.turnOn();
 	}
 	
 	public void remove(int index) {
 		index--;
 		taskStorage.remove(index);
+		hasEditSwitch.turnOn();
 	}
 	
 	public void remove(Task t) {
@@ -61,10 +91,12 @@ public class Storage implements Closeable, Iterable<Task> {
 		index--;
 		taskStorage.remove(index);
 		taskStorage.insert(index, task);
+		hasEditSwitch.turnOn();
 	}
 
 	public void clear() {
 		taskStorage.setState(new ArrayList<Task>());
+		hasEditSwitch.turnOn();
 	}
 
 	public Task get(int index) {
@@ -93,6 +125,7 @@ public class Storage implements Closeable, Iterable<Task> {
 		while (itemsIterator.hasNext()) {
 			remove(itemsIterator.next());
 		}
+		hasEditSwitch.turnOn();
 	}
 	
 	@Override
@@ -100,11 +133,12 @@ public class Storage implements Closeable, Iterable<Task> {
 		writeToFile();
 	}
 
-	private void writeToFile() throws IOException {
+	public synchronized void writeToFile() throws IOException {
 		File file = new File(fileName);
 		//if(file.exists()) { file.delete(); }
 		
 		Json.writeToFile(convertIteratorToList(taskStorage.iterator()), file);
+		hasEditSwitch.turnOff();
 	}
 	
 	private static <E> ArrayList<E> convertIteratorToList (Iterator<E> iter) {
@@ -113,5 +147,9 @@ public class Storage implements Closeable, Iterable<Task> {
 			result.add(iter.next());
 		}
 		return result;
+	}
+	
+	public void fileWriteNotify () {
+		hasEditSwitch.turnOn();
 	}
 }
