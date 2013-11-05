@@ -450,7 +450,7 @@ public class ApplicationWindow {
 				} else if (arg0.keyCode == SWT.F10) {
 					executeUserInput("display timed");
 				} else if (arg0.keyCode == SWT.F11) {
-					executeUserInput("display floating");
+					executeUserInput("display tentative");
 				} else if (arg0.keyCode == SWT.ESC) {
 					helpDialog.close();
 				}
