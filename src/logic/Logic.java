@@ -732,6 +732,19 @@ public class Logic {
 		}
 		return result;
 	}
+	
+	public void notifyStorage () {
+		storage.fileWriteNotify();
+	}
+	
+	public void forceFileWrite () {
+		try {
+			storage.writeToFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	// public static void main(String[] args) {
 	// Logic logic;

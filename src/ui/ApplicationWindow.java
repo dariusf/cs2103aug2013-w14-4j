@@ -873,6 +873,7 @@ public class ApplicationWindow {
 	public void toggleMinimizeState() {
 		if (shell.getVisible()) {
 			shell.setVisible(false);
+			logic.forceFileWrite();
 		} else {
 			shell.setVisible(true);
 			input.setFocus();
@@ -922,14 +923,10 @@ public class ApplicationWindow {
 			}
 
 			@Override
-			public void nativeKeyReleased(NativeKeyEvent e) {
-				// do nothing
-			}
+			public void nativeKeyReleased(NativeKeyEvent e) { /* do nothing */ }
 
 			@Override
-			public void nativeKeyTyped(NativeKeyEvent e) {
-				// do nothing
-			}
+			public void nativeKeyTyped(NativeKeyEvent e) { /* do nothing */ }
 		}
 		
 		try {
@@ -1023,6 +1020,7 @@ public class ApplicationWindow {
 
 				if (isStateChangingOperation(feedbackObj.getCommand())) {
 					actionStack.finaliseActions();
+					logic.notifyStorage();
 				} else {
 					actionStack.flushCurrentActionSet();
 				}
