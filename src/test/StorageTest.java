@@ -97,7 +97,7 @@ public class StorageTest {
 	private static Task floatingTaskCreator() {
 		Task result = new Task();
 		result.setName("floatingTask");
-		result.setType(Constants.TASK_TYPE_FLOATING);
+		result.setType(Constants.TASK_TYPE_TENTATIVE);
 		result.setPossibleTime(intervals);
 		
 		return result;
