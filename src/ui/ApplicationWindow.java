@@ -820,7 +820,7 @@ public class ApplicationWindow {
 			descriptionFont = new Font(shell.getDisplay(), "Calibri", (int) (9 * scaling),
 					SWT.NORMAL);
 			inputFont = new Font(shell.getDisplay(), "Calibri", (int) (18 * scaling), SWT.NORMAL);
-			displayFeedbackFont = new Font(shell.getDisplay(), "Calibri", (int) (12 * scaling), SWT.NORMAL);
+			displayFeedbackFont = new Font(shell.getDisplay(), "Calibri", (int) (10 * scaling), SWT.NORMAL);
 		} else {
 			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
 					SWT.NORMAL);
@@ -831,7 +831,7 @@ public class ApplicationWindow {
 			descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
 					SWT.NORMAL);
 			inputFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
-			displayFeedbackFont = new Font(shell.getDisplay(), "Calibri", 16, SWT.NORMAL);
+			displayFeedbackFont = new Font(shell.getDisplay(), "Calibri", 13, SWT.NORMAL);
 		}
 	}
 
