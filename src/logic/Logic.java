@@ -350,7 +350,7 @@ public class Logic {
 			return task.isTimedTask();
 		case DEADLINE:
 			return task.isDeadlineTask();
-		case FLOATING:
+		case TENTATIVE:
 			return task.isFloatingTask();
 		case UNTIMED:
 			return task.isUntimedTask();
@@ -455,7 +455,7 @@ public class Logic {
 					case TIMED:
 						condition = currentTask.isTimedTask();
 						break;
-					case FLOATING:
+					case TENTATIVE:
 						condition = currentTask.isFloatingTask();
 						break;
 					case UNTIMED:

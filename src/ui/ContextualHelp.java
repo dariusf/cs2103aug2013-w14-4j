@@ -6,7 +6,7 @@ import common.Constants;
 public class ContextualHelp {
 	final private String COMMAND_FORMAT_ADD = "add <task> {by|on|from..to|or} {#hashtag}";
 	final private String COMMAND_FORMAT_EDIT = "edit <task index> {timeslot index} \n{task name|by|on|from..to|or|#hashtag}";
-	final private String COMMAND_FORMAT_DISPLAY = "display {all|done|overdue|floating|timed|untimed \ndeadline|date}";
+	final private String COMMAND_FORMAT_DISPLAY = "display {all|done|overdue|tentative|timed|untimed \ndeadline|date}";
 	final private String COMMAND_FORMAT_DELETE = "delete <task index>";
 	final private String COMMAND_FORMAT_CLEAR = "clear {done}";
 	final private String COMMAND_FORMAT_SORT = "tasks will be sorted by date order";
