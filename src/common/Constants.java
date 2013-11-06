@@ -72,6 +72,7 @@ public class Constants {
 			+ "F9: deadlines\n"
 			+ "F10: timed tasks\n"
 			+ "F11: floating tasks\n"
+			+ "F12: some jokes\n"
 			+ "*Note F2 to F11 are different modes of display";
 	public static final String HELP_ADD = "Adding a Task\n"
 			+ "You may add a timed task, untimed task, tentative task or deadline task.\n\n"

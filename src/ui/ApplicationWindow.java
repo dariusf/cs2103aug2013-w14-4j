@@ -370,13 +370,8 @@ public class ApplicationWindow {
 	}
 
 	public String displayWelcomeMessage() {
-		String welcomeMessage = Constants.WELCOME_MSG;
-		if(Math.random() < 0.05){
-			int index = new Random().nextInt(Constants.RANDOM_JOKES.length);
-			welcomeMessage = Constants.RANDOM_JOKES[index];
-		} else {
-			welcomeMessage = Constants.MSG_AVAILABLE_COMMANDS;
-		}
+		String welcomeMessage = Constants.MSG_AVAILABLE_COMMANDS;
+
 		return welcomeMessage;
 	}
 
@@ -459,6 +454,10 @@ public class ApplicationWindow {
 					executeUserInput("display timed");
 				} else if (arg0.keyCode == SWT.F11) {
 					executeUserInput("display tentative");
+				} else if (arg0.keyCode == SWT.F12) {
+					int index = new Random().nextInt(Constants.RANDOM_JOKES.length);
+					displayFeedback.setForeground(red);
+					displayFeedback.setText(Constants.RANDOM_JOKES[index]);
 				} else if (arg0.keyCode == SWT.ESC) {
 					helpDialog.close();
 				}
