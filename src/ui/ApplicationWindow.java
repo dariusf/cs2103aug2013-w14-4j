@@ -57,6 +57,7 @@ public class ApplicationWindow {
 	Font descriptionFont; // accessed by task composite
 	public Font pageNumberFont;
 	public Font inputFont;
+	public Font displayFeedbackFont;
 	
 	public Color green;
 	public Color red;
@@ -230,6 +231,7 @@ public class ApplicationWindow {
 				| SWT.MULTI);
 		displayFeedback.setEnabled(false);
 		displayFeedback.setBounds(35, 558, 412, 40);
+		displayFeedback.setFont(displayFeedbackFont);
 	}
 
 	private void defineDisplayTitle() {
@@ -817,7 +819,8 @@ public class ApplicationWindow {
 			titleFont = new Font(shell.getDisplay(), "Calibri", (int) (18 * scaling), SWT.NORMAL);
 			descriptionFont = new Font(shell.getDisplay(), "Calibri", (int) (9 * scaling),
 					SWT.NORMAL);
-			inputFont = new Font(shell.getDisplay(), "Calibri", 17, SWT.NORMAL);
+			inputFont = new Font(shell.getDisplay(), "Calibri", (int) (18 * scaling), SWT.NORMAL);
+			displayFeedbackFont = new Font(shell.getDisplay(), "Calibri", (int) (12 * scaling), SWT.NORMAL);
 		} else {
 			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
 					SWT.NORMAL);
@@ -827,6 +830,8 @@ public class ApplicationWindow {
 			titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
 			descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
 					SWT.NORMAL);
+			inputFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
+			displayFeedbackFont = new Font(shell.getDisplay(), "Calibri", 16, SWT.NORMAL);
 		}
 	}
 
