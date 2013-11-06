@@ -47,6 +47,7 @@ public class ApplicationWindow {
 	public StyledText displayRemainingTaskCount;
 	public StyledText displayTodayTaskCount;
 	public TaskComposite dummyTaskComposite;
+	public Font displayFeedbackFont;
 	
 	public static HelpDialog helpDialog;
 	public static DisplayLogic displayLogic;
@@ -219,6 +220,7 @@ public class ApplicationWindow {
 				| SWT.MULTI);
 		displayFeedback.setEnabled(false);
 		displayFeedback.setBounds(35, 558, 412, 40);
+		displayFeedback.setFont(displayFeedbackFont);
 
 		input = new Text(shell, SWT.BORDER);
 		input.setFocus();
@@ -811,6 +813,7 @@ public class ApplicationWindow {
 			descriptionFont = new Font(shell.getDisplay(), "Calibri", (int) (9 * scaling),
 					SWT.NORMAL);
 			inputFont = new Font(shell.getDisplay(), "Calibri", 17, SWT.NORMAL);
+			displayFeedbackFont = new Font(shell.getDisplay(), "Calibri", 10, SWT.NORMAL);
 		} else {
 			windowTitleFont = new Font(shell.getDisplay(), "Calibri", 44,
 					SWT.NORMAL);
@@ -820,6 +823,8 @@ public class ApplicationWindow {
 			titleFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
 			descriptionFont = new Font(shell.getDisplay(), "Calibri", 12,
 					SWT.NORMAL);
+			inputFont = new Font(shell.getDisplay(), "Calibri", 24, SWT.NORMAL);
+			displayFeedbackFont = new Font(shell.getDisplay(), "Calibri", 14, SWT.NORMAL);
 		}
 	}
 
