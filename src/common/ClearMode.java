@@ -1,7 +1,7 @@
 package common;
 
 public enum ClearMode {
-	DEADLINE, TIMED, FLOATING, UNTIMED, ALL, OVERDUE, DATE, INVALID, DONE;
+	DEADLINE, TIMED, TENTATIVE, UNTIMED, ALL, OVERDUE, DATE, INVALID, DONE;
 	
 	public static ClearMode fromString(String clearModeString) {
 		try {

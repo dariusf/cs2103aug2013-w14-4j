@@ -50,7 +50,7 @@ public class Constants {
 
 	public static final String CLEAR_ATT_DONE = "clearDone";
 
-	public static final String TASK_TYPE_FLOATING = "floating";
+	public static final String TASK_TYPE_FLOATING = "tentative";
 	public static final String TASK_TYPE_TIMED = "timed";
 	public static final String TASK_TYPE_DEADLINE = "deadline";
 	public static final String TASK_TYPE_UNTIMED = "untimed";
@@ -74,7 +74,7 @@ public class Constants {
 			+ "F11: floating tasks\n"
 			+ "*Note F2 to F11 are different modes of display";
 	public static final String HELP_ADD = "Adding a Task\n"
-			+ "You may add a timed task, untimed task, floating task or deadline task.\n\n"
+			+ "You may add a timed task, untimed task, tentative task or deadline task.\n\n"
 			+ "Command format:\n"
 			+ "* Start with the keyword 'add'\n"
 			+ "* Use 'by' to denote a deadline\n"
@@ -93,7 +93,7 @@ public class Constants {
 			+ "* Choose a 'date' to display task(s) for the date\n"
 			+ "  ** Dates available: today, tomorrow, 13/10\n"
 			+ "* Choose a 'type' to display task(s) corresponding to the specified type\n"
-			+ "  ** Types available: untimed, deadline, timed, floating, overdue, done\n\n"
+			+ "  ** Types available: untimed, deadline, timed, tentative, overdue, done\n\n"
 			+ "Examples:\n" + "display all\n" + "display 25 Oct\n"
 			+ "display overdue";
 	public static final String HELP_HELP = "Help\n"
@@ -139,8 +139,8 @@ public class Constants {
 			+ "Marks a completed task as done. \n\n" + "Command format:\n"
 			+ "Start with the keyword 'done' followed by the task's index\n\n"
 			+ "Example:\n" + "done 2";
-	public static final String HELP_FINALISE = "Finalising Timing For a Floating Task\n"
-			+ "Perform this action when you have decided on the timeslot for a particular floating task.\n\n"
+	public static final String HELP_FINALISE = "Finalising Timing For a Tentative Task\n"
+			+ "Perform this action when you have decided on the timeslot for a particular tentative task.\n\n"
 			+ "Command format:\n"
 			+ "* Start with the keyword 'finalise' followed by the task's index\n"
 			+ "* Next set the confirmed slot as the finalised timing by using its index\n\n"
@@ -198,7 +198,7 @@ public class Constants {
 	public static final String MODE_TOMORROW = "Tomorrow";
 	public static final String MODE_DEADLINE = "Deadlines";
 	public static final String MODE_TIMED = "Timed Tasks";
-	public static final String MODE_FLOATING = "Floating Tasks";
+	public static final String MODE_FLOATING = "Tentative Tasks";
 	public static final String MODE_UNTIMED = "Untimed Tasks";
 	public static final String MODE_ALL = "All Tasks";
 	public static final String MODE_SEARCH = "Search Result";

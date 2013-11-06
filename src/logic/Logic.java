@@ -260,6 +260,101 @@ public class Logic {
 		return feedback;
 	}
 
+
+	public int getNumberOfTasks() {
+		if (isDynamicIndex) {
+			return temporaryMapping.keySet().size();
+		} else {
+			return storage.size();
+		}
+	}
+
+	public int getNumberOfRemainingTasks() {
+		int count = 0;
+		for (Task task : storage) {
+			if (!task.isDone()) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public int getNumberOfTasksToday() {
+		int count = 0;
+		DateTime today = new DateTime();
+		for (Task task : storage) {
+			if (!task.isDone() && task.isOnDate(today)) {
+				count++;
+			}
+		}
+		return count;
+
+	}
+
+	public ArrayList<Task> getTasksToDisplay() {
+		ArrayList<Task> output = new ArrayList<Task>();
+
+		if (!isDynamicIndex) {
+			Iterator<Task> storageIterator = storage.iterator();
+			while (storageIterator.hasNext()) {
+				Task task = storageIterator.next();
+				output.add(task);
+			}
+		} else {
+			for (Integer index : temporaryMapping.keySet()) {
+				Task task = storage.get(temporaryMapping.get(index));
+				output.add(task);
+			}
+		}
+		return output;
+	}
+
+	public ArrayList<Task> getTasksToDisplay(DisplayMode displayMode,
+			DateTime dateTime) {
+		Command displayCommand = new Command(CommandType.DISPLAY);
+		displayCommand.setDisplayMode(displayMode);
+		if (displayMode == displayMode.DATE) {
+			displayCommand.setDisplayDateTime(dateTime);
+		}
+		displayTasks(displayCommand);
+		return getTasksToDisplay();
+	}
+
+	public boolean displayCondition(Command command, Task task) {
+		DisplayMode displayMode = command.getDisplayMode();
+		DateTime displayDate = null;
+		switch (displayMode) {
+		case DATE:
+			displayDate = command.getDisplayDateTime();
+			return task.isOnDate(displayDate);
+		case TODAY:
+			displayDate = new DateTime();
+			return task.isOnDate(displayDate);
+		case TOMORROW:
+			displayDate = new DateTime();
+			displayDate = displayDate.plusDays(1);
+			return task.isOnDate(displayDate);
+		case ALL:
+			return true;
+		case TODO:
+			return !task.isDone();
+		case DONE:
+			return task.isDone();
+		case TIMED:
+			return task.isTimedTask();
+		case DEADLINE:
+			return task.isDeadlineTask();
+		case TENTATIVE:
+			return task.isFloatingTask();
+		case UNTIMED:
+			return task.isUntimedTask();
+		case OVERDUE:
+			return task.isOverdue();
+		default:
+			return !task.isDone();
+		}
+	}
+
 	public Feedback displayTasks(Command command) {
 		DisplayMode displayMode = command.getDisplayMode();
 		Feedback feedback = null;
@@ -333,21 +428,22 @@ public class Logic {
 		Feedback feedback = null;
 		ClearMode clearMode = command.getClearMode();
 		DateTime now = new DateTime(); // or stub
-
+		
 		if (storage.size() > 0) {
 			if (clearMode == ClearMode.ALL) {
 				storage.clear();
 				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
 				isDynamicIndex = false;
-			} else {
+			}
+			else {
 				Iterator<Task> tasksIterator = storage.iterator();
 				ArrayList<Task> doneTasks = new ArrayList<>();
 
 				while (tasksIterator.hasNext()) {
-
+					
 					Task currentTask = tasksIterator.next();
 					boolean condition = false;
-
+					
 					switch (clearMode) {
 					case DEADLINE:
 						condition = currentTask.isDeadlineTask();
@@ -355,19 +451,17 @@ public class Logic {
 					case TIMED:
 						condition = currentTask.isTimedTask();
 						break;
-					case FLOATING:
+					case TENTATIVE:
 						condition = currentTask.isFloatingTask();
 						break;
 					case UNTIMED:
 						condition = currentTask.isUntimedTask();
 						break;
 					case OVERDUE:
-						condition = currentTask.isDeadlineTask()
-								&& currentTask.getDeadline().isBefore(now);
+						condition = currentTask.isDeadlineTask() && currentTask.getDeadline().isBefore(now);
 						break;
 					case DATE:
-						condition = currentTask.getStartTime().dayOfYear()
-								.equals(command.getClearDateTime().dayOfYear());
+						condition = currentTask.getStartTime().dayOfYear().equals(command.getClearDateTime().dayOfYear());
 						break;
 					case DONE:
 						condition = currentTask.isDone();
@@ -377,20 +471,18 @@ public class Logic {
 					default:
 						assert false : "Error in clear mode logic";
 					}
-
+					
 					if (condition) {
 						doneTasks.add(currentTask);
 					}
 				}
 
 				storage.removeSet(doneTasks);
-				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE,
-						CommandType.CLEAR);
+				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE, CommandType.CLEAR);
 				isDynamicIndex = false;
 			}
 		} else {
-			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
-					CommandType.CLEAR);
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR, CommandType.CLEAR);
 		}
 		return feedback;
 	}

@@ -298,6 +298,16 @@ public class ParserTest {
 		actual = new Parser().parse("add go home on halloween for a scare");
 		assertEquals(actual, expected);
 
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go to school");
+		intervals = new ArrayList<>();
+		start = now.withMonthOfYear(12).withDayOfMonth(25).withTime(0, 0, 0, 0);
+		end = start.withTime(23, 59, 0, 0);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = new Parser().parse("add go to school on christmas");
+		assertEquals(actual, expected);
+
 		// Specifying dates and times in the middle
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("do schoolwork in school");
