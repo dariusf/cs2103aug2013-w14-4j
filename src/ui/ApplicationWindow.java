@@ -52,12 +52,12 @@ public class ApplicationWindow {
 	public static DisplayLogic displayLogic;
 	
 	public Font windowTitleFont;
-	Font indexFont; // accessed by task composite
-	Font titleFont; // accessed by task composite
-	Font descriptionFont; // accessed by task composite
 	public Font pageNumberFont;
 	public Font inputFont;
 	public Font displayFeedbackFont;
+	public Font indexFont; // accessed by task composite
+	public Font titleFont; // accessed by task composite
+	public Font descriptionFont; // accessed by task composite
 	
 	public Color green;
 	public Color red;
@@ -489,7 +489,6 @@ public class ApplicationWindow {
 					} else if (taskIndex != -1){
 						displayInvalidIndexAsFeedback();
 					}
-					//TODO: find a way to display error message if user actually types -1...
 					break;
 				case FINALISE :
 					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
@@ -953,7 +952,6 @@ public class ApplicationWindow {
 			GlobalScreen.registerNativeHook();
 			GlobalScreen.getInstance().addNativeKeyListener(new NativeHook());
 		} catch (Exception e) {
-			// I can't actually fix this bug, because it is an OS level problem
 			System.err.println("Unable to initialise global hotkey!"
 					+ "Please check your system accessibility settings!"
 					+ "Basket will continue without hotkey.");
