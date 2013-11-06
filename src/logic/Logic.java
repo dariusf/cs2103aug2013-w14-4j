@@ -247,8 +247,8 @@ public class Logic {
 			} else if (finalType == Constants.TASK_TYPE_TIMED) {
 				taskToEdit.setType(Constants.TASK_TYPE_TIMED);
 				taskToEdit.setInterval(command.getIntervals().get(0));
-			} else if (finalType == Constants.TASK_TYPE_FLOATING) {
-				taskToEdit.setType(Constants.TASK_TYPE_FLOATING);
+			} else if (finalType == Constants.TASK_TYPE_TENTATIVE) {
+				taskToEdit.setType(Constants.TASK_TYPE_TENTATIVE);
 				taskToEdit.setPossibleTime(command.getIntervals());
 			}
 

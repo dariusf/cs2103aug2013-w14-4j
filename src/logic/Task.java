@@ -30,7 +30,7 @@ public class Task implements Comparable<Task>, Cloneable {
 			interval = command.getIntervals().get(0);
 		} else if (type == Constants.TASK_TYPE_DEADLINE) {
 			deadline = command.getDeadline();
-		} else if (type == Constants.TASK_TYPE_FLOATING) {
+		} else if (type == Constants.TASK_TYPE_TENTATIVE) {
 			possibleIntervals = command.getIntervals();
 		}
 
@@ -50,7 +50,7 @@ public class Task implements Comparable<Task>, Cloneable {
 			this.interval = new Interval(task.interval);
 		} else if (this.type.equals(Constants.TASK_TYPE_DEADLINE)) {
 			this.deadline = new DateTime(task.deadline);
-		} else if (this.type.equals(Constants.TASK_TYPE_FLOATING)) {
+		} else if (this.type.equals(Constants.TASK_TYPE_TENTATIVE)) {
 			this.possibleIntervals = duplicatePossibleIntervals(task.possibleIntervals);
 		}
 
@@ -295,7 +295,7 @@ public class Task implements Comparable<Task>, Cloneable {
 	}
 
 	public boolean isFloatingTask() {
-		return type.equals(Constants.TASK_TYPE_FLOATING);
+		return type.equals(Constants.TASK_TYPE_TENTATIVE);
 	}
 
 	public boolean isUntimedTask() {

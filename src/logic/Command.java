@@ -130,7 +130,7 @@ public class Command {
 			return Constants.TASK_TYPE_TIMED;
 		}
 		else {
-			return Constants.TASK_TYPE_FLOATING;
+			return Constants.TASK_TYPE_TENTATIVE;
 		}
 	}
 	

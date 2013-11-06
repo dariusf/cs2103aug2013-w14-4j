@@ -595,7 +595,7 @@ public class ApplicationWindow {
 								.get(0);
 						descriptionBuilder.append("from "
 								+ Task.intervalFormat(taskInterval.getStartDateTime(), taskInterval.getEndDateTime()));
-					} else if (finalType.equals(Constants.TASK_TYPE_FLOATING)) {
+					} else if (finalType.equals(Constants.TASK_TYPE_TENTATIVE)) {
 						descriptionBuilder.append("on ");
 						ArrayList<Interval> possibleIntervals = executedCommand
 								.getIntervals();
@@ -617,7 +617,7 @@ public class ApplicationWindow {
 						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
 								| finalType.equals(Constants.TASK_TYPE_TIMED)
 								| finalType
-										.equals(Constants.TASK_TYPE_FLOATING)) {
+										.equals(Constants.TASK_TYPE_TENTATIVE)) {
 							descriptionBuilder.append("\n");
 						}
 						for (String tag : tags) {
@@ -694,7 +694,7 @@ public class ApplicationWindow {
 								+ " to "
 								+ Constants.fullDateTimeFormat
 										.print(taskInterval.getEndDateTime()));
-					} else if (finalType.equals(Constants.TASK_TYPE_FLOATING)) {
+					} else if (finalType.equals(Constants.TASK_TYPE_TENTATIVE)) {
 						descriptionBuilder.append("on ");
 						ArrayList<Interval> possibleIntervals = executedCommand
 								.getIntervals();
@@ -728,7 +728,7 @@ public class ApplicationWindow {
 						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
 								| finalType.equals(Constants.TASK_TYPE_TIMED)
 								| finalType
-										.equals(Constants.TASK_TYPE_FLOATING)) {
+										.equals(Constants.TASK_TYPE_TENTATIVE)) {
 							descriptionBuilder.append("\n");
 						}
 						descriptionBuilder.append(combinedTags);
@@ -1082,7 +1082,7 @@ public class ApplicationWindow {
 		ArrayList<Interval> intervalList = new ArrayList<Interval>();
 		intervalList.add(interval1);
 		intervalList.add(interval2);
-		task1.setType(Constants.TASK_TYPE_FLOATING);
+		task1.setType(Constants.TASK_TYPE_TENTATIVE);
 		task1.setPossibleTime(intervalList);
 		TaskComposite taskComposite2 = new TaskComposite(
 				displayLogic.getTaskDisplay(), task1, 1);
@@ -1098,7 +1098,7 @@ public class ApplicationWindow {
 		interval3.setEndDateTime(endDate3);
 		intervalList.add(interval3);
 
-		task1.setType(Constants.TASK_TYPE_FLOATING);
+		task1.setType(Constants.TASK_TYPE_TENTATIVE);
 		task1.setPossibleTime(intervalList);
 		TaskComposite taskComposite3 = new TaskComposite(
 				displayLogic.getTaskDisplay(), task1, 1);

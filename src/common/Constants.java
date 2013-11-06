@@ -50,7 +50,7 @@ public class Constants {
 
 	public static final String CLEAR_ATT_DONE = "clearDone";
 
-	public static final String TASK_TYPE_FLOATING = "tentative";
+	public static final String TASK_TYPE_TENTATIVE = "tentative";
 	public static final String TASK_TYPE_TIMED = "timed";
 	public static final String TASK_TYPE_DEADLINE = "deadline";
 	public static final String TASK_TYPE_UNTIMED = "untimed";
@@ -71,7 +71,7 @@ public class Constants {
 			+ "F8: untimed tasks\n"
 			+ "F9: deadlines\n"
 			+ "F10: timed tasks\n"
-			+ "F11: floating tasks\n"
+			+ "F11: tentative tasks\n"
 			+ "F12: some jokes\n"
 			+ "*Note F2 to F11 are different modes of display";
 	public static final String HELP_ADD = "Adding a Task\n"
@@ -199,7 +199,7 @@ public class Constants {
 	public static final String MODE_TOMORROW = "Tomorrow";
 	public static final String MODE_DEADLINE = "Deadlines";
 	public static final String MODE_TIMED = "Timed Tasks";
-	public static final String MODE_FLOATING = "Tentative Tasks";
+	public static final String MODE_TENTATIVE = "Tentative Tasks";
 	public static final String MODE_UNTIMED = "Untimed Tasks";
 	public static final String MODE_ALL = "All Tasks";
 	public static final String MODE_SEARCH = "Search Result";
