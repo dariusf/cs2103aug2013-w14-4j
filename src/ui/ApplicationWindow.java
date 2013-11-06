@@ -166,80 +166,26 @@ public class ApplicationWindow {
 		}
 	}
 
-
 	/**
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
 		loadShell();
-		
-		shell.setSize(482, 681);
-		shell.setText(Constants.APP_NAME);
 		// TODO Please change this value to 1 when you compile for use on your computers.
-		defineFont(1);
-		
-		red = new Color(shell.getDisplay(), 0x99, 0, 0);
-		green = new Color(shell.getDisplay(), 0, 0x66, 0);
-		purple = SWTResourceManager.getColor(102, 0, 255);
-
-		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.SINGLE);
-		displayPageNumber.setEnabled(false);
-		displayPageNumber.setSize(105, 25);
-		displayPageNumber.setLocation(335, 567);
-
-		displayRemainingTaskCount = new StyledText(shell, SWT.READ_ONLY
-				| SWT.WRAP | SWT.SINGLE);
-		displayRemainingTaskCount.setEnabled(false);
-		displayRemainingTaskCount.setBounds(370, 54, 77, 14);
-		displayRemainingTaskCount.setFont(descriptionFont);
-		displayRemainingTaskCount.setLineAlignment(0, 1, SWT.RIGHT);
-
-		displayTodayTaskCount = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
-				| SWT.SINGLE);
-		displayTodayTaskCount.setEnabled(false);
-		displayTodayTaskCount.setBounds(370, 41, 77, 14);
-		displayTodayTaskCount.setFont(descriptionFont);
-		displayTodayTaskCount.setLineAlignment(0, 1, SWT.RIGHT);
-
-		displayLogic = new DisplayLogic(logic, DisplayMode.TODO,
-				Constants.DEFAULT_PAGE_NUMBER);
-		displayLogic.initialiseTaskDisplay();
-
-		displayTitle = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
-				| SWT.SINGLE);
-		displayTitle.setEnabled(false);
-		displayTitle.setBounds(36, 23, 311, 50);
-		displayTitle.setForeground(red);
-		displayTitle.setLineAlignment(0, 1, SWT.LEFT);
-		displayTitle.setFont(windowTitleFont);
-
+		defineFont(0.85);
+		defineColours();
+		defineDisplayPageNumber();
+		defineRemainingTaskCount();
+		defineTodayTaskCount();
+		defineDisplayLogic();
+		defineDisplayTitle();
 		defineTaskCompositeHeight();
-
-		displayFeedback = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
-				| SWT.MULTI);
-		displayFeedback.setEnabled(false);
-		displayFeedback.setBounds(35, 558, 412, 40);
-
-		input = new Text(shell, SWT.BORDER);
-		input.setFocus();
-		input.setFont(inputFont);
-		input.setBounds(20, 608, 442, 50);
-		input.setBackground(SWTResourceManager.getColor(255, 255, 255));
-		
-		tray = shell.getDisplay().getSystemTray();
-		trayIcon = new TrayItem(tray, SWT.NONE);
-		trayIcon.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
-				"/image/basketIcon.gif"));
-		enableTraySelection();
-
+		defineFeedbackWindow();
+		defineInputField();
+		defineTrayIcon();
 		// Tween.registerAccessor(Text.class, new InputAccessor());
-
-		closeButton = new Composite(shell, SWT.NONE);
-		closeButton.setBounds(433, 0, 49, 27);
-		enableWindowButton();
-
+		defineWindowButton();
 		enableNativeHook();
-
 		setWelcomePage();
 		displayFeedback.setText(displayWelcomeMessage());
 		displayFeedback.setForeground(purple);
@@ -257,6 +203,68 @@ public class ApplicationWindow {
 		});
 		adjustPageNumberAlignment();
 		enableDrag();
+	}
+
+	private void defineColours() {
+		red = new Color(shell.getDisplay(), 0x99, 0, 0);
+		green = new Color(shell.getDisplay(), 0, 0x66, 0);
+		purple = SWTResourceManager.getColor(102, 0, 255);
+	}
+
+	private void defineInputField() {
+		input = new Text(shell, SWT.BORDER);
+		input.setFocus();
+		input.setFont(inputFont);
+		input.setBounds(20, 608, 442, 50);
+		input.setBackground(SWTResourceManager.getColor(255, 255, 255));
+	}
+
+	private void defineDisplayLogic() {
+		displayLogic = new DisplayLogic(logic, DisplayMode.TODO,
+				Constants.DEFAULT_PAGE_NUMBER);
+		displayLogic.initialiseTaskDisplay();
+	}
+
+	private void defineFeedbackWindow() {
+		displayFeedback = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
+				| SWT.MULTI);
+		displayFeedback.setEnabled(false);
+		displayFeedback.setBounds(35, 558, 412, 40);
+	}
+
+	private void defineDisplayTitle() {
+		displayTitle = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
+				| SWT.SINGLE);
+		displayTitle.setEnabled(false);
+		displayTitle.setBounds(36, 23, 311, 50);
+		displayTitle.setForeground(red);
+		displayTitle.setLineAlignment(0, 1, SWT.LEFT);
+		displayTitle.setFont(windowTitleFont);
+	}
+
+	private void defineTodayTaskCount() {
+		displayTodayTaskCount = new StyledText(shell, SWT.READ_ONLY | SWT.WRAP
+				| SWT.SINGLE);
+		displayTodayTaskCount.setEnabled(false);
+		displayTodayTaskCount.setBounds(370, 41, 77, 14);
+		displayTodayTaskCount.setFont(descriptionFont);
+		displayTodayTaskCount.setLineAlignment(0, 1, SWT.RIGHT);
+	}
+
+	private void defineRemainingTaskCount() {
+		displayRemainingTaskCount = new StyledText(shell, SWT.READ_ONLY
+				| SWT.WRAP | SWT.SINGLE);
+		displayRemainingTaskCount.setEnabled(false);
+		displayRemainingTaskCount.setBounds(370, 54, 77, 14);
+		displayRemainingTaskCount.setFont(descriptionFont);
+		displayRemainingTaskCount.setLineAlignment(0, 1, SWT.RIGHT);
+	}
+
+	private void defineDisplayPageNumber() {
+		displayPageNumber = new StyledText(shell, SWT.READ_ONLY | SWT.SINGLE);
+		displayPageNumber.setEnabled(false);
+		displayPageNumber.setSize(105, 25);
+		displayPageNumber.setLocation(335, 567);
 	}
 	
 	public void loadShell() {
@@ -806,7 +814,7 @@ public class ApplicationWindow {
 					SWT.NORMAL);
 			pageNumberFont = new Font(shell.getDisplay(), "Calibri", (int) (13 * scaling),
 					SWT.NORMAL);
-			indexFont = new Font(shell.getDisplay(), "Calibri", (int) (45 * scaling), SWT.NORMAL);
+			indexFont = new Font(shell.getDisplay(), "Calibri", (int) (40 * scaling), SWT.NORMAL);
 			titleFont = new Font(shell.getDisplay(), "Calibri", (int) (18 * scaling), SWT.NORMAL);
 			descriptionFont = new Font(shell.getDisplay(), "Calibri", (int) (9 * scaling),
 					SWT.NORMAL);
@@ -855,7 +863,12 @@ public class ApplicationWindow {
 		shell.addListener(SWT.MouseMove, listener);
 	}
 	
-	public void enableTraySelection() {
+	public void defineTrayIcon() {
+		tray = shell.getDisplay().getSystemTray();
+		trayIcon = new TrayItem(tray, SWT.NONE);
+		trayIcon.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
+				"/image/basketIcon.gif"));
+		
 		trayIcon.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -880,7 +893,10 @@ public class ApplicationWindow {
 		}
 	}
 
-	public void enableWindowButton() {
+	public void defineWindowButton() {
+		closeButton = new Composite(shell, SWT.NONE);
+		closeButton.setBounds(433, 0, 49, 27);
+		
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				if (event.type == SWT.MouseUp) {
@@ -1099,7 +1115,6 @@ public class ApplicationWindow {
 		int taskCompositeIncrement = taskComposite4.getSize().y
 				- taskComposite3LinesHeight;
 		displayLogic.setTaskCompositeIncrement(taskCompositeIncrement);
-
 	}
 
 	public String generateLoggingString() {
