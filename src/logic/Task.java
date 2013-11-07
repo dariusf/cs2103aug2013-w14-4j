@@ -10,11 +10,12 @@ import org.joda.time.format.DateTimeFormatter;
 
 import common.CommandType;
 import common.Constants;
+import common.TaskType;
 
 public class Task implements Comparable<Task>, Cloneable {
 
 	private String name = "";
-	private String type = "";
+	private TaskType type;
 	private ArrayList<String> tags = new ArrayList<String>();
 	private Interval interval = null;
 	private DateTime deadline = null;
@@ -26,11 +27,11 @@ public class Task implements Comparable<Task>, Cloneable {
 		type = command.getTaskType();
 		done = false;
 
-		if (type == Constants.TASK_TYPE_TIMED) {
+		if (type == TaskType.TIMED) {
 			interval = command.getIntervals().get(0);
-		} else if (type == Constants.TASK_TYPE_DEADLINE) {
+		} else if (type == TaskType.DEADLINE) {
 			deadline = command.getDeadline();
-		} else if (type == Constants.TASK_TYPE_FLOATING) {
+		} else if (type == TaskType.TENTATIVE) {
 			possibleIntervals = command.getIntervals();
 		}
 
@@ -42,15 +43,16 @@ public class Task implements Comparable<Task>, Cloneable {
 	public Task(Task task) {
 		this.setName(new String(task.name));
 		this.setTags(new ArrayList<String>(task.tags));
-		this.setType(new String(task.type));
+		this.setType(task.type);
+		
 		if (task.done) {
 			this.markDone();
 		}
-		if (this.type.equals(Constants.TASK_TYPE_TIMED)) {
+		if (this.type == TaskType.TIMED) {
 			this.interval = new Interval(task.interval);
-		} else if (this.type.equals(Constants.TASK_TYPE_DEADLINE)) {
+		} else if (this.type == TaskType.DEADLINE) {
 			this.deadline = new DateTime(task.deadline);
-		} else if (this.type.equals(Constants.TASK_TYPE_FLOATING)) {
+		} else if (this.type == TaskType.TENTATIVE) {
 			this.possibleIntervals = duplicatePossibleIntervals(task.possibleIntervals);
 		}
 
@@ -60,39 +62,39 @@ public class Task implements Comparable<Task>, Cloneable {
 
 	}
 
-	private String tagsToString() {
-		StringBuilder output = new StringBuilder();
-		for (String tag : tags) {
-			output.append(tag + " ");
-		}
-		return output.toString();
-	}
+//	private String tagsToString() {
+//		StringBuilder output = new StringBuilder();
+//		for (String tag : tags) {
+//			output.append(tag + " ");
+//		}
+//		return output.toString();
+//	}
 
-	public String get(String attribute) {
-		String output = "";
-
-		if (attribute == Constants.TASK_ATT_DEADLINE) {
-			output = deadline.toString();
-		} else if (attribute == Constants.TASK_ATT_DONE) {
-			output = done ? "done" : "not done";
-		} else if (attribute == Constants.TASK_ATT_NAME) {
-			output = name;
-		} else if (attribute == Constants.TASK_ATT_TYPE) {
-			output = type;
-		} else if (attribute == Constants.TASK_ATT_STARTTIME) {
-			output = interval.getStartDateTime().toString();
-		} else if (attribute == Constants.TASK_ATT_POSSIBLETIME) {
-			output = possibleIntervals.toString();
-		} else if (attribute == Constants.TASK_ATT_ENDTIME) {
-			output = interval.getEndDateTime().toString();
-		} else if (attribute == Constants.TASK_ATT_TAGS) {
-			output = tagsToString();
-		} else {
-			output = "";
-		}
-
-		return output;
-	}
+//	public String get(String attribute) {
+//		String output = "";
+//
+//		if (attribute == Constants.TASK_ATT_DEADLINE) {
+//			output = deadline.toString();
+//		} else if (attribute == Constants.TASK_ATT_DONE) {
+//			output = done ? "done" : "not done";
+//		} else if (attribute == Constants.TASK_ATT_NAME) {
+//			output = name;
+//		} else if (attribute == Constants.TASK_ATT_TYPE) {
+//			output = type;
+//		} else if (attribute == Constants.TASK_ATT_STARTTIME) {
+//			output = interval.getStartDateTime().toString();
+//		} else if (attribute == Constants.TASK_ATT_POSSIBLETIME) {
+//			output = possibleIntervals.toString();
+//		} else if (attribute == Constants.TASK_ATT_ENDTIME) {
+//			output = interval.getEndDateTime().toString();
+//		} else if (attribute == Constants.TASK_ATT_TAGS) {
+//			output = tagsToString();
+//		} else {
+//			output = "";
+//		}
+//
+//		return output;
+//	}
 
 	// public HashMap<String, String> getAttributes() {
 	// HashMap<String, String> output = new HashMap<>();
@@ -118,11 +120,11 @@ public class Task implements Comparable<Task>, Cloneable {
 		this.name = name;
 	}
 
-	public String getType() {
+	public TaskType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(TaskType type) {
 		this.type = type;
 	}
 
@@ -196,11 +198,18 @@ public class Task implements Comparable<Task>, Cloneable {
 		else if (now.plusDays(1).dayOfYear().equals(dateTime.dayOfYear())) {
 			return ", tomorrow";
 		}
+		else if (now.plusDays(2).dayOfYear().equals(dateTime.dayOfYear())) {
+			return ", the day after";
+		}
 		else if (now.minusDays(1).dayOfYear().equals(dateTime.dayOfYear())) {
 			return ", yesterday";
 		}
 		else if (now.minusDays(2).dayOfYear().equals(dateTime.dayOfYear())) {
 			return ", the day before";
+		}
+		else if (dateTime.isAfter(now.withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
+				&& dateTime.isBefore(now.withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
+			return ", this " + dateTime.dayOfWeek().getAsShortText();
 		}
 		else if (dateTime.isAfter(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
 				&& dateTime.isBefore(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
@@ -287,19 +296,19 @@ public class Task implements Comparable<Task>, Cloneable {
 	}
 
 	public boolean isTimedTask() {
-		return type.equals(Constants.TASK_TYPE_TIMED);
+		return type == TaskType.TIMED;
 	}
 
 	public boolean isDeadlineTask() {
-		return type.equals(Constants.TASK_TYPE_DEADLINE);
+		return type == TaskType.DEADLINE;
 	}
 
 	public boolean isFloatingTask() {
-		return type.equals(Constants.TASK_TYPE_FLOATING);
+		return type == TaskType.TENTATIVE;
 	}
 
 	public boolean isUntimedTask() {
-		return type.equals(Constants.TASK_TYPE_UNTIMED);
+		return type == TaskType.UNTIMED;
 	}
 
 	public String toString() {
@@ -307,12 +316,9 @@ public class Task implements Comparable<Task>, Cloneable {
 		output.append(name);
 
 		if (isDeadlineTask()) {
-			output.append(" before "
-					+ Constants.fullDateTimeFormat.print(deadline));
+			output.append(" before " + Task.format(deadline));
 		} else if (isTimedTask()) {
-			output.append(" from "
-					+ Constants.fullDateTimeFormat.print(getStartTime())
-					+ " to " + Constants.fullDateTimeFormat.print(getEndTime()));
+			output.append(" from " + Task.intervalFormat(getStartTime(), getEndTime()));
 		} else if (isFloatingTask()) {
 			output.append(" on ");
 			int index = 1;
@@ -320,11 +326,7 @@ public class Task implements Comparable<Task>, Cloneable {
 				output.append("(");
 				output.append(index);
 				output.append(") ");
-				output.append(Constants.fullDateTimeFormat.print(slot
-						.getStartDateTime()));
-				output.append(" to ");
-				output.append(Constants.fullDateTimeFormat.print(slot
-						.getEndDateTime()));
+				output.append(Task.intervalFormat(slot.getStartDateTime(), slot.getEndDateTime()));
 				if (index != possibleIntervals.size()) {
 					output.append(" or ");
 				}

@@ -1,7 +1,5 @@
 package ui;
 
-import java.util.EventListener;
-
 import logic.Feedback;
 
 import org.eclipse.swt.widgets.Dialog;
@@ -14,13 +12,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.wb.swt.SWTResourceManager;
-
-import com.sun.xml.internal.ws.Closeable;
 
 import common.CommandType;
 import common.Constants;
@@ -31,8 +25,8 @@ public class HelpDialog extends Dialog {
 	StyledText helpText;
 	boolean isGeneralHelp = false;
 	private Shell dialog;
-	boolean isOpen = false;
 
+	// @author A0101048X
 	public HelpDialog(Shell parent) {
 		super(parent);
 	}
@@ -85,7 +79,6 @@ public class HelpDialog extends Dialog {
 		}
 
 		dialog.open();
-		isOpen = true;
 
 		Listener listener = new Listener() {
 			@Override
@@ -106,12 +99,14 @@ public class HelpDialog extends Dialog {
 		orange.dispose();
 	}
 	
+	// @author: A0097556M
 	public void close () {
-		if (isOpen) {
+		if (!dialog.isDisposed()) {
 			dialog.close();
 		}
-		isOpen = false;
 	}
+	
+	// @author A0101048X
 	private int calculateYCoordinateForShellPosition(
 			Rectangle parentShellBounds) {
 		int parentYCoordinate = parentShellBounds.y;
@@ -189,7 +184,7 @@ public class HelpDialog extends Dialog {
 		case EXIT:
 			return Constants.HELP_EXIT;
 		case GOTO:
-			return "dummy";
+			return Constants.HELP_GOTO;
 		default:
 			isGeneralHelp = true;
 			return Constants.HELP_GENERAL;

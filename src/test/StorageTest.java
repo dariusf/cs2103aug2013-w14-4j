@@ -18,6 +18,7 @@ import org.joda.time.format.DateTimeParser;
 import org.junit.Test;
 
 import common.Constants;
+import common.TaskType;
 import common.undo.DoublyLinkedList;
 
 
@@ -62,7 +63,7 @@ public class StorageTest {
 	private static Task deadlineTaskCreator() {
 		Task result = new Task();
 		result.setName("deadlineTask");
-		result.setType(Constants.TASK_TYPE_DEADLINE);
+		result.setType(TaskType.DEADLINE);
 		result.setDeadline(deadlineTime);
 		
 		return result;
@@ -71,7 +72,7 @@ public class StorageTest {
 	private static Task timedTaskCreator() {
 		Task result = new Task();
 		result.setName("timedTask");
-		result.setType(Constants.TASK_TYPE_TIMED);
+		result.setType(TaskType.TIMED);
 		result.setInterval(new Interval(startTime, endTime));
 		
 		return result;
@@ -80,7 +81,7 @@ public class StorageTest {
 	private static Task untimedTaskCreator() {
 		Task result = new Task();
 		result.setName("timedTask");
-		result.setType(Constants.TASK_TYPE_UNTIMED);
+		result.setType(TaskType.UNTIMED);
 		
 		return result;
 	}
@@ -88,7 +89,7 @@ public class StorageTest {
 	private static Task taggedTaskCreator() {
 		Task result = new Task();
 		result.setName("timedTask");
-		result.setType(Constants.TASK_TYPE_UNTIMED);
+		result.setType(TaskType.UNTIMED);
 		result.setTags(tags);
 		
 		return result;
@@ -97,7 +98,7 @@ public class StorageTest {
 	private static Task floatingTaskCreator() {
 		Task result = new Task();
 		result.setName("floatingTask");
-		result.setType(Constants.TASK_TYPE_FLOATING);
+		result.setType(TaskType.TENTATIVE);
 		result.setPossibleTime(intervals);
 		
 		return result;

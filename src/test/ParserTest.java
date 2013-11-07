@@ -62,7 +62,7 @@ public class ParserTest {
 		// Adding a bunch of symbols
 		actual = new Parser().parse("add !@#$%^&*({}][]\\|';.,><;");
 		expected = new Command(CommandType.ADD);
-		expected.setDescription("! ' .");
+		expected.setDescription("'");
 		assertEquals(actual, expected);
 
 		// Correct format
@@ -132,6 +132,58 @@ public class ParserTest {
 		actual = new Parser().parse("  add  go  home   at  13:00 pm  ");
 		assertEquals(actual, expected);
 		
+		// Time aliases
+		// morning
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go running");
+		intervals = new ArrayList<>();
+		start = now.withDayOfWeek(DateTimeConstants.SUNDAY).withTime(8, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = new Parser().parse("add go running on sunday morning");
+		assertEquals(actual, expected);
+		
+		// evening
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("buy dinner in the");
+		intervals = new ArrayList<>();
+		start = now.plusDays(1).withTime(19, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = new Parser().parse("add buy dinner in the evening");
+		assertEquals(actual, expected);
+		
+		// afternoon
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("take nap");
+		intervals = new ArrayList<>();
+		start = now.plusDays(1).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = new Parser().parse("add take afternoon nap");
+		assertEquals(actual, expected);
+		
+		// midnight
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("submit assignment");
+		intervals = new ArrayList<>();
+		start = now.plusDays(1).withTime(0, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = new Parser().parse("add submit assignment at midnight tomorrow");
+		assertEquals(actual, expected);
+		
+		// noon
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go to school");
+		expected.setDeadline(now.withTime(12, 0, 0, 0));
+		actual = new Parser().parse("add go to school by noon");
+		assertEquals(actual, expected);
+		
 		// Quotes
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home at 10:00 pm");
@@ -177,7 +229,7 @@ public class ParserTest {
 
 		// Symbols
 		expected = new Command(CommandType.ADD);
-		expected.setDescription("go home yeah!");
+		expected.setDescription("go home yeah");
 		intervals = new ArrayList<>();
 		start = now.plusDays(1).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
@@ -264,6 +316,17 @@ public class ParserTest {
 		actual = new Parser().parse("add event today");
 		assertEquals(actual, expected);
 		
+		// yesterday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("event");
+		intervals = new ArrayList<>();
+		start = now.minusDays(1).withTime(0, 0, 0, 0);
+		end = start.withTime(23, 59, 0, 0);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = new Parser().parse("add event yesterday");
+		assertEquals(actual, expected);
+
 		// tonight
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("event");
@@ -660,17 +723,16 @@ public class ParserTest {
 		actual = new Parser().parse("add task 29 feb 12");
 		assertEquals(actual, expected);
 		
-//		expected = new Command(CommandType.INVALID);
-//		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_DATE);
-//		
-//		expected.setDescription("go home");
-//		intervals = new ArrayList<>();
-//		start = now.plusWeeks(2).withTime(13, 0, 0, 0);
-//		end = start.plusHours(1);
-//		intervals.add(new Interval(start, end));
-//		expected.setIntervals(intervals);
-//		actual = new Parser().parse("add go home next fortnight 1pm");
-//		assertEquals(actual, expected);
+		// Invalid date range
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("task");
+		intervals = new ArrayList<>();
+		start = now.withDate(2013, 10, 6).withTime(0, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = new Parser().parse("add task 6 oct to 4 oct");
+		assertEquals(actual, expected);
 	}
 
 	@Test
@@ -869,23 +931,44 @@ public class ParserTest {
 	@Test
 	public void searchCommandTests() {
 		Command expected, actual;
-		ArrayList<String> tags;
+		ArrayList<String> tags, searchTerms;
 		
 		expected = new Command(CommandType.SEARCH);
 		actual = new Parser().parse("search");
 		assertEquals(expected, actual);
 		
 		expected = new Command(CommandType.SEARCH);
-		expected.setSearchString("hello there 12/2");
+		searchTerms = new ArrayList<String>();
+		searchTerms.add("hello");
+		searchTerms.add("there");
+		searchTerms.add("12/2");
+		expected.setSearchTerms(searchTerms);
 		actual = new Parser().parse("search hello there 12/2");
 		assertEquals(expected, actual);
 
 		expected = new Command(CommandType.SEARCH);
-		expected.setSearchString("hello there #yellow");
+		searchTerms = new ArrayList<String>();
+		searchTerms.add("hello");
+		searchTerms.add("there");
+		expected.setSearchTerms(searchTerms);
+		tags = new ArrayList<String>();
+		tags.add("#yellow");
+		expected.setTags(tags);
 		actual = new Parser().parse("search hello there #yellow");
 		assertEquals(expected, actual);
 
+		expected = new Parser().parse("search #yellow hello there");
+		actual = new Parser().parse("search hello there #yellow");
+		assertEquals(expected, actual);
+
+		expected = new Parser().parse("search there hello #yellow");
+		actual = new Parser().parse("search hello there #yellow");
+		assertNotSame(expected, actual);
+
 		expected = new Command(CommandType.SEARCH);
+		searchTerms = new ArrayList<String>();
+		searchTerms.add("whatever");
+		expected.setSearchTerms(searchTerms);
 		tags = new ArrayList<String>();
 		tags.add("#yellow");
 		tags.add("#blue");

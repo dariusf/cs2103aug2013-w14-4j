@@ -7,6 +7,9 @@ import org.joda.time.DateTime;
 
 public class TimeToken extends Token {
 
+	private static final String REGEX_ALIAS_TIME = "(midnight|noon|morning|afternoon|evening)";
+	private static Pattern aliasTimePattern = Pattern.compile(REGEX_ALIAS_TIME, Pattern.CASE_INSENSITIVE);
+
 	private static final String REGEX_TIME = "(((1[012]|[1-9])([:.]([0-5][0-9]))?[ ]*(am|pm))|((2[0-3]|[01]?[0-9])[:.]?([0-5][0-9])))";
 	private static Pattern timePattern = Pattern.compile(REGEX_TIME, Pattern.CASE_INSENSITIVE);
 	
@@ -18,7 +21,43 @@ public class TimeToken extends Token {
 		super(contents);
 
 		if (matchTime(contents)) return;
+		else if (matchAliasTime(contents)) return;
 		else assert false : "Time token contents did not match anything; possibly a regex bug in either DateToken or lexer";
+	}
+
+	private boolean matchAliasTime(String contents) {
+		Matcher matcher = aliasTimePattern.matcher(contents); 
+		if (!matcher.find()) return false;
+		
+		// Capturing groups:
+		
+		// 1: whole
+		
+		String matchedWord = matcher.group(1);
+
+		switch (matchedWord) {
+		case "midnight":
+			hour = 0;
+			break;
+		case "noon":
+			hour = 12;
+			break;
+		case "morning":
+			hour = 8;
+			break;
+		case "afternoon":
+			hour = 13;
+			break;
+		case "evening":
+			hour = 19;
+			break;
+		default:
+			break;
+		}
+		
+		minute = 0;
+		
+		return true;
 	}
 
 	private boolean matchTime(String contents) {
@@ -38,16 +77,6 @@ public class TimeToken extends Token {
 		// 7: 24-hour time
 		// 8: hour
 		// 9: minute
-		
-//		String aString = matcher.group(1);
-//		aString = matcher.group(2);
-//		aString = matcher.group(3);
-//		aString = matcher.group(4);
-//		aString = matcher.group(5);
-//		aString = matcher.group(6);
-//		aString = matcher.group(7);
-//		aString = matcher.group(8);
-//		aString = matcher.group(9);
 
 		if (matcher.group(2) == null) {
 			// 24 hour time matched
@@ -57,7 +86,7 @@ public class TimeToken extends Token {
 		else {
 			// 12 hour time matched
 			hour = Integer.parseInt(matcher.group(3));
-			if (matcher.group(4) != null) {
+			if (matcher.group(5) != null) {
 				minute = Integer.parseInt(matcher.group(5));
 			}
 			else {

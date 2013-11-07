@@ -22,16 +22,7 @@ public class Parser {
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
-
-		//		test("add event from 10:00 am until 11am");
-		//        test("edit 1 go home at 10:00 am");
-		//        test("delete 1");
-		//        test("search hi there");
-		//        test("clear");
-		//        test("clear done");
-		//        test("clear aklsjdksd");
-		//        test("help done asjdlkasd");
-
+		
 		// Mini REPL for testing
 		java.util.Scanner scanner = new java.util.Scanner(System.in);
 		while(true) {
@@ -159,7 +150,7 @@ public class Parser {
 		case FINALISE:
 			return createFinaliseCommand();
 		case SEARCH:
-			return createSearchStringCommand();
+			return createSearchCommand();
 		case HELP:
 			return createHelpCommand();
 		case CLEAR:
@@ -449,44 +440,26 @@ public class Parser {
 		return command;
 	}
 
-	private Command createSearchStringCommand() {
-		Command command;
+	private Command createSearchCommand() {
+		Command command = new Command(CommandType.SEARCH);
+		ArrayList<String> tags = new ArrayList<String>();
+		ArrayList<String> searchTerms = new ArrayList<String>();
 		
-		if (!hasTokensLeft()) {
-			command = new Command(CommandType.SEARCH);
-			return command;
-		}
-		
-		Token firstToken = getCurrentToken();
-		
-		if (firstToken instanceof WordToken) {
-			StringBuilder toSearch = new StringBuilder();
+		while (hasTokensLeft()) {
+			Token currentToken = getCurrentToken();
 			
-			while(hasTokensLeft()) {
-				toSearch.append(getCurrentToken().contents + " ");
-				nextToken();
+			if (currentToken instanceof TagToken) {
+				tags.add(currentToken.contents);
 			}
-
-			command = new Command(CommandType.SEARCH);
-			command.setSearchString(toSearch.toString().trim());
-		}
-		else if (firstToken instanceof TagToken) {
-			ArrayList<String> tags = new ArrayList<String>();
-			
-			while (hasTokensLeft()) {
-				Token token = getCurrentToken();
-				if (token instanceof TagToken) {
-					tags.add(token.contents);
-				}
-				nextToken();
+			else {
+				searchTerms.add(currentToken.contents);
 			}
 			
-			command = new Command(CommandType.SEARCH);
-			command.setTags(tags);
+			nextToken();
 		}
-		else {
-			command = new Command(CommandType.SEARCH);
-		}
+		
+		command.setTags(tags);
+		command.setSearchTerms(searchTerms);
 		
 		return command;
 	}

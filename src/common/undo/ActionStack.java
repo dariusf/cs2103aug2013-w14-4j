@@ -79,16 +79,13 @@ public class ActionStack {
 	
 	public void finaliseActions() {
 		if (currentActionSet.isEmpty()) {
-			System.out.println("empty stack");
 			return;
 		}
-		System.out.println("push success");
 		actionStack.pushHere(currentActionSet);
 		currentActionSet = new ActionSet();
 	}
 	
 	public void flushCurrentActionSet () {
-		System.out.println("flush");
 		currentActionSet = new ActionSet();
 	}
 	

@@ -1,6 +1,5 @@
 package logic;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,6 +13,7 @@ import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
 import common.InvalidCommandReason;
+import common.TaskType;
 import common.undo.ActionStack;
 
 import parser.Parser;
@@ -28,22 +28,42 @@ public class Logic {
 	protected Command currentHelpCommand = null;
 	protected ActionStack actionStack = ActionStack.getInstance();
 
-	private FileWriter inputLogger;
-
-	// Constructor
 	public Logic() throws IOException {
 		storage = new Storage(Constants.DEFAULT_FILENAME);
-		this.executeCommand("display");
+		this.executeCommand(Constants.COMMAND_DISPLAY);
 	}
 
-	// Main execution methods
 	public ActiveFeedback activeFeedback(String userInput) {
 		Command command = new Parser().parse(userInput);
 		return new ActiveFeedback(command);
 	}
 
+	// private ActiveFeedback activeSearchTasks(Command command) {
+	// return new ActiveFeedback(command);
+	// }
+	//
+	// private ActiveFeedback activeFinalisaTask(Command command) {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// private ActiveFeedback activeMarkDone(Command command) {
+	// return new ActiveFeedback(command);
+	// }
+	//
+	// private ActiveFeedback activeDeleteTask(Command command) {
+	// return new ActiveFeedback(command);
+	// }
+	//
+	// private ActiveFeedback activeEditTask(Command command) {
+	// return new ActiveFeedback(command);
+	// }
+	//
+	// private ActiveFeedback activeAddTask(Command command) {
+	// return new ActiveFeedback(command);
+	// }
+
 	public Feedback executeCommand(String userCommand) {
-		logCommand(userCommand);
 		Command command = new Parser().parse(userCommand);
 		CommandType commandType = command.getCommandType();
 
@@ -80,85 +100,37 @@ public class Logic {
 			return invalidCommand(command);
 		}
 	}
-
-	// For testing
-
-	private void logCommand(String commandString) {
-		if (inputLogger == null) {
-			try {
-				inputLogger = new FileWriter("inputLog.txt", true);
-				inputLogger.append(new DateTime()
-						.toString(Constants.DATE_TIME_FORMAT) + "\n\n");
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-
-		try {
-			inputLogger.append(commandString + "\n");
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
-
-	private void endLogging() {
-		if (inputLogger != null) {
-			try {
-				inputLogger.append("\n" + "End of log." + "\n"
-						+ new DateTime().toString(Constants.DATE_TIME_FORMAT)
-						+ "\n\n-----------------------\n\n");
-				inputLogger.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-	}
-
-	// Main functions for all command types
-
-	public Feedback invalidCommand(Command command) {
+	
+	public Feedback invalidCommand(Command command){
 		InvalidCommandReason error = command.getInvalidCommandReason();
 		Feedback feedback = null;
 		switch (error) {
 		case EMPTY_COMMAND:
-			feedback = new Feedback(Constants.SC_EMPTY_COMMAND_ERROR,
-					CommandType.INVALID);
+			feedback = new Feedback(Constants.SC_EMPTY_COMMAND_ERROR, CommandType.INVALID);
 			break;
 		case INVALID_DATE:
-			feedback = new Feedback(Constants.SC_INVALID_DATE_ERROR,
-					CommandType.INVALID);
+			feedback = new Feedback(Constants.SC_INVALID_DATE_ERROR, CommandType.INVALID);
 			break;
 		case INVALID_PAGE_INDEX:
-			feedback = new Feedback(Constants.SC_INVALID_PAGE_INDEX_ERROR,
-					CommandType.INVALID);
+			feedback = new Feedback(Constants.SC_INVALID_PAGE_INDEX_ERROR, CommandType.INVALID);
 			break;
 		case INVALID_SEARCH_PARAMETERS:
-			feedback = new Feedback(
-					Constants.SC_INVALID_SEARCH_PARAMETERS_ERROR,
-					CommandType.INVALID);
+			feedback = new Feedback(Constants.SC_INVALID_SEARCH_PARAMETERS_ERROR, CommandType.INVALID);
 			break;
 		case INVALID_TASK_INDEX:
-			feedback = new Feedback(Constants.SC_INVALID_TASK_INDEX_ERROR,
-					CommandType.INVALID);
+			feedback = new Feedback(Constants.SC_INVALID_TASK_INDEX_ERROR, CommandType.INVALID);
 			break;
 		case INVALID_TIMESLOT_INDEX:
-			feedback = new Feedback(Constants.SC_INVALID_TIMESLOT_INDEX_ERROR,
-					CommandType.INVALID);
+			feedback = new Feedback(Constants.SC_INVALID_TIMESLOT_INDEX_ERROR, CommandType.INVALID);
 			break;
 		case TOO_FEW_ARGUMENTS:
-			feedback = new Feedback(Constants.SC_TOO_FEW_ARGUMENTS_ERROR,
-					CommandType.INVALID);
+			feedback = new Feedback(Constants.SC_TOO_FEW_ARGUMENTS_ERROR, CommandType.INVALID);
 			break;
 		case UNRECOGNIZED_COMMAND:
-			feedback = new Feedback(Constants.SC_UNRECOGNIZED_COMMAND_ERROR,
-					CommandType.INVALID);
+			feedback = new Feedback(Constants.SC_UNRECOGNIZED_COMMAND_ERROR, CommandType.INVALID);
 			break;
 		default:
-			feedback = new Feedback(Constants.SC_INVALID_COMMAND_ERROR,
-					CommandType.INVALID);
+			feedback = new Feedback(Constants.SC_INVALID_COMMAND_ERROR, CommandType.INVALID);
 			break;
 		}
 		return feedback;
@@ -223,7 +195,7 @@ public class Logic {
 			}
 		} else {
 
-			String finalType = command.getTaskType();
+			TaskType finalType = command.getTaskType();
 
 			if (!command.getDescription().isEmpty()) {
 				taskToEdit.setName(command.getDescription());
@@ -234,14 +206,13 @@ public class Logic {
 				originalTags.addAll(command.getTags());
 			}
 
-			if (finalType == Constants.TASK_TYPE_DEADLINE) {
-				taskToEdit.setType(Constants.TASK_TYPE_DEADLINE);
+			taskToEdit.setType(finalType);
+			
+			if (finalType == TaskType.DEADLINE) {
 				taskToEdit.setDeadline(command.getDeadline());
-			} else if (finalType == Constants.TASK_TYPE_TIMED) {
-				taskToEdit.setType(Constants.TASK_TYPE_TIMED);
+			} else if (finalType == TaskType.TIMED) {
 				taskToEdit.setInterval(command.getIntervals().get(0));
-			} else if (finalType == Constants.TASK_TYPE_FLOATING) {
-				taskToEdit.setType(Constants.TASK_TYPE_FLOATING);
+			} else if (finalType == TaskType.TENTATIVE) {
 				taskToEdit.setPossibleTime(command.getIntervals());
 			}
 
@@ -259,7 +230,6 @@ public class Logic {
 
 		return feedback;
 	}
-
 
 	public int getNumberOfTasks() {
 		if (isDynamicIndex) {
@@ -403,23 +373,21 @@ public class Logic {
 	}
 
 	protected Feedback deleteTask(Command command) {
-		int inputIndex = command.getTaskIndex();
-		int taskIndex = inputIndex;
-
-		if (inputIndex > storage.size() || inputIndex <= 0
-				|| (isDynamicIndex && !temporaryMapping.containsKey(inputIndex))) {
-			return new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
-					CommandType.EDIT);
-		} else if (isDynamicIndex && temporaryMapping.containsKey(inputIndex)) {
-			taskIndex = temporaryMapping.get(inputIndex);
+		int taskIndex = command.getTaskIndex();
+		if (isDynamicIndex) {
+			taskIndex = temporaryMapping.get(taskIndex);
 		}
 
 		Feedback feedback = null;
-
-		storage.remove(taskIndex);
-		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
-		feedback.setTaskIndex(taskIndex);
-		isDynamicIndex = false;
+		if (taskIndex <= storage.size()) {
+			storage.remove(taskIndex);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
+			feedback.setTaskIndex(taskIndex);
+			isDynamicIndex = false;
+		} else {
+			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
+					CommandType.DELETE);
+		}
 
 		return feedback;
 	}
@@ -515,7 +483,7 @@ public class Logic {
 		}
 
 		Interval newInterval = oldIntervalList.get(taskSlotIndex - 1);
-		taskToEdit.setType(Constants.TASK_TYPE_TIMED);
+		taskToEdit.setType(TaskType.TIMED);
 		taskToEdit.setInterval(newInterval);
 
 		storage.replace(taskIndex, taskToEdit);
@@ -623,8 +591,9 @@ public class Logic {
 
 	protected Feedback searchTasks(Command command) {
 		Feedback feedback = null;
-		String searchString = command.getSearchString();
+		
 		ArrayList<String> searchTags = command.getTags();
+		ArrayList<String> searchTerms = command.getSearchTerms();
 
 		ArrayList<Task> validTasks = new ArrayList<Task>();
 		ArrayList<Integer> validTasksAbsoluteIndices = new ArrayList<Integer>();
@@ -649,7 +618,7 @@ public class Logic {
 		} else {
 			for (int i = 0; i < storage.size(); i++) {
 				Task currentTask = storageIterator.next();
-				if (isWordInString(searchString, currentTask.getName())) {
+				if (areAllWordsInString(searchTerms, currentTask.getName())) {
 					validTasks.add(currentTask);
 					validTasksAbsoluteIndices.add(i + 1);
 				}
@@ -670,8 +639,6 @@ public class Logic {
 	}
 
 	protected Feedback exit() {
-		endLogging();
-
 		Feedback feedback = new Feedback(Constants.SC_SUCCESS, CommandType.EXIT);
 
 		try {
@@ -681,102 +648,6 @@ public class Logic {
 			e.printStackTrace();
 		}
 		return feedback;
-	}
-
-	// Helper functions
-
-	public int getNumberOfTasks() {
-		if (isDynamicIndex) {
-			return temporaryMapping.keySet().size();
-		} else {
-			return storage.size();
-		}
-	}
-
-	public int getNumberOfRemainingTasks() {
-		int count = 0;
-		for (Task task : storage) {
-			if (!task.isDone()) {
-				count++;
-			}
-		}
-		return count;
-	}
-
-	public int getNumberOfTasksToday() {
-		int count = 0;
-		DateTime today = new DateTime();
-		for (Task task : storage) {
-			if (!task.isDone() && task.isOnDate(today)) {
-				count++;
-			}
-		}
-		return count;
-
-	}
-
-	public ArrayList<Task> getTasksToDisplay() {
-		ArrayList<Task> output = new ArrayList<Task>();
-
-		if (!isDynamicIndex) {
-			Iterator<Task> storageIterator = storage.iterator();
-			while (storageIterator.hasNext()) {
-				Task task = storageIterator.next();
-				output.add(task);
-			}
-		} else {
-			for (Integer index : temporaryMapping.keySet()) {
-				Task task = storage.get(temporaryMapping.get(index));
-				output.add(task);
-			}
-		}
-		return output;
-	}
-
-	public ArrayList<Task> getTasksToDisplay(DisplayMode displayMode,
-			DateTime dateTime) {
-		Command displayCommand = new Command(CommandType.DISPLAY);
-		displayCommand.setDisplayMode(displayMode);
-		if (displayMode == displayMode.DATE) {
-			displayCommand.setDisplayDateTime(dateTime);
-		}
-		displayTasks(displayCommand);
-		return getTasksToDisplay();
-	}
-
-	public boolean displayCondition(Command command, Task task) {
-		DisplayMode displayMode = command.getDisplayMode();
-		DateTime displayDate = null;
-		switch (displayMode) {
-		case DATE:
-			displayDate = command.getDisplayDateTime();
-			return task.isOnDate(displayDate);
-		case TODAY:
-			displayDate = new DateTime();
-			return task.isOnDate(displayDate);
-		case TOMORROW:
-			displayDate = new DateTime();
-			displayDate = displayDate.plusDays(1);
-			return task.isOnDate(displayDate);
-		case ALL:
-			return true;
-		case TODO:
-			return !task.isDone();
-		case DONE:
-			return task.isDone();
-		case TIMED:
-			return task.isTimedTask();
-		case DEADLINE:
-			return task.isDeadlineTask();
-		case FLOATING:
-			return task.isFloatingTask();
-		case UNTIMED:
-			return task.isUntimedTask();
-		case OVERDUE:
-			return task.isOverdue();
-		default:
-			return !task.isDone();
-		}
 	}
 
 	protected boolean isTaskOver(Task task) {
@@ -808,17 +679,26 @@ public class Logic {
 		return time.compareTo(new DateTime()) < 0;
 	}
 
+	protected boolean areAllWordsInString(ArrayList<String> words, String string) {
+		for (String word : words) {
+			if (!isWordInString(word, string)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	protected boolean isWordInString(String word, String string) {
 		String lowerCaseString = string.toLowerCase();
 		String lowerCaseWord = word.toLowerCase();
 		return lowerCaseString.indexOf(lowerCaseWord) != -1;
 	}
 
-	public boolean isTagInTask(String tag, Task task) {
+	public boolean isTagInTask(String tagInQuestion, Task task) {
 		ArrayList<String> tags = task.getTags();
 		boolean result = false;
-		for (String string : tags) {
-			if (tag.equalsIgnoreCase(string)) {
+		for (String tag : tags) {
+			if (isWordInString(tagInQuestion, tag)) {
 				result = true;
 			}
 		}

@@ -6,6 +6,7 @@ import common.Constants;
 import common.DisplayMode;
 import common.ClearMode;
 import common.InvalidCommandReason;
+import common.TaskType;
 
 public class Command {
 	private CommandType commandType = null;
@@ -21,7 +22,7 @@ public class Command {
 	
 	private ClearMode clearMode;
 	private CommandType helpCommand;
-	private String searchString = "";
+	private ArrayList<String> searchTerms = new ArrayList<>();
 	private InvalidCommandReason invalidCommandReason;
 	private DisplayMode displayMode;
 	private DateTime displayDateTime = null;
@@ -99,12 +100,12 @@ public class Command {
 		this.helpCommand = helpCommand;
 	}
 
-	public String getSearchString() {
-		return searchString;
+	public ArrayList<String> getSearchTerms() {
+		return searchTerms;
 	}
 
-	public void setSearchString(String searchString) {
-		this.searchString = searchString;
+	public void setSearchTerms(ArrayList<String> searchTerms) {
+		this.searchTerms = searchTerms;
 	}
 
 	public InvalidCommandReason getInvalidCommandReason() {
@@ -118,19 +119,19 @@ public class Command {
 	// TODO: might want to move to a higher level,
 	// this is just here for now to illustrate how these
 	// fields alone can define the task type clearly
-	public String getTaskType() {
+	public TaskType getTaskType() {
 		assert commandType == CommandType.ADD || commandType == CommandType.EDIT;
 		if (deadline != null) {
-			return Constants.TASK_TYPE_DEADLINE;
+			return TaskType.DEADLINE;
 		}
 		else if (intervals.size() == 0) {
-			return Constants.TASK_TYPE_UNTIMED;
+			return TaskType.UNTIMED;
 		}
 		else if (intervals.size() == 1) {
-			return Constants.TASK_TYPE_TIMED;
+			return TaskType.TIMED;
 		}
 		else {
-			return Constants.TASK_TYPE_FLOATING;
+			return TaskType.TENTATIVE;
 		}
 	}
 	
@@ -178,7 +179,7 @@ public class Command {
 				+ intervals + ", tags=" + tags + ", taskIndex=" + taskIndex
 				+ ", pageIndex=" + pageIndex + ", timeslotIndex="
 				+ timeslotIndex + ", clearMode=" + clearMode + ", helpCommand="
-				+ helpCommand + ", searchString=" + searchString
+				+ helpCommand + ", searchString=" + searchTerms
 				+ ", invalidCommandReason=" + invalidCommandReason
 				+ ", displayMode=" + displayMode + ", displayDateTime="
 				+ displayDateTime + ", clearDateTime=" + clearDateTime + "]";
@@ -230,10 +231,10 @@ public class Command {
 			return false;
 		if (pageIndex != other.pageIndex)
 			return false;
-		if (searchString == null) {
-			if (other.searchString != null)
+		if (searchTerms == null) {
+			if (other.searchTerms != null)
 				return false;
-		} else if (!searchString.equals(other.searchString))
+		} else if (!searchTerms.equals(other.searchTerms))
 			return false;
 		if (tags == null) {
 			if (other.tags != null)
