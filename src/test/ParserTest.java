@@ -62,7 +62,7 @@ public class ParserTest {
 		// Adding a bunch of symbols
 		actual = new Parser().parse("add !@#$%^&*({}][]\\|';.,><;");
 		expected = new Command(CommandType.ADD);
-		expected.setDescription("! ' .");
+		expected.setDescription("'");
 		assertEquals(actual, expected);
 
 		// Correct format
@@ -229,7 +229,7 @@ public class ParserTest {
 
 		// Symbols
 		expected = new Command(CommandType.ADD);
-		expected.setDescription("go home yeah!");
+		expected.setDescription("go home yeah");
 		intervals = new ArrayList<>();
 		start = now.plusDays(1).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);

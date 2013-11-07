@@ -39,9 +39,9 @@ StandardTime = (((1[012]|[1-9])([:.]([0-5][0-9]))?[ ]*(am|pm))|((2[0-3]|[01]?[0-
 Date = {DateQualifier} ({StandardDate}|{RelativeDate}|{RelativeDayDate}|{AliasDate}|{MixedDate})
 Time = {TimeQualifier} ({StandardTime}|{AliasTime})
 
-Word = [-:./'!?a-zA-Z0-9]+
+Word = [-:/'a-zA-Z0-9]+
 Tag = #{Word}
-QuotedWords = "\""[- :./'!?a-zA-Z0-9]+"\""
+QuotedWords = "\""[- :/'a-zA-Z0-9]+"\""
 
 %%
 
