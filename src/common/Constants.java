@@ -155,6 +155,11 @@ public class Constants {
 	public static final String HELP_EXIT = "Exiting\n"
 			+ "Perform this action if you wish to close the application.\n\n"
 			+ "Command format:\n" + "'exit'";
+	public static final String HELP_GOTO = "Navigating using 'goto'\n"
+			+ "Navigates to the page specified. You may also use the hotkeys page up and page down to go to the previous or next page.\n\n"
+			+ "Command format:\n"
+			+ "Start with the keyword 'goto' followed by the page number\n\n"
+			+ "Example:\n" + "goto 2";
 
 	// Please keep success code numbers between 10 and 19.
 	public static final int SC_SUCCESS = 10;

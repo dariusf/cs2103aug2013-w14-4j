@@ -188,7 +188,7 @@ public class HelpDialog extends Dialog {
 		case EXIT:
 			return Constants.HELP_EXIT;
 		case GOTO:
-			return "dummy";
+			return Constants.HELP_GOTO;
 		default:
 			isGeneralHelp = true;
 			return Constants.HELP_GENERAL;
