@@ -648,25 +648,13 @@ public class ApplicationWindow {
 							Interval interval = possibleIntervals.get(0);
 							if (timeSlot == 1) {
 								String description = "on (1) "
-										+ Constants.fullDateTimeFormat
-												.print(interval
-														.getStartDateTime())
-										+ " to "
-										+ Constants.fullDateTimeFormat
-												.print(interval
-														.getEndDateTime());
+										+ Task.intervalFormat(interval.getStartDateTime(), interval.getEndDateTime());;
 								currentComposite
 										.setDescriptionAtLine(description,
 												timeSlot);
 							} else {
 								String description = "or ("+timeSlot+") "
-										+ Constants.fullDateTimeFormat
-												.print(interval
-														.getStartDateTime())
-										+ " to "
-										+ Constants.fullDateTimeFormat
-												.print(interval
-														.getEndDateTime());
+										+ Task.intervalFormat(interval.getStartDateTime(), interval.getEndDateTime());
 								currentComposite
 										.setDescriptionAtLine(description,
 												timeSlot);
@@ -684,17 +672,12 @@ public class ApplicationWindow {
 					StringBuilder descriptionBuilder = new StringBuilder();
 					if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
 						descriptionBuilder.append("by "
-								+ Constants.fullDateTimeFormat
-										.print(executedCommand.getDeadline()));
+								+ Task.format(executedCommand.getDeadline()));
 					} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
 						Interval taskInterval = executedCommand.getIntervals()
 								.get(0);
-						descriptionBuilder.append("from "
-								+ Constants.fullDateTimeFormat
-										.print(taskInterval.getStartDateTime())
-								+ " to "
-								+ Constants.fullDateTimeFormat
-										.print(taskInterval.getEndDateTime()));
+						descriptionBuilder.append("from ");
+						descriptionBuilder.append(Task.intervalFormat(taskInterval.getStartDateTime(), taskInterval.getEndDateTime()));
 					} else if (finalType.equals(Constants.TASK_TYPE_TENTATIVE)) {
 						descriptionBuilder.append("on ");
 						ArrayList<Interval> possibleIntervals = executedCommand
@@ -704,13 +687,7 @@ public class ApplicationWindow {
 							descriptionBuilder.append("(");
 							descriptionBuilder.append(index);
 							descriptionBuilder.append(") ");
-							descriptionBuilder
-									.append(Constants.fullDateTimeFormat
-											.print(slot.getStartDateTime()));
-							descriptionBuilder.append(" to ");
-							descriptionBuilder
-									.append(Constants.fullDateTimeFormat
-											.print(slot.getEndDateTime()));
+							descriptionBuilder.append(Task.intervalFormat(slot.getStartDateTime(), slot.getEndDateTime()));
 							if (index != possibleIntervals.size()) {
 								descriptionBuilder.append("\nor ");
 							}

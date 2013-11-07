@@ -314,12 +314,9 @@ public class Task implements Comparable<Task>, Cloneable {
 		output.append(name);
 
 		if (isDeadlineTask()) {
-			output.append(" before "
-					+ Constants.fullDateTimeFormat.print(deadline));
+			output.append(" before " + Task.format(deadline));
 		} else if (isTimedTask()) {
-			output.append(" from "
-					+ Constants.fullDateTimeFormat.print(getStartTime())
-					+ " to " + Constants.fullDateTimeFormat.print(getEndTime()));
+			output.append(" from " + Task.intervalFormat(getStartTime(), getEndTime()));
 		} else if (isFloatingTask()) {
 			output.append(" on ");
 			int index = 1;
@@ -327,11 +324,7 @@ public class Task implements Comparable<Task>, Cloneable {
 				output.append("(");
 				output.append(index);
 				output.append(") ");
-				output.append(Constants.fullDateTimeFormat.print(slot
-						.getStartDateTime()));
-				output.append(" to ");
-				output.append(Constants.fullDateTimeFormat.print(slot
-						.getEndDateTime()));
+				output.append(Task.intervalFormat(slot.getStartDateTime(), slot.getEndDateTime()));
 				if (index != possibleIntervals.size()) {
 					output.append(" or ");
 				}
