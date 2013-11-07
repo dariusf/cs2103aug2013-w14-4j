@@ -29,6 +29,7 @@ import org.joda.time.DateTime;
 import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
+import common.TaskType;
 import common.undo.Action;
 import common.undo.ActionStack;
 
@@ -583,20 +584,20 @@ public class ApplicationWindow {
 
 					dummyTaskComposite.setHighlighted(true);
 					
-					String finalType = executedCommand.getTaskType();
+					TaskType finalType = executedCommand.getTaskType();
 					if (!executedCommand.getDescription().isEmpty()) {
 						dummyTaskComposite.setTaskName(executedCommand
 								.getDescription());
 					}
 					StringBuilder descriptionBuilder = new StringBuilder();
-					if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
+					if (finalType.equals(TaskType.DEADLINE)) {
 						descriptionBuilder.append("by " + Task.format(executedCommand.getDeadline()));
-					} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
+					} else if (finalType.equals(TaskType.TIMED)) {
 						Interval taskInterval = executedCommand.getIntervals()
 								.get(0);
 						descriptionBuilder.append("from "
 								+ Task.intervalFormat(taskInterval.getStartDateTime(), taskInterval.getEndDateTime()));
-					} else if (finalType.equals(Constants.TASK_TYPE_TENTATIVE)) {
+					} else if (finalType.equals(TaskType.TENTATIVE)) {
 						descriptionBuilder.append("on ");
 						ArrayList<Interval> possibleIntervals = executedCommand
 								.getIntervals();
@@ -615,10 +616,10 @@ public class ApplicationWindow {
 					}
 					ArrayList<String> tags = executedCommand.getTags();
 					if (tags.size() > 0) {
-						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
-								| finalType.equals(Constants.TASK_TYPE_TIMED)
+						if (finalType.equals(TaskType.DEADLINE)
+								| finalType.equals(TaskType.TIMED)
 								| finalType
-										.equals(Constants.TASK_TYPE_TENTATIVE)) {
+										.equals(TaskType.TENTATIVE)) {
 							descriptionBuilder.append("\n");
 						}
 						for (String tag : tags) {
@@ -662,7 +663,7 @@ public class ApplicationWindow {
 						}
 					}
 				} else {
-					String finalType = executedCommand.getTaskType();
+					TaskType finalType = executedCommand.getTaskType();
 
 					if (!executedCommand.getDescription().isEmpty()) {
 						currentComposite.setTaskName(
@@ -670,15 +671,15 @@ public class ApplicationWindow {
 					}
 
 					StringBuilder descriptionBuilder = new StringBuilder();
-					if (finalType.equals(Constants.TASK_TYPE_DEADLINE)) {
+					if (finalType.equals(TaskType.DEADLINE)) {
 						descriptionBuilder.append("by "
 								+ Task.format(executedCommand.getDeadline()));
-					} else if (finalType.equals(Constants.TASK_TYPE_TIMED)) {
+					} else if (finalType.equals(TaskType.TIMED)) {
 						Interval taskInterval = executedCommand.getIntervals()
 								.get(0);
 						descriptionBuilder.append("from ");
 						descriptionBuilder.append(Task.intervalFormat(taskInterval.getStartDateTime(), taskInterval.getEndDateTime()));
-					} else if (finalType.equals(Constants.TASK_TYPE_TENTATIVE)) {
+					} else if (finalType.equals(TaskType.TENTATIVE)) {
 						descriptionBuilder.append("on ");
 						ArrayList<Interval> possibleIntervals = executedCommand
 								.getIntervals();
@@ -703,10 +704,10 @@ public class ApplicationWindow {
 					}
 
 					if (!combinedTags.isEmpty()) {
-						if (finalType.equals(Constants.TASK_TYPE_DEADLINE)
-								| finalType.equals(Constants.TASK_TYPE_TIMED)
+						if (finalType.equals(TaskType.DEADLINE)
+								| finalType.equals(TaskType.TIMED)
 								| finalType
-										.equals(Constants.TASK_TYPE_TENTATIVE)) {
+										.equals(TaskType.TENTATIVE)) {
 							descriptionBuilder.append("\n");
 						}
 						descriptionBuilder.append(combinedTags);
@@ -1043,7 +1044,7 @@ public class ApplicationWindow {
 		Command command1 = new Command(CommandType.ADD);
 		command1.setDescription("haha");
 		Task task1 = new Task(command1);
-		task1.setType(Constants.TASK_TYPE_UNTIMED);
+		task1.setType(TaskType.UNTIMED);
 		TaskComposite taskComposite1 = new TaskComposite(
 				displayLogic.getTaskDisplay(), task1, 1);
 		int taskCompositeHeight = taskComposite1.getSize().y;
@@ -1062,7 +1063,7 @@ public class ApplicationWindow {
 		ArrayList<Interval> intervalList = new ArrayList<Interval>();
 		intervalList.add(interval1);
 		intervalList.add(interval2);
-		task1.setType(Constants.TASK_TYPE_TENTATIVE);
+		task1.setType(TaskType.TENTATIVE);
 		task1.setPossibleTime(intervalList);
 		TaskComposite taskComposite2 = new TaskComposite(
 				displayLogic.getTaskDisplay(), task1, 1);
@@ -1078,7 +1079,7 @@ public class ApplicationWindow {
 		interval3.setEndDateTime(endDate3);
 		intervalList.add(interval3);
 
-		task1.setType(Constants.TASK_TYPE_TENTATIVE);
+		task1.setType(TaskType.TENTATIVE);
 		task1.setPossibleTime(intervalList);
 		TaskComposite taskComposite3 = new TaskComposite(
 				displayLogic.getTaskDisplay(), task1, 1);
