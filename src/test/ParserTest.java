@@ -869,23 +869,44 @@ public class ParserTest {
 	@Test
 	public void searchCommandTests() {
 		Command expected, actual;
-		ArrayList<String> tags;
+		ArrayList<String> tags, searchTerms;
 		
 		expected = new Command(CommandType.SEARCH);
 		actual = new Parser().parse("search");
 		assertEquals(expected, actual);
 		
 		expected = new Command(CommandType.SEARCH);
-		expected.setSearchString("hello there 12/2");
+		searchTerms = new ArrayList<String>();
+		searchTerms.add("hello");
+		searchTerms.add("there");
+		searchTerms.add("12/2");
+		expected.setSearchTerms(searchTerms);
 		actual = new Parser().parse("search hello there 12/2");
 		assertEquals(expected, actual);
 
 		expected = new Command(CommandType.SEARCH);
-		expected.setSearchString("hello there #yellow");
+		searchTerms = new ArrayList<String>();
+		searchTerms.add("hello");
+		searchTerms.add("there");
+		expected.setSearchTerms(searchTerms);
+		tags = new ArrayList<String>();
+		tags.add("#yellow");
+		expected.setTags(tags);
 		actual = new Parser().parse("search hello there #yellow");
 		assertEquals(expected, actual);
 
+		expected = new Parser().parse("search #yellow hello there");
+		actual = new Parser().parse("search hello there #yellow");
+		assertEquals(expected, actual);
+
+		expected = new Parser().parse("search there hello #yellow");
+		actual = new Parser().parse("search hello there #yellow");
+		assertNotSame(expected, actual);
+
 		expected = new Command(CommandType.SEARCH);
+		searchTerms = new ArrayList<String>();
+		searchTerms.add("whatever");
+		expected.setSearchTerms(searchTerms);
 		tags = new ArrayList<String>();
 		tags.add("#yellow");
 		tags.add("#blue");
