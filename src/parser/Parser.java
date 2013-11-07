@@ -22,16 +22,7 @@ public class Parser {
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
-
-		//		test("add event from 10:00 am until 11am");
-		//        test("edit 1 go home at 10:00 am");
-		//        test("delete 1");
-		//        test("search hi there");
-		//        test("clear");
-		//        test("clear done");
-		//        test("clear aklsjdksd");
-		//        test("help done asjdlkasd");
-
+		
 		// Mini REPL for testing
 		java.util.Scanner scanner = new java.util.Scanner(System.in);
 		while(true) {
