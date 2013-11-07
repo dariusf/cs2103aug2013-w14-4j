@@ -12,6 +12,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 
 public class TaskComposite extends Composite {
@@ -51,6 +54,7 @@ public class TaskComposite extends Composite {
 		taskDetailsComposite.setLayout(new GridLayout());
 
 		taskName = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
+		taskName.setLayoutData(new GridData(340, SWT.DEFAULT));
 		taskName.setFont(ApplicationWindow.self.titleFont);
 		this.setTaskName(task.getName());
 
@@ -92,7 +96,13 @@ public class TaskComposite extends Composite {
 	public void setTaskName(String name) {
 		taskName.setText(name);
 		this.pack();
-		int xSize = taskName.getSize().x;
+		StyledText measurement = new StyledText(taskName.getParent(), SWT.NONE);
+		measurement.setText(name);
+		measurement.setFont(new Font(taskName.getDisplay(), "Calibri",
+						24, SWT.NORMAL));
+		measurement.pack();
+		int xSize = measurement.getSize().x;
+
 		boolean isWindows = System.getProperty("os.name").toLowerCase()
 				.indexOf("win") >= 0;
 
@@ -110,6 +120,7 @@ public class TaskComposite extends Composite {
 			}
 
 		}
+		measurement.dispose();
 	}
 
 	public String getTaskName(String name) {
