@@ -12,9 +12,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 
 public class TaskComposite extends Composite {
