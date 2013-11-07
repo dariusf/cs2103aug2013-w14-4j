@@ -1,7 +1,6 @@
 package ui;
 
 import logic.Feedback;
-
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -10,7 +9,6 @@ import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
@@ -36,7 +34,7 @@ public class HelpDialog extends Dialog {
 		dialog = new Shell(parent);
 		display = parent.getDisplay();
 
-		dialog.setSize(420, 420);
+		dialog.setSize(420, 460);
 		dialog.setText("Help");
 		
 		Monitor primary = display.getPrimaryMonitor();
@@ -50,7 +48,7 @@ public class HelpDialog extends Dialog {
 		dialog.setLocation(x, y);
 
 		final Button closeButton = new Button(dialog, SWT.NONE);
-		closeButton.setBounds(148, 357, 118, 25);
+		closeButton.setBounds(148, 397, 118, 25);
 		closeButton.setText("Got it!");
 
 		helpText = new StyledText(dialog, SWT.READ_ONLY | SWT.WRAP);
@@ -63,21 +61,27 @@ public class HelpDialog extends Dialog {
 			helpText.setFont(SWTResourceManager.getFont("Calibri", 16,
 					SWT.NORMAL));
 		}
-		helpText.setBounds(10, 10, 394, 341);
+		helpText.setBounds(10, 10, 394, 381);
 		helpText.setEnabled(false);
 
 		Color orange = new Color(display, 255, 127, 0);
 
 		String helpString = getHelpText(feedbackObj.getHelpCommandType());
-		helpText.setText(helpString);
+//		helpText.setText(helpString);
 
-		setFirstLineStyle(orange, helpString);
-		if (isGeneralHelp()) {
-			boldCommandsForGeneralHelp(helpString);
-		} else {
-			setCommandFormatStyle(helpString);
-		}
-
+//		setFirstLineStyle(orange, helpString);
+//		if (isGeneralHelp()) {
+//			boldCommandsForGeneralHelp(helpString);
+//		} else {
+//			setCommandFormatStyle(helpString);
+//		}
+		
+//		ArrayList<Integer> formats = getFormatRanges(helpString);
+//		helpText.setText(helpString.replaceAll(Constants.FORMATTING_REGEX_UNDERLINE, "$1").replaceAll(Constants.FORMATTING_REGEX_BOLD, "$1"));
+//		applyFormatting(helpString, formats);
+		
+		TextFormatter.setFormattedText(helpText, helpString);
+		
 		dialog.open();
 
 		Listener listener = new Listener() {
@@ -191,44 +195,44 @@ public class HelpDialog extends Dialog {
 		}
 	}
 
-	private boolean isGeneralHelp() {
-		return isGeneralHelp;
-	}
+//	private boolean isGeneralHelp() {
+//		return isGeneralHelp;
+//	}
 
-	private void setFirstLineStyle(Color orange, String helpString) {
-		StyleRange styleRange = new StyleRange();
-		styleRange.start = 0;
-		styleRange.length = helpString.indexOf("\n");
-		styleRange.underline = true;
-		styleRange.foreground = orange;
-		helpText.setStyleRange(styleRange);
-	}
+	// private void setFirstLineStyle(Color colour, String helpString) {
+	// 	StyleRange styleRange = new StyleRange();
+	// 	styleRange.start = 0;
+	// 	styleRange.length = helpString.indexOf("\n");
+	// 	styleRange.underline = true;
+	// 	styleRange.foreground = colour;
+	// 	helpText.setStyleRange(styleRange);
+	// }
 
-	private void boldCommandsForGeneralHelp(String helpString) {
-		StyleRange styleRange;
-		int startIndex = helpString.indexOf("\n");
-		int colonIndex = helpString.indexOf(":");
+	// private void boldCommandsForGeneralHelp(String helpString) {
+	// 	StyleRange styleRange;
+	// 	int startIndex = helpString.indexOf("\n");
+	// 	int colonIndex = helpString.indexOf(":");
 
-		while (startIndex != -1 && colonIndex != -1) {
-			styleRange = new StyleRange();
-			styleRange.start = startIndex + 1;
-			styleRange.length = colonIndex - startIndex;
-			styleRange.fontStyle = SWT.BOLD;
-			helpText.setStyleRange(styleRange);
-			colonIndex = helpString.indexOf(":", colonIndex + 1);
-			startIndex = helpString.indexOf("\n", startIndex + 1);
-		}
+	// 	while (startIndex != -1 && colonIndex != -1) {
+	// 		styleRange = new StyleRange();
+	// 		styleRange.start = startIndex + 1;
+	// 		styleRange.length = colonIndex - startIndex;
+	// 		styleRange.fontStyle = SWT.BOLD;
+	// 		helpText.setStyleRange(styleRange);
+	// 		colonIndex = helpString.indexOf(":", colonIndex + 1);
+	// 		startIndex = helpString.indexOf("\n", startIndex + 1);
+	// 	}
 
-		isGeneralHelp = false;
-	}
+	// 	isGeneralHelp = false;
+	// }
 
-	private void setCommandFormatStyle(String helpString) {
-		int startIndex = helpString.indexOf("\n\n");
-		int colonIndex = helpString.indexOf(":");
-		StyleRange styleRange = new StyleRange();
-		styleRange.start = startIndex + 1;
-		styleRange.length = colonIndex - startIndex;
-		styleRange.fontStyle = SWT.BOLD;
-		helpText.setStyleRange(styleRange);
-	}
+	// private void setCommandFormatStyle(String helpString) {
+	// 	int startIndex = helpString.indexOf("\n\n");
+	// 	int colonIndex = helpString.indexOf(":");
+	// 	StyleRange styleRange = new StyleRange();
+	// 	styleRange.start = startIndex + 1;
+	// 	styleRange.length = colonIndex - startIndex;
+	// 	styleRange.fontStyle = SWT.BOLD;
+	// 	helpText.setStyleRange(styleRange);
+	// }
 }
