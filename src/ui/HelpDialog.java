@@ -25,7 +25,6 @@ public class HelpDialog extends Dialog {
 	StyledText helpText;
 	boolean isGeneralHelp = false;
 	private Shell dialog;
-	boolean isOpen = false;
 
 	// @author A0101048X
 	public HelpDialog(Shell parent) {
@@ -80,7 +79,6 @@ public class HelpDialog extends Dialog {
 		}
 
 		dialog.open();
-		isOpen = true;
 
 		Listener listener = new Listener() {
 			@Override
@@ -101,13 +99,11 @@ public class HelpDialog extends Dialog {
 		orange.dispose();
 	}
 	
-	//TODO: Matthew fill in your matric no below. thanks
-	// @author 
+	// @author: A0097556M
 	public void close () {
-		if (isOpen) {
+		if (!dialog.isDisposed()) {
 			dialog.close();
 		}
-		isOpen = false;
 	}
 	
 	// @author A0101048X

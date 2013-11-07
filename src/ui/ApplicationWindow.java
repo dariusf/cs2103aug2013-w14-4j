@@ -14,9 +14,7 @@ import logic.Interval;
 import logic.Logic;
 import logic.Task;
 
-import common.*;
-
-import org.eclipse.swt.*;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
@@ -28,7 +26,9 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.joda.time.DateTime;
 
+import common.CommandType;
 import common.Constants;
+import common.DisplayMode;
 import common.undo.Action;
 import common.undo.ActionStack;
 
@@ -435,27 +435,27 @@ public class ApplicationWindow {
 					updateTaskDisplay();
 					logger.log(Level.INFO, generateLoggingString());
 				} else if (arg0.keyCode == SWT.F1 && arg0.stateMask != SWT.SHIFT) {
-					executeUserInput("help");
+					executeUserInput(Constants.COMMAND_HELP);
 				} else if (arg0.keyCode == SWT.F2) {
-					executeUserInput("display");
+					executeUserInput(Constants.COMMAND_DISPLAY);
 				} else if (arg0.keyCode == SWT.F3) {
-					executeUserInput("display today");
+					executeUserInput(Constants.COMMAND_DISPLAY + " today");
 				} else if (arg0.keyCode == SWT.F4) {
-					executeUserInput("display tomorrow");
+					executeUserInput(Constants.COMMAND_DISPLAY + " tomorrow");
 				} else if (arg0.keyCode == SWT.F5) {
-					executeUserInput("display all");
+					executeUserInput(Constants.COMMAND_DISPLAY + " all");
 				} else if (arg0.keyCode == SWT.F6) {
-					executeUserInput("display done");
+					executeUserInput(Constants.COMMAND_DISPLAY + " done");
 				} else if (arg0.keyCode == SWT.F7) {
-					executeUserInput("display overdue");
+					executeUserInput(Constants.COMMAND_DISPLAY + " overdue");
 				} else if (arg0.keyCode == SWT.F8) {
-					executeUserInput("display untimed");
+					executeUserInput(Constants.COMMAND_DISPLAY + " untimed");
 				} else if (arg0.keyCode == SWT.F9) {
-					executeUserInput("display deadline");
+					executeUserInput(Constants.COMMAND_DISPLAY + " deadline");
 				} else if (arg0.keyCode == SWT.F10) {
-					executeUserInput("display timed");
+					executeUserInput(Constants.COMMAND_DISPLAY + " timed");
 				} else if (arg0.keyCode == SWT.F11) {
-					executeUserInput("display tentative");
+					executeUserInput(Constants.COMMAND_DISPLAY + " tentative");
 				} else if (arg0.keyCode == SWT.F12) {
 					int index = new Random().nextInt(Constants.RANDOM_JOKES.length);
 					displayFeedback.setForeground(red);
