@@ -11,7 +11,7 @@ public class Constants {
 
 	public static final String MSG_UNRECOGNISED_COMMAND = "Unrecognized command type";
 	public static final String MSG_WELCOME = "Welcome to Basket! \nType 'help' if you are unsure of what to do.";
-	public static final String MSG_AVAILABLE_COMMANDS = "Commands available: add|edit|display|sort|search finalise|help|goto|undo|redo|clear|done|exit";
+	public static final String MSG_AVAILABLE_COMMANDS = "Commands available: add|edit|display|sort|search\nfinalise|help|goto|undo|redo|clear|done|exit";
 
 	public static final String COMMAND_ADD = "add";
 	public static final String COMMAND_DELETE = "delete";
