@@ -627,8 +627,9 @@ public class Logic {
 
 	protected Feedback searchTasks(Command command) {
 		Feedback feedback = null;
-		String searchString = command.getSearchString();
+		
 		ArrayList<String> searchTags = command.getTags();
+		ArrayList<String> searchTerms = command.getSearchTerms();
 
 		ArrayList<Task> validTasks = new ArrayList<Task>();
 		ArrayList<Integer> validTasksAbsoluteIndices = new ArrayList<Integer>();
@@ -653,7 +654,7 @@ public class Logic {
 		} else {
 			for (int i = 0; i < storage.size(); i++) {
 				Task currentTask = storageIterator.next();
-				if (isWordInString(searchString, currentTask.getName())) {
+				if (areAllWordsInString(searchTerms, currentTask.getName())) {
 					validTasks.add(currentTask);
 					validTasksAbsoluteIndices.add(i + 1);
 				}
@@ -716,6 +717,15 @@ public class Logic {
 		return time.compareTo(new DateTime()) < 0;
 	}
 
+	protected boolean areAllWordsInString(ArrayList<String> words, String string) {
+		for (String word : words) {
+			if (!isWordInString(word, string)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	protected boolean isWordInString(String word, String string) {
 		String lowerCaseString = string.toLowerCase();
 		String lowerCaseWord = word.toLowerCase();
