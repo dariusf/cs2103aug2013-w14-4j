@@ -13,6 +13,7 @@ import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
 import common.InvalidCommandReason;
+import common.TaskType;
 import common.undo.ActionStack;
 
 import parser.Parser;
@@ -194,7 +195,7 @@ public class Logic {
 			}
 		} else {
 
-			String finalType = command.getTaskType();
+			TaskType finalType = command.getTaskType();
 
 			if (!command.getDescription().isEmpty()) {
 				taskToEdit.setName(command.getDescription());
@@ -205,14 +206,13 @@ public class Logic {
 				originalTags.addAll(command.getTags());
 			}
 
-			if (finalType == Constants.TASK_TYPE_DEADLINE) {
-				taskToEdit.setType(Constants.TASK_TYPE_DEADLINE);
+			taskToEdit.setType(finalType);
+			
+			if (finalType == TaskType.DEADLINE) {
 				taskToEdit.setDeadline(command.getDeadline());
-			} else if (finalType == Constants.TASK_TYPE_TIMED) {
-				taskToEdit.setType(Constants.TASK_TYPE_TIMED);
+			} else if (finalType == TaskType.TIMED) {
 				taskToEdit.setInterval(command.getIntervals().get(0));
-			} else if (finalType == Constants.TASK_TYPE_TENTATIVE) {
-				taskToEdit.setType(Constants.TASK_TYPE_TENTATIVE);
+			} else if (finalType == TaskType.TENTATIVE) {
 				taskToEdit.setPossibleTime(command.getIntervals());
 			}
 
@@ -483,7 +483,7 @@ public class Logic {
 		}
 
 		Interval newInterval = oldIntervalList.get(taskSlotIndex - 1);
-		taskToEdit.setType(Constants.TASK_TYPE_TIMED);
+		taskToEdit.setType(TaskType.TIMED);
 		taskToEdit.setInterval(newInterval);
 
 		storage.replace(taskIndex, taskToEdit);

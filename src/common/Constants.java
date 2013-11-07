@@ -7,12 +7,11 @@ public class Constants {
 	public static final String APP_NAME = "Basket";
 	public static final String DEFAULT_FILENAME = "default.txt";
 
-	public static String WELCOME_MSG = "Welcome to Basket! \nType 'help' if you are unsure of what to do.";
 	public static String WELCOME_PAGE_DISPLAY = "display";
 
 	public static final String MSG_UNRECOGNISED_COMMAND = "Unrecognized command type";
-
-	public static final String EMPTY_STRING = "";
+	public static final String MSG_WELCOME = "Welcome to Basket! \nType 'help' if you are unsure of what to do.";
+	public static final String MSG_AVAILABLE_COMMANDS = "Commands available: add|edit|display|sort|search finalise|help|goto|undo|redo|clear|done|exit";
 
 	public static final String COMMAND_ADD = "add";
 	public static final String COMMAND_DELETE = "delete";
@@ -29,32 +28,32 @@ public class Constants {
 	public static final String COMMAND_REDO = "redo";
 	public static final String COMMAND_DONE = "done";
 
-	public static final String TASK_ATT_NAME = "name";
-	public static final String TASK_ATT_LOCATION = "location";
-	public static final String TASK_ATT_STARTTIME = "startTime";
-	public static final String TASK_ATT_ENDTIME = "endTime";
-	public static final String TASK_ATT_DEADLINE = "deadline";
-	public static final String TASK_ATT_TYPE = "type";
-	public static final String TASK_ATT_TAGS = "tags";
-	public static final String TASK_ATT_POSSIBLETIME = "possibleTime";
-	public static final String TASK_ATT_DONE = "done";
+//	public static final String TASK_ATT_NAME = "name";
+//	public static final String TASK_ATT_LOCATION = "location";
+//	public static final String TASK_ATT_STARTTIME = "startTime";
+//	public static final String TASK_ATT_ENDTIME = "endTime";
+//	public static final String TASK_ATT_DEADLINE = "deadline";
+//	public static final String TASK_ATT_TYPE = "type";
+//	public static final String TASK_ATT_TAGS = "tags";
+//	public static final String TASK_ATT_POSSIBLETIME = "possibleTime";
+//	public static final String TASK_ATT_DONE = "done";
 
-	public static final String DELETE_ATT_LINE = "deleteIndex";
+//	public static final String DELETE_ATT_LINE = "deleteIndex";
+//
+//	public static final String EDIT_ATT_LINE = "editIndex";
+//
+//	public static final String DONE_ATT_LINE = "doneIndex";
+//
+//	public static final String FINALISE_ATT_LINE = "finaliseIndex";
+//	public static final String FINALISE_ATT_INDEX = "slotIndex";
+//
+//	public static final String CLEAR_ATT_DONE = "clearDone";
 
-	public static final String EDIT_ATT_LINE = "editIndex";
-
-	public static final String DONE_ATT_LINE = "doneIndex";
-
-	public static final String FINALISE_ATT_LINE = "finaliseIndex";
-	public static final String FINALISE_ATT_INDEX = "slotIndex";
-
-	public static final String CLEAR_ATT_DONE = "clearDone";
-
-	public static final String TASK_TYPE_TENTATIVE = "tentative";
-	public static final String TASK_TYPE_TIMED = "timed";
-	public static final String TASK_TYPE_DEADLINE = "deadline";
-	public static final String TASK_TYPE_UNTIMED = "untimed";
-
+//	public static final String TASK_TYPE_TENTATIVE = "tentative";
+//	public static final String TASK_TYPE_TIMED = "timed";
+//	public static final String TASK_TYPE_DEADLINE = "deadline";
+//	public static final String TASK_TYPE_UNTIMED = "untimed";
+	
 	public static final String HELP_INSTRUCTIONS = "Refer to the help window.";
 	public static final String HELP_GENERAL = "Hotkeys\n"
 			+ "Pageup: Navigates to previous page\n"
@@ -214,8 +213,7 @@ public class Constants {
 	public static DateTimeFormatter simpleTimeFormat = DateTimeFormat.forPattern("h a");
 	public static DateTimeFormatter simpleDateFormat = DateTimeFormat.forPattern("E, d MMM");
 
-	public static DateTimeFormatter dateOnlyFormat = DateTimeFormat
-			.forPattern("d MMM',' EE");
+	public static DateTimeFormatter dateOnlyFormat = DateTimeFormat.forPattern("d MMM',' EE");
 	public static final String DATE_TIME_FORMAT = "d/M/yy h:mm a";
 
 	public static final String MODE_TODAY = "Today";
@@ -231,7 +229,7 @@ public class Constants {
 	public static final String MODE_DONE = "Completed Tasks";
 
 	public static final int DEFAULT_PAGE_NUMBER = 1;
-
+	
 	public static final String[] RANDOM_JOKES = { "Why do Java Programmers wear glasses?\nBecause they don't see sharp.", "What is the object-oriented way to\nbecome wealthy? Inheritance.", "[\"hip\", \"hip\"]\n(Get it?)", "Is it a boy or a girl?\nTrue", "Why did the programmer quit his job?\nBecause he didn't get arrays.", "Why did the integer drown?\nBecause it couldn't float!"};
-	public static final String MSG_AVAILABLE_COMMANDS = "Commands available: add|edit|display|sort|search finalise|help|goto|undo|redo|clear|done|exit";
+
 }
