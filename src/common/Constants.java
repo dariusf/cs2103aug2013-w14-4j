@@ -209,8 +209,6 @@ public class Constants {
 	public static final int SC_REDO_NO_PRIOR_STATE_ERROR = 110;
 	public static final int SC_INVALID_PAGE_INDEX = 120;
 
-	public static DateTimeFormatter fullDateTimeFormat = DateTimeFormat.forPattern("h:mm a 'on' E, d MMM YY");
-	
 	public static DateTimeFormatter verboseTimeFormat = DateTimeFormat.forPattern("h:mm a");
 	public static DateTimeFormatter verboseDateFormat = DateTimeFormat.forPattern("E, d MMM YY");
 	public static DateTimeFormatter simpleTimeFormat = DateTimeFormat.forPattern("h a");
