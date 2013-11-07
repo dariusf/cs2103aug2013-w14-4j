@@ -181,7 +181,7 @@ public class DisplayLogic {
 		case DEADLINE:
 			return Constants.MODE_DEADLINE;
 		case TENTATIVE:
-			return Constants.MODE_FLOATING;
+			return Constants.MODE_TENTATIVE;
 		case TIMED:
 			return Constants.MODE_TIMED;
 		case UNTIMED:
