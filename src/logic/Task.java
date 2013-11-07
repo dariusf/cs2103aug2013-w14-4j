@@ -196,11 +196,18 @@ public class Task implements Comparable<Task>, Cloneable {
 		else if (now.plusDays(1).dayOfYear().equals(dateTime.dayOfYear())) {
 			return ", tomorrow";
 		}
+		else if (now.plusDays(2).dayOfYear().equals(dateTime.dayOfYear())) {
+			return ", the day after";
+		}
 		else if (now.minusDays(1).dayOfYear().equals(dateTime.dayOfYear())) {
 			return ", yesterday";
 		}
 		else if (now.minusDays(2).dayOfYear().equals(dateTime.dayOfYear())) {
 			return ", the day before";
+		}
+		else if (dateTime.isAfter(now.withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
+				&& dateTime.isBefore(now.withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
+			return ", this " + dateTime.dayOfWeek().getAsShortText();
 		}
 		else if (dateTime.isAfter(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
 				&& dateTime.isBefore(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
