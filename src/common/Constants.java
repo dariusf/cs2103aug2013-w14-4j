@@ -82,7 +82,8 @@ public class Constants {
 			+ "* Use 'on' or 'from' to denote the time the task is supposed to occur\n"
 			+ "  ** You can specify a time period by using 'to'\n"
 			+ "  ** You can specify multiple choices of timeslots using 'or'\n"
-			+ "* Use # to group items by hashtag\n\n" + "Examples:\n"
+			+ "* Use # to group items by hashtag\n\n" 
+			+ "Examples:\n"
 			+ "add Perform April Fool's Prank on 01/04 at 1200 #forfun\n"
 			+ "add Save Princess Peach by 22/12/2012\n"
 			+ "add Meet Boss at 11am or 12pm";
@@ -91,11 +92,13 @@ public class Constants {
 			+ "Command format:\n"
 			+ "* Start with the keyword 'display'. The default case shows all undone task(s)\n"
 			+ "* Use 'all' to display all task(s)\n"
-			+ "* Choose a 'date' to display task(s) for the date\n"
+			+ "* Or choose a 'date' to display task(s) for the date\n"
 			+ "  ** Dates available: today, tomorrow, 13/10\n"
-			+ "* Choose a 'type' to display task(s) corresponding to the specified type\n"
+			+ "* Or choose a 'type' to display task(s) corresponding to the specified type\n"
 			+ "  ** Types available: untimed, deadline, timed, tentative, overdue, done\n\n"
-			+ "Examples:\n" + "display all\n" + "display 25 Oct\n"
+			+ "Examples:\n" 
+			+ "display all\n" 
+			+ "display 25 Oct\n"
 			+ "display overdue";
 	public static final String HELP_HELP = "Help\n"
 			+ "Displays help for a specific command. Includes the description of the command as well as examples.\n\n"
@@ -105,13 +108,15 @@ public class Constants {
 	public static final String HELP_SORT = "Sorting Task(s)\n"
 			+ "Performing this action will result in tasks sorted by date order.\n"
 			+ "The task with the earliest date will be listed first.\n\n"
-			+ "Command format:\n" + "'sort'";
+			+ "Command format:\n" 
+			+ "'sort'";
 	public static final String HELP_DELETE = "Deleting a Task\n"
 			+ "You may delete a specified task.\n"
 			+ "Use 'undo' if you wish to reverse the deletion\n\n"
 			+ "Command format:\n"
 			+ "Start with the keyword 'delete' followed by the task's index\n\n"
-			+ "Example:\n" + "delete 1";
+			+ "Example:\n" 
+			+ "delete 1";
 	public static final String HELP_EDIT = "Editing a Task\n"
 			+ "You may edit the name or task type of a specified task.\n\n"
 			+ "Command format:\n"
@@ -119,15 +124,24 @@ public class Constants {
 			+ "* You may choose to edit the name or task type or both\n"
 			+ "  ** To edit the name of task, simply type your new task's name\n"
 			+ "  ** To edit the task type, use keywords such as 'by', 'from', 'on', 'or' to denote the new task type\n\n"
-			+ "Examples:\n" + "edit 1 Awesome Task!\n"
+			+ "Examples:\n" 
+			+ "edit 1 Awesome Task!\n"
 			+ "edit 2 by 12:00 pm 30/10/2013\n"
 			+ "edit 1 on 31/10 9am to 04/11 5pm\n"
 			+ "edit 3 from 2000 to 2130\n"
 			+ "edit 4 Get hair cut on 31/10 or 01/11";
 	public static final String HELP_CLEAR = "Clearing Task(s)\n"
 			+ "Performing this action will remove all/done tasks.\n\n"
-			+ "Command format:\n" + "* Use 'clear' to remove all tasks\n"
-			+ "* Use 'clear done' to remove all the completed tasks";
+			+ "Command format:\n" 
+			+ "* Start with the keyword 'clear'. 'clear' alone will remove all tasks\n"
+			+ "* Choose a 'type' of task to clear\n"
+			+ "  ** Types available: untimed, deadline, timed, tentative, overdue, done\n"
+			+ "* Or choose a 'date' to clear all task(s) with the date\n"
+			+ "  ** Dates available: today, tomorrow, 13/10\n\n"
+			+ "Examples:\n" 
+			+ "clear done\n" 
+			+ "clear today\n"
+			+ "clear overdue";
 	public static final String HELP_UNDO = "Undoing\n"
 			+ "This reverses the last action performed.\n"
 			+ "Multiple undos are supported.\n\n" + "Command format:\n"
@@ -139,27 +153,33 @@ public class Constants {
 	public static final String HELP_DONE = "Marking Task as Done\n"
 			+ "Marks a completed task as done. \n\n" + "Command format:\n"
 			+ "Start with the keyword 'done' followed by the task's index\n\n"
-			+ "Example:\n" + "done 2";
+			+ "Example:\n" 
+			+ "done 2";
 	public static final String HELP_FINALISE = "Finalising Timing For a Tentative Task\n"
 			+ "Perform this action when you have decided on the timeslot for a particular tentative task.\n\n"
 			+ "Command format:\n"
 			+ "* Start with the keyword 'finalise' followed by the task's index\n"
 			+ "* Next set the confirmed slot as the finalised timing by using its index\n\n"
-			+ "Example:\n" + "finalise 1 2";
+			+ "Example:\n" 
+			+ "finalise 1 2";
 	public static final String HELP_SEARCH = "Searching For Task(s)\n"
 			+ "Perform this action if you wish to filter your tasks by word(s)/hashtag(s).\n\n"
 			+ "Command format:\n"
 			+ "Start with the keyword 'search' followed by the word(s) to filter by\n\n"
-			+ "Examples:\n" + "search boss\n" + "search #homework\n"
+			+ "Examples:\n" 
+			+ "search boss\n" 
+			+ "search #homework\n"
 			+ "search #important #homework";
 	public static final String HELP_EXIT = "Exiting\n"
 			+ "Perform this action if you wish to close the application.\n\n"
-			+ "Command format:\n" + "'exit'";
+			+ "Command format:\n" 
+			+ "'exit'";
 	public static final String HELP_GOTO = "Navigating using 'goto'\n"
 			+ "Navigates to the page specified. You may also use the hotkeys page up and page down to go to the previous or next page.\n\n"
 			+ "Command format:\n"
 			+ "Start with the keyword 'goto' followed by the page number\n\n"
-			+ "Example:\n" + "goto 2";
+			+ "Example:\n" 
+			+ "goto 2";
 
 	// Please keep success code numbers between 10 and 19.
 	public static final int SC_SUCCESS = 10;
