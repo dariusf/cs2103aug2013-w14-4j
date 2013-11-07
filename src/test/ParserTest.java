@@ -723,17 +723,16 @@ public class ParserTest {
 		actual = new Parser().parse("add task 29 feb 12");
 		assertEquals(actual, expected);
 		
-//		expected = new Command(CommandType.INVALID);
-//		expected.setInvalidCommandReason(InvalidCommandReason.INVALID_DATE);
-//		
-//		expected.setDescription("go home");
-//		intervals = new ArrayList<>();
-//		start = now.plusWeeks(2).withTime(13, 0, 0, 0);
-//		end = start.plusHours(1);
-//		intervals.add(new Interval(start, end));
-//		expected.setIntervals(intervals);
-//		actual = new Parser().parse("add go home next fortnight 1pm");
-//		assertEquals(actual, expected);
+		// Invalid date range
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("task");
+		intervals = new ArrayList<>();
+		start = now.withDate(2013, 10, 6).withTime(0, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = new Parser().parse("add task 6 oct to 4 oct");
+		assertEquals(actual, expected);
 	}
 
 	@Test
