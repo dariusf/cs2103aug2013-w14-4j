@@ -482,13 +482,13 @@ public class ApplicationWindow {
 
 				Command executedCommand = activeFeedback.getCommand();
 				int taskIndex = executedCommand.getTaskIndex();
-				CommandType command = executedCommand.getCommandType();
+				CommandType commandType = executedCommand.getCommandType();
 				displayFeedback.setForeground(purple);
 
-				ContextualHelp contextualHelp = new ContextualHelp(command);
-				displayFeedback.setText(contextualHelp.toString());
+				ContextualHelp contextualHelp = new ContextualHelp(executedCommand);
+				TextFormatter.setFormattedText(displayFeedback, contextualHelp.toString());
 
-				switch (command) {
+				switch (commandType) {
 				case DONE:
 					break;
 				case DELETE:

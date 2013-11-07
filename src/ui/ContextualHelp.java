@@ -1,5 +1,6 @@
 package ui;
 
+import logic.Command;
 import common.CommandType;
 import common.Constants;
 
@@ -19,13 +20,13 @@ public class ContextualHelp {
 	final private String COMMAND_FORMAT_GOTO = "goto <page number>\nYou can also use the page up and page down keys";
 	final private String COMMAND_FORMAT_EXIT = "exit closes the application";
 	
-	CommandType command;
+	Command command;
 	
-	public ContextualHelp(CommandType command) {
+	public ContextualHelp(Command command) {
 		setCommand(command);
 	}
 
-	public void setCommand(CommandType command) {
+	public void setCommand(Command command) {
 		assert command != null;
 		this.command = command;
 	}
@@ -36,36 +37,44 @@ public class ContextualHelp {
 	}
 
 	private String determineFeedback() {
-		switch (command) {
-		case ADD :
-			return COMMAND_FORMAT_ADD;
+		switch (command.getCommandType()) {
+		case ADD:
+			if (command.getDescription().isEmpty()) {
+				return "add <_task_> {by|on|from..to|or} {#hashtag}";
+			}
+			else if (command.getTags().size() == 0) {
+				return "add <task> {by|on|from..to|or} {#_hashtag_}";
+			}
+			else {
+				return COMMAND_FORMAT_ADD;
+			}
 		case EDIT:
 			return COMMAND_FORMAT_EDIT;
-		case DISPLAY :
+		case DISPLAY:
 			return COMMAND_FORMAT_DISPLAY;
-		case DELETE :
+		case DELETE:
 			return COMMAND_FORMAT_DELETE;
-		case CLEAR :
+		case CLEAR:
 			return COMMAND_FORMAT_CLEAR;
-		case SORT :
+		case SORT:
 			return COMMAND_FORMAT_SORT;
 		case SEARCH:
 			return COMMAND_FORMAT_SEARCH;
-		case UNDO :
+		case UNDO:
 			return COMMAND_FORMAT_UNDO;
 		case REDO:
 			return COMMAND_FORMAT_REDO;
-		case FINALISE :
+		case FINALISE:
 			return COMMAND_FORMAT_FINALISE;
-		case HELP :
+		case HELP:
 			return COMMAND_FORMAT_HELP;
-		case DONE :
+		case DONE:
 			return COMMAND_FORMAT_DONE;
-		case GOTO :
+		case GOTO:
 			return COMMAND_FORMAT_GOTO;
-		case EXIT :
+		case EXIT:
 			return COMMAND_FORMAT_EXIT;
-		default :
+		default:
 			return Constants.MSG_AVAILABLE_COMMANDS;
 		}
 	}

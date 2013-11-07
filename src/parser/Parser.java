@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
+
 import logic.Command;
 import logic.Interval;
 import org.joda.time.DateTime;
@@ -22,7 +23,7 @@ public class Parser {
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
-		
+
 		// Mini REPL for testing
 		java.util.Scanner scanner = new java.util.Scanner(System.in);
 		while(true) {

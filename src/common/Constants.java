@@ -55,33 +55,33 @@ public class Constants {
 //	public static final String TASK_TYPE_UNTIMED = "untimed";
 	
 	public static final String HELP_INSTRUCTIONS = "Refer to the help window.";
-	public static final String HELP_GENERAL = "Hotkeys\n"
-			+ "Pageup: Navigates to previous page\n"
-			+ "Pagedown: Navigates to next page\n"
-			+ "ESC: closes help window\n"
-			+ "SHIFT-F1: minimises/restores Basket\n"
-			+ "F1: opens help window\n"
-			+ "F2: uncompleted tasks\n"
-			+ "F3: tasks today\n"
-			+ "F4: tasks tomorrow\n"
-			+ "F5: all tasks\n"
-			+ "F6: completed tasks\n"
-			+ "F7: overdue tasks\n"
-			+ "F8: untimed tasks\n"
-			+ "F9: deadlines\n"
-			+ "F10: timed tasks\n"
-			+ "F11: tentative tasks\n"
-			+ "F12: some jokes\n"
-			+ "*Note F2 to F11 are different modes of display";
-	public static final String HELP_ADD = "Adding a Task\n"
+	public static final String HELP_GENERAL = "_Hotkeys_\n"
+			+ "*Shift+F1*: Minimises/restores Basket\n"
+			+ "*Page Up*: Previous page\n"
+			+ "*Page Down*: Next page\n"
+			+ "*F1*: Opens help window\n"
+			+ "*Esc*: Closes help window\n"
+			+ "*F12*: Some jokes\n\n"
+			+ "_Display modes_\n"
+			+ "*F2*: Uncompleted tasks\n"
+			+ "*F3*: Today's tasks\n"
+			+ "*F4*: Tomorrow's tasks\n"
+			+ "*F5*: All tasks\n"
+			+ "*F6*: Completed tasks\n"
+			+ "*F7*: Overdue tasks\n"
+			+ "*F8*: Untimed tasks\n"
+			+ "*F9*: Deadlines\n"
+			+ "*F10*: Timed tasks\n"
+			+ "*F11*: Tentative tasks\n";
+	public static final String HELP_ADD = "_Adding a Task_\n"
 			+ "You may add a timed task, untimed task, tentative task or deadline task.\n\n"
 			+ "Command format:\n"
-			+ "* Start with the keyword 'add'\n"
-			+ "* Use 'by' to denote a deadline\n"
-			+ "* Use 'on' or 'from' to denote the time the task is supposed to occur\n"
-			+ "  ** You can specify a time period by using 'to'\n"
-			+ "  ** You can specify multiple choices of timeslots using 'or'\n"
-			+ "* Use # to group items by hashtag\n\n" 
+			+ "- Start with the keyword 'add'\n"
+			+ "- Use 'by' to denote a deadline\n"
+			+ "- Use 'on' or 'from' to denote the time the task is supposed to occur\n"
+			+ "  -- You can specify a time period by using 'to'\n"
+			+ "  -- You can specify multiple choices of timeslots using 'or'\n"
+			+ "- Use # to group items by hashtag\n\n" 
 			+ "Examples:\n"
 			+ "add Perform April Fool's Prank on 01/04 at 1200 #forfun\n"
 			+ "add Save Princess Peach by 22/12/2012\n"
@@ -223,7 +223,7 @@ public class Constants {
 	public static final String MODE_TENTATIVE = "Tentative Tasks";
 	public static final String MODE_UNTIMED = "Untimed Tasks";
 	public static final String MODE_ALL = "All Tasks";
-	public static final String MODE_SEARCH = "Search Result";
+	public static final String MODE_SEARCH = "Search Results";
 	public static final String MODE_OVERDUE = "Overdue Tasks";
 	public static final String MODE_TODO = "Todo";
 	public static final String MODE_DONE = "Completed Tasks";
@@ -232,4 +232,7 @@ public class Constants {
 	
 	public static final String[] RANDOM_JOKES = { "Why do Java Programmers wear glasses?\nBecause they don't see sharp.", "What is the object-oriented way to\nbecome wealthy? Inheritance.", "[\"hip\", \"hip\"]\n(Get it?)", "Is it a boy or a girl?\nTrue", "Why did the programmer quit his job?\nBecause he didn't get arrays.", "Why did the integer drown?\nBecause it couldn't float!"};
 
+	public static final String FORMATTING_REGEX_UNDERLINE = "_([\\w +]+)_";
+	public static final String FORMATTING_REGEX_BOLD = "\\*([\\w +]+)\\*";
+	
 }
