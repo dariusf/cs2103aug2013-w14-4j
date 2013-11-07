@@ -21,7 +21,7 @@ public class Command {
 	
 	private ClearMode clearMode;
 	private CommandType helpCommand;
-	private String searchString = "";
+	private ArrayList<String> searchTerms = new ArrayList<>();
 	private InvalidCommandReason invalidCommandReason;
 	private DisplayMode displayMode;
 	private DateTime displayDateTime = null;
@@ -99,12 +99,12 @@ public class Command {
 		this.helpCommand = helpCommand;
 	}
 
-	public String getSearchString() {
-		return searchString;
+	public ArrayList<String> getSearchTerms() {
+		return searchTerms;
 	}
 
-	public void setSearchString(String searchString) {
-		this.searchString = searchString;
+	public void setSearchTerms(ArrayList<String> searchTerms) {
+		this.searchTerms = searchTerms;
 	}
 
 	public InvalidCommandReason getInvalidCommandReason() {
@@ -178,7 +178,7 @@ public class Command {
 				+ intervals + ", tags=" + tags + ", taskIndex=" + taskIndex
 				+ ", pageIndex=" + pageIndex + ", timeslotIndex="
 				+ timeslotIndex + ", clearMode=" + clearMode + ", helpCommand="
-				+ helpCommand + ", searchString=" + searchString
+				+ helpCommand + ", searchString=" + searchTerms
 				+ ", invalidCommandReason=" + invalidCommandReason
 				+ ", displayMode=" + displayMode + ", displayDateTime="
 				+ displayDateTime + ", clearDateTime=" + clearDateTime + "]";
@@ -230,10 +230,10 @@ public class Command {
 			return false;
 		if (pageIndex != other.pageIndex)
 			return false;
-		if (searchString == null) {
-			if (other.searchString != null)
+		if (searchTerms == null) {
+			if (other.searchTerms != null)
 				return false;
-		} else if (!searchString.equals(other.searchString))
+		} else if (!searchTerms.equals(other.searchTerms))
 			return false;
 		if (tags == null) {
 			if (other.tags != null)
