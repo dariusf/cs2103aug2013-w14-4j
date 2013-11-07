@@ -732,11 +732,11 @@ public class Logic {
 		return lowerCaseString.indexOf(lowerCaseWord) != -1;
 	}
 
-	public boolean isTagInTask(String tag, Task task) {
+	public boolean isTagInTask(String tagInQuestion, Task task) {
 		ArrayList<String> tags = task.getTags();
 		boolean result = false;
-		for (String string : tags) {
-			if (tag.equalsIgnoreCase(string)) {
+		for (String tag : tags) {
+			if (isWordInString(tagInQuestion, tag)) {
 				result = true;
 			}
 		}
