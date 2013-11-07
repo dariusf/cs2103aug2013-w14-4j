@@ -29,7 +29,7 @@ public class DateToken extends Token {
 	private static final String REGEX_RELATIVE_DAY_DATE = "((this|next|last)[ ]+)?(((mon|tues|wednes|thurs|fri|satur|sun)day)|mon|tues|tue|wed|thurs|thu|fri|sat|sun)";
 	private static Pattern relativeDayDate = Pattern.compile(REGEX_RELATIVE_DAY_DATE, Pattern.CASE_INSENSITIVE);
 
-	private static final String REGEX_ALIAS_DATE = "(today|tonight|tomorrow|tmrw|tmr|halloween|christmas)";
+	private static final String REGEX_ALIAS_DATE = "(yesterday|today|tonight|tomorrow|tmrw|tmr|halloween|christmas)";
 	private static Pattern aliasDate = Pattern.compile(REGEX_ALIAS_DATE, Pattern.CASE_INSENSITIVE);
 	
 	private static final String REGEX_MIXED_DATE = "((0?[1-9]|[12][0-9]|3[01])[ ]*(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)[ ]*((19|20)?[0-9][0-9])?)";
@@ -126,6 +126,11 @@ public class DateToken extends Token {
 		int day = 0, month = 0, year = 0;
 		
 		switch (dateString) {
+		case "yesterday":
+			day = now.minusDays(1).getDayOfMonth();
+			month = now.getMonthOfYear();
+			year = now.getYear();
+			break;
 		case "today":
 		case "tonight":
 			day = now.getDayOfMonth();
