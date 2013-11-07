@@ -273,7 +273,7 @@ public class ApplicationWindow {
 	}
 
 	public void loadShell() {
-		shell = new Shell(Display.getDefault(), SWT.NO_TRIM | SWT.ON_TOP);
+		shell = new Shell(Display.getDefault(), SWT.NO_TRIM );
 
 		shell.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
 				"/image/basketIcon.gif"));
@@ -423,7 +423,7 @@ public class ApplicationWindow {
 				} else if (arg0.character == SWT.CR) {
 					userInput = input.getText();
 					dummyCompositeIsCreated = false;
-					if(!dummyTaskComposite.isDisposed()){
+					if(dummyTaskComposite!= null && !dummyTaskComposite.isDisposed()){
 						dummyTaskComposite.dispose();
 					}
 					inputHistory.addInput(userInput);
@@ -655,6 +655,7 @@ public class ApplicationWindow {
 					dummyTaskComposite.setDescription(descriptionBuilder
 							.toString());
 				}
+				dummyTaskComposite.pack();
 			}
 
 			private void editTaskFeedback(Command executedCommand, int taskIndex) {
