@@ -339,7 +339,7 @@ public class DisplayLogic {
 	}
 	
 	public void goToLastPage() {
-		setPageNumber(getNumberOfPages());
+		setPageNumber(Integer.MAX_VALUE);
 	}
 	
 	public void goToFirstPage() {
