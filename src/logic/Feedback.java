@@ -148,7 +148,9 @@ public class Feedback {
 			statusMessage = "Error: Attribute is unrecognised";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
 			statusMessage = "Error: ID is not valid";
-		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
+		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR) {
+			statusMessage = "Error: Time slot ID is not valid";
+		}else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
 			statusMessage = "Error: No ID is indicated";
 		} else {
 			statusMessage = "Error: Invalid edit (this should not happen!)";
