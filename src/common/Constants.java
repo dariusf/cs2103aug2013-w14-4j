@@ -232,7 +232,8 @@ public class Constants {
 	
 	public static final String[] RANDOM_JOKES = { "Why do Java Programmers wear glasses?\nBecause they don't see sharp.", "What is the object-oriented way to\nbecome wealthy? Inheritance.", "[\"hip\", \"hip\"]\n(Get it?)", "Is it a boy or a girl?\nTrue", "Why did the programmer quit his job?\nBecause he didn't get arrays.", "Why did the integer drown?\nBecause it couldn't float!"};
 
-	public static final String FORMATTING_REGEX_UNDERLINE = "_([\\w +]+)_";
-	public static final String FORMATTING_REGEX_BOLD = "\\*([\\w +]+)\\*";
+	public static final String FORMATTING_ALLOWED_CHARACTERS = "[a-z}{A-Z+><.|# ]";
+	public static final String FORMATTING_REGEX_UNDERLINE = "_(" + FORMATTING_ALLOWED_CHARACTERS + "+)_";
+	public static final String FORMATTING_REGEX_BOLD = "\\*(" + FORMATTING_ALLOWED_CHARACTERS + "+)\\*";
 	
 }

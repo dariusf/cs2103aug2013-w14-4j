@@ -51,13 +51,23 @@ public class Command {
 	public void setDeadline(DateTime deadline) {
 		this.deadline = deadline;
 	}
+	
+	public boolean hasDeadline() {
+		return this.deadline != null;
+	}
 
 	public ArrayList<Interval> getIntervals() {
 		return intervals;
 	}
 
 	public void setIntervals(ArrayList<Interval> intervals) {
+		assert intervals != null;
 		this.intervals = intervals;
+	}
+	
+	public boolean hasIntervals() {
+		assert this.intervals != null;
+		return this.intervals.size() > 0;
 	}
 	
 	public ArrayList<String> getTags() {
@@ -65,7 +75,13 @@ public class Command {
 	}
 
 	public void setTags(ArrayList<String> tags) {
+		assert tags != null;
 		this.tags = tags;
+	}
+	
+	public boolean hasTags() {
+		assert this.tags != null;
+		return this.tags.size() > 0;
 	}
 	
 	public int getTaskIndex() {
