@@ -1,5 +1,7 @@
 package ui;
 
+import java.util.Arrays;
+
 import logic.Task;
 
 import org.eclipse.swt.SWT;
@@ -134,12 +136,13 @@ public class TaskComposite extends Composite {
 
 	public void setTentativeTaskAtLine(String description, int line) {
 		String[] currentDescription = taskDescription.getText().split("\n");
+	
 		int numberOfLines = currentDescription.length;
 		if (this.isTagged()) {
 			numberOfLines = numberOfLines - 1;
 		}
 
-		if (line <= numberOfLines) {
+		if (line <= numberOfLines && !taskDescription.getText().isEmpty()) {
 			currentDescription[line - 1] = description;
 			StringBuilder builder = new StringBuilder();
 
@@ -175,7 +178,7 @@ public class TaskComposite extends Composite {
 		if (this.isTagged()) {
 			numberOfLines = numberOfLines - 1;
 		}
-		if (line > 0 && line <= numberOfLines) {
+		if (line > 0 && line <= numberOfLines && !taskDescription.getText().isEmpty()) {
 			taskDescription.setLineBackground(line - 1, 1,
 					new Color(ApplicationWindow.self.shell.getDisplay(), 0x00,
 							0xdd, 0x00));
