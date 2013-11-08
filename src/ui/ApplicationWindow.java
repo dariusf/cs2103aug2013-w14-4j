@@ -676,10 +676,10 @@ public class ApplicationWindow {
 						descriptionBuilder.append(tag + " ");
 					}
 				}
-				if (!descriptionBuilder.toString().isEmpty()) {
+			
 					dummyTaskComposite.setDescription(descriptionBuilder
 							.toString());
-				}
+				
 				dummyTaskComposite.pack();
 			}
 
