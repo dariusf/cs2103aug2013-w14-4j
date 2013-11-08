@@ -40,7 +40,7 @@ public class ContextualHelp {
 		switch (command.getCommandType()) {
 		case ADD:
 			if (command.getDescription().isEmpty()) {
-				return "add _<task>_ {by|on|from..to|or} {#hashtag}";
+				return "&add& _<task>_ {by|on|from..to|or} {#hashtag}";
 			}
 			else if (!command.hasIntervals() && !command.hasDeadline()) {
 				return "add <task> {_by_|_on|from..to_|_or_} _{#hashtag}_";
