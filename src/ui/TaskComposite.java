@@ -135,9 +135,10 @@ public class TaskComposite extends Composite {
 	public void setTentativeTaskAtLine(String description, int line) {
 		String[] currentDescription = taskDescription.getText().split("\n");
 		int numberOfLines = currentDescription.length;
-		if (isTagged()) {
-			numberOfLines--;
+		if (this.isTagged()) {
+			numberOfLines = numberOfLines -1;
 		}
+	
 		if (line <= numberOfLines) {
 			currentDescription[line - 1] = description;
 			StringBuilder builder = new StringBuilder();
@@ -174,7 +175,7 @@ public class TaskComposite extends Composite {
 	}
 
 	public boolean isTagged() {
-		String[] taskDescriptionArray = taskDescription.getText().split("/n");
+		String[] taskDescriptionArray = taskDescription.getText().split("\n");
 		if (taskDescriptionArray.length > 0) {
 			String lastLine = taskDescriptionArray[taskDescriptionArray.length - 1];
 			return lastLine.startsWith("#");
