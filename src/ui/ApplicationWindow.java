@@ -208,7 +208,7 @@ public class ApplicationWindow {
 			}
 		});
 		adjustPageNumberAlignment();
-		enableDrag();
+	
 	}
 
 	private void defineColours() {
@@ -492,9 +492,7 @@ public class ApplicationWindow {
 						executedCommand);
 				TextFormatter.setFormattedText(displayFeedback,
 						contextualHelp.toString());
-				if (taskIndex == -1) {
-					defaultFeedback();
-				} else {
+			
 					switch (commandType) {
 					case DONE:
 						// Fall through
@@ -504,6 +502,8 @@ public class ApplicationWindow {
 							highlightTaskFeedback(taskIndex);
 						} else if (taskIndex != -1) {
 							displayInvalidIndexAsFeedback();
+						}	else {
+							defaultFeedback();
 						}
 						break;
 					case FINALISE:
@@ -513,6 +513,8 @@ public class ApplicationWindow {
 						} else if (taskIndex != -1) {
 							displayInvalidIndexAsFeedback();
 							return;
+						}else {
+							defaultFeedback();
 						}
 						break;
 					case EDIT:
@@ -543,7 +545,7 @@ public class ApplicationWindow {
 						defaultFeedback();
 						break;
 					}
-				}
+				
 			}
 
 			private void displayInvalidIndexAsFeedback() {
@@ -878,38 +880,6 @@ public class ApplicationWindow {
 			displayFeedbackFont = new Font(shell.getDisplay(), "Calibri", 13,
 					SWT.NORMAL);
 		}
-	}
-
-	public void enableDrag() {
-		final Point[] offset = new Point[1];
-		Listener listener = new Listener() {
-			public void handleEvent(Event event) {
-				switch (event.type) {
-				case SWT.MouseDown:
-					Point pt1 = shell.toDisplay(0, 0);
-					Point pt2 = Display.getCurrent().getCursorLocation();
-					offset[0] = new Point(pt2.x - pt1.x, pt2.y - pt1.y);
-
-					break;
-				case SWT.MouseMove:
-					if (offset[0] != null) {
-						Point pt = offset[0];
-						Point newMouseLoc = Display.getCurrent()
-								.getCursorLocation();
-						shell.setLocation(newMouseLoc.x - pt.x, newMouseLoc.y
-								- pt.y);
-					}
-					break;
-				case SWT.MouseUp:
-					offset[0] = null;
-					break;
-				}
-			}
-		};
-
-		shell.addListener(SWT.MouseDown, listener);
-		shell.addListener(SWT.MouseUp, listener);
-		shell.addListener(SWT.MouseMove, listener);
 	}
 
 	public void defineTrayIcon() {
