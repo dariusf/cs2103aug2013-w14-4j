@@ -14,7 +14,6 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.joda.time.DateTime;
 
-
 public class TaskComposite extends Composite {
 
 	private static final RowLayout innerRowLayout = new RowLayout();
@@ -52,11 +51,13 @@ public class TaskComposite extends Composite {
 		taskDetailsComposite.setLayout(new GridLayout());
 
 		taskName = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
+		taskName.setEnabled(false);
 		taskName.setLayoutData(new GridData(340, SWT.DEFAULT));
 		taskName.setFont(ApplicationWindow.self.titleFont);
 		this.setTaskName(task.getName());
 
 		taskDescription = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
+		taskDescription.setEnabled(false);
 		taskDescription.setText(task.getInfoString());
 		taskDescription.setFont(ApplicationWindow.self.descriptionFont);
 
@@ -94,14 +95,14 @@ public class TaskComposite extends Composite {
 	public void setTaskName(String name) {
 		taskName.setText(name);
 		this.pack();
-		
+
 		StyledText measurement = new StyledText(taskName.getParent(), SWT.NONE);
 		measurement.setText(name);
-		measurement.setFont(new Font(taskName.getDisplay(), "Calibri",
-						24, SWT.NORMAL));
+		measurement.setFont(new Font(taskName.getDisplay(), "Calibri", 24,
+				SWT.NORMAL));
 		measurement.pack();
 		int xSize = measurement.getSize().x;
-		
+
 		boolean isWindows = System.getProperty("os.name").toLowerCase()
 				.indexOf("win") >= 0;
 
@@ -131,9 +132,13 @@ public class TaskComposite extends Composite {
 		taskDescription.pack();
 	}
 
-	public void setDescriptionAtLine(String description, int line) {
+	public void setTentativeTaskAtLine(String description, int line) {
 		String[] currentDescription = taskDescription.getText().split("\n");
-		if (line <= currentDescription.length) {
+		int numberOfLines = currentDescription.length;
+		if (isTagged()) {
+			numberOfLines--;
+		}
+		if (line <= numberOfLines) {
 			currentDescription[line - 1] = description;
 			StringBuilder builder = new StringBuilder();
 
@@ -186,14 +191,15 @@ public class TaskComposite extends Composite {
 			return "";
 		}
 	}
-	
-	public String getTimeString(){
-		if(isTagged()){
-			String[] taskDescriptionArray = taskDescription.getText().split("/n");
+
+	public String getTimeString() {
+		if (isTagged()) {
+			String[] taskDescriptionArray = taskDescription.getText().split(
+					"/n");
 			StringBuilder stringBuilder = new StringBuilder();
-			for(int i = 0; i < taskDescriptionArray.length -1 ; i++){
+			for (int i = 0; i < taskDescriptionArray.length - 1; i++) {
 				stringBuilder.append(taskDescriptionArray[i]);
-				if(i != taskDescriptionArray.length -2){
+				if (i != taskDescriptionArray.length - 2) {
 					stringBuilder.append(" ");
 				}
 			}
