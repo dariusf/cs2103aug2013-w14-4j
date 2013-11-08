@@ -9,7 +9,7 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import common.Constants;
 
-//@ A0097282W
+//@author A0097282W
 public class TextFormatter {
 	
 	/**
