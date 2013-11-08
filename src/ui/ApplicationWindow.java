@@ -490,52 +490,59 @@ public class ApplicationWindow {
 
 				ContextualHelp contextualHelp = new ContextualHelp(
 						executedCommand);
-				// TextFormatter.setFormattedText(displayFeedback,
-				// contextualHelp.toString());
-
-				switch (commandType) {
-				case DONE:
-					break;
-				case DELETE:
-					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
-						highlightTaskFeedback(taskIndex);
-					} else if (taskIndex != -1) {
-						displayInvalidIndexAsFeedback();
-					}
-					break;
-				case FINALISE:
-					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
-						finaliseTaskFeedback(executedCommand, taskIndex);
-					} else if (taskIndex != -1) {
-						displayInvalidIndexAsFeedback();
-						return;
-					}
-					break;
-				case EDIT:
-					// TODO timeslot index has to be checked lower down, inside
-					// edit and finalise
-
-					if (taskIndex > 0 && taskIndex <= logic.getNumberOfTasks()) {
-						editTaskFeedback(executedCommand, taskIndex);
-					} else if (taskIndex != -1) {
-						defaultFeedback();
-						displayInvalidIndexAsFeedback();
-						return;
-					} else {
-						defaultFeedback();
-					}
-					break;
-				case ADD:
-					addTaskFeedback(executedCommand);
-					break;
-				case SEARCH:
-					searchTaskFeedback(executedCommand);
-					break;
-				case INVALID:
-					break;
-				default:
+				TextFormatter.setFormattedText(displayFeedback,
+						contextualHelp.toString());
+				if (taskIndex == -1) {
 					defaultFeedback();
-					break;
+				} else {
+					switch (commandType) {
+					case DONE:
+						// Fall through
+					case DELETE:
+						if (taskIndex > 0
+								&& taskIndex <= logic.getNumberOfTasks()) {
+							highlightTaskFeedback(taskIndex);
+						} else if (taskIndex != -1) {
+							displayInvalidIndexAsFeedback();
+						}
+						break;
+					case FINALISE:
+						if (taskIndex > 0
+								&& taskIndex <= logic.getNumberOfTasks()) {
+							finaliseTaskFeedback(executedCommand, taskIndex);
+						} else if (taskIndex != -1) {
+							displayInvalidIndexAsFeedback();
+							return;
+						}
+						break;
+					case EDIT:
+						// TODO timeslot index has to be checked lower down,
+						// inside
+						// edit and finalise
+
+						if (taskIndex > 0
+								&& taskIndex <= logic.getNumberOfTasks()) {
+							editTaskFeedback(executedCommand, taskIndex);
+						} else if (taskIndex != -1) {
+							defaultFeedback();
+							displayInvalidIndexAsFeedback();
+							return;
+						} else {
+							defaultFeedback();
+						}
+						break;
+					case ADD:
+						addTaskFeedback(executedCommand);
+						break;
+					case SEARCH:
+						searchTaskFeedback(executedCommand);
+						break;
+					case INVALID:
+						// Fall through
+					default:
+						defaultFeedback();
+						break;
+					}
 				}
 			}
 
