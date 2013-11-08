@@ -12,6 +12,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.joda.time.DateTime;
 
 
 public class TaskComposite extends Composite {
@@ -93,13 +94,14 @@ public class TaskComposite extends Composite {
 	public void setTaskName(String name) {
 		taskName.setText(name);
 		this.pack();
+		
 		StyledText measurement = new StyledText(taskName.getParent(), SWT.NONE);
 		measurement.setText(name);
 		measurement.setFont(new Font(taskName.getDisplay(), "Calibri",
 						24, SWT.NORMAL));
 		measurement.pack();
 		int xSize = measurement.getSize().x;
-
+		
 		boolean isWindows = System.getProperty("os.name").toLowerCase()
 				.indexOf("win") >= 0;
 
