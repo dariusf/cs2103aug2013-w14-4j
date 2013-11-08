@@ -40,14 +40,19 @@ public class TextFormatter {
 	
 	public static void setFormattedText(StyledText styledText, String text) {
 		ArrayList<FormatRange> ranges = getFormatRanges(text);
-		
-		text = performSubstitutions(removeFormattingCharacters(text));
-		styledText.setText(text);
+		styledText.setText(performSubstitutions(removeFormattingCharacters(text)));
 		applyFormatting(styledText, text, ranges);
 	}
 	
 	private static String performSubstitutions(String text) {
-		return text.replaceAll("- ", "• ");
+		assert Constants.FORMATTING_SUBSTITUTIONS.length % 2 == 0;
+		
+		for (int i=0; i<Constants.FORMATTING_SUBSTITUTIONS.length; i+=2) {
+			String substituteThis = Constants.FORMATTING_SUBSTITUTIONS[i];
+			String forThis = Constants.FORMATTING_SUBSTITUTIONS[i+1];
+			text = text.replaceAll(substituteThis, forThis);
+		}
+		return text;
 	}
 
 	private static String removeFormattingCharacters(String text) {
@@ -57,24 +62,30 @@ public class TextFormatter {
 	}
 
 	private static void applyFormatting(StyledText styledText, String helpString, ArrayList<FormatRange> formatRanges) {
+		
 		for (FormatRange formatRange : formatRanges) {
 			StyleRange sr = new StyleRange();
 			sr.start = formatRange.start;
 			sr.length = formatRange.end - sr.start;
 			int formatType = formatRange.formatType;
 
-			if (formatType == UNDERLINE) {
+			switch (formatType) {
+			case UNDERLINE:
 				sr.underline = true;
-			}
-			else if (formatType == COLOUR1) {
+				break;
+			case COLOUR1:
 				sr.foreground = ApplicationWindow.self.red;
-			}
-			else {
-				assert formatType == BOLD;
+				break;
+			case BOLD:
 				sr.fontStyle = SWT.BOLD;
+				break;
+			default:
+				assert false : "Unrecognized formatting enumeration " + formatType;
 			}
+			
 			styledText.setStyleRange(sr);
 		}
+		
 	}
 
 	private static ArrayList<FormatRange> getFormatRanges(String text) {
