@@ -17,6 +17,7 @@ public class Feedback {
 	private boolean isError = false;
 	private int gotoPage = 0;
 	private CommandType helpCommandType = null;
+	private Task addedTask = null;
 
 	public Feedback(int status, CommandType command) {
 		setStatusCode(status);
@@ -349,5 +350,13 @@ public class Feedback {
 
 	public void setGotoPage(int gotoPage) {
 		this.gotoPage = gotoPage;
+	}
+
+	public Task getAddedTask() {
+		return addedTask;
+	}
+
+	public void setAddedTask(Task addedTask) {
+		this.addedTask = addedTask;
 	}
 }

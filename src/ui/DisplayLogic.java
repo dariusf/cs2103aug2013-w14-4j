@@ -117,8 +117,11 @@ public class DisplayLogic {
 	public void processFeedback(Feedback feedback, HelpDialog helpDialog) {
 		switch (feedback.getCommand()) {
 		case ADD:
-			this.setDisplayMode(DisplayMode.TODO);
-			goToLastPage();
+			Task task = feedback.getAddedTask();
+			if(!taskIsInCurrentDisplayMode(task)){
+				this.setDisplayMode(DisplayMode.TODO);
+				goToLastPage();
+			}
 			break;
 		case EDIT:
 			// fallthrough
@@ -168,6 +171,41 @@ public class DisplayLogic {
 		default:
 			break;
 		}
+	}
+
+	private boolean taskIsInCurrentDisplayMode(Task task) {
+		switch (displayMode) {
+		case ALL:
+			return true;
+		case DATE:
+			return task.isOnDate(currentDisplayDateTime);
+		case DEADLINE:
+			return task.isDeadlineTask();
+		case DONE:
+			return task.isDone();
+		case INVALID:
+			return false;
+		case OVERDUE:
+			return task.isOverdue();
+		case SEARCH:
+			return false;
+		case TENTATIVE:
+			return task.isFloatingTask();
+		case TIMED:
+			return task.isTimedTask();
+		case TODAY:
+			return task.isOnDate(new DateTime());
+		case TODO:
+			return true;
+		case TOMORROW:
+			return task.isOnDate(new DateTime().plusDays(1));
+		case UNTIMED:
+			return task.isUntimedTask();
+		default:
+			break;
+	
+		}
+		return false;
 	}
 
 	private String determineTitle() {
