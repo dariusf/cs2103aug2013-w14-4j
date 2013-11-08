@@ -40,13 +40,16 @@ public class ContextualHelp {
 		switch (command.getCommandType()) {
 		case ADD:
 			if (command.getDescription().isEmpty()) {
-				return "add <_task_> {by|on|from..to|or} {#hashtag}";
+				return "add _<task>_ {by|on|from..to|or} {#hashtag}";
 			}
-			else if (command.getTags().size() == 0) {
-				return "add <task> {by|on|from..to|or} {#_hashtag_}";
+			else if (!command.hasIntervals() && !command.hasDeadline()) {
+				return "add <task> {_by_|_on|from..to_|_or_} _{#hashtag}_";
+			}
+			else if (command.hasIntervals()) {
+				return "add <task> {by|on|from..to|_or_} _{#hashtag}_";
 			}
 			else {
-				return COMMAND_FORMAT_ADD;
+				return "add <task> {by|on|from..to|or} _{#hashtag}_";
 			}
 		case EDIT:
 			return COMMAND_FORMAT_EDIT;

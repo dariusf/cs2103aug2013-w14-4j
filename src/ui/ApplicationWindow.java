@@ -176,7 +176,7 @@ public class ApplicationWindow {
 		loadShell();
 		// TODO Please change this value to 1 when you compile for use on your
 		// computers.
-		defineFont(0.85);
+		defineFont(1);
 		defineColours();
 		defineDisplayPageNumber();
 		defineRemainingTaskCount();
