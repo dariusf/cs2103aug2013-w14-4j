@@ -63,6 +63,7 @@ public class ApplicationWindow {
 	public Font titleFont; // accessed by task composite
 	public Font descriptionFont; // accessed by task composite
 
+	// TODO should probably be static final
 	public Color green;
 	public Color red;
 	public Color purple;
@@ -486,12 +487,12 @@ public class ApplicationWindow {
 				Command executedCommand = activeFeedback.getCommand();
 				int taskIndex = executedCommand.getTaskIndex();
 				CommandType commandType = executedCommand.getCommandType();
-				displayFeedback.setForeground(purple);
+//				displayFeedback.setForeground(purple);
 
 				ContextualHelp contextualHelp = new ContextualHelp(
 						executedCommand);
-				// TextFormatter.setFormattedText(displayFeedback,
-				// contextualHelp.toString());
+				 TextFormatter.setFormattedText(displayFeedback,
+				 contextualHelp.toString());
 
 				switch (commandType) {
 				case DONE:
