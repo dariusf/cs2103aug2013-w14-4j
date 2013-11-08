@@ -136,9 +136,9 @@ public class TaskComposite extends Composite {
 		String[] currentDescription = taskDescription.getText().split("\n");
 		int numberOfLines = currentDescription.length;
 		if (this.isTagged()) {
-			numberOfLines = numberOfLines -1;
+			numberOfLines = numberOfLines - 1;
 		}
-	
+
 		if (line <= numberOfLines) {
 			currentDescription[line - 1] = description;
 			StringBuilder builder = new StringBuilder();
@@ -170,8 +170,16 @@ public class TaskComposite extends Composite {
 	}
 
 	public void highlightLine(int line) {
-		taskDescription.setLineBackground(line - 1, 1, new Color(
-				ApplicationWindow.self.shell.getDisplay(), 0x00, 0xdd, 0x00));
+		String[] currentDescription = taskDescription.getText().split("\n");
+		int numberOfLines = currentDescription.length;
+		if (this.isTagged()) {
+			numberOfLines = numberOfLines - 1;
+		}
+		if (line > 0 && line <= numberOfLines) {
+			taskDescription.setLineBackground(line - 1, 1,
+					new Color(ApplicationWindow.self.shell.getDisplay(), 0x00,
+							0xdd, 0x00));
+		}
 	}
 
 	public boolean isTagged() {

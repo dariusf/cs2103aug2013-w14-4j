@@ -714,7 +714,9 @@ public class ApplicationWindow {
 												interval.getEndDateTime());
 								currentComposite.setTentativeTaskAtLine(
 										description, timeSlot);
+								
 							}
+							currentComposite.highlightLine(timeSlot);
 						}
 					}
 				} else {
