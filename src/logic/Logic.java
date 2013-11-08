@@ -155,8 +155,10 @@ public class Logic {
 		if (isTaskOver(newTask)) {
 			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
 					CommandType.ADD);
+			feedback.setAddedTask(newTask);
 		} else {
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.ADD);
+			feedback.setAddedTask(newTask);
 		}
 
 		return feedback;
