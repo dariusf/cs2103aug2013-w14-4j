@@ -186,4 +186,20 @@ public class TaskComposite extends Composite {
 			return "";
 		}
 	}
+	
+	public String getTimeString(){
+		if(isTagged()){
+			String[] taskDescriptionArray = taskDescription.getText().split("/n");
+			StringBuilder stringBuilder = new StringBuilder();
+			for(int i = 0; i < taskDescriptionArray.length -1 ; i++){
+				stringBuilder.append(taskDescriptionArray[i]);
+				if(i != taskDescriptionArray.length -2){
+					stringBuilder.append(" ");
+				}
+			}
+			return stringBuilder.toString();
+		} else {
+			return taskDescription.getText();
+		}
+	}
 }

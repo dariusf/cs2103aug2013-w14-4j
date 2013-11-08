@@ -724,7 +724,7 @@ public class ApplicationWindow {
 						currentComposite.setTaskName(executedCommand
 								.getDescription());
 					}
-
+					
 					StringBuilder descriptionBuilder = new StringBuilder();
 					if (finalType.equals(TaskType.DEADLINE)) {
 						descriptionBuilder.append("by "
@@ -753,22 +753,22 @@ public class ApplicationWindow {
 							}
 							index++;
 						}
+					} else {
+						descriptionBuilder.append(currentComposite.getTimeString());
 					}
+				
 					String currentTags = currentComposite.getTags();
 					ArrayList<String> newTags = executedCommand.getTags();
 					StringBuilder tagsBuilder = new StringBuilder();
 					tagsBuilder.append(currentTags);
 
-					// TODO use stringbuilder
 					for (String tag : newTags) {
 						tagsBuilder.append(tag);
 						tagsBuilder.append(" ");
 					}
 
 					if (tagsBuilder.length() > 0) {
-						if (finalType.equals(TaskType.DEADLINE)
-								| finalType.equals(TaskType.TIMED)
-								| finalType.equals(TaskType.TENTATIVE)) {
+						if (!descriptionBuilder.toString().isEmpty()) {
 							descriptionBuilder.append("\n");
 						}
 						descriptionBuilder.append(tagsBuilder.toString());
