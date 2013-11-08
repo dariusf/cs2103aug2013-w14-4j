@@ -703,7 +703,7 @@ public class ApplicationWindow {
 												interval.getStartDateTime(),
 												interval.getEndDateTime());
 								;
-								currentComposite.setDescriptionAtLine(
+								currentComposite.setTentativeTaskAtLine(
 										description, timeSlot);
 							} else {
 								String description = "or ("
@@ -712,7 +712,7 @@ public class ApplicationWindow {
 										+ Task.intervalFormat(
 												interval.getStartDateTime(),
 												interval.getEndDateTime());
-								currentComposite.setDescriptionAtLine(
+								currentComposite.setTentativeTaskAtLine(
 										description, timeSlot);
 							}
 						}
