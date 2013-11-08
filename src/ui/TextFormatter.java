@@ -13,19 +13,24 @@ import common.Constants;
 public class TextFormatter {
 	
 	/**
-	 * A class that defines a (tiny) subset of markdown for styling SWT StyledText objects.
-	 * It exposes one public method, setFormattedText, which sets the text of the StyledText
-	 * object to the text string, with formatting applied and formatting characters removed.
+	 * A class that defines a (tiny) (unofficial) subset of markdown for styling SWT
+	 * StyledText objects. It exposes one public method, setFormattedText, which sets
+	 * the text of the StyledText object to the text string, with formatting applied
+	 * and formatting characters removed.
 	 * 
 	 * Formatting types supported:
 	 * 
 	 * *bold*
 	 * _underline_
+	 * &colour1&
+	 * 
+	 * - bullets
 	 * 
 	 */
 	
 	private static final int UNDERLINE = 0;
 	private static final int BOLD = 1;
+	private static final int COLOUR1 = 2;
 	
 	private static class FormatRange {
 		public int start;
@@ -35,12 +40,20 @@ public class TextFormatter {
 	
 	public static void setFormattedText(StyledText styledText, String text) {
 		ArrayList<FormatRange> ranges = getFormatRanges(text);
-		styledText.setText(removeFormattingCharacters(text));
+		
+		text = performSubstitutions(removeFormattingCharacters(text));
+		styledText.setText(text);
 		applyFormatting(styledText, text, ranges);
 	}
 	
+	private static String performSubstitutions(String text) {
+		return text.replaceAll("- ", "• ");
+	}
+
 	private static String removeFormattingCharacters(String text) {
-		return text.replaceAll(Constants.FORMATTING_REGEX_UNDERLINE, "$1").replaceAll(Constants.FORMATTING_REGEX_BOLD, "$1");
+		return text.replaceAll(Constants.FORMATTING_REGEX_UNDERLINE, "$1")
+				.replaceAll(Constants.FORMATTING_REGEX_BOLD, "$1")
+				.replaceAll(Constants.FORMATTING_REGEX_COLOUR1, "$1");
 	}
 
 	private static void applyFormatting(StyledText styledText, String helpString, ArrayList<FormatRange> formatRanges) {
@@ -53,6 +66,9 @@ public class TextFormatter {
 			if (formatType == UNDERLINE) {
 				sr.underline = true;
 			}
+			else if (formatType == COLOUR1) {
+				sr.foreground = ApplicationWindow.self.red;
+			}
 			else {
 				assert formatType == BOLD;
 				sr.fontStyle = SWT.BOLD;
@@ -63,7 +79,7 @@ public class TextFormatter {
 
 	private static ArrayList<FormatRange> getFormatRanges(String text) {
 		
-		Pattern pattern = Pattern.compile(Constants.FORMATTING_REGEX_UNDERLINE + "|" + Constants.FORMATTING_REGEX_BOLD);
+		Pattern pattern = Pattern.compile(Constants.FORMATTING_REGEX_UNDERLINE + "|" + Constants.FORMATTING_REGEX_BOLD + "|" + Constants.FORMATTING_REGEX_COLOUR1);
 		Matcher matcher = pattern.matcher(text);
 
 		ArrayList<FormatRange> result = new ArrayList<FormatRange>();
@@ -78,7 +94,11 @@ public class TextFormatter {
 			
 			if (matcher.group(1) != null) {
 				formatRange.formatType = UNDERLINE;
-			} else {
+			}
+			else if (matcher.group(3) != null) {
+				formatRange.formatType = COLOUR1;
+			}
+			else {
 				assert matcher.group(2) != null;
 				formatRange.formatType = BOLD;
 			}
