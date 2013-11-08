@@ -311,6 +311,10 @@ public class Task implements Comparable<Task>, Cloneable {
 		return type == TaskType.UNTIMED;
 	}
 
+	public boolean isEmpty(){
+		return name.isEmpty() && tags.isEmpty() && interval == null && deadline == null && possibleIntervals.isEmpty();
+	}
+	
 	public String toString() {
 		StringBuilder output = new StringBuilder();
 		output.append(name);

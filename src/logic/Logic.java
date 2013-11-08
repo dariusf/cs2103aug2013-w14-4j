@@ -68,35 +68,35 @@ public class Logic {
 		CommandType commandType = command.getCommandType();
 
 		switch (commandType) {
-		case ADD:
+		case ADD :
 			return addTask(command);
-		case DISPLAY:
+		case DISPLAY :
 			return displayTasks(command);
-		case DELETE:
+		case DELETE :
 			return deleteTask(command);
-		case CLEAR:
+		case CLEAR :
 			return clearTasks(command);
-		case EXIT:
+		case EXIT :
 			return exit();
-		case SEARCH:
+		case SEARCH :
 			return searchTasks(command);
-		case UNDO:
+		case UNDO :
 			return undoState();
-		case REDO:
+		case REDO :
 			return redoState();
-		case EDIT:
+		case EDIT :
 			return editTask(command);
-		case HELP:
+		case HELP :
 			return showHelp(command);
-		case DONE:
+		case DONE :
 			return markDone(command);
-		case FINALISE:
+		case FINALISE :
 			return finaliseTask(command);
-		case SORT:
+		case SORT :
 			return sortTask();
-		case GOTO:
+		case GOTO :
 			return gotoPage(command);
-		default:
+		default :
 			return invalidCommand(command);
 		}
 	}
@@ -105,31 +105,31 @@ public class Logic {
 		InvalidCommandReason error = command.getInvalidCommandReason();
 		Feedback feedback = null;
 		switch (error) {
-		case EMPTY_COMMAND:
+		case EMPTY_COMMAND :
 			feedback = new Feedback(Constants.SC_EMPTY_COMMAND_ERROR, CommandType.INVALID);
 			break;
-		case INVALID_DATE:
+		case INVALID_DATE :
 			feedback = new Feedback(Constants.SC_INVALID_DATE_ERROR, CommandType.INVALID);
 			break;
-		case INVALID_PAGE_INDEX:
+		case INVALID_PAGE_INDEX :
 			feedback = new Feedback(Constants.SC_INVALID_PAGE_INDEX_ERROR, CommandType.INVALID);
 			break;
-		case INVALID_SEARCH_PARAMETERS:
+		case INVALID_SEARCH_PARAMETERS :
 			feedback = new Feedback(Constants.SC_INVALID_SEARCH_PARAMETERS_ERROR, CommandType.INVALID);
 			break;
-		case INVALID_TASK_INDEX:
+		case INVALID_TASK_INDEX :
 			feedback = new Feedback(Constants.SC_INVALID_TASK_INDEX_ERROR, CommandType.INVALID);
 			break;
-		case INVALID_TIMESLOT_INDEX:
+		case INVALID_TIMESLOT_INDEX :
 			feedback = new Feedback(Constants.SC_INVALID_TIMESLOT_INDEX_ERROR, CommandType.INVALID);
 			break;
-		case TOO_FEW_ARGUMENTS:
+		case TOO_FEW_ARGUMENTS :
 			feedback = new Feedback(Constants.SC_TOO_FEW_ARGUMENTS_ERROR, CommandType.INVALID);
 			break;
-		case UNRECOGNIZED_COMMAND:
+		case UNRECOGNIZED_COMMAND :
 			feedback = new Feedback(Constants.SC_UNRECOGNIZED_COMMAND_ERROR, CommandType.INVALID);
 			break;
-		default:
+		default :
 			feedback = new Feedback(Constants.SC_INVALID_COMMAND_ERROR, CommandType.INVALID);
 			break;
 		}
@@ -294,33 +294,33 @@ public class Logic {
 		DisplayMode displayMode = command.getDisplayMode();
 		DateTime displayDate = null;
 		switch (displayMode) {
-		case DATE:
+		case DATE :
 			displayDate = command.getDisplayDateTime();
 			return task.isOnDate(displayDate);
-		case TODAY:
+		case TODAY :
 			displayDate = new DateTime();
 			return task.isOnDate(displayDate);
-		case TOMORROW:
+		case TOMORROW :
 			displayDate = new DateTime();
 			displayDate = displayDate.plusDays(1);
 			return task.isOnDate(displayDate);
-		case ALL:
+		case ALL :
 			return true;
-		case TODO:
+		case TODO :
 			return !task.isDone();
-		case DONE:
+		case DONE :
 			return task.isDone();
-		case TIMED:
+		case TIMED :
 			return task.isTimedTask();
-		case DEADLINE:
+		case DEADLINE :
 			return task.isDeadlineTask();
-		case TENTATIVE:
+		case TENTATIVE :
 			return task.isFloatingTask();
-		case UNTIMED:
+		case UNTIMED :
 			return task.isUntimedTask();
-		case OVERDUE:
+		case OVERDUE :
 			return task.isOverdue();
-		default:
+		default :
 			return !task.isDone();
 		}
 	}
@@ -413,30 +413,30 @@ public class Logic {
 					boolean condition = false;
 					
 					switch (clearMode) {
-					case DEADLINE:
+					case DEADLINE :
 						condition = currentTask.isDeadlineTask();
 						break;
-					case TIMED:
+					case TIMED :
 						condition = currentTask.isTimedTask();
 						break;
-					case TENTATIVE:
+					case TENTATIVE :
 						condition = currentTask.isFloatingTask();
 						break;
-					case UNTIMED:
+					case UNTIMED :
 						condition = currentTask.isUntimedTask();
 						break;
-					case OVERDUE:
+					case OVERDUE :
 						condition = currentTask.isDeadlineTask() && currentTask.getDeadline().isBefore(now);
 						break;
-					case DATE:
+					case DATE :
 						condition = currentTask.getStartTime().dayOfYear().equals(command.getClearDateTime().dayOfYear());
 						break;
-					case DONE:
+					case DONE :
 						condition = currentTask.isDone();
 						break;
-					case INVALID:
+					case INVALID :
 						assert false : "Invalid clear mode, either an error in above or parser logic";
-					default:
+					default :
 						assert false : "Error in clear mode logic";
 					}
 					
