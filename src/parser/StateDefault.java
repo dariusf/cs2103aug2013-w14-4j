@@ -2,6 +2,7 @@ package parser;
 
 import logic.Interval;
 
+//@author A0097282W
 class StateDefault implements State {
 
 	StringBuilder words = new StringBuilder();

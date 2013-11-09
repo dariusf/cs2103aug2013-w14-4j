@@ -1,5 +1,6 @@
 package parser;
 
+//@author A0097282W
 public interface State {
 
 	// This method determines if the current state will be popped from
