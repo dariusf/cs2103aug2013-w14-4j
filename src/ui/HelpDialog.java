@@ -24,6 +24,8 @@ public class HelpDialog extends Dialog {
 	boolean isGeneralHelp = false;
 	private Shell dialog;
 
+	private int increase = 45; // TODO remove this
+	
 	// @author A0101048X
 	public HelpDialog(Shell parent) {
 		super(parent);
@@ -34,7 +36,7 @@ public class HelpDialog extends Dialog {
 		dialog = new Shell(parent);
 		display = parent.getDisplay();
 
-		dialog.setSize(420, 460);
+		dialog.setSize(420, 540+increase);
 		dialog.setText("Help");
 		
 		Monitor primary = display.getPrimaryMonitor();
@@ -48,7 +50,7 @@ public class HelpDialog extends Dialog {
 		dialog.setLocation(x, y);
 
 		final Button closeButton = new Button(dialog, SWT.NONE);
-		closeButton.setBounds(148, 397, 118, 25);
+		closeButton.setBounds(148, 477+increase, 118, 25);
 		closeButton.setText("Got it!");
 
 		helpText = new StyledText(dialog, SWT.READ_ONLY | SWT.WRAP);
@@ -61,7 +63,7 @@ public class HelpDialog extends Dialog {
 			helpText.setFont(SWTResourceManager.getFont("Calibri", 16,
 					SWT.NORMAL));
 		}
-		helpText.setBounds(10, 10, 394, 381);
+		helpText.setBounds(10, 10, 394, 461+increase);
 		helpText.setEnabled(false);
 
 		Color orange = new Color(display, 255, 127, 0);
