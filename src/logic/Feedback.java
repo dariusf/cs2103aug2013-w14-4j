@@ -125,13 +125,13 @@ public class Feedback {
 
 	private String addFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task added successfully!";
+			statusMessage = "Task added!";
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task added successfully! \nTask is overdue";
-		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
-			statusMessage = "Error: No task description was given";
-		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
-			statusMessage = "Error: Attribute is unrecognised";
+			statusMessage = "Task added!\nIt's overdue, though.";
+//		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
+//			statusMessage = "Error: No task description was given";
+//		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
+//			statusMessage = "Error: Attribute is unrecognised";
 		} else {
 			statusMessage = "Error: Invalid add (this should not happen!)";
 		}
@@ -140,19 +140,19 @@ public class Feedback {
 
 	private String editFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task edited successfully!";
+			statusMessage = "Task edited!";
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task edited successfully! \nTask is overdue";
+			statusMessage = "Task edited!\nIt's overdue, though.";
 		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
-			statusMessage = "Error: No task description was given";
-		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
-			statusMessage = "Error: Attribute is unrecognised";
+			statusMessage = "Error: No task description was given!";
+//		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
+//			statusMessage = "Error: Attribute is unrecognised";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
-			statusMessage = "Error: ID is not valid";
+			statusMessage = "Error: That's not a valid task index!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR) {
-			statusMessage = "Error: Time slot ID is not valid";
+			statusMessage = "Error: That's not a valid timeslot index!";
 		}else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
-			statusMessage = "Error: No ID is indicated";
+			statusMessage = "Error: You need to specify a task index!";
 		} else {
 			statusMessage = "Error: Invalid edit (this should not happen!)";
 		}
@@ -161,9 +161,9 @@ public class Feedback {
 
 	private String displayFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Here are your tasks.";
+			statusMessage = "Here are your tasks!";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
-			statusMessage = "You have no tasks :)";
+			statusMessage = "You have no tasks!";
 		} else {
 			statusMessage = "Error: Invalid display (this should not happen!)";
 		}
@@ -172,11 +172,11 @@ public class Feedback {
 
 	private String deleteFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task deleted successfully!";
+			statusMessage = "Task deleted!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
-			statusMessage = "Error: ID is not valid";
+			statusMessage = "Error: That's not a valid task index!";
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
-			statusMessage = "Error: No ID is indicated";
+			statusMessage = "Error: You need to specify a task index!";
 		} else {
 			statusMessage = "Error: Invalid delete (this should not happen!)";
 		}
@@ -185,9 +185,9 @@ public class Feedback {
 
 	private String clearFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "All tasks cleared!";
+			statusMessage = "Tasks cleared!";
 		} else if (statusCode == Constants.SC_SUCCESS_CLEAR_DONE) {
-			statusMessage = "All done tasks cleared!";
+			statusMessage = "Tasks cleared!";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to clear!";
 		} else {
@@ -198,7 +198,7 @@ public class Feedback {
 
 	private String sortFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "All tasks sorted!";
+			statusMessage = "Tasks sorted!";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to sort!";
 		} else {
@@ -209,13 +209,13 @@ public class Feedback {
 
 	private String searchFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Here are your search results.";
+			statusMessage = "Here are your search results!";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to search!";
 		} else if (statusCode == Constants.SC_SEARCH_KEYWORD_MISSING_ERROR) {
-			statusMessage = "Error: No search description was given";
-		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
-			statusMessage = "Error: Attribute is unrecognised";
+			statusMessage = "Error: No search description was given!";
+//		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
+//			statusMessage = "Error: Attribute is unrecognised";
 		} else {
 			statusMessage = "Error: Invalid search (this should not happen!)";
 		}
@@ -224,21 +224,21 @@ public class Feedback {
 
 	private String invalidFeedback() {
 		if (statusCode == Constants.SC_INVALID_COMMAND_ERROR) {
-			statusMessage = "Error: Invalid command!";
+			statusMessage = "Error: That's not valid command!";
 		} else if (statusCode == Constants.SC_EMPTY_COMMAND_ERROR){
 			statusMessage = "Error: No command entered!";
 		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX_ERROR){
-			statusMessage = "Error: Page index is invalid!!";
+			statusMessage = "Error: That's not a vaild page index!";
 		} else if (statusCode == Constants.SC_INVALID_DATE_ERROR){
-			statusMessage = "Error: Date is invalid!";
+			statusMessage = "Error: That's not a valid date!";
 		} else if (statusCode == Constants.SC_UNRECOGNIZED_COMMAND_ERROR){
 			statusMessage = "Error: Command is not recognised!";
 		} else if (statusCode == Constants.SC_TOO_FEW_ARGUMENTS_ERROR){
 			statusMessage = "Error: Command is not in the right format!";
 		} else if (statusCode == Constants.SC_INVALID_TIMESLOT_INDEX_ERROR){
-			statusMessage = "Error: Timeslot index is invalid!";
+			statusMessage = "Error: That's not a valid timeslot index!";
 		} else if (statusCode == Constants.SC_INVALID_SEARCH_PARAMETERS_ERROR){
-			statusMessage = "Error: Search parameter(s) is/are invalid!";
+			statusMessage = "Error: Search parameters are invalid!";
 		}  else if (statusCode == Constants.SC_INVALID_TASK_INDEX_ERROR){
 			statusMessage = "Error: Task index is invalid!";
 		}else {
@@ -251,7 +251,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = "Undo successful!";
 		} else if (statusCode == Constants.SC_UNDO_NO_PRIOR_STATE_ERROR) {
-			statusMessage = "Error: Nothing to undo!";
+			statusMessage = "Error: There's nothing to undo!";
 		} else {
 			statusMessage = "Error: Invalid undo (this should not happen!)";
 		}
@@ -271,21 +271,21 @@ public class Feedback {
 
 	private String finaliseFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task finalised successfully!";
+			statusMessage = "Task finalised!";
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task finalised successfully! \nTask is overdue";
+			statusMessage = "Task finalised!\nIt's overdue, though.";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to finalise!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
-			statusMessage = "Error: ID is not valid";
+			statusMessage = "Error: That's not a valid task index!";
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
-			statusMessage = "Error: No ID is indicated";
+			statusMessage = "Error: That's not a valid task index!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR) {
-			statusMessage = "Error: Time ID is not valid";
+			statusMessage = "Error: That's not a valid timeslot index!";
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_TIME_ERROR) {
-			statusMessage = "Error: Time ID is not specified";
+			statusMessage = "Error: That's not a valid time!";
 		} else if (statusCode == Constants.SC_FINALISE_TYPE_MISMATCH_ERROR) {
-			statusMessage = "Error: Task selected is not a floating task";
+			statusMessage = "Error: That's not a tentative task!";
 		} else {
 			statusMessage = "Error: Invalid finalise (this should not happen!)";
 		}
@@ -307,9 +307,9 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to mark as done!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
-			statusMessage = "Error: ID is not valid";
+			statusMessage = "Error: That's not a valid task index!";
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
-			statusMessage = "Error: No ID is indicated";
+			statusMessage = "Error: That's not a valid task index!";
 		} else {
 			statusMessage = "Error: Invalid done (this should not happen!)";
 		}
@@ -320,7 +320,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = "Page " + gotoPage;
 		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX) {
-			statusMessage = "Error: Invalid page " + gotoPage;
+			statusMessage = "Error: " + gotoPage + " is not a valid page!";
 		} else {
 			statusMessage = "Error: Invalid goto (this should not happen!)";
 		}
@@ -329,7 +329,7 @@ public class Feedback {
 
 	private String exitFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Exiting...";
+			statusMessage = "Saving...";
 		} else {
 			statusMessage = "Error: Cannot exit (this should not happen!)";
 		}

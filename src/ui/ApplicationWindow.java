@@ -487,7 +487,7 @@ public class ApplicationWindow {
 				Command executedCommand = activeFeedback.getCommand();
 				int taskIndex = executedCommand.getTaskIndex();
 				CommandType commandType = executedCommand.getCommandType();
-//				displayFeedback.setForeground(purple);
+				displayFeedback.setForeground(purple);
 
 				ContextualHelp contextualHelp = new ContextualHelp(
 						executedCommand);

@@ -186,7 +186,7 @@ public class Constants {
 	public static final int SC_INVALID_DATE_ERROR = 27;
 	public static final int SC_INVALID_TIMESLOT_INDEX_ERROR = 28;
 	public static final int SC_EMPTY_DESCRIPTION_ERROR = 30;
-	public static final int SC_UNRECOGNISED_ATTRIBUTE_ERROR = 31;
+//	public static final int SC_UNRECOGNISED_ATTRIBUTE_ERROR = 31;
 	public static final int SC_INTEGER_OUT_OF_BOUNDS_ERROR = 41;
 	public static final int SC_NO_TASK_ERROR = 50;
 	public static final int SC_NO_ID_INDICATED_ERROR = 60;
