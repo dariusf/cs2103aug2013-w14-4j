@@ -112,6 +112,38 @@ public class Task implements Comparable<Task>, Cloneable {
 	//
 	// }
 
+	public static void main(String[] args) throws CloneNotSupportedException {
+		Command command6 = new Command(CommandType.ADD);
+		DateTime startDate6a = new DateTime(2012, 10, 30, 12, 0, 0);
+		DateTime endDate6a = new DateTime(2012, 10, 30, 16, 0, 0);
+		Interval interval6a = new Interval();
+		interval6a.setStartDateTime(startDate6a);
+		interval6a.setEndDateTime(endDate6a);
+		DateTime startDate6b = new DateTime(2012, 10, 30, 16, 0, 0);
+		DateTime endDate6b = new DateTime(2012, 10, 30, 17, 0, 0);
+		Interval interval6b = new Interval();
+		interval6b.setStartDateTime(startDate6b);
+		interval6b.setEndDateTime(endDate6b);
+		DateTime startDate6c = new DateTime(2012, 10, 30, 17, 0, 0);
+		DateTime endDate6c = new DateTime(2012, 10, 30, 18, 0, 0);
+		Interval interval6c = new Interval();
+		interval6c.setStartDateTime(startDate6c);
+		interval6c.setEndDateTime(endDate6c);
+		ArrayList<Interval> intervalList6 = new ArrayList<Interval>();
+		intervalList6.add(interval6a);
+		intervalList6.add(interval6b);
+		intervalList6.add(interval6c);
+		command6.setIntervals(intervalList6);
+		command6.setDescription("An overdue floating event!");
+		Task task1 = new Task(command6);
+		Task task2 = (Task) task1.clone();
+		task2.setPossibleTime(null);
+		task2.setName("hahaha");
+	
+		System.out.println(task1);
+		System.out.println(task2);
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -168,78 +200,6 @@ public class Task implements Comparable<Task>, Cloneable {
 		return deadline;
 	}
 	
-	private static DateTimeFormatter pickDateFormatter(DateTime dateTime) {
-		DateTime now = new DateTime(); // or stub
-		if (dateTime.year().equals(now.year())) {
-			return Constants.simpleDateFormat;
-		} else {
-			return Constants.verboseDateFormat;
-		}
-	}
-	
-	private static DateTimeFormatter pickTimeFormatter(DateTime dateTime) {
-		if (dateTime.getMinuteOfHour() == 0) {
-			return Constants.simpleTimeFormat;
-		} else {
-			return Constants.verboseTimeFormat;
-		}
-	}
-	
-	private static String formatDateHalf(DateTime dateTime) {
-		DateTimeFormatter dateFormatter = pickDateFormatter(dateTime);
-		DateTime now = new DateTime(); // or stub
-		
-		if (now.getYear()+1 == dateTime.getYear()) {
-			return ", next year";
-		}
-		else if (now.dayOfYear().equals(dateTime.dayOfYear())) {
-			return ", today";
-		}
-		else if (now.plusDays(1).dayOfYear().equals(dateTime.dayOfYear())) {
-			return ", tomorrow";
-		}
-		else if (now.plusDays(2).dayOfYear().equals(dateTime.dayOfYear())) {
-			return ", the day after";
-		}
-		else if (now.minusDays(1).dayOfYear().equals(dateTime.dayOfYear())) {
-			return ", yesterday";
-		}
-		else if (now.minusDays(2).dayOfYear().equals(dateTime.dayOfYear())) {
-			return ", the day before";
-		}
-		else if (dateTime.isAfter(now.withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
-				&& dateTime.isBefore(now.withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
-			return ", this " + dateTime.dayOfWeek().getAsShortText();
-		}
-		else if (dateTime.isAfter(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
-				&& dateTime.isBefore(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
-			return ", next " + dateTime.dayOfWeek().getAsShortText();
-		}
-		else if (dateTime.isAfter(now.minusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
-				&& dateTime.isBefore(now.minusWeeks(1).withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
-			return ", last " + dateTime.dayOfWeek().getAsShortText();
-		}
-		else {
-			return " on " + dateFormatter.print(dateTime);
-		}
-	}
-	
-	public static String format(DateTime dateTime) {
-		DateTimeFormatter timeFormatter = pickTimeFormatter(dateTime);
-		return timeFormatter.print(dateTime) + formatDateHalf(dateTime);
-	}
-	
-	public static String intervalFormat(DateTime start, DateTime end) {
-		if (start.dayOfYear().equals(end.dayOfYear())) {
-			DateTimeFormatter startTimeFormatter = pickTimeFormatter(start);
-			DateTimeFormatter endTimeFormatter = pickTimeFormatter(end);
-			return startTimeFormatter.print(start) + " to " + endTimeFormatter.print(end) + formatDateHalf(start);
-		}
-		else {
-			return format(start) + " to " + format(end);
-		}
-	}
-
 	public String getInfoString() {
 		StringBuilder output = new StringBuilder();
 		if (isDeadlineTask()) {
@@ -492,35 +452,76 @@ public class Task implements Comparable<Task>, Cloneable {
 		return cloned;
 	}
 
-	public static void main(String[] args) throws CloneNotSupportedException {
-		Command command6 = new Command(CommandType.ADD);
-		DateTime startDate6a = new DateTime(2012, 10, 30, 12, 0, 0);
-		DateTime endDate6a = new DateTime(2012, 10, 30, 16, 0, 0);
-		Interval interval6a = new Interval();
-		interval6a.setStartDateTime(startDate6a);
-		interval6a.setEndDateTime(endDate6a);
-		DateTime startDate6b = new DateTime(2012, 10, 30, 16, 0, 0);
-		DateTime endDate6b = new DateTime(2012, 10, 30, 17, 0, 0);
-		Interval interval6b = new Interval();
-		interval6b.setStartDateTime(startDate6b);
-		interval6b.setEndDateTime(endDate6b);
-		DateTime startDate6c = new DateTime(2012, 10, 30, 17, 0, 0);
-		DateTime endDate6c = new DateTime(2012, 10, 30, 18, 0, 0);
-		Interval interval6c = new Interval();
-		interval6c.setStartDateTime(startDate6c);
-		interval6c.setEndDateTime(endDate6c);
-		ArrayList<Interval> intervalList6 = new ArrayList<Interval>();
-		intervalList6.add(interval6a);
-		intervalList6.add(interval6b);
-		intervalList6.add(interval6c);
-		command6.setIntervals(intervalList6);
-		command6.setDescription("An overdue floating event!");
-		Task task1 = new Task(command6);
-		Task task2 = (Task) task1.clone();
-		task2.setPossibleTime(null);
-		task2.setName("hahaha");
+	//@author A0097282W
+	private static DateTimeFormatter pickDateFormatter(DateTime dateTime) {
+		DateTime now = new DateTime(); // or stub
+		if (dateTime.year().equals(now.year())) {
+			return Constants.simpleDateFormat;
+		} else {
+			return Constants.verboseDateFormat;
+		}
+	}
 
-		System.out.println(task1);
-		System.out.println(task2);
+	private static DateTimeFormatter pickTimeFormatter(DateTime dateTime) {
+		if (dateTime.getMinuteOfHour() == 0) {
+			return Constants.simpleTimeFormat;
+		} else {
+			return Constants.verboseTimeFormat;
+		}
+	}
+
+	private static String formatDateHalf(DateTime dateTime) {
+		DateTimeFormatter dateFormatter = pickDateFormatter(dateTime);
+		DateTime now = new DateTime(); // or stub
+		
+		if (now.getYear()+1 == dateTime.getYear()) {
+			return ", next year";
+		}
+		else if (now.dayOfYear().equals(dateTime.dayOfYear())) {
+			return ", today";
+		}
+		else if (now.plusDays(1).dayOfYear().equals(dateTime.dayOfYear())) {
+			return ", tomorrow";
+		}
+		else if (now.plusDays(2).dayOfYear().equals(dateTime.dayOfYear())) {
+			return ", the day after";
+		}
+		else if (now.minusDays(1).dayOfYear().equals(dateTime.dayOfYear())) {
+			return ", yesterday";
+		}
+		else if (now.minusDays(2).dayOfYear().equals(dateTime.dayOfYear())) {
+			return ", the day before";
+		}
+		else if (dateTime.isAfter(now.withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
+				&& dateTime.isBefore(now.withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
+			return ", this " + dateTime.dayOfWeek().getAsShortText();
+		}
+		else if (dateTime.isAfter(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
+				&& dateTime.isBefore(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
+			return ", next " + dateTime.dayOfWeek().getAsShortText();
+		}
+		else if (dateTime.isAfter(now.minusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
+				&& dateTime.isBefore(now.minusWeeks(1).withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
+			return ", last " + dateTime.dayOfWeek().getAsShortText();
+		}
+		else {
+			return " on " + dateFormatter.print(dateTime);
+		}
+	}
+
+	public static String format(DateTime dateTime) {
+		DateTimeFormatter timeFormatter = pickTimeFormatter(dateTime);
+		return timeFormatter.print(dateTime) + formatDateHalf(dateTime);
+	}
+
+	public static String intervalFormat(DateTime start, DateTime end) {
+		if (start.dayOfYear().equals(end.dayOfYear())) {
+			DateTimeFormatter startTimeFormatter = pickTimeFormatter(start);
+			DateTimeFormatter endTimeFormatter = pickTimeFormatter(end);
+			return startTimeFormatter.print(start) + " to " + endTimeFormatter.print(end) + formatDateHalf(start);
+		}
+		else {
+			return format(start) + " to " + format(end);
+		}
 	}
 }

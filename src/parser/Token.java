@@ -1,5 +1,6 @@
 package parser;
 
+//@author A0097282W
 abstract class Token {
 	String contents = "";
 

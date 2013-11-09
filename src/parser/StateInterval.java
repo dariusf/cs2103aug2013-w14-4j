@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import logic.Interval;
 
+//@author A0097282W
 class StateInterval implements State {
 
 	private final Parser parser;

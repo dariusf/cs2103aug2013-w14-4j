@@ -7,16 +7,8 @@ import java.util.regex.Pattern;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
+//@author A0097282W
 public class DateToken extends Token {
-
-//	public static void main(String[] args){
-//		java.util.Scanner scanner = new java.util.Scanner(System.in);
-//		while(true) {
-//			DateToken randomDateToken = new DateToken("12 Oct");
-//			String input = scanner.nextLine();
-////			System.out.println(randomDateToken.isValidDateString(input));
-//		}
-//	}
 	
 	private static DateTime nowStub = null; // for testing purposes
 
