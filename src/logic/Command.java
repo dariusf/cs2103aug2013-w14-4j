@@ -2,7 +2,6 @@ package logic;
 import java.util.ArrayList;
 import org.joda.time.DateTime;
 import common.CommandType;
-import common.Constants;
 import common.DisplayMode;
 import common.ClearMode;
 import common.InvalidCommandReason;
@@ -20,11 +19,11 @@ public class Command {
 	private int pageIndex = -1;
 	private int timeslotIndex = -1;
 	
-	private ClearMode clearMode;
-	private CommandType helpCommand;
+	private ClearMode clearMode = null;
+	private CommandType helpCommand = null;
 	private ArrayList<String> searchTerms = new ArrayList<>();
 	private InvalidCommandReason invalidCommandReason;
-	private DisplayMode displayMode;
+	private DisplayMode displayMode = null;
 	private DateTime displayDateTime = null;
 	private DateTime clearDateTime = null;
 		
@@ -92,12 +91,20 @@ public class Command {
 		this.taskIndex = taskIndex;
 	}
 
+	public boolean hasTaskIndex() {
+		return taskIndex != -1;
+	}
+
 	public int getTimeslotIndex() {
 		return timeslotIndex;
 	}
 
 	public void setTimeslotIndex(int timeslotIndex) {
 		this.timeslotIndex = timeslotIndex;
+	}
+
+	public boolean hasTimeslotIndex() {
+		return timeslotIndex != -1;
 	}
 
 	public DateTime getDisplayDateTime() {
@@ -112,12 +119,21 @@ public class Command {
 		return helpCommand;
 	}
 
+	public boolean hasHelpCommand() {
+		return helpCommand != null;
+	}
+
 	public void setHelpCommand(CommandType helpCommand) {
 		this.helpCommand = helpCommand;
 	}
 
 	public ArrayList<String> getSearchTerms() {
 		return searchTerms;
+	}
+
+	public boolean hasSearchTerms() {
+		assert searchTerms != null;
+		return searchTerms.size() > 0;
 	}
 
 	public void setSearchTerms(ArrayList<String> searchTerms) {
@@ -160,6 +176,10 @@ public class Command {
 		return displayMode;
 	}
 
+	public boolean hasDisplayMode() {
+		return displayMode != null;
+	}
+
 	public void setDisplayMode(DisplayMode displayMode) {
 		this.displayMode = displayMode;
 	}
@@ -168,12 +188,20 @@ public class Command {
 		return clearMode;
 	}
 
+	public boolean hasClearMode() {
+		return clearMode != null;
+	}
+
 	public void setClearMode(ClearMode clearMode) {
 		this.clearMode = clearMode;
 	}
 
 	public int getPageIndex() {
 		return pageIndex;
+	}
+
+	public boolean hasPageIndex() {
+		return pageIndex != -1;
 	}
 
 	public void setPageIndex(int pageIndex) {
