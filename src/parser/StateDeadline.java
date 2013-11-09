@@ -28,12 +28,12 @@ public class StateDeadline implements State {
 	public void processToken(Token t) {
 		assert !popCondition(); // t has to be a DateToken or TimeToken
 		results.add(t);
-		this.parser.nextToken();
+		this.parser.tokens.nextToken();
 	}
 
 	@Override
 	public boolean popCondition() {
-		Token t = this.parser.getCurrentToken();
+		Token t = this.parser.tokens.getCurrentToken();
 		return !(t instanceof DateToken || t instanceof TimeToken);
 	}
 

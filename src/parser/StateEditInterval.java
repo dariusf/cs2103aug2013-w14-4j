@@ -42,7 +42,7 @@ class StateEditInterval implements State {
 		else {
 			// Ignore the current token
 		}
-		this.parser.nextToken();
+		this.parser.tokens.nextToken();
 	}
 
 	@Override
