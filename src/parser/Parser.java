@@ -15,6 +15,7 @@ import common.Constants;
 import common.DisplayMode;
 import common.InvalidCommandReason;
 
+//@author A0097282W
 public class Parser {
 
 	private static final boolean PRINT_LEXER_TOKENS = false;
@@ -87,7 +88,7 @@ public class Parser {
 
 	public Command parse(String userInput) {
 
-		if (userInput == null || userInput.isEmpty()) {
+		if (isEmpty(userInput)) {
 			return invalidCommand(InvalidCommandReason.EMPTY_COMMAND);
 		}
 
@@ -127,16 +128,16 @@ public class Parser {
 
 		Token firstToken = getCurrentToken();
 		CommandType commandType;
-		boolean exact = true;
+		boolean exactMatch = true;
 
 		if (isCommand(firstToken)) {
 			commandType = CommandType.fromString(firstToken.contents);
 		} else {
 			commandType = tryFuzzyMatch(firstToken.contents);
-			exact = false;
+			exactMatch = false;
 		}
 
-		if (PRINT_MATCHED_COMMAND_TYPE) System.out.println("Command (" + (exact ? "exact" : "fuzzy") + "): " + commandType);
+		if (PRINT_MATCHED_COMMAND_TYPE) System.out.println("Command (" + (exactMatch ? "exact" : "fuzzy") + "): " + commandType);
 
 		nextToken();
 
@@ -201,8 +202,8 @@ public class Parser {
 		int maximumSubsequenceLength = Integer.MIN_VALUE;
 
 		for (int i=0; i<keywords.length; i++) {
-			levDist[i] = levenshteinDistance(probableCommand, keywords[i]);
-			longestSubsequenceLength[i] = longestCommonSubsequence(probableCommand, keywords[i]).length();
+			levDist[i] = Utility.levenshteinDistance(probableCommand, keywords[i]);
+			longestSubsequenceLength[i] = Utility.longestCommonSubsequence(probableCommand, keywords[i]).length();
 			if (longestSubsequenceLength[i] > maximumSubsequenceLength) {
 				maximumSubsequenceLength = longestSubsequenceLength[i];
 			}
@@ -511,75 +512,10 @@ public class Parser {
 		return CommandType.fromString(token.contents) != CommandType.INVALID;
 	}
 
-	private static int[] arrayOfNumbers(int lower, int upper) {
-		int[] result = new int[upper-lower+1];
-		for (int i=lower; i<=upper; i++) {
-			result[i-lower] = i;
-		}
-		return result;
+	private boolean isEmpty(String userInput) {
+		return userInput == null || userInput.isEmpty();
 	}
-
-	// Source: https://github.com/threedaymonk/text/blob/master/lib/text/levenshtein.rb
-	private static int levenshteinDistance(String s, String t) {
-		int n = s.length();
-		int m = t.length();
-
-		if (n == 0) return m;
-		if (m == 0) return n;
-
-		int[] d = arrayOfNumbers(0, m);
-		int x = 0;
-
-		for (int i=0; i<n; i++) {
-			int e = i + 1;
-			for (int j=0; j<m; j++) {
-				int cost = s.charAt(i) == t.charAt(j) ? 0 : 1;
-				x = Math.min(
-						d[j+1] + 1, Math.min(// insertion
-								e + 1, // deletion
-								d[j] + cost // substitution
-								));
-				d[j] = e;
-				e = x;
-			}
-			d[m] = x;
-		}
-		return x;
-	}
-
-	// Source: http://rosettacode.org/wiki/Longest_common_subsequence
-	private static String longestCommonSubsequence(String a, String b) {
-		int[][] lengths = new int[a.length()+1][b.length()+1];
-
-		// row 0 and column 0 are initialized to 0 already
-
-		for (int i = 0; i < a.length(); i++)
-			for (int j = 0; j < b.length(); j++)
-				if (a.charAt(i) == b.charAt(j))
-					lengths[i+1][j+1] = lengths[i][j] + 1;
-				else
-					lengths[i+1][j+1] =
-					Math.max(lengths[i+1][j], lengths[i][j+1]);
-
-		// read the substring out from the matrix
-		StringBuffer sb = new StringBuffer();
-		for (int x = a.length(), y = b.length();
-				x != 0 && y != 0; ) {
-			if (lengths[x][y] == lengths[x-1][y])
-				x--;
-			else if (lengths[x][y] == lengths[x][y-1])
-				y--;
-			else {
-				assert a.charAt(x-1) == b.charAt(y-1);
-				sb.append(a.charAt(x-1));
-				x--;
-				y--;
-			}
-		}
-
-		return sb.reverse().toString();
-	}
-
+	
 	private Command invalidCommand(InvalidCommandReason reason) {
 		Command command = new Command(CommandType.INVALID);
 		command.setInvalidCommandReason(reason);

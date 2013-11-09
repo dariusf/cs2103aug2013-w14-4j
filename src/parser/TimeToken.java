@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
 
+//@author A0097282W
 public class TimeToken extends Token {
 
 	private static final String REGEX_ALIAS_TIME = "(midnight|noon|morning|afternoon|evening)";
