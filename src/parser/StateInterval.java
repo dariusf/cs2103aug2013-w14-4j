@@ -36,7 +36,7 @@ class StateInterval implements State {
 			}
 			trailingOr = false;
 			trailingDelimiter = false;
-			this.parser.nextToken();
+			this.parser.tokens.nextToken();
 		}
 		else if (t instanceof WordToken) {
 			if (t.contents.equalsIgnoreCase("or")) {
@@ -50,13 +50,13 @@ class StateInterval implements State {
 				foundDelimiter = true;
 				trailingDelimiter = true;
 			}
-			this.parser.nextToken();
+			this.parser.tokens.nextToken();
 		}
 	}
 
 	@Override
 	public boolean popCondition() {
-		Token token = this.parser.getCurrentToken();
+		Token token = this.parser.tokens.getCurrentToken();
 		
 		return !(token instanceof DateToken
 				|| token instanceof TimeToken

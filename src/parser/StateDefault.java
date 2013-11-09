@@ -17,25 +17,25 @@ class StateDefault implements State {
 	@Override
 	public void processToken(Token t) {
 		if (t instanceof TimeToken || t instanceof DateToken) {
-			parser.pushState(new StateInterval(parser, this));
+			parser.parseStates.push(new StateInterval(parser, this));
 			// Do not advance
 		}
 		else if (t instanceof WordToken) {
 			if (t.contents.equals("by") || t.contents.equals("before")) {
-				parser.pushState(new StateDeadline(parser, this, t.contents));
+				parser.parseStates.push(new StateDeadline(parser, this, t.contents));
 			}
 			else {
 				words.append(t.contents + " ");
 			}
-			parser.nextToken();
+			parser.tokens.nextToken();
 		}
 		else if (t instanceof TagToken) {
 			parser.tags.add(((TagToken) t).contents);
-			parser.nextToken();
+			parser.tokens.nextToken();
 		}
 		else {
 			words.append(t.contents + " ");
-			parser.nextToken();
+			parser.tokens.nextToken();
 		}
 	}
 

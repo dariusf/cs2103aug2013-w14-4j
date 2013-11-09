@@ -3,8 +3,6 @@ package parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Stack;
-
 import logic.Command;
 import logic.Interval;
 import org.joda.time.DateTime;
@@ -38,51 +36,13 @@ public class Parser {
 		if (PRINT_PARSED_COMMAND) System.out.println(command.toString());
 	}
 
-	// State stack
-
-	private Stack<State> parseStates = new Stack<>();
-
-	void pushState(State s) {
-		s.onPush();
-		parseStates.push(s);
-	}
-
-	State popState() {
-		State state = parseStates.pop();
-		state.onPop();
-		return state;
-	}
-
-	// Tokens
-
-	private ArrayList<Token> tokens = new ArrayList<>();
-	private int tokenCount = 0;
-	private int tokenPointer = 0;
-
-	void nextToken() {
-		tokenPointer = Math.min(tokenPointer + 1, tokenCount);
-	}
-
-	void previousToken() {
-		tokenPointer = Math.max(tokenPointer - 1, 0);
-	}
-
-	Token getCurrentToken() {
-		assert tokenPointer < tokenCount;
-		return tokens.get(tokenPointer);
-	}
-
-	boolean hasTokensLeft() {
-		return tokenPointer < tokenCount;
-	}
-
-	// Components of the command that will be built up gradually
+	StateStack parseStates = new StateStack();
+	TokenCollection tokens = null;
 
 	String description = "";
 	DateTime deadline = null;
 	ArrayList<Interval> intervals = new ArrayList<>();
 	ArrayList<String> tags = new ArrayList<>();
-
 	int taskIndex = -1;
 	int timeslotIndex = -1;
 
@@ -106,13 +66,14 @@ public class Parser {
 
 			Token next;
 			if (PRINT_LEXER_TOKENS) System.out.println("\nTokens:");
-
+			
+			ArrayList<Token> tokens = new ArrayList<>();
 			while ((next = lexer.nextToken()) != null) {
 				tokens.add(next);
 				if (PRINT_LEXER_TOKENS) System.out.println(next.toString());
 			}
 
-			tokenCount = tokens.size();
+			this.tokens = new TokenCollection(tokens);
 
 		} catch (IOException e) {
 			System.out.println("Error getting next token!");
@@ -122,24 +83,24 @@ public class Parser {
 
 	private Command constructCommand() {
 
-		if (!hasTokensLeft()) {
+		if (!tokens.hasTokensLeft()) {
 			return invalidCommand(InvalidCommandReason.EMPTY_COMMAND);
 		}
 
-		Token firstToken = getCurrentToken();
+		Token firstToken = tokens.getCurrentToken();
 		CommandType commandType;
 		boolean exactMatch = true;
 
 		if (isCommand(firstToken)) {
 			commandType = CommandType.fromString(firstToken.contents);
 		} else {
-			commandType = tryFuzzyMatch(firstToken.contents);
 			exactMatch = false;
+			commandType = tryFuzzyMatch(firstToken.contents);
 		}
 
 		if (PRINT_MATCHED_COMMAND_TYPE) System.out.println("Command (" + (exactMatch ? "exact" : "fuzzy") + "): " + commandType);
 
-		nextToken();
+		tokens.nextToken();
 
 		switch (commandType) {
 		case ADD:
@@ -176,7 +137,7 @@ public class Parser {
 
 	private CommandType tryFuzzyMatch(String probableCommand) {
 
-		// This list is prioritized
+		// This list is prioritised
 		String[] keywords = new String[] {
 				Constants.COMMAND_ADD,
 				Constants.COMMAND_SEARCH,
@@ -219,14 +180,14 @@ public class Parser {
 		// Inferior heuristics tried:
 		// Absolute difference in string length
 
-		// Find the smallest distance (and best-matching keyword) while we're at it
-
 		int[] heuristic = new int[keywords.length];
 
 		int threshold = 3;
 		int minimum = Integer.MAX_VALUE;
 		int minimumIndex = -1;
 
+		// Find the smallest distance (for the best-matching keyword) while we're at it
+		
 		for (int i=0; i<keywords.length; i++) {
 			heuristic[i] = (probableCommand.charAt(0) == keywords[i].charAt(0) ? -1 : 1) + (maximumSubsequenceLength - longestSubsequenceLength[i]) + levDist[i];
 
@@ -252,15 +213,15 @@ public class Parser {
 		
 		Command command = new Command(CommandType.FINALISE);
 
-		if (hasTokensLeft()) {
+		if (tokens.hasTokensLeft()) {
 			try {
-				whichTask = Integer.parseInt(getCurrentToken().contents);
+				whichTask = Integer.parseInt(tokens.getCurrentToken().contents);
 				command.setTaskIndex(whichTask);
-				nextToken();
+				tokens.nextToken();
 				
-				if (hasTokensLeft()) {
+				if (tokens.hasTokensLeft()) {
 					try {
-						whichSlot = Integer.parseInt(getCurrentToken().contents);
+						whichSlot = Integer.parseInt(tokens.getCurrentToken().contents);
 					} catch (NumberFormatException e) {
 						return command;
 					}
@@ -281,21 +242,21 @@ public class Parser {
 
 	private Command createEditCommand() {
 
-		if (hasTokensLeft()) {
+		if (tokens.hasTokensLeft()) {
 			try {
-				taskIndex = Integer.parseInt(getCurrentToken().contents);
+				taskIndex = Integer.parseInt(tokens.getCurrentToken().contents);
 			} catch (NumberFormatException e) {
 				return new Command(CommandType.EDIT);
 			}
-			nextToken();
+			tokens.nextToken();
 						
-			if (hasTokensLeft()) {
-				Token currentToken = getCurrentToken();
+			if (tokens.hasTokensLeft()) {
+				Token currentToken = tokens.getCurrentToken();
 				try {
 					// if the next token is numerical, edit is being applied
 					// to a timeslot
 					timeslotIndex = Integer.parseInt(currentToken.contents);
-					nextToken();
+					tokens.nextToken();
 					return createEditTimeslotCommand();
 				} catch (NumberFormatException e) {
 					return createNaturalCommand(CommandType.EDIT);
@@ -313,24 +274,24 @@ public class Parser {
 	}
 
 	private Command createEditTimeslotCommand() {
-		pushState(new StateEditInterval(this));
+		parseStates.push(new StateEditInterval(this));
 
-		while (hasTokensLeft()) {
+		while (tokens.hasTokensLeft()) {
 			State currentState = parseStates.peek();
 
 			if (currentState.popCondition()) {
-				popState();
+				parseStates.pop();
 			} else {
-				Token token = getCurrentToken();
+				Token token = tokens.getCurrentToken();
 				currentState.processToken(token);
 			}
 		}
 
-		// pop the remaining states from the stack, in case
+		// Pop the remaining states from the stack, in case
 		// we ran out of tokens before they all were done
 		
 		while (parseStates.size() > 0) {
-			popState();
+			parseStates.pop();
 		}
 
 		Command command = new Command(CommandType.EDIT);
@@ -343,24 +304,24 @@ public class Parser {
 	}
 
 	private Command createNaturalCommand(CommandType commandType) {
-		pushState(new StateDefault(this));
+		parseStates.push(new StateDefault(this));
 
-		while (hasTokensLeft()) {
+		while (tokens.hasTokensLeft()) {
 			State currentState = parseStates.peek();
 
 			if (currentState.popCondition()) {
-				popState();
+				parseStates.pop();
 			} else {
-				Token token = getCurrentToken();
+				Token token = tokens.getCurrentToken();
 				currentState.processToken(token);
 			}
 		}
 
-		// pop the remaining states from the stack, in case
+		// Pop the remaining states from the stack, in case
 		// we ran out of tokens before they all were done
 		
 		while (parseStates.size() > 0) {
-			popState();
+			parseStates.pop();
 		}
 
 		Command command = new Command(commandType);
@@ -377,8 +338,8 @@ public class Parser {
 	private Command createClearCommand() {
 		Command command = new Command(CommandType.CLEAR);
 		
-        if (hasTokensLeft()) {
-            Token currentToken = getCurrentToken();
+        if (tokens.hasTokensLeft()) {
+            Token currentToken = tokens.getCurrentToken();
             
             ClearMode clearMode = ClearMode.fromString(currentToken.contents);
             
@@ -402,8 +363,8 @@ public class Parser {
 	private Command createDisplayCommand() {
 		Command command = new Command(CommandType.DISPLAY);
 
-		if (hasTokensLeft()) {
-			Token currentToken = getCurrentToken();
+		if (tokens.hasTokensLeft()) {
+			Token currentToken = tokens.getCurrentToken();
 			
 			DisplayMode displayMode = DisplayMode.fromString(currentToken.contents);
 			
@@ -426,15 +387,15 @@ public class Parser {
 	private Command createHelpCommand() {
 		Command command = new Command(CommandType.HELP);
 
-		if (hasTokensLeft()) {
+		if (tokens.hasTokensLeft()) {
 			
 			CommandType commandType;
 			
-			if (isCommand(getCurrentToken())) {
-				commandType = CommandType.fromString(getCurrentToken().contents);
+			if (isCommand(tokens.getCurrentToken())) {
+				commandType = CommandType.fromString(tokens.getCurrentToken().contents);
 				command.setHelpCommand(commandType);
 			} else {
-				commandType = tryFuzzyMatch(getCurrentToken().contents);
+				commandType = tryFuzzyMatch(tokens.getCurrentToken().contents);
 				command.setHelpCommand(commandType);
 			}
 		}
@@ -447,8 +408,8 @@ public class Parser {
 		ArrayList<String> tags = new ArrayList<String>();
 		ArrayList<String> searchTerms = new ArrayList<String>();
 		
-		while (hasTokensLeft()) {
-			Token currentToken = getCurrentToken();
+		while (tokens.hasTokensLeft()) {
+			Token currentToken = tokens.getCurrentToken();
 			
 			if (currentToken instanceof TagToken) {
 				tags.add(currentToken.contents);
@@ -457,7 +418,7 @@ public class Parser {
 				searchTerms.add(currentToken.contents);
 			}
 			
-			nextToken();
+			tokens.nextToken();
 		}
 		
 		command.setTags(tags);
@@ -473,10 +434,10 @@ public class Parser {
 	private Command createPageIndexCommand(CommandType commandType) {
 		Command command = new Command(commandType);
 
-		if (hasTokensLeft()) {
+		if (tokens.hasTokensLeft()) {
 			int index;
 			try {
-				index = Integer.parseInt(getCurrentToken().contents);
+				index = Integer.parseInt(tokens.getCurrentToken().contents);
 			} catch (NumberFormatException e) {
 				return command;
 			}
@@ -492,10 +453,10 @@ public class Parser {
 	private Command createTaskIndexCommand(CommandType commandType) {
 		Command command = new Command(commandType);
 		
-		if (hasTokensLeft()) {
+		if (tokens.hasTokensLeft()) {
 			int index;
 			try {
-				index = Integer.parseInt(getCurrentToken().contents);
+				index = Integer.parseInt(tokens.getCurrentToken().contents);
 			} catch (NumberFormatException e) {
 				return command;
 			}
