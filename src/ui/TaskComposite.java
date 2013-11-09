@@ -23,6 +23,7 @@ public class TaskComposite extends Composite {
 	private StyledText taskIndex;
 	private StyledText taskName;
 	private StyledText taskDescription;
+	private Composite taskDetailsComposite;
 
 	public TaskComposite(Composite parent, Task task, int index) {
 		super(parent, SWT.NONE);
@@ -48,7 +49,7 @@ public class TaskComposite extends Composite {
 		Composite paddingComposite = new Composite(this, SWT.NONE);
 		paddingComposite.setLayoutData(paddingLayoutData);
 
-		Composite taskDetailsComposite = new Composite(this, SWT.NONE);
+		taskDetailsComposite = new Composite(this, SWT.NONE);
 		taskDetailsComposite.setLayoutData(taskDescriptionLayoutData);
 		taskDetailsComposite.setLayout(new GridLayout());
 
@@ -61,6 +62,7 @@ public class TaskComposite extends Composite {
 		taskDescription = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
 		taskDescription.setEnabled(false);
 		taskDescription.setText(task.getInfoString());
+		taskDescription.setLayoutData(new GridData(340, SWT.DEFAULT));
 		taskDescription.setFont(ApplicationWindow.self.descriptionFont);
 
 		if (task.isDone()) {
@@ -132,6 +134,7 @@ public class TaskComposite extends Composite {
 	public void setDescription(String name) {
 		taskDescription.setText(name);
 		taskDescription.pack();
+		taskDetailsComposite.pack();
 	}
 
 	public void setTentativeTaskAtLine(String description, int line) {
