@@ -7,10 +7,10 @@ public class Constants {
 	public static final String APP_NAME = "Basket";
 	public static final String DEFAULT_FILENAME = "default.txt";
 
-	public static String WELCOME_PAGE_DISPLAY = "display";
+	public static final String WELCOME_PAGE_DISPLAY = "display";
 
 	public static final String MSG_UNRECOGNISED_COMMAND = "Unrecognized command type";
-	public static final String MSG_WELCOME = "Welcome to Basket! \nType 'help' if you are unsure of what to do.";
+	public static final String MSG_WELCOME = "Welcome to " + APP_NAME + "! \nType 'help' if you are unsure of what to do.";
 	public static final String MSG_AVAILABLE_COMMANDS = "Commands available: add|edit|display|sort|search\nfinalise|help|goto|undo|redo|clear|done|exit";
 
 	public static final String COMMAND_ADD = "add";
@@ -101,6 +101,7 @@ public class Constants {
 			+ "display 25 Oct\n"
 			+ "display overdue";
 	public static final String HELP_HELP = "Help\n"
+			+ "Getting meta, are we?\n\n"
 			+ "Displays help for a specific command. Includes the description of the command as well as examples.\n\n"
 			+ "Command format:\n"
 			+ "help: Provides a brief description of each command\n"
@@ -209,12 +210,12 @@ public class Constants {
 	public static final int SC_REDO_NO_PRIOR_STATE_ERROR = 110;
 	public static final int SC_INVALID_PAGE_INDEX = 120;
 
-	public static DateTimeFormatter verboseTimeFormat = DateTimeFormat.forPattern("h:mm a");
-	public static DateTimeFormatter verboseDateFormat = DateTimeFormat.forPattern("E, d MMM YY");
-	public static DateTimeFormatter simpleTimeFormat = DateTimeFormat.forPattern("h a");
-	public static DateTimeFormatter simpleDateFormat = DateTimeFormat.forPattern("E, d MMM");
+	public static final DateTimeFormatter verboseTimeFormat = DateTimeFormat.forPattern("h:mm a");
+	public static final DateTimeFormatter verboseDateFormat = DateTimeFormat.forPattern("E, d MMM YY");
+	public static final DateTimeFormatter simpleTimeFormat = DateTimeFormat.forPattern("h a");
+	public static final DateTimeFormatter simpleDateFormat = DateTimeFormat.forPattern("E, d MMM");
 
-	public static DateTimeFormatter dateOnlyFormat = DateTimeFormat.forPattern("d MMM',' EE");
+	public static final DateTimeFormatter dateOnlyFormat = DateTimeFormat.forPattern("d MMM',' EE");
 	public static final String DATE_TIME_FORMAT = "d/M/yy h:mm a";
 
 	public static final String MODE_TODAY = "Today";
@@ -240,5 +241,26 @@ public class Constants {
 	public static final String[] FORMATTING_SUBSTITUTIONS = {
 		"- ", "• "
 	};
-	
+
+    public static final String CONTEXTUAL_HELP_DESC = "<description>";
+    public static final String CONTEXTUAL_HELP_DESC_OPTIONAL = "{description}";
+    public static final String CONTEXTUAL_HELP_DEADLINE = "{by}";
+    public static final String CONTEXTUAL_HELP_INTERVAL_ALTERNATIVE = "{or}";
+    public static final String CONTEXTUAL_HELP_INTERVAL = "{at|on|from..to}";
+    public static final String CONTEXTUAL_HELP_HASHTAG = "{#hashtag}";
+    public static final String CONTEXTUAL_HELP_TASK_INDEX = "<task index>";
+    public static final String CONTEXTUAL_HELP_TIMESLOT_INDEX = "<timeslot index>";
+    public static final String CONTEXTUAL_HELP_TIMESLOT_INDEX_OPTIONAL = "{timeslot index}";
+    public static final String CONTEXTUAL_HELP_CLEAR_MODE = "{deadline|timed|<date>|done|overdue|...}";
+    public static final String CONTEXTUAL_HELP_DISPLAY_MODE = "{done|today|tomorrow|deadline|timed|...}";
+    public static final String CONTEXTUAL_HELP_DISPLAY_MODE_TIP = "Type 'help display' to see more options.";
+    public static final String CONTEXTUAL_HELP_CLEAR_MODE_TIP = "Type 'help clear' to see more options.";
+    public static final String CONTEXTUAL_HELP_SEARCH_TERMS = "{keyword|hashtag}+";
+    public static final String CONTEXTUAL_HELP_COMMAND = "{command}";
+    public static final String CONTEXTUAL_HELP_PAGE_INDEX = "{page number}";
+    public static final String CONTEXTUAL_HELP_SORT = "Tasks will be sorted by date.";
+    public static final String CONTEXTUAL_HELP_UNDO = "Undo reverts the last operation on the task list.";
+    public static final String CONTEXTUAL_HELP_REDO = "Redo reverts the last undo.";
+    public static final String CONTEXTUAL_HELP_EXIT = "Exit quits the application.";
+    
 }
