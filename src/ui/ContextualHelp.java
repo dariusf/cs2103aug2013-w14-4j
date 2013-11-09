@@ -21,7 +21,7 @@ public class ContextualHelp {
 				boolean hasIntervalsNorDeadline = command.hasDeadline() || command.hasIntervals();
 				String interval = hasIntervalsNorDeadline ? Constants.CONTEXTUAL_HELP_INTERVAL : highlight(Constants.CONTEXTUAL_HELP_INTERVAL);
 				String deadline = hasIntervalsNorDeadline ? Constants.CONTEXTUAL_HELP_DEADLINE : highlight(Constants.CONTEXTUAL_HELP_DEADLINE);
-				String alternative = !command.hasDeadline() ? highlight(Constants.CONTEXTUAL_HELP_INTERVAL_ALTERNATIVE) : Constants.CONTEXTUAL_HELP_INTERVAL_ALTERNATIVE;
+				String alternative = !command.hasDeadline() && command.hasIntervals() ? highlight(Constants.CONTEXTUAL_HELP_INTERVAL_ALTERNATIVE) : Constants.CONTEXTUAL_HELP_INTERVAL_ALTERNATIVE;
 				return constructFeedbackString(Constants.COMMAND_ADD, Constants.CONTEXTUAL_HELP_DESC, deadline, interval, alternative, "\n", highlight(Constants.CONTEXTUAL_HELP_HASHTAG));
 			}
 		case EDIT:
