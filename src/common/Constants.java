@@ -28,32 +28,6 @@ public class Constants {
 	public static final String COMMAND_REDO = "redo";
 	public static final String COMMAND_DONE = "done";
 
-//	public static final String TASK_ATT_NAME = "name";
-//	public static final String TASK_ATT_LOCATION = "location";
-//	public static final String TASK_ATT_STARTTIME = "startTime";
-//	public static final String TASK_ATT_ENDTIME = "endTime";
-//	public static final String TASK_ATT_DEADLINE = "deadline";
-//	public static final String TASK_ATT_TYPE = "type";
-//	public static final String TASK_ATT_TAGS = "tags";
-//	public static final String TASK_ATT_POSSIBLETIME = "possibleTime";
-//	public static final String TASK_ATT_DONE = "done";
-
-//	public static final String DELETE_ATT_LINE = "deleteIndex";
-//
-//	public static final String EDIT_ATT_LINE = "editIndex";
-//
-//	public static final String DONE_ATT_LINE = "doneIndex";
-//
-//	public static final String FINALISE_ATT_LINE = "finaliseIndex";
-//	public static final String FINALISE_ATT_INDEX = "slotIndex";
-//
-//	public static final String CLEAR_ATT_DONE = "clearDone";
-
-//	public static final String TASK_TYPE_TENTATIVE = "tentative";
-//	public static final String TASK_TYPE_TIMED = "timed";
-//	public static final String TASK_TYPE_DEADLINE = "deadline";
-//	public static final String TASK_TYPE_UNTIMED = "untimed";
-	
 	public static final String HELP_INSTRUCTIONS = "Refer to the help window.";
 	public static final String HELP_GENERAL = "_Hotkeys_\n"
 			+ "*Shift+F1*: Minimises/restores Basket\n"
@@ -73,33 +47,32 @@ public class Constants {
 			+ "*F9*: Deadlines\n"
 			+ "*F10*: Timed tasks\n"
 			+ "*F11*: Tentative tasks\n";
-	public static final String HELP_ADD = "_The add command_\n"
+	public static final String HELP_ADD = "_add_\n"
 			+ "This command is used to add tasks to Basket.\n\n"
-			+ "Tasks you add may be timed, untimed, tentative, or .\n\n"
+			+ "Tasks may be timed, untimed, tentative, or have a deadline.\n\n"
 			+ "Command format:\n"
-			+ "- Start with the keyword 'add'\n"
-			+ "- Use 'by' to denote a deadline\n"
-			+ "- Use 'on' or 'from' to denote the time the task is supposed to occur\n"
-			+ "    - You can specify a time period by using 'to'\n"
-			+ "    - You can specify multiple choices of timeslots using 'or'\n"
-			+ "- Use # to group items by hashtag\n\n" 
+			+ "- Start with the keyword 'add', followed by a description.\n"
+			+ "- Use 'on', 'at', or 'from' to specify a time interval.\n"
+			+ "- Time intervals are indicated with the words 'to' or 'until'.\n"
+			+ "- Use 'or' after that to specify other timeslots.\n"
+			+ "- Alternatively, use 'by' to specify a deadline.\n"
+			+ "- Use # to add a hashtag\n\n" 
 			+ "Examples:\n"
-			+ "add Perform April Fool's Prank on 01/04 at 1200 #forfun\n"
-			+ "add Save Princess Peach by 22/12/2012\n"
-			+ "add Meet Boss at 11am or 12pm";
-	public static final String HELP_DISPLAY = "Displaying Task(s)\n"
-			+ "Displays all tasks in the database. \n\n"
+			+ "- add Perform April Fool's prank on 1 Apr at 1600 #forfun\n"
+			+ "- add Save Princess Peach by 22/12/2012\n"
+			+ "- add Meet boss at 11:00 am today or 12:00 pm tomorrow\n"
+			+ "- Take afternoon nap";
+	public static final String HELP_DISPLAY = "_display_\n"
+			+ "Displays all saved tasks. \n\n"
 			+ "Command format:\n"
-			+ "* Start with the keyword 'display'. The default case shows all undone task(s)\n"
-			+ "* Use 'all' to display all task(s)\n"
-			+ "* Or choose a 'date' to display task(s) for the date\n"
-			+ "  ** Dates available: today, tomorrow, 13/10\n"
-			+ "* Or choose a 'type' to display task(s) corresponding to the specified type\n"
-			+ "  ** Types available: untimed, deadline, timed, tentative, overdue, done\n\n"
+			+ "- Start with the keyword 'display'.\n"
+			+ "- Pick a display mode. Options are 'today', 'tomorrow', 'deadline', 'timed', 'tentative', 'untimed', 'all', 'overdue', 'todo', and 'done'.\n"
+			+ "- Alternatively, specify a date to display task(s) for that day.\n\n"
+			+ "- Undone tasks (todo) will be shown by default.\n"
 			+ "Examples:\n" 
-			+ "display all\n" 
-			+ "display 25 Oct\n"
-			+ "display overdue";
+			+ "- display all\n" 
+			+ "- display 25 Oct\n"
+			+ "- display overdue";
 	public static final String HELP_HELP = "Help\n"
 			+ "Getting meta, are we?\n\n"
 			+ "Displays help for a specific command. Includes the description of the command as well as examples.\n\n"
@@ -234,7 +207,7 @@ public class Constants {
 	
 	public static final String[] RANDOM_JOKES = { "Why do Java Programmers wear glasses?\nBecause they don't see sharp.", "What is the object-oriented way to\nbecome wealthy? Inheritance.", "[\"hip\", \"hip\"]\n(Get it?)", "Is it a boy or a girl?\nTrue", "Why did the programmer quit his job?\nBecause he didn't get arrays.", "Why did the integer drown?\nBecause it couldn't float!"};
 
-	public static final String FORMATTING_ALLOWED_CHARACTERS = "[a-z}{A-Z+><.|# ]";
+	public static final String FORMATTING_ALLOWED_CHARACTERS = "[a-z0-9}{A-Z+><.|# ]";
 	public static final String FORMATTING_REGEX_UNDERLINE = "_(" + FORMATTING_ALLOWED_CHARACTERS + "+)_";
 	public static final String FORMATTING_REGEX_BOLD = "\\*(" + FORMATTING_ALLOWED_CHARACTERS + "+)\\*";
 	public static final String FORMATTING_REGEX_COLOUR1 = "&(" + FORMATTING_ALLOWED_CHARACTERS + "+)&";
