@@ -2,13 +2,9 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import common.CommandType;
 import common.Constants;
 import common.TaskType;
 
@@ -112,37 +108,37 @@ public class Task implements Comparable<Task>, Cloneable {
 	//
 	// }
 
-	public static void main(String[] args) throws CloneNotSupportedException {
-		Command command6 = new Command(CommandType.ADD);
-		DateTime startDate6a = new DateTime(2012, 10, 30, 12, 0, 0);
-		DateTime endDate6a = new DateTime(2012, 10, 30, 16, 0, 0);
-		Interval interval6a = new Interval();
-		interval6a.setStartDateTime(startDate6a);
-		interval6a.setEndDateTime(endDate6a);
-		DateTime startDate6b = new DateTime(2012, 10, 30, 16, 0, 0);
-		DateTime endDate6b = new DateTime(2012, 10, 30, 17, 0, 0);
-		Interval interval6b = new Interval();
-		interval6b.setStartDateTime(startDate6b);
-		interval6b.setEndDateTime(endDate6b);
-		DateTime startDate6c = new DateTime(2012, 10, 30, 17, 0, 0);
-		DateTime endDate6c = new DateTime(2012, 10, 30, 18, 0, 0);
-		Interval interval6c = new Interval();
-		interval6c.setStartDateTime(startDate6c);
-		interval6c.setEndDateTime(endDate6c);
-		ArrayList<Interval> intervalList6 = new ArrayList<Interval>();
-		intervalList6.add(interval6a);
-		intervalList6.add(interval6b);
-		intervalList6.add(interval6c);
-		command6.setIntervals(intervalList6);
-		command6.setDescription("An overdue floating event!");
-		Task task1 = new Task(command6);
-		Task task2 = (Task) task1.clone();
-		task2.setPossibleTime(null);
-		task2.setName("hahaha");
-	
-		System.out.println(task1);
-		System.out.println(task2);
-	}
+//	public static void main(String[] args) throws CloneNotSupportedException {
+//		Command command6 = new Command(CommandType.ADD);
+//		DateTime startDate6a = new DateTime(2012, 10, 30, 12, 0, 0);
+//		DateTime endDate6a = new DateTime(2012, 10, 30, 16, 0, 0);
+//		Interval interval6a = new Interval();
+//		interval6a.setStartDateTime(startDate6a);
+//		interval6a.setEndDateTime(endDate6a);
+//		DateTime startDate6b = new DateTime(2012, 10, 30, 16, 0, 0);
+//		DateTime endDate6b = new DateTime(2012, 10, 30, 17, 0, 0);
+//		Interval interval6b = new Interval();
+//		interval6b.setStartDateTime(startDate6b);
+//		interval6b.setEndDateTime(endDate6b);
+//		DateTime startDate6c = new DateTime(2012, 10, 30, 17, 0, 0);
+//		DateTime endDate6c = new DateTime(2012, 10, 30, 18, 0, 0);
+//		Interval interval6c = new Interval();
+//		interval6c.setStartDateTime(startDate6c);
+//		interval6c.setEndDateTime(endDate6c);
+//		ArrayList<Interval> intervalList6 = new ArrayList<Interval>();
+//		intervalList6.add(interval6a);
+//		intervalList6.add(interval6b);
+//		intervalList6.add(interval6c);
+//		command6.setIntervals(intervalList6);
+//		command6.setDescription("An overdue floating event!");
+//		Task task1 = new Task(command6);
+//		Task task2 = (Task) task1.clone();
+//		task2.setPossibleTime(null);
+//		task2.setName("hahaha");
+//	
+//		System.out.println(task1);
+//		System.out.println(task2);
+//	}
 
 	public String getName() {
 		return name;
@@ -313,8 +309,43 @@ public class Task implements Comparable<Task>, Cloneable {
 
 	@Override
 	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		return super.equals(obj);
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Task other = (Task) obj;
+		if (deadline == null) {
+			if (other.deadline != null)
+				return false;
+		} else if (!deadline.equals(other.deadline))
+			return false;
+		if (done != other.done)
+			return false;
+		if (interval == null) {
+			if (other.interval != null)
+				return false;
+		} else if (!interval.equals(other.interval))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (possibleIntervals == null) {
+			if (other.possibleIntervals != null)
+				return false;
+		} else if (!possibleIntervals.equals(other.possibleIntervals))
+			return false;
+		if (tags == null) {
+			if (other.tags != null)
+				return false;
+		} else if (!tags.equals(other.tags))
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
 	}
 
 	public Interval getInterval() {
@@ -492,21 +523,28 @@ public class Task implements Comparable<Task>, Cloneable {
 		else if (now.minusDays(2).dayOfYear().equals(dateTime.dayOfYear())) {
 			return ", the day before";
 		}
-		else if (dateTime.isAfter(now.withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
-				&& dateTime.isBefore(now.withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
+		else if (isWithinDates(now, now.plusDays(1), now.plusDays(7))) {
 			return ", this " + dateTime.dayOfWeek().getAsShortText();
 		}
-		else if (dateTime.isAfter(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
-				&& dateTime.isBefore(now.plusWeeks(1).withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
+		else if (isWithinDates(now, now.plusDays(8), now.plusDays(13))) {
 			return ", next " + dateTime.dayOfWeek().getAsShortText();
 		}
-		else if (dateTime.isAfter(now.minusWeeks(1).withDayOfWeek(DateTimeConstants.MONDAY).minusDays(1))
-				&& dateTime.isBefore(now.minusWeeks(1).withDayOfWeek(DateTimeConstants.SUNDAY).plusDays(1))) {
+		else if (isWithinDates(now, now.minusDays(7), now.minusDays(1))) {
 			return ", last " + dateTime.dayOfWeek().getAsShortText();
 		}
 		else {
 			return " on " + dateFormatter.print(dateTime);
 		}
+	}
+	
+	private static boolean isWithinDates(DateTime dateTime, DateTime lower, DateTime upper) {
+
+		// Intervals are inclusive of the start time and exclusive of the end time
+		DateTime start = lower.withTime(0, 0, 0, 0);
+		DateTime end = upper.plusDays(1).withTime(0, 0, 0, 0);
+		
+		org.joda.time.Interval interval = new org.joda.time.Interval(start, end);
+		return interval.contains(dateTime);
 	}
 
 	public static String format(DateTime dateTime) {
