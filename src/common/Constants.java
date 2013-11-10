@@ -30,8 +30,23 @@ public class Constants {
 	public static final String COMMAND_REDO = "redo";
 	public static final String COMMAND_DONE = "done";
 	public static final String COMMAND_INVALID = "invalid";
+	
+	public static final String FEEDBACK_SUCCESS_ADD = "Task added!";
+	public static final String FEEDBACK_SUCCESS_EDIT = "Task edited!";
+	public static final String FEEDBACK_SUCCESS_DISPLAY = "Here are your tasks!";
+	public static final String FEEDBACK_SUCCESS_DELETE = "Task deleted!";
+	public static final String FEEDBACK_SUCCESS_CLEAR = "Tasks cleared!";
+	public static final String FEEDBACK_SUCCESS_SORT = "Tasks sorted!";
+	public static final String FEEDBACK_SUCCESS_SEARCH = "Here are your search results!";
+	public static final String FEEDBACK_SUCCESS_UNDO = "Undo successful!";
+	public static final String FEEDBACK_SUCCESS_REDO = "Redo successful!";
+	public static final String FEEDBACK_SUCCESS_FINALISE = "Task finalised!";
+	public static final String FEEDBACK_SUCCESS_HELP = "Refer to the help window.";
+	public static final String FEEDBACK_SUCCESS_DONE = "Task marked as done!";
+	public static final String FEEDBACK_SUCCESS_GOTO = "Page %1$s";
+	public static final String FEEDBACK_SUCCESS_EXIT = "Saving...";
+	
 
-	public static final String HELP_INSTRUCTIONS = "Refer to the help window.";
 	public static final String HELP_GENERAL = "_Hotkeys_\n"
 			+ "*Shift+F1*: Minimises/restores Basket\n"
 			+ "*Page Up*: Previous page\n"
