@@ -175,16 +175,33 @@ public class DateToken extends Token {
 		int dayIndex = dayOfWeek(dayString);
 		
 		DateTime now = nowStub == null ? new DateTime() : nowStub;
+		
+		// Scheme for day qualifiers:
+		
+		// Let x be the current day
+		// last = x-7 to x-1
+		// this = x+1 to x+7
+		// next = x+7 to x+13 (1 day overlap with 'this')
+		
 		DateTime date = now.withDayOfWeek(dayIndex);
-			
+		if (date.isBefore(now) || date.isEqual(now)) {
+			date = date.plusWeeks(1);
+		}
+		
 		if (qualifier != null) {
 			if (qualifier.equalsIgnoreCase("next")) {
-				date = date.plusWeeks(1);
+				if (!date.minusDays(7).equals(now)) {
+					date = date.plusWeeks(1);
+				}
 			}
 			else if (qualifier.equalsIgnoreCase("last")) {
 				date = date.minusWeeks(1);
+				if (date.isEqual(now)) {
+					date = date.minusWeeks(1);
+				}
 			}
-			// "this" is not caught; same effect as qualifier being null
+			// 'this' is not caught; the logic for it is the same as that for
+			// having no qualifier
 		}
 		
 		
