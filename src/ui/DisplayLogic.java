@@ -149,7 +149,7 @@ public class DisplayLogic {
 			break;
 		case GOTO:
 			if (!feedback.isErrorMessage()) {
-				this.setPageNumber(feedback.getGotoPage());
+				this.setPageNumber(feedback.getPageNumber());
 			}
 			break;
 		

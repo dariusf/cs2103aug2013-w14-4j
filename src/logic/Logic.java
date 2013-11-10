@@ -530,7 +530,7 @@ public class Logic {
 
 		if (pageIndex > 0) {
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.GOTO);
-			feedback.setGotoPage(pageIndex);
+			feedback.setPageNumber(pageIndex);
 		} else {
 			feedback = new Feedback(Constants.SC_INVALID_PAGE_INDEX,
 					CommandType.GOTO);
