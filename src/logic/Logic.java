@@ -386,12 +386,19 @@ public class Logic {
 	}
 
 	protected Feedback deleteTask(Command command) {
-		int taskIndex = command.getTaskIndex();
-		if (isDynamicIndex) {
-			taskIndex = temporaryMapping.get(taskIndex);
-		}
-
+		int inputIndex = command.getTaskIndex();
 		Feedback feedback = null;
+		
+		int taskIndex = inputIndex;
+
+		if (taskIndex > storage.size()
+				|| (isDynamicIndex && !temporaryMapping.containsKey(taskIndex))) {
+			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
+					CommandType.DELETE);
+		} else if (isDynamicIndex && temporaryMapping.containsKey(taskIndex)) {
+			taskIndex = temporaryMapping.get(inputIndex);
+		}
+		
 		if (taskIndex <= storage.size()) {
 			storage.remove(taskIndex);
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
