@@ -126,7 +126,7 @@ public class Feedback {
 
 	private String addFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task added!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_ADD;
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
 			statusMessage = "Task added!\nIt's overdue, though.";
 //		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
@@ -139,7 +139,7 @@ public class Feedback {
 
 	private String editFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task edited!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_EDIT;
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
 			statusMessage = "Task edited!\nIt's overdue, though.";
 		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
@@ -158,7 +158,7 @@ public class Feedback {
 
 	private String displayFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Here are your tasks!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_DISPLAY;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "You have no tasks!";
 		} else {
@@ -169,7 +169,7 @@ public class Feedback {
 
 	private String deleteFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task deleted!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_DELETE;
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
 			statusMessage = "Error: That's not a valid task index!";
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
@@ -182,7 +182,7 @@ public class Feedback {
 
 	private String clearFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Tasks cleared!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_CLEAR;
 		} else if (statusCode == Constants.SC_SUCCESS_CLEAR_DONE) {
 			statusMessage = "Tasks cleared!";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
@@ -195,7 +195,7 @@ public class Feedback {
 
 	private String sortFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Tasks sorted!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_SORT;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to sort!";
 		} else {
@@ -206,7 +206,7 @@ public class Feedback {
 
 	private String searchFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Here are your search results!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_SEARCH;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to search!";
 		} else if (statusCode == Constants.SC_SEARCH_KEYWORD_MISSING_ERROR) {
@@ -244,7 +244,7 @@ public class Feedback {
 
 	private String undoFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Undo successful!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_UNDO;
 		} else if (statusCode == Constants.SC_UNDO_NO_PRIOR_STATE_ERROR) {
 			statusMessage = "Error: There's nothing to undo!";
 		} else {
@@ -255,7 +255,7 @@ public class Feedback {
 	
 	private String redoFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Redo successful!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_REDO;
 		} else if (statusCode == Constants.SC_REDO_NO_PRIOR_STATE_ERROR) {
 			statusMessage = "Error: Nothing to redo!";
 		} else {
@@ -266,7 +266,7 @@ public class Feedback {
 
 	private String finaliseFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task finalised!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_FINALISE;
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
 			statusMessage = "Task finalised!\nIt's overdue, though.";
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
@@ -289,7 +289,7 @@ public class Feedback {
 
 	private String helpFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = Constants.HELP_INSTRUCTIONS;
+			statusMessage = Constants.FEEDBACK_SUCCESS_HELP;
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_HELP);
 		}
@@ -298,7 +298,7 @@ public class Feedback {
 
 	private String doneFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Task marked as done!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_DONE;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to mark as done!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
@@ -313,7 +313,7 @@ public class Feedback {
 	
 	private String gotoFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Page " + gotoPage;
+			statusMessage = String.format(Constants.FEEDBACK_SUCCESS_GOTO, gotoPage);
 		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX) {
 			statusMessage = "Error: " + gotoPage + " is not a valid page!";
 		} else {
@@ -324,7 +324,7 @@ public class Feedback {
 
 	private String exitFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = "Saving...";
+			statusMessage = Constants.FEEDBACK_SUCCESS_EXIT;
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_EXIT);
 		}
