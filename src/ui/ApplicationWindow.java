@@ -1,3 +1,14 @@
+/**
+ * APPLICATION WINDOW
+ * 
+ * This class handles the UI elements in the shell. It has the following responsibilities:
+ * 1) Define each UI element and modify them based on the feedback from logic
+ * 2) Add listeners to UI elements
+ * 3) Add listeners to keystrokes
+ * 4) Call the appropriate classes in logic to process input
+ * 
+ */
+
 package ui;
 
 import java.io.File;
@@ -23,8 +34,6 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.joda.time.DateTime;
 
-import com.sun.org.apache.xml.internal.security.utils.HelperNodeList;
-
 import common.Command;
 import common.CommandType;
 import common.Constants;
@@ -36,6 +45,10 @@ import common.TaskType;
 import common.undo.Action;
 import common.undo.ActionStack;
 
+/**
+ * @author macbook
+ *
+ */
 public class ApplicationWindow {
 	// Logging
 	public static boolean testMode = false;
@@ -504,8 +517,8 @@ public class ApplicationWindow {
 			public void keyReleased(KeyEvent arg0) {
 				if (isKeyboardInput(arg0.keyCode)) {
 					userInput = input.getText();
-					Command activeFeedback = commandLogic
-							.activeFeedback(userInput);
+					Command activeFeedback = activeFeedbackLogic
+							.getActiveFeedback(userInput);
 					activeFeedbackLogic.processActiveFeedback(userInput,
 							activeFeedback);
 				}
