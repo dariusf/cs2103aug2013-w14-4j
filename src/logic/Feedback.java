@@ -130,8 +130,6 @@ public class Feedback {
 			statusMessage = "Task added!\nIt's overdue, though.";
 //		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
 //			statusMessage = "Error: No task description was given";
-//		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
-//			statusMessage = "Error: Attribute is unrecognised";
 		} else {
 			statusMessage = "Error: Invalid add (this should not happen!)";
 		}
@@ -145,8 +143,6 @@ public class Feedback {
 			statusMessage = "Task edited!\nIt's overdue, though.";
 		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
 			statusMessage = "Error: No task description was given!";
-//		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
-//			statusMessage = "Error: Attribute is unrecognised";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
 			statusMessage = "Error: That's not a valid task index!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR) {
@@ -214,8 +210,6 @@ public class Feedback {
 			statusMessage = "Error: You have no tasks to search!";
 		} else if (statusCode == Constants.SC_SEARCH_KEYWORD_MISSING_ERROR) {
 			statusMessage = "Error: No search description was given!";
-//		} else if (statusCode == Constants.SC_UNRECOGNISED_ATTRIBUTE_ERROR) {
-//			statusMessage = "Error: Attribute is unrecognised";
 		} else {
 			statusMessage = "Error: Invalid search (this should not happen!)";
 		}
