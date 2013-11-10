@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 
+import parser.Parser;
+
 import ui.ContextualHelp;
 import ui.TaskComposite;
 import ui.TextFormatter;
@@ -27,6 +29,11 @@ public class ActiveFeedbackLogic {
 		this.displayLogic = displayLogic;
 		this.commandLogic = commandLogic;
 		this.window = window;
+	}
+	
+	public Command getActiveFeedback(String userInput) {
+		Command command = Parser.parse(userInput);
+		return command;
 	}
 	
 	public void processActiveFeedback(String userInput, Command executedCommand) {
