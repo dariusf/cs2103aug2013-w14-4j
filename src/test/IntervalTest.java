@@ -35,7 +35,7 @@ public class IntervalTest {
 		interval = new Interval();
 		interval.changeStartTime(new TimeToken("1:00pm"));
 		interval.changeStartDate(new DateToken("1/2/13"));
-		assertEquals(interval.toString(), "1/2/13 1:00 PM to 6/10/13 2:00 PM");
+		assertEquals(interval.toString(), "1/2/13 1:00 PM to 1/2/13 2:00 PM");
 
 		// Start date, then time
 		interval = new Interval();
@@ -48,14 +48,14 @@ public class IntervalTest {
 		interval.changeStartTime(new TimeToken("1:00pm"));
 		interval.changeStartDate(new DateToken("1/2/13"));
 		interval.changeEndTime(new TimeToken("3:00pm"));
-		assertEquals(interval.toString(), "1/2/13 1:00 PM to 6/10/13 3:00 PM");
+		assertEquals(interval.toString(), "1/2/13 1:00 PM to 1/2/13 3:00 PM");
 
 		// Interval, then end date
 		interval = new Interval();
 		interval.changeStartTime(new TimeToken("1:00pm"));
 		interval.changeStartDate(new DateToken("1/2/13"));
 		interval.changeEndDate(new DateToken("5/2/13"));
-		assertEquals(interval.toString(), "1/2/13 1:00 PM to 5/2/13 2:00 PM");
+		assertEquals(interval.toString(), "1/2/13 1:00 PM to 5/2/13 11:59 PM");
 
 		// End date earlier than start
 		interval = new Interval();
