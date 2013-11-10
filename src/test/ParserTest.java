@@ -376,7 +376,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("do schoolwork in school");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.MONDAY).withTime(13, 0, 0, 0);
+		start = now.plusDays(2).withTime(13, 0, 0, 0); // the coming monday
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -387,7 +387,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("do schoolwork or die");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.MONDAY).withTime(13, 0, 0, 0);
+		start = now.plusDays(2).withTime(13, 0, 0, 0); // the coming monday
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -549,7 +549,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.TUESDAY).withTime(13, 0, 0, 0);
+		start = now.plusDays(3).withTime(13, 0, 0, 0); // the coming tuesday
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -560,7 +560,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.TUESDAY).withTime(13, 0, 0, 0);
+		start = now.plusDays(3).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -571,7 +571,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.TUESDAY).withTime(13, 0, 0, 0).minusWeeks(1);
+		start = now.withDayOfWeek(DateTimeConstants.TUESDAY).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -582,7 +582,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.MONDAY).withTime(13, 0, 0, 0).plusWeeks(1);
+		start = now.withDayOfWeek(DateTimeConstants.MONDAY).plusWeeks(2).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -593,7 +593,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("gO hOmE");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.THURSDAY).withTime(13, 0, 0, 0);
+		start = now.withDayOfWeek(DateTimeConstants.THURSDAY).plusWeeks(1).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -604,7 +604,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.THURSDAY).withTime(13, 0, 0, 0);
+		start = now.withDayOfWeek(DateTimeConstants.THURSDAY).plusWeeks(1).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -615,7 +615,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home nes");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.WEDNESDAY).withTime(13, 0, 0, 0);
+		start = now.withDayOfWeek(DateTimeConstants.WEDNESDAY).plusWeeks(1).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
