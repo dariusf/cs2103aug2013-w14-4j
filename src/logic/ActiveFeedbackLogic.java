@@ -182,6 +182,37 @@ public class ActiveFeedbackLogic {
 		}
 	}
 
+	private void editTaskFeedback(Command executedCommand, int taskIndex) {
+
+		highlightTaskFeedback(taskIndex);
+		TaskComposite currentComposite = displayLogic
+				.getCompositeGlobal(taskIndex);
+
+		if (executedCommand.getTimeslotIndex() != Constants.INVALID_INDEX) {
+			modifyTimeSlotOfTaskComposite(executedCommand, currentComposite);
+		} else {
+			modifyTaskComposite(executedCommand, currentComposite);
+		}
+
+	}
+
+	private void finaliseTaskFeedback(Command executedCommand,
+			int taskIndex) {
+		highlightTaskFeedback(taskIndex);
+		if (executedCommand.getTimeslotIndex() > 0) {
+			displayLogic.getCompositeGlobal(taskIndex).highlightLine(
+					executedCommand.getTimeslotIndex());
+		}
+	}
+
+	private void highlightTaskFeedback(int taskIndex) {
+		displayLogic.clearHighlightedTasks();
+		displayLogic.addHighlightedTask(taskIndex);
+		displayLogic.setPageNumber(displayLogic
+				.getPageOfTask(taskIndex));
+		window.updateTaskDisplay();
+	}
+	
 	private void modifyDummyTaskComposite(Command executedCommand) {
 		TaskType finalType = executedCommand.getTaskType();
 		if (!executedCommand.getDescription().isEmpty()) {
@@ -227,37 +258,20 @@ public class ActiveFeedbackLogic {
 				descriptionBuilder.append(tag + " ");
 			}
 		}
-
+	
 		window.dummyTaskComposite.setDescription(descriptionBuilder.toString());
-
 		window.dummyTaskComposite.pack();
 	}
 
-	private void editTaskFeedback(Command executedCommand, int taskIndex) {
-
-		highlightTaskFeedback(taskIndex);
-
-		TaskComposite currentComposite = displayLogic
-				.getCompositeGlobal(taskIndex);
-
-		if (executedCommand.getTimeslotIndex() != Constants.INVALID_INDEX) {
-			editTimeSlotOfTaskComposite(executedCommand, currentComposite);
-		} else {
-			editTaskComposite(executedCommand, currentComposite);
-
-		}
-
-	}
-
-	private void editTaskComposite(Command executedCommand,
+	private void modifyTaskComposite(Command executedCommand,
 			TaskComposite currentComposite) {
 		TaskType finalType = executedCommand.getTaskType();
-
+	
 		if (!executedCommand.getDescription().isEmpty()) {
 			currentComposite.setTaskName(executedCommand
 					.getDescription());
 		}
-
+	
 		StringBuilder descriptionBuilder = new StringBuilder();
 		if (finalType.equals(TaskType.DEADLINE)) {
 			descriptionBuilder.append("by "
@@ -290,17 +304,17 @@ public class ActiveFeedbackLogic {
 			descriptionBuilder.append(currentComposite
 					.getTimeString());
 		}
-
+	
 		String currentTags = currentComposite.getTags();
 		ArrayList<String> newTags = executedCommand.getTags();
 		StringBuilder tagsBuilder = new StringBuilder();
 		tagsBuilder.append(currentTags);
-
+	
 		for (String tag : newTags) {
 			tagsBuilder.append(tag);
 			tagsBuilder.append(" ");
 		}
-
+	
 		if (tagsBuilder.length() > 0) {
 			if (!descriptionBuilder.toString().isEmpty()) {
 				descriptionBuilder.append("\n");
@@ -311,11 +325,11 @@ public class ActiveFeedbackLogic {
 			currentComposite.setDescription(descriptionBuilder
 					.toString());
 		}
-
+	
 		currentComposite.pack();
 	}
 
-	private void editTimeSlotOfTaskComposite(Command executedCommand,
+	private void modifyTimeSlotOfTaskComposite(Command executedCommand,
 			TaskComposite currentComposite) {
 		if (executedCommand.getTimeslotIndex() > 0) {
 			int timeSlot = executedCommand.getTimeslotIndex();
@@ -340,30 +354,13 @@ public class ActiveFeedbackLogic {
 									interval.getEndDateTime());
 					currentComposite.setTentativeTaskAtLine(
 							description, timeSlot);
-
+	
 				}
 				currentComposite.highlightLine(timeSlot);
 			}
 		}
 	}
 
-	private void finaliseTaskFeedback(Command executedCommand,
-			int taskIndex) {
-		highlightTaskFeedback(taskIndex);
-		if (executedCommand.getTimeslotIndex() > 0) {
-			displayLogic.getCompositeGlobal(taskIndex).highlightLine(
-					executedCommand.getTimeslotIndex());
-		}
-	}
-
-	private void highlightTaskFeedback(int taskIndex) {
-		displayLogic.clearHighlightedTasks();
-		displayLogic.addHighlightedTask(taskIndex);
-		displayLogic.setPageNumber(displayLogic
-				.getPageOfTask(taskIndex));
-		window.updateTaskDisplay();
-	}
-	
 	protected void setFeedbackColour(Feedback feedbackObj) {
 		if (feedbackObj.isErrorMessage()) {
 			window.displayFeedback.setForeground(window.red);
