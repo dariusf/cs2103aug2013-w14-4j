@@ -23,7 +23,7 @@ import common.undo.ActionStack;
 import parser.Parser;
 import storage.Storage;
 
-public class Logic {
+public class CommandLogic {
 
 	protected Storage storage = null;
 	protected TreeMap<Integer, Integer> temporaryMapping = new TreeMap<Integer, Integer>();
@@ -32,14 +32,14 @@ public class Logic {
 	protected Command currentHelpCommand = null;
 	protected ActionStack actionStack = ActionStack.getInstance();
 
-	public Logic() throws IOException {
+	public CommandLogic() throws IOException {
 		storage = new Storage(Constants.DEFAULT_FILENAME);
 		this.executeCommand(Constants.COMMAND_DISPLAY);
 	}
 
-	public ActiveFeedback activeFeedback(String userInput) {
+	public Command activeFeedback(String userInput) {
 		Command command = Parser.parse(userInput);
-		return new ActiveFeedback(command);
+		return command;
 	}
 
 	// private ActiveFeedback activeSearchTasks(Command command) {

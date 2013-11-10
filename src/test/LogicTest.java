@@ -14,13 +14,13 @@ import common.DisplayMode;
 import common.Interval;
 
 
-import logic.Logic;
+import logic.CommandLogic;
 
 public class LogicTest {
 
 	@Test
 	public void test() throws IOException {
-		Logic logic = new Logic();
+		CommandLogic logic = new CommandLogic();
 		Command displayCommand = new Command(CommandType.DISPLAY);
 		displayCommand.setDisplayMode(DisplayMode.ALL);
 		// Display task test

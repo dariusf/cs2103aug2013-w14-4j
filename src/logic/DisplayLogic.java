@@ -1,14 +1,17 @@
-package ui;
+package logic;
 
 import java.util.ArrayList;
 
-import logic.Logic;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.joda.time.DateTime;
+
+import ui.ApplicationWindow;
+import ui.HelpDialog;
+import ui.TaskComposite;
 
 import common.Constants;
 import common.DisplayMode;
@@ -17,7 +20,7 @@ import common.Task;
 
 public class DisplayLogic {
 
-	private Logic logic;
+	private CommandLogic commandLogic;
 	private DisplayMode displayMode;
 	private Composite taskDisplay;
 	private int pageNumber;
@@ -38,7 +41,7 @@ public class DisplayLogic {
 	
 	private boolean recreateTaskComposites = false;
 
-	public DisplayLogic(Logic logic, DisplayMode displayMode, int pageNumber) {
+	public DisplayLogic(CommandLogic logic, DisplayMode displayMode, int pageNumber) {
 		setLogic(logic);
 		setDisplayMode(displayMode);
 		taskDisplay = new Composite(ApplicationWindow.shell, SWT.NONE);
@@ -98,7 +101,7 @@ public class DisplayLogic {
 			startingIndex += numberOfTasksOnEachPage.get(i);
  		}
 
-		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
+		ArrayList<Task> taskList = commandLogic.getTasksToDisplay(displayMode, currentDisplayDateTime);
 		taskComposites = new TaskComposite[numberOfTasksOnEachPage.get(pageNumber - 1)];
 
 		for (int i = 0; i < taskComposites.length; i++) {
@@ -293,7 +296,7 @@ public class DisplayLogic {
 	}
 
 	private void determineNumberOfTasksForEachPage(DisplayMode displayMode) {
-		ArrayList<Task> taskList = logic.getTasksToDisplay(displayMode, currentDisplayDateTime);
+		ArrayList<Task> taskList = commandLogic.getTasksToDisplay(displayMode, currentDisplayDateTime);
 		int numberOfTasks = taskList.size();
 		int[] heights = new int[numberOfTasks];
 		int index = 0;
@@ -395,13 +398,13 @@ public class DisplayLogic {
 	}
 
 	public int getNumberOfRemainingTasks() {
-		noOfTasksRemaining = logic.getNumberOfRemainingTasks();
+		noOfTasksRemaining = commandLogic.getNumberOfRemainingTasks();
 		assert (noOfTasksRemaining >= 0);
 		return noOfTasksRemaining;
 	}
 
 	public int getNumberOfTasksToday() {
-		noOfTasksToday = logic.getNumberOfTasksToday();
+		noOfTasksToday = commandLogic.getNumberOfTasksToday();
 		assert (noOfTasksToday >= 0);
 		return noOfTasksToday;
 	}
@@ -410,9 +413,9 @@ public class DisplayLogic {
 		return determineTitle();
 	}
 	
-	private void setLogic(Logic logic) {
+	private void setLogic(CommandLogic logic) {
 		assert (logic != null);
-		this.logic = logic;
+		this.commandLogic = logic;
 	}
 
 	public void setDisplayMode(DisplayMode displayMode) {
