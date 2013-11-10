@@ -225,4 +225,15 @@ public class TaskComposite extends Composite {
 			return taskDescription.getText();
 		}
 	}
+	
+	public boolean isTentativeTaskComposite(){
+		String[] taskDescriptionArray = taskDescription.getText().split(
+				"\n");
+		System.out.println(taskDescriptionArray.length);
+		if(isTagged()){
+			return (taskDescriptionArray.length-1) > 1;
+		} else {
+			return taskDescriptionArray.length > 1;
+		}
+	}
 }
