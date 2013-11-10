@@ -10,6 +10,7 @@ import common.Constants;
 
 public class FeedbackTest {
 
+	// @author A0101048X
 	@Test
 	public final void test() {
 		
@@ -23,44 +24,46 @@ public class FeedbackTest {
 	 */
 	private void testForSuccessCases() {
 		Feedback testFeedback = new Feedback(Constants.SC_SUCCESS, CommandType.ADD); 
-		assertEquals("Task added successfully!", testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_ADD, testFeedback.toString());
 		
 		testFeedback.setCommand(CommandType.EDIT);
-		assertEquals("Task edited successfully!", testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_EDIT, testFeedback.toString());
 		
 		testFeedback.setCommand(CommandType.DISPLAY);
-		assertEquals("Here are your tasks.", testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_DISPLAY, testFeedback.toString());
 		
 		testFeedback.setCommand(CommandType.DELETE);
-		assertEquals("Task deleted successfully!", testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_DELETE, testFeedback.toString());
 		
 		testFeedback.setCommand(CommandType.CLEAR);
-		assertEquals("All tasks cleared!", testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_CLEAR, testFeedback.toString());
 
 		testFeedback.setCommand(CommandType.SORT);
-		assertEquals("All tasks sorted!", testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_SORT, testFeedback.toString());
 		
 		testFeedback.setCommand(CommandType.SEARCH);
-		assertEquals("Here are your search results.", testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_SEARCH, testFeedback.toString());
 		
 		testFeedback.setCommand(CommandType.UNDO);
-		assertEquals("Undo successful!", testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_UNDO, testFeedback.toString());
 		
 		testFeedback.setCommand(CommandType.REDO);
-		assertEquals("Redo successful!", testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_REDO, testFeedback.toString());
 		
 		testFeedback.setCommand(CommandType.FINALISE);
-		assertEquals("Task finalised successfully!", testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_FINALISE, testFeedback.toString());
 
 		testFeedback.setCommand(CommandType.HELP);
-		assertEquals(Constants.HELP_INSTRUCTIONS, testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_HELP, testFeedback.toString());
 
 		testFeedback.setCommand(CommandType.DONE);
-		assertEquals("Task marked as done!", testFeedback.toString());
+		assertEquals(Constants.FEEDBACK_SUCCESS_DONE, testFeedback.toString());
 		
 		testFeedback.setCommand(CommandType.GOTO);
-		testFeedback.setGotoPage(2);
-		assertEquals("Page 2", testFeedback.toString());
+		int expectedPageNumber = 2;
+		testFeedback.setGotoPage(expectedPageNumber);
+		assertEquals(expectedPageNumber, testFeedback.getGotoPage());
+		assertEquals(String.format(Constants.FEEDBACK_SUCCESS_GOTO, expectedPageNumber), testFeedback.toString());
 	}
 
 }
