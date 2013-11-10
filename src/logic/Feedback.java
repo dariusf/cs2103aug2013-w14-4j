@@ -6,6 +6,7 @@ import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
 
+//@author A0101048X
 public class Feedback {
 	private CommandType feedbackCommand = null;
 	private int taskIndex = 0; 
@@ -19,7 +20,6 @@ public class Feedback {
 	private CommandType helpCommandType = null;
 	private Task addedTask = null;
 
-	// @author A0101048X
 	public Feedback(int status, CommandType command) {
 		setStatusCode(status);
 		setCommand(command);
@@ -127,7 +127,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_ADD;
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task added!\nIt's overdue, though.";
+			statusMessage = Constants.FEEDBACK_SUCCESS_OVERDUE_ADD;
 //		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
 //			statusMessage = "Error: No task description was given";
 		} else {
@@ -140,7 +140,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_EDIT;
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task edited!\nIt's overdue, though.";
+			statusMessage = Constants.FEEDBACK_SUCCESS_OVERDUE_EDIT;
 		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
 			statusMessage = "Error: No task description was given!";
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
@@ -183,7 +183,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_CLEAR;
 		} else if (statusCode == Constants.SC_SUCCESS_CLEAR_DONE) {
-			statusMessage = "Tasks cleared!";
+			statusMessage = Constants.FEEDBACK_SUCCESS_CLEAR;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to clear!";
 		} else {

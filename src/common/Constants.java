@@ -45,6 +45,8 @@ public class Constants {
 	public static final String FEEDBACK_SUCCESS_DONE = "Task marked as done!";
 	public static final String FEEDBACK_SUCCESS_GOTO = "Page %1$s";
 	public static final String FEEDBACK_SUCCESS_EXIT = "Saving...";
+	public static final String FEEDBACK_SUCCESS_OVERDUE_ADD = "Task added!\nIt's overdue, though.";
+	public static final String FEEDBACK_SUCCESS_OVERDUE_EDIT = "Task edited!\nIt's overdue, though.";
 	
 
 	public static final String HELP_GENERAL = "_Hotkeys_\n"
