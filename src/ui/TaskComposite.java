@@ -135,6 +135,7 @@ public class TaskComposite extends Composite {
 		taskDescription.setText(name);
 		taskDescription.pack();
 		taskDetailsComposite.pack();
+		this.pack();
 	}
 
 	public void setTentativeTaskAtLine(String description, int line) {
