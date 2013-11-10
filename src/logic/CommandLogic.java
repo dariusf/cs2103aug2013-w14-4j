@@ -453,12 +453,7 @@ public class CommandLogic {
 								&& currentTask.getDeadline().isBefore(now);
 						break;
 					case DATE:
-						if (currentTask.getStartTime() == null) {
-							condition = false;
-						} else {
-							condition = currentTask.getStartTime().dayOfYear()
-								.equals(command.getClearDateTime().dayOfYear());
-						}
+						condition = currentTask.isOnDate(command.getClearDateTime());
 						break;
 					case DONE:
 						condition = currentTask.isDone();
