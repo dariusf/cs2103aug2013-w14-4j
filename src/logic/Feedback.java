@@ -19,6 +19,7 @@ public class Feedback {
 	private CommandType helpCommandType = null;
 	private Task addedTask = null;
 
+	// @author A0101048X
 	public Feedback(int status, CommandType command) {
 		setStatusCode(status);
 		setCommand(command);
@@ -119,7 +120,7 @@ public class Feedback {
 		case EXIT :
 			return exitFeedback();
 		default :
-			return "This should not happen!";
+			return String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.MSG_DEFAULT);
 		}
 	}
 
@@ -131,7 +132,7 @@ public class Feedback {
 //		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
 //			statusMessage = "Error: No task description was given";
 		} else {
-			statusMessage = "Error: Invalid add (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_ADD);
 		}
 		return statusMessage;
 	}
@@ -150,7 +151,7 @@ public class Feedback {
 		}else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
 			statusMessage = "Error: You need to specify a task index!";
 		} else {
-			statusMessage = "Error: Invalid edit (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_EDIT);
 		}
 		return statusMessage;
 	}
@@ -161,7 +162,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "You have no tasks!";
 		} else {
-			statusMessage = "Error: Invalid display (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_DISPLAY);
 		}
 		return statusMessage;
 	}
@@ -174,7 +175,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
 			statusMessage = "Error: You need to specify a task index!";
 		} else {
-			statusMessage = "Error: Invalid delete (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_DELETE);
 		}
 		return statusMessage;
 	}
@@ -187,7 +188,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to clear!";
 		} else {
-			statusMessage = "Error: Invalid clear (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_CLEAR);
 		}
 		return statusMessage;
 	}
@@ -198,7 +199,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
 			statusMessage = "Error: You have no tasks to sort!";
 		} else {
-			statusMessage = "Error: Invalid sort (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_SORT);
 		}
 		return statusMessage;
 	}
@@ -211,7 +212,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_SEARCH_KEYWORD_MISSING_ERROR) {
 			statusMessage = "Error: No search description was given!";
 		} else {
-			statusMessage = "Error: Invalid search (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_SEARCH);
 		}
 		return statusMessage;
 	}
@@ -236,7 +237,7 @@ public class Feedback {
 		}  else if (statusCode == Constants.SC_INVALID_TASK_INDEX_ERROR){
 			statusMessage = "Error: Task index is invalid!";
 		}else {
-			statusMessage = "Error: Invalid command (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_INVALID);
 		}
 		return statusMessage;
 	}
@@ -247,7 +248,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_UNDO_NO_PRIOR_STATE_ERROR) {
 			statusMessage = "Error: There's nothing to undo!";
 		} else {
-			statusMessage = "Error: Invalid undo (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_UNDO);
 		}
 		return statusMessage;
 	}
@@ -258,7 +259,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_REDO_NO_PRIOR_STATE_ERROR) {
 			statusMessage = "Error: Nothing to redo!";
 		} else {
-			statusMessage = "Error: Invalid redo (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_REDO);
 		}
 		return statusMessage;
 	}
@@ -281,7 +282,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_FINALISE_TYPE_MISMATCH_ERROR) {
 			statusMessage = "Error: That's not a tentative task!";
 		} else {
-			statusMessage = "Error: Invalid finalise (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_FINALISE);
 		}
 		return statusMessage;
 	}	
@@ -290,7 +291,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.HELP_INSTRUCTIONS;
 		} else {
-			statusMessage = "Error: Invalid help (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_HELP);
 		}
 		return statusMessage;
 	}
@@ -305,7 +306,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
 			statusMessage = "Error: That's not a valid task index!";
 		} else {
-			statusMessage = "Error: Invalid done (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_DONE);
 		}
 		return statusMessage;
 	}
@@ -316,7 +317,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX) {
 			statusMessage = "Error: " + gotoPage + " is not a valid page!";
 		} else {
-			statusMessage = "Error: Invalid goto (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_GOTO);
 		}
 		return statusMessage;
 	}
@@ -325,7 +326,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = "Saving...";
 		} else {
-			statusMessage = "Error: Cannot exit (this should not happen!)";
+			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_EXIT);
 		}
 		return statusMessage;
 	}
