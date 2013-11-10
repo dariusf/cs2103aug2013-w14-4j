@@ -2,6 +2,7 @@ package parser;
 
 import java.util.ArrayList;
 
+import common.Constants;
 import common.Interval;
 
 
@@ -29,7 +30,7 @@ class StateEditInterval implements State {
 			}
 		}
 		else if (t instanceof WordToken) {
-			if (t.contents.equalsIgnoreCase("or")) {
+			if (t.contents.equalsIgnoreCase(Constants.PARSER_KEYWORD_OR)) {
 				finaliseInterval();
 				foundDelimiter = false;
 			}
