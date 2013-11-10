@@ -59,9 +59,12 @@ public class ContextualHelp {
 		case REDO:
 			return Constants.CONTEXTUAL_HELP_REDO;
 		case FINALISE:
-			String finaliseTaskIndex = command.hasTaskIndex() ? Constants.CONTEXTUAL_HELP_TASK_INDEX : highlight(Constants.CONTEXTUAL_HELP_TASK_INDEX);
-			String timeslotIndex = command.hasTaskIndex() ? Constants.CONTEXTUAL_HELP_TIMESLOT_INDEX : highlight(Constants.CONTEXTUAL_HELP_TIMESLOT_INDEX);
-			return constructFeedbackString(Constants.COMMAND_FINALISE, finaliseTaskIndex, timeslotIndex);
+			if (!command.hasTaskIndex()) {
+				return constructFeedbackString(Constants.COMMAND_FINALISE, highlight(Constants.CONTEXTUAL_HELP_TASK_INDEX), Constants.CONTEXTUAL_HELP_TIMESLOT_INDEX);
+			} else {
+				String timeslotIndex = command.hasTimeslotIndex() ? Constants.CONTEXTUAL_HELP_TIMESLOT_INDEX : highlight(Constants.CONTEXTUAL_HELP_TIMESLOT_INDEX);
+				return constructFeedbackString(Constants.COMMAND_FINALISE, Constants.CONTEXTUAL_HELP_TASK_INDEX, timeslotIndex);
+			}
 		case HELP:
 	        String helpCommand = command.hasHelpCommand() ? Constants.CONTEXTUAL_HELP_COMMAND : highlight(Constants.CONTEXTUAL_HELP_COMMAND);
 	        return constructFeedbackString(Constants.COMMAND_HELP, helpCommand);
