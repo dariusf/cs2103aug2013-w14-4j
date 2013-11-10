@@ -3,14 +3,14 @@ package parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import logic.Command;
-import logic.Interval;
 import org.joda.time.DateTime;
 
 import common.ClearMode;
+import common.Command;
 import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
+import common.Interval;
 import common.InvalidCommandReason;
 
 //@author A0097282W

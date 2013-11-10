@@ -1,11 +1,6 @@
-package logic;
+package common;
 import java.util.ArrayList;
 import org.joda.time.DateTime;
-import common.CommandType;
-import common.DisplayMode;
-import common.ClearMode;
-import common.InvalidCommandReason;
-import common.TaskType;
 
 public class Command {
 	private CommandType commandType = null;

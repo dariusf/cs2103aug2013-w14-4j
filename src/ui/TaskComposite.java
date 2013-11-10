@@ -2,7 +2,6 @@ package ui;
 
 import java.util.Arrays;
 
-import logic.Task;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -15,6 +14,8 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.joda.time.DateTime;
+
+import common.Task;
 
 public class TaskComposite extends Composite {
 

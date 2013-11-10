@@ -2,16 +2,18 @@ package ui;
 
 import java.util.ArrayList;
 
+import logic.Logic;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.joda.time.DateTime;
+
 import common.Constants;
 import common.DisplayMode;
-import logic.Feedback;
-import logic.Logic;
-import logic.Task;
+import common.Feedback;
+import common.Task;
 
 public class DisplayLogic {
 

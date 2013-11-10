@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+import common.Command;
 import common.CommandType;
 import common.DisplayMode;
+import common.Interval;
 
 
-import logic.Command;
-import logic.Interval;
 import logic.Logic;
 
 public class LogicTest {

@@ -8,11 +8,11 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.junit.Test;
 
+import common.Command;
 import common.CommandType;
+import common.Interval;
 import common.InvalidCommandReason;
 
-import logic.Command;
-import logic.Interval;
 import parser.DateToken;
 import parser.Parser;
 import parser.StateDeadline;

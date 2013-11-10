@@ -11,8 +11,6 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import logic.Interval;
-import logic.Task;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -30,6 +28,8 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import common.Constants;
+import common.Interval;
+import common.Task;
 
 /**
  * Contains two static methods, one for creating a JSON document out of a list of objects

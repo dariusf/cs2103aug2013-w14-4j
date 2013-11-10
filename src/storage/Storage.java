@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import logic.Task;
+import common.Task;
+
 
 public class Storage implements Closeable, Iterable<Task> {
 	class Switch {

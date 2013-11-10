@@ -1,4 +1,4 @@
-package logic;
+package common;
 
 
 import org.joda.time.DateTime;
@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import parser.DateToken;
 import parser.TimeToken;
 
-import common.Constants;
 
 public class Interval {
 	/**

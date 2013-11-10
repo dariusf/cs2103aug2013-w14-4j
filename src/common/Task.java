@@ -1,4 +1,4 @@
-package logic;
+package common;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,6 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import common.CommandType;
-import common.Constants;
-import common.TaskType;
 
 public class Task implements Comparable<Task>, Cloneable {
 

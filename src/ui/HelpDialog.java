@@ -1,6 +1,5 @@
 package ui;
 
-import logic.Feedback;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -19,6 +18,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import common.CommandType;
 import common.Constants;
+import common.Feedback;
 
 public class HelpDialog extends Dialog {
 

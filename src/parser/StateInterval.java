@@ -2,7 +2,8 @@ package parser;
 
 import java.util.ArrayList;
 
-import logic.Interval;
+import common.Interval;
+
 
 //@author A0097282W
 class StateInterval implements State {

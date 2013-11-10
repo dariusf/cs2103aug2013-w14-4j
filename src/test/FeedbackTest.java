@@ -1,12 +1,12 @@
 package test;
 
 import static org.junit.Assert.*;
-import logic.Feedback;
 
 import org.junit.Test;
 
 import common.CommandType;
 import common.Constants;
+import common.Feedback;
 
 //@author A0101048X
 public class FeedbackTest {

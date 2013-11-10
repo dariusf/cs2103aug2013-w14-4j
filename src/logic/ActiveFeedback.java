@@ -1,5 +1,7 @@
 package logic;
 
+import common.Command;
+
 public class ActiveFeedback {
 	private Command command = null;
 	

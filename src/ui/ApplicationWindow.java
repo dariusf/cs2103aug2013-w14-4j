@@ -10,11 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import logic.ActiveFeedback;
-import logic.Command;
-import logic.Feedback;
-import logic.Interval;
 import logic.Logic;
-import logic.Task;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
@@ -28,9 +24,13 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.joda.time.DateTime;
 
+import common.Command;
 import common.CommandType;
 import common.Constants;
 import common.DisplayMode;
+import common.Feedback;
+import common.Interval;
+import common.Task;
 import common.TaskType;
 import common.undo.Action;
 import common.undo.ActionStack;

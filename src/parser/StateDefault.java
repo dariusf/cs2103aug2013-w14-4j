@@ -1,6 +1,6 @@
 package parser;
 
-import logic.Interval;
+import common.Interval;
 
 //@author A0097282W
 class StateDefault implements State {

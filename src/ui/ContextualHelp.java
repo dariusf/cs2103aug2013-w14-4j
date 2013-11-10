@@ -1,6 +1,6 @@
 package ui;
 
-import logic.Command;
+import common.Command;
 import common.Constants;
 
 //@author A0097282W
