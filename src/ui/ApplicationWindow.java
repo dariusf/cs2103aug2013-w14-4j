@@ -384,7 +384,7 @@ public class ApplicationWindow {
 	}
 
 	public void setWelcomePage() {
-		executeUserInput(Constants.WELCOME_PAGE_DISPLAY);
+		executeUserInput(Constants.WELCOME_PAGE_DISPLAY_COMMAND);
 	}
 
 	public void enterDriverLoop() {
