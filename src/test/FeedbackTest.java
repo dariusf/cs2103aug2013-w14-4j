@@ -8,9 +8,9 @@ import org.junit.Test;
 import common.CommandType;
 import common.Constants;
 
+//@author A0101048X
 public class FeedbackTest {
-
-	// @author A0101048X
+	
 	@Test
 	public final void test() {
 		
@@ -64,6 +64,17 @@ public class FeedbackTest {
 		testFeedback.setPageNumber(expectedPageNumber);
 		assertEquals(expectedPageNumber, testFeedback.getPageNumber());
 		assertEquals(String.format(Constants.FEEDBACK_SUCCESS_GOTO, expectedPageNumber), testFeedback.toString());
+		
+		testFeedback.setStatusCode(Constants.SC_SUCCESS_TASK_OVERDUE);
+		testFeedback.setCommand(CommandType.ADD);
+		assertEquals(Constants.FEEDBACK_SUCCESS_OVERDUE_ADD, testFeedback.toString());
+		
+		testFeedback.setCommand(CommandType.EDIT);
+		assertEquals(Constants.FEEDBACK_SUCCESS_OVERDUE_EDIT, testFeedback.toString());
+		
+		testFeedback.setStatusCode(Constants.SC_SUCCESS_CLEAR_DONE);
+		testFeedback.setCommand(CommandType.CLEAR);
+		assertEquals(Constants.FEEDBACK_SUCCESS_CLEAR, testFeedback.toString());
 	}
 
 }
