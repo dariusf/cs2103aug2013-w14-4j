@@ -37,36 +37,6 @@ public class CommandLogic {
 		this.executeCommand(Constants.COMMAND_DISPLAY);
 	}
 
-	public Command activeFeedback(String userInput) {
-		Command command = Parser.parse(userInput);
-		return command;
-	}
-
-	// private ActiveFeedback activeSearchTasks(Command command) {
-	// return new ActiveFeedback(command);
-	// }
-	//
-	// private ActiveFeedback activeFinalisaTask(Command command) {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-	//
-	// private ActiveFeedback activeMarkDone(Command command) {
-	// return new ActiveFeedback(command);
-	// }
-	//
-	// private ActiveFeedback activeDeleteTask(Command command) {
-	// return new ActiveFeedback(command);
-	// }
-	//
-	// private ActiveFeedback activeEditTask(Command command) {
-	// return new ActiveFeedback(command);
-	// }
-	//
-	// private ActiveFeedback activeAddTask(Command command) {
-	// return new ActiveFeedback(command);
-	// }
-
 	public Feedback executeCommand(String userCommand) {
 		Command command = Parser.parse(userCommand);
 		CommandType commandType = command.getCommandType();
