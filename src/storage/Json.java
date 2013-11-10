@@ -10,6 +10,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 import org.joda.time.DateTime;
@@ -42,7 +43,7 @@ public class Json {
 	private static DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder().
 			appendPattern(Constants.DATE_TIME_FORMAT).toFormatter();
 	
-	static Gson jsonFormatter = new GsonBuilder().setPrettyPrinting().
+	private static Gson jsonFormatter = new GsonBuilder().setPrettyPrinting().
 			registerTypeAdapter(DateTime.class, new DateTimeSerializer()).
 			registerTypeAdapter(DateTime.class, new DateTimeDeserializer()).
 			registerTypeAdapter(Interval.class, new IntervalSerializer()).
@@ -60,7 +61,8 @@ public class Json {
 		public Interval deserialize(JsonElement json, Type typeOfT,
 				JsonDeserializationContext context) throws JsonParseException {
 			String[] dates = json.getAsString().split(" to ");
-			return new Interval(dateTimeFormatter.parseDateTime(dates[0]), dateTimeFormatter.parseDateTime(dates[1]));
+			return new Interval(dateTimeFormatter.parseDateTime(dates[0]),
+					dateTimeFormatter.parseDateTime(dates[1]));
 		}
 	}
 	
@@ -127,6 +129,14 @@ public class Json {
 		return writer.toString();
 	}
 	
+	public static void writeToFile (Iterator<Task> tasksIterator, File file) throws IOException {
+		writeToFile(iteratorToList(tasksIterator), file);
+	}
+	
+	public static void writeToString (Iterator<Task> tasksIterator) throws IOException {
+		writeToString(iteratorToList(tasksIterator));
+	}
+	
 	private static <E> ArrayList<E> arrayToArrayList(E[] array) {
 		if(array == null || array.length == 0) {
 			return new ArrayList<>();
@@ -138,8 +148,11 @@ public class Json {
 		return result;
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(dateTimeFormatter.parseDateTime("23/04/13 10:00 PM").toString());
+	private static <E> ArrayList<E> iteratorToList (Iterator<E> iter) {
+		ArrayList<E> result = new ArrayList<>();
+		while (iter.hasNext()) {
+			result.add(iter.next());
+		}
+		return result;
 	}
-
 }

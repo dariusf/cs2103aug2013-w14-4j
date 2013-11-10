@@ -603,6 +603,48 @@ public class ApplicationWindow {
 					+ "Basket will continue without hotkey.");
 		}
 	}
+
+	/**
+	 * Execute the command which is entered
+	 */
+	public void executeUserInput(String userInput) {
+
+		if (!userInput.isEmpty()) {
+			pushInitialDisplayModeIntoUndoStack ();
+			Feedback feedbackObj = commandLogic.executeCommand(userInput);
+
+			if (feedbackObj.getCommand() == CommandType.EXIT) {
+				shell.dispose();
+				trayIcon.dispose();
+				tray.dispose();
+				System.exit(0);
+			}
+			
+			String feedback = feedbackObj.toString();
+			setFeedbackColour(feedbackObj);
+			displayFeedback.setText(feedback);
+			if (feedbackObj.isErrorMessage()) {
+				getUpHistory();
+			} else {
+				input.setText("");
+			}
+
+			displayLogic.processFeedback(feedbackObj, helpDialog);
+			
+			pushFinalDisplayModeIntoUndoStack ();
+			finaliseThisAction (feedbackObj.getCommand());
+			
+			updateTaskDisplay();
+
+			if (testMode) {
+				logger.log(Level.INFO, generateLoggingString());
+			}
+		}
+	}
+
+	/**
+	 * Helper methods
+	 */
 	
 	private void pushInitialDisplayModeIntoUndoStack() {
 		class StartDisplayAction implements Action {
@@ -671,48 +713,6 @@ public class ApplicationWindow {
 				|| command == CommandType.EDIT
 				|| command == CommandType.FINALISE || command == CommandType.SORT);
 	}
-
-	/**
-	 * Execute the command which is entered
-	 */
-	public void executeUserInput(String userInput) {
-
-		if (!userInput.isEmpty()) {
-			pushInitialDisplayModeIntoUndoStack ();
-			Feedback feedbackObj = commandLogic.executeCommand(userInput);
-
-			if (feedbackObj.getCommand() == CommandType.EXIT) {
-				shell.dispose();
-				trayIcon.dispose();
-				tray.dispose();
-				System.exit(0);
-			}
-			
-			String feedback = feedbackObj.toString();
-			setFeedbackColour(feedbackObj);
-			displayFeedback.setText(feedback);
-			if (feedbackObj.isErrorMessage()) {
-				getUpHistory();
-			} else {
-				input.setText("");
-			}
-
-			displayLogic.processFeedback(feedbackObj, helpDialog);
-			
-			pushFinalDisplayModeIntoUndoStack ();
-			finaliseThisAction (feedbackObj.getCommand());
-			
-			updateTaskDisplay();
-
-			if (testMode) {
-				logger.log(Level.INFO, generateLoggingString());
-			}
-		}
-	}
-
-	/**
-	 * Helper methods
-	 */
 	
 	/**
 	 * Methods required to align windows at the centre of the monitor display

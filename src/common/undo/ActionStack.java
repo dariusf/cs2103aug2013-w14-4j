@@ -1,11 +1,13 @@
 package common.undo;
 
-// TODO remove debug codes, or move them to a logger
-
 public class ActionStack {
 	
+	private static String ERROR_NO_ACTIONS = "No actions in stack!";
+	private static String ERROR_UNFINALISED_ACTIONS = "Current action stack contains unfinalised actions!" +
+													  "Please finalise them before undo/redo.";
+	
 	private static class ActionSet implements Action {
-		DoublyLinkedList<Action> set;
+		private DoublyLinkedList<Action> set;
 		
 		public ActionSet() {
 			set = new DoublyLinkedList<>();
@@ -42,8 +44,7 @@ public class ActionStack {
 			
 	private void noPendingActionsCheck () throws Exception {
 		if (!currentActionSet.isEmpty()) {
-			throw new Exception("Current action stack contains unfinalised actions!" +
-					"Please finalise them before undo/redo.");
+			throw new Exception(ERROR_UNFINALISED_ACTIONS);
 		}
 	}
 	
@@ -53,7 +54,7 @@ public class ActionStack {
 	
 	public void undo () throws Exception {
 		if (!isUndoable()) {
-			throw new Exception("No actions in stack!");
+			throw new Exception(ERROR_NO_ACTIONS);
 		}
 		
 		noPendingActionsCheck();
@@ -62,7 +63,7 @@ public class ActionStack {
 	
 	public void redo () throws Exception {
 		if (!isRedoable()) {
-			throw new Exception("No actions in stack!");
+			throw new Exception(ERROR_NO_ACTIONS);
 		}
 		
 		noPendingActionsCheck();

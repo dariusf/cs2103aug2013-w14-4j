@@ -13,6 +13,10 @@ import common.Task;
 
 
 public class Storage implements Closeable, Iterable<Task> {
+	
+	private static int WRITE_TO_FILE_DELAY = 30000;
+	private static int WRITE_TO_FILE_PERIOD = 30000;
+	
 	class Switch {
 		boolean switchState = false;
 		
@@ -53,6 +57,10 @@ public class Storage implements Closeable, Iterable<Task> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		initialiseTimer();
+	}
+
+	private void initialiseTimer() {
 		writeTimer = new Timer(true);
 		writeTimer.schedule(new TimerTask() {
 			
@@ -66,7 +74,7 @@ public class Storage implements Closeable, Iterable<Task> {
 					}
 				}
 			}
-		}, 30000, 30000);
+		}, WRITE_TO_FILE_DELAY, WRITE_TO_FILE_PERIOD);
 	}
 	
 	public void sort() {
@@ -136,18 +144,9 @@ public class Storage implements Closeable, Iterable<Task> {
 
 	public synchronized void writeToFile() throws IOException {
 		File file = new File(fileName);
-		//if(file.exists()) { file.delete(); }
 		
-		Json.writeToFile(convertIteratorToList(taskStorage.iterator()), file);
+		Json.writeToFile(taskStorage.iterator(), file);
 		hasEditSwitch.turnOff();
-	}
-	
-	private static <E> ArrayList<E> convertIteratorToList (Iterator<E> iter) {
-		ArrayList<E> result = new ArrayList<>();
-		while (iter.hasNext()) {
-			result.add(iter.next());
-		}
-		return result;
 	}
 	
 	public void fileWriteNotify () {

@@ -5,6 +5,8 @@ import java.util.NoSuchElementException;
 
 public class DoublyLinkedList<E> implements ListIterator<E> {
 	
+	private static int VALUE_SENTINEL_EMPTY = -1; //sentinel value representing empty list
+	
 	private class Node {
 		E item;
 		Node prevNode;
@@ -23,20 +25,20 @@ public class DoublyLinkedList<E> implements ListIterator<E> {
 		}
 	}
 	
-	Node previousNode;
-	Node headNode;
-	Node tailNode;
-	int index;
+	private Node previousNode;
+	private Node headNode;
+	private Node tailNode;
+	private int index;
 	
 	public DoublyLinkedList() {
 		headNode = new Node(null, null, null);
 		tailNode = new Node(null, headNode, null);
 		previousNode = headNode;
-		index = -1; //sentinel value representing empty list
+		index = VALUE_SENTINEL_EMPTY;
 	}
 	
 	public void add(E item) { // adds item to head of list
-		if(index == -1) {
+		if(index == VALUE_SENTINEL_EMPTY) {
 			Node newNode = new Node(item, headNode, tailNode);
 			previousNode = newNode;
 			index = 0;
@@ -89,23 +91,23 @@ public class DoublyLinkedList<E> implements ListIterator<E> {
 	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
-		
 	}
 
 	@Override
 	public void set(E e) {
 		throw new UnsupportedOperationException();
-		
 	}
 	
 	public void removeAllPrevious() {
-		if (previousNode == headNode) { return; }
+		if (previousNode == headNode) {
+			return;
+		}
 		Node nextNode = previousNode.nextNode;
 		nextNode.prevNode = headNode;
 		headNode.nextNode = nextNode;
 		previousNode = headNode;
 		if (previousNode.nextNode == tailNode) {
-			index = -1;
+			index = VALUE_SENTINEL_EMPTY;
 		} else {
 			index = 0;
 		}
