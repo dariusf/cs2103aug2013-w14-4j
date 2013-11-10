@@ -14,6 +14,7 @@ public class Constants {
 	public static final String MSG_AVAILABLE_COMMANDS = "Commands available: add|edit|display|sort|search\nfinalise|help|goto|undo|redo|clear|done|exit";
 	public static final String MSG_SHOULD_NOT_HAPPEN = "%1$s error: Something has gone wrong; please contact the developers";
 	public static final String MSG_DEFAULT = "default";
+	public static final String MSG_MARK_AS_DONE = "mark as done";
 	
 	public static final String COMMAND_ADD = "add";
 	public static final String COMMAND_DELETE = "delete";
@@ -47,8 +48,27 @@ public class Constants {
 	public static final String FEEDBACK_SUCCESS_EXIT = "Saving...";
 	public static final String FEEDBACK_SUCCESS_OVERDUE_ADD = "Task added!\nIt's overdue, though.";
 	public static final String FEEDBACK_SUCCESS_OVERDUE_EDIT = "Task edited!\nIt's overdue, though.";
+	public static final String FEEDBACK_SUCCESS_OVERDUE_FINALISE = "Task finalised!\nIt's overdue, though.";
 	
-
+	public static final String FEEDBACK_ERROR_EMPTY_DESCRIPTION = "Error: No task description was given!";
+	public static final String FEEDBACK_ERROR_INTEGER_OUT_OF_BOUNDS = "Error: That's not a valid task index!";
+	public static final String FEEDBACK_ERROR_INTEGER_OUT_OF_BOUNDS_TIME = "Error: That's not a valid timeslot index!";
+	public static final String FEEDBACK_ERROR_NO_INDEX_INDICATED = "Error: You need to specify a task index!";
+	public static final String FEEDBACK_ERROR_NO_TIME_INDICATED = "Error: That's not a valid time!";
+	public static final String FEEDBACK_ERROR_NO_TASK = "Error: You have no tasks to %1$s!";
+	public static final String FEEDBACK_ERROR_NO_TASK_DISPLAY = "Error: You have no tasks!";
+	public static final String FEEDBACK_ERROR_NO_KEYWORD_SEARCH = "Error: No search description was given!";
+	public static final String FEEDBACK_ERROR_NO_PRIOR_STATE = "Error: There's nothing to %1$s!";
+	public static final String FEEDBACK_ERROR_FINALISE_TYPE_MISMATCH = "Error: That's not a tentative task!";
+	public static final String FEEDBACK_ERROR_INVALID_PAGE_NUMBER = "Error: %1$s is not a valid page!";
+	public static final String FEEDBACK_ERROR_INVALID_COMMAND = "Error: That's not valid command!";
+	public static final String FEEDBACK_ERROR_NO_COMMAND = "Error: No command entered!";
+	public static final String FEEDBACK_ERROR_INVALID_PAGE_INDEX = "Error: That's not a vaild page index!";
+	public static final String FEEDBACK_ERROR_INVALID_DATE = "Error: That's not a valid date!";
+	public static final String FEEDBACK_ERROR_UNRECOGNISED_COMMAND = "Error: Command is not recognised!";
+	public static final String FEEDBACK_ERROR_TOO_FEW_ARGUMENTS = "Error: Command is not in the right format!";
+	public static final String FEEDBACK_ERROR_INVALID_SEARCH_PARAMETERS = "Error: Search parameters are invalid!";
+	
 	public static final String HELP_GENERAL = "_Hotkeys_\n"
 			+ "*Shift+F1*: Minimises/restores Basket\n"
 			+ "*Page Up*: Previous page\n"
