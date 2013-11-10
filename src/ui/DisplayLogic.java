@@ -120,8 +120,8 @@ public class DisplayLogic {
 			Task task = feedback.getAddedTask();
 			if(!taskIsInCurrentDisplayMode(task)){
 				this.setDisplayMode(DisplayMode.TODO);
-				goToLastPage();
 			}
+			goToLastPage();
 			break;
 		case EDIT:
 			// fallthrough

@@ -11,7 +11,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Region;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import common.CommandType;
@@ -33,10 +37,77 @@ public class HelpDialog extends Dialog {
 
 	public void open(Feedback feedbackObj) {
 		Shell parent = getParent();
-		dialog = new Shell(parent);
+		dialog = new Shell(parent, SWT.NO_TRIM);
 		display = parent.getDisplay();
+		
+		final Image image = SWTResourceManager.getImage(
+				ApplicationWindow.class, "/image/helpbackground.png");
+		Region region = new Region();
+		final ImageData imageData = image.getImageData();
+		if (imageData.alphaData != null) {
+			Rectangle pixel = new Rectangle(0, 0, 1, 1);
+			for (int y = 0; y < imageData.height; y++) {
+				for (int x = 0; x < imageData.width; x++) {
+					if (imageData.getAlpha(x, y) == 255) {
+						pixel.x = imageData.x + x;
+						pixel.y = imageData.y + y;
+						region.add(pixel);
+					}
+				}
+			}
+		} else {
+			ImageData mask = imageData.getTransparencyMask();
+			Rectangle pixel = new Rectangle(0, 0, 1, 1);
+			for (int y = 0; y < mask.height; y++) {
+				for (int x = 0; x < mask.width; x++) {
+					if (mask.getPixel(x, y) != 0) {
+						pixel.x = imageData.x + x;
+						pixel.y = imageData.y + y;
+						region.add(pixel);
+					}
+				}
+			}
+		}
+		dialog.setRegion(region);
 
-		dialog.setSize(420, 540+increase);
+		Listener l = new Listener() {
+			int startX, startY;
+
+			public void handleEvent(Event e) {
+				if (e.type == SWT.KeyDown && e.character == SWT.ESC) {
+					dialog.dispose();
+				}
+				if (e.type == SWT.MouseDown && e.button == 1) {
+					startX = e.x;
+					startY = e.y;
+				}
+				if (e.type == SWT.MouseMove && (e.stateMask & SWT.BUTTON1) != 0) {
+					Point p = dialog.toDisplay(e.x, e.y);
+					p.x -= startX;
+					p.y -= startY;
+					dialog.setLocation(p);
+				}
+				if (e.type == SWT.Paint) {
+					e.gc.drawImage(image, imageData.x, imageData.y);
+				}
+			}
+		};
+		dialog.addListener(SWT.KeyDown, l);
+		dialog.addListener(SWT.MouseDown, l);
+		dialog.addListener(SWT.MouseMove, l);
+		dialog.addListener(SWT.Paint, l);
+
+		dialog.setSize(imageData.x + imageData.width, imageData.y
+				+ imageData.height);
+
+		ImageData backgroundData = new ImageData(getClass()
+				.getResourceAsStream("/image/helpbackground.png"));
+		Image transparentBackgroundImage = new Image(Display.getCurrent(),
+				backgroundData);
+		dialog.setBackgroundImage(transparentBackgroundImage);
+		dialog.setBackgroundMode(SWT.INHERIT_FORCE);
+
+		dialog.setSize(420, 681);
 		dialog.setText("Help");
 		
 		Monitor primary = display.getPrimaryMonitor();
@@ -63,7 +134,7 @@ public class HelpDialog extends Dialog {
 			helpText.setFont(SWTResourceManager.getFont("Calibri", 16,
 					SWT.NORMAL));
 		}
-		helpText.setBounds(10, 10, 394, 461+increase);
+		helpText.setBounds(18, 18, 380, 461+increase);
 		helpText.setEnabled(false);
 
 		Color orange = new Color(display, 255, 127, 0);
@@ -131,9 +202,9 @@ public class HelpDialog extends Dialog {
 		boolean positionHelpOnRight = isShellInViewOnRight(parentWidth, parentXCoordinate, monitorWidth, helpShellWidth);
 		
 		if (positionHelpOnRight) {
-			xCoordinate = parentXCoordinate + parentWidth;
+			xCoordinate = parentXCoordinate + parentWidth -6;
 		} else {
-			xCoordinate = parentXCoordinate - helpShellWidth;
+			xCoordinate = parentXCoordinate - helpShellWidth +6;
 		}
 		
 		return xCoordinate;
