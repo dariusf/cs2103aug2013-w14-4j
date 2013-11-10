@@ -1,4 +1,6 @@
-package ui;
+//@author A0102332A
+
+package common;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -11,7 +13,8 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import common.Task;
+import ui.ApplicationWindow;
+
 
 public class TaskComposite extends Composite {
 

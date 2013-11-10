@@ -41,14 +41,12 @@ import common.DisplayMode;
 import common.Feedback;
 import common.Interval;
 import common.Task;
+import common.TaskComposite;
 import common.TaskType;
 import common.undo.Action;
 import common.undo.ActionStack;
 
-/**
- * @author macbook
- *
- */
+//@author A0102332A
 public class ApplicationWindow {
 	// Logging
 	public static boolean testMode = false;
@@ -504,10 +502,7 @@ public class ApplicationWindow {
 			public void keyReleased(KeyEvent arg0) {
 				if (isKeyboardInput(arg0.keyCode)) {
 					userInput = input.getText();
-					Command activeFeedback = activeFeedbackLogic
-							.getActiveFeedback(userInput);
-					activeFeedbackLogic.processActiveFeedback(userInput,
-							activeFeedback);
+					activeFeedbackLogic.processActiveFeedback(userInput);
 				}
 			}
 
