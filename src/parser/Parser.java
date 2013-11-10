@@ -3,6 +3,9 @@ package parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.joda.time.DateTime;
 
 import common.ClearMode;
@@ -16,12 +19,12 @@ import common.InvalidCommandReason;
 //@author A0097282W
 public class Parser {
 
-	private static final boolean PRINT_LEXER_TOKENS = false;
-	private static final boolean PRINT_MATCHED_COMMAND_TYPE = false;
-	private static final boolean PRINT_PARSED_COMMAND = true;
+	public static final Logger logger = Logger.getLogger(Parser.class.getName());
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
+		
+		logger.setLevel(Level.OFF);
 
 		// Mini REPL for testing
 		java.util.Scanner scanner = new java.util.Scanner(System.in);
@@ -33,7 +36,8 @@ public class Parser {
 
 	private static void test(String input) {
 		Command command = Parser.parse(input);
-		if (PRINT_PARSED_COMMAND) System.out.println(command.toString());
+		if (Constants.PRINT_PARSED_COMMAND) System.out.println(command.toString());
+		logger.log(Level.INFO, command.toString());
 	}
 
 	// Limit the exposed interface of the parser, to prevent users from getting
@@ -79,18 +83,21 @@ public class Parser {
 			Lexer lexer = new Lexer(new ByteArrayInputStream(userInput.getBytes("UTF-8")));
 
 			Token next;
-			if (PRINT_LEXER_TOKENS) System.out.println("\nTokens:");
+			if (Constants.PRINT_LEXER_TOKENS) System.out.println(Constants.PARSER_LOG_LEXER_TOKENS);
+			logger.log(Level.INFO, Constants.PARSER_LOG_LEXER_TOKENS);
 			
 			ArrayList<Token> tokens = new ArrayList<>();
 			while ((next = lexer.nextToken()) != null) {
 				tokens.add(next);
-				if (PRINT_LEXER_TOKENS) System.out.println(next.toString());
+				if (Constants.PRINT_LEXER_TOKENS) System.out.println(next.toString());
+				logger.log(Level.INFO, next.toString());
 			}
 
 			this.tokens = new TokenCollection(tokens);
 
 		} catch (IOException e) {
-			System.out.println("Error getting next token!");
+			System.out.println(Constants.PARSER_LOG_ERROR_GETTING_NEXT_TOKEN);
+			logger.log(Level.INFO, Constants.PARSER_LOG_ERROR_GETTING_NEXT_TOKEN);
 			e.printStackTrace();
 		}
 	}
@@ -112,8 +119,10 @@ public class Parser {
 			commandType = tryFuzzyMatch(firstToken.contents);
 		}
 
-		if (PRINT_MATCHED_COMMAND_TYPE) System.out.println("Command (" + (exactMatch ? "exact" : "fuzzy") + "): " + commandType);
-
+		String matchedCommandMessage = String.format(Constants.PARSER_LOG_MATCHED_COMMAND, (exactMatch ? Constants.PARSER_LOG_EXACT : Constants.PARSER_LOG_FUZZY), commandType);
+		if (Constants.PRINT_MATCHED_COMMAND_TYPE) System.out.println(matchedCommandMessage);
+		logger.log(Level.INFO, matchedCommandMessage);
+		
 		tokens.nextToken();
 
 		switch (commandType) {
@@ -144,7 +153,7 @@ public class Parser {
 		case INVALID:
 			return invalidCommand(InvalidCommandReason.UNRECOGNIZED_COMMAND);
 		default:
-			assert false : "No such command type";
+			assert false : Constants.PARSER_ASSERTION_ERROR_NO_SUCH_COMMAND;
 			return null;
 		}
 	}
@@ -195,8 +204,8 @@ public class Parser {
 		// Absolute difference in string length
 
 		int[] heuristic = new int[keywords.length];
-
-		int threshold = 3;
+		
+		int threshold = Constants.PARSER_FUZZY_MATCH_THRESHOLD;
 		int minimum = Integer.MAX_VALUE;
 		int minimumIndex = -1;
 
@@ -267,7 +276,7 @@ public class Parser {
 			if (tokens.hasTokensLeft()) {
 				Token currentToken = tokens.getCurrentToken();
 				try {
-					// if the next token is numerical, edit is being applied
+					// If the next token is numeric, edit is being applied
 					// to a timeslot
 					timeslotIndex = Integer.parseInt(currentToken.contents);
 					tokens.nextToken();
