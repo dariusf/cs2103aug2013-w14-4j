@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
@@ -25,12 +24,12 @@ public class HelpDialog extends Dialog {
 
 	Display display;
 	StyledText helpText;
-	boolean isGeneralHelp = false;
 	private Shell dialog;
+	final private int padding = 6;
 
 	private int increase = 45; // TODO remove this
 	
-	// @author A0101048X
+	// @author A0102332
 	public HelpDialog(Shell parent) {
 		super(parent);
 	}
@@ -137,21 +136,7 @@ public class HelpDialog extends Dialog {
 		helpText.setBounds(18, 18, 380, 461+increase);
 		helpText.setEnabled(false);
 
-		Color orange = new Color(display, 255, 127, 0);
-
 		String helpString = getHelpText(feedbackObj.getHelpCommandType());
-//		helpText.setText(helpString);
-
-//		setFirstLineStyle(orange, helpString);
-//		if (isGeneralHelp()) {
-//			boldCommandsForGeneralHelp(helpString);
-//		} else {
-//			setCommandFormatStyle(helpString);
-//		}
-		
-//		ArrayList<Integer> formats = getFormatRanges(helpString);
-//		helpText.setText(helpString.replaceAll(Constants.FORMATTING_REGEX_UNDERLINE, "$1").replaceAll(Constants.FORMATTING_REGEX_BOLD, "$1"));
-//		applyFormatting(helpString, formats);
 		
 		TextFormatter.setFormattedText(helpText, helpString);
 		
@@ -172,8 +157,6 @@ public class HelpDialog extends Dialog {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-
-		orange.dispose();
 	}
 	
 	// @author: A0097556M
@@ -202,9 +185,9 @@ public class HelpDialog extends Dialog {
 		boolean positionHelpOnRight = isShellInViewOnRight(parentWidth, parentXCoordinate, monitorWidth, helpShellWidth);
 		
 		if (positionHelpOnRight) {
-			xCoordinate = parentXCoordinate + parentWidth -6;
+			xCoordinate = parentXCoordinate + parentWidth - padding;
 		} else {
-			xCoordinate = parentXCoordinate - helpShellWidth +6;
+			xCoordinate = parentXCoordinate - helpShellWidth + padding;
 		}
 		
 		return xCoordinate;
@@ -229,7 +212,6 @@ public class HelpDialog extends Dialog {
 
 	private String getHelpText(CommandType helpCommandType) {
 		if (helpCommandType == null) {
-			isGeneralHelp = true;
 			return Constants.HELP_GENERAL;
 		}
 
@@ -263,49 +245,7 @@ public class HelpDialog extends Dialog {
 		case GOTO:
 			return Constants.HELP_GOTO;
 		default:
-			isGeneralHelp = true;
 			return Constants.HELP_GENERAL;
 		}
 	}
-
-//	private boolean isGeneralHelp() {
-//		return isGeneralHelp;
-//	}
-
-	// private void setFirstLineStyle(Color colour, String helpString) {
-	// 	StyleRange styleRange = new StyleRange();
-	// 	styleRange.start = 0;
-	// 	styleRange.length = helpString.indexOf("\n");
-	// 	styleRange.underline = true;
-	// 	styleRange.foreground = colour;
-	// 	helpText.setStyleRange(styleRange);
-	// }
-
-	// private void boldCommandsForGeneralHelp(String helpString) {
-	// 	StyleRange styleRange;
-	// 	int startIndex = helpString.indexOf("\n");
-	// 	int colonIndex = helpString.indexOf(":");
-
-	// 	while (startIndex != -1 && colonIndex != -1) {
-	// 		styleRange = new StyleRange();
-	// 		styleRange.start = startIndex + 1;
-	// 		styleRange.length = colonIndex - startIndex;
-	// 		styleRange.fontStyle = SWT.BOLD;
-	// 		helpText.setStyleRange(styleRange);
-	// 		colonIndex = helpString.indexOf(":", colonIndex + 1);
-	// 		startIndex = helpString.indexOf("\n", startIndex + 1);
-	// 	}
-
-	// 	isGeneralHelp = false;
-	// }
-
-	// private void setCommandFormatStyle(String helpString) {
-	// 	int startIndex = helpString.indexOf("\n\n");
-	// 	int colonIndex = helpString.indexOf(":");
-	// 	StyleRange styleRange = new StyleRange();
-	// 	styleRange.start = startIndex + 1;
-	// 	styleRange.length = colonIndex - startIndex;
-	// 	styleRange.fontStyle = SWT.BOLD;
-	// 	helpText.setStyleRange(styleRange);
-	// }
 }
