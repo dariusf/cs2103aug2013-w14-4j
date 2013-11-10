@@ -1257,21 +1257,66 @@ public class ParserTest {
 	@Test
 	public void fuzzyMatchingTests() {
 		
-//		INVALID,
-//		ADD, EDIT, DISPLAY, DELETE, CLEAR, EXIT, GOTO,
-//		SORT, SEARCH, UNDO, FINALISE, HELP, DONE, REDO;
-
-//		Command expected, actual;
-		
 		assertEquals(Parser.parse("qwe").getCommandType(), CommandType.INVALID);
 		assertEquals(Parser.parse("zxc").getCommandType(), CommandType.INVALID);
 
+		assertEquals(Parser.parse("a").getCommandType(), CommandType.ADD);
 		assertEquals(Parser.parse("ad").getCommandType(), CommandType.ADD);
 		assertEquals(Parser.parse("sad").getCommandType(), CommandType.ADD);
 		assertEquals(Parser.parse("asd").getCommandType(), CommandType.ADD);
 		assertEquals(Parser.parse("ass").getCommandType(), CommandType.ADD);
+		assertEquals(Parser.parse("aww").getCommandType(), CommandType.ADD);
 		assertEquals(Parser.parse("dad").getCommandType(), CommandType.ADD);
 		assertEquals(Parser.parse("addd").getCommandType(), CommandType.ADD);
+
+		assertEquals(Parser.parse("e").getCommandType(), CommandType.EDIT);
+		assertEquals(Parser.parse("ed").getCommandType(), CommandType.EDIT);
+		assertEquals(Parser.parse("edot").getCommandType(), CommandType.EDIT);
+		assertEquals(Parser.parse("rdit").getCommandType(), CommandType.EDIT);
+		assertEquals(Parser.parse("fdot").getCommandType(), CommandType.EDIT);
+
+		assertEquals(Parser.parse("ex").getCommandType(), CommandType.EXIT);
+		assertEquals(Parser.parse("ext").getCommandType(), CommandType.EXIT);
+		assertEquals(Parser.parse("exat").getCommandType(), CommandType.EXIT);
+		assertEquals(Parser.parse("exoo").getCommandType(), CommandType.EXIT);
+
+		assertEquals(Parser.parse("dis").getCommandType(), CommandType.DISPLAY);
+		assertEquals(Parser.parse("dipslay").getCommandType(), CommandType.DISPLAY);
+		assertEquals(Parser.parse("dpisly").getCommandType(), CommandType.DISPLAY);
+
+		assertEquals(Parser.parse("g").getCommandType(), CommandType.GOTO);
+		assertEquals(Parser.parse("got").getCommandType(), CommandType.GOTO);
+		assertEquals(Parser.parse("goo").getCommandType(), CommandType.GOTO);
+
+		assertEquals(Parser.parse("s").getCommandType(), CommandType.SORT);
+		assertEquals(Parser.parse("sor").getCommandType(), CommandType.SORT);
+		assertEquals(Parser.parse("srot").getCommandType(), CommandType.SORT);
+
+		assertEquals(Parser.parse("se").getCommandType(), CommandType.SEARCH);
+		assertEquals(Parser.parse("srch").getCommandType(), CommandType.SEARCH);
+		assertEquals(Parser.parse("sarrch").getCommandType(), CommandType.SEARCH);
+
+		assertEquals(Parser.parse("u").getCommandType(), CommandType.UNDO);
+		assertEquals(Parser.parse("uond").getCommandType(), CommandType.UNDO);
+		assertEquals(Parser.parse("uni").getCommandType(), CommandType.UNDO);
+
+		assertEquals(Parser.parse("fina").getCommandType(), CommandType.FINALISE);
+		assertEquals(Parser.parse("finalize").getCommandType(), CommandType.FINALISE);
+		assertEquals(Parser.parse("nalise").getCommandType(), CommandType.FINALISE);
+
+		assertEquals(Parser.parse("h").getCommandType(), CommandType.HELP);
+		assertEquals(Parser.parse("hlp").getCommandType(), CommandType.HELP);
+		assertEquals(Parser.parse("hello").getCommandType(), CommandType.HELP);
+
+		assertEquals(Parser.parse("reod").getCommandType(), CommandType.REDO);
+		assertEquals(Parser.parse("r").getCommandType(), CommandType.REDO);
+		assertEquals(Parser.parse("rod").getCommandType(), CommandType.REDO);
+
+		assertEquals(Parser.parse("c").getCommandType(), CommandType.CLEAR);
+		assertEquals(Parser.parse("clr").getCommandType(), CommandType.CLEAR);
+		assertEquals(Parser.parse("lear").getCommandType(), CommandType.CLEAR);
+		assertEquals(Parser.parse("clarr").getCommandType(), CommandType.CLEAR);
+		assertEquals(Parser.parse("clrer").getCommandType(), CommandType.CLEAR);
 
 		assertEquals(Parser.parse("del 1").getCommandType(), CommandType.DELETE);
 		assertEquals(Parser.parse("dele 1").getCommandType(), CommandType.DELETE);
@@ -1280,6 +1325,7 @@ public class ParserTest {
 		assertEquals(Parser.parse("deeelt 1").getCommandType(), CommandType.DELETE);
 		assertEquals(Parser.parse("deleeete 1").getCommandType(), CommandType.DELETE);
 
+		assertEquals(Parser.parse("d 1").getCommandType(), CommandType.DONE);
 		assertEquals(Parser.parse("daa").getCommandType(), CommandType.DONE);
 		assertEquals(Parser.parse("de 1").getCommandType(), CommandType.DONE);
 		assertEquals(Parser.parse("dne 1").getCommandType(), CommandType.DONE);
