@@ -216,35 +216,35 @@ public class HelpDialog extends Dialog {
 		}
 
 		switch (helpCommandType) {
-		case ADD:
+		case ADD :
 			return Constants.HELP_ADD;
-		case DISPLAY:
+		case DISPLAY :
 			return Constants.HELP_DISPLAY;
-		case HELP:
+		case HELP :
 			return Constants.HELP_HELP;
-		case SORT:
+		case SORT :
 			return Constants.HELP_SORT;
-		case DELETE:
+		case DELETE :
 			return Constants.HELP_DELETE;
-		case EDIT:
+		case EDIT :
 			return Constants.HELP_EDIT;
-		case CLEAR:
+		case CLEAR :
 			return Constants.HELP_CLEAR;
-		case UNDO:
+		case UNDO :
 			return Constants.HELP_UNDO;
-		case REDO:
+		case REDO :
 			return Constants.HELP_REDO;
-		case DONE:
+		case DONE :
 			return Constants.HELP_DONE;
-		case FINALISE:
+		case FINALISE :
 			return Constants.HELP_FINALISE;
-		case SEARCH:
+		case SEARCH :
 			return Constants.HELP_SEARCH;
-		case EXIT:
+		case EXIT :
 			return Constants.HELP_EXIT;
-		case GOTO:
+		case GOTO :
 			return Constants.HELP_GOTO;
-		default:
+		default :
 			return Constants.HELP_GENERAL;
 		}
 	}
