@@ -11,6 +11,7 @@ import ui.ApplicationWindow;
 
 import common.Command;
 import common.CommandType;
+import common.Constants;
 import common.Feedback;
 import common.Interval;
 import common.Task;
@@ -51,7 +52,7 @@ public class ActiveFeedbackLogic {
 			if (taskIndex > 0
 					&& taskIndex <= commandLogic.getNumberOfTasks()) {
 				highlightTaskFeedback(taskIndex);
-			} else if (taskIndex != -1) {
+			} else if (taskIndex != Constants.INVALID_INDEX) {
 				displayInvalidIndexAsFeedback();
 			} else {
 				defaultFeedback();
@@ -61,7 +62,7 @@ public class ActiveFeedbackLogic {
 			if (taskIndex > 0
 					&& taskIndex <= commandLogic.getNumberOfTasks()) {
 				finaliseTaskFeedback(executedCommand, taskIndex);
-			} else if (taskIndex != -1) {
+			} else if (taskIndex != Constants.INVALID_INDEX) {
 				displayInvalidIndexAsFeedback();
 				return;
 			} else {
@@ -76,7 +77,7 @@ public class ActiveFeedbackLogic {
 			if (taskIndex > 0
 					&& taskIndex <= commandLogic.getNumberOfTasks()) {
 				editTaskFeedback(executedCommand, taskIndex);
-			} else if (taskIndex != -1) {
+			} else if (taskIndex != Constants.INVALID_INDEX) {
 				defaultFeedback();
 				displayInvalidIndexAsFeedback();
 				return;
@@ -239,101 +240,111 @@ public class ActiveFeedbackLogic {
 		TaskComposite currentComposite = displayLogic
 				.getCompositeGlobal(taskIndex);
 
-		if (executedCommand.getTimeslotIndex() != -1) {
-			if (executedCommand.getTimeslotIndex() > 0) {
-				int timeSlot = executedCommand.getTimeslotIndex();
-				ArrayList<Interval> possibleIntervals = executedCommand
-						.getIntervals();
-				if (!possibleIntervals.isEmpty()) {
-					Interval interval = possibleIntervals.get(0);
-					if (timeSlot == 1) {
-						String description = "on (1) "
-								+ Task.intervalFormat(
-										interval.getStartDateTime(),
-										interval.getEndDateTime());
-						;
-						currentComposite.setTentativeTaskAtLine(
-								description, timeSlot);
-					} else {
-						String description = "or ("
-								+ timeSlot
-								+ ") "
-								+ Task.intervalFormat(
-										interval.getStartDateTime(),
-										interval.getEndDateTime());
-						currentComposite.setTentativeTaskAtLine(
-								description, timeSlot);
-
-					}
-					currentComposite.highlightLine(timeSlot);
-				}
-			}
+		if (executedCommand.getTimeslotIndex() != Constants.INVALID_INDEX) {
+			editTimeSlotOfTaskComposite(executedCommand, currentComposite);
 		} else {
-			TaskType finalType = executedCommand.getTaskType();
-
-			if (!executedCommand.getDescription().isEmpty()) {
-				currentComposite.setTaskName(executedCommand
-						.getDescription());
-			}
-
-			StringBuilder descriptionBuilder = new StringBuilder();
-			if (finalType.equals(TaskType.DEADLINE)) {
-				descriptionBuilder.append("by "
-						+ Task.format(executedCommand.getDeadline()));
-			} else if (finalType.equals(TaskType.TIMED)) {
-				Interval taskInterval = executedCommand.getIntervals()
-						.get(0);
-				descriptionBuilder.append("from ");
-				descriptionBuilder.append(Task.intervalFormat(
-						taskInterval.getStartDateTime(),
-						taskInterval.getEndDateTime()));
-			} else if (finalType.equals(TaskType.TENTATIVE)) {
-				descriptionBuilder.append("on ");
-				ArrayList<Interval> possibleIntervals = executedCommand
-						.getIntervals();
-				int index = 1;
-				for (Interval slot : possibleIntervals) {
-					descriptionBuilder.append("(");
-					descriptionBuilder.append(index);
-					descriptionBuilder.append(") ");
-					descriptionBuilder.append(Task.intervalFormat(
-							slot.getStartDateTime(),
-							slot.getEndDateTime()));
-					if (index != possibleIntervals.size()) {
-						descriptionBuilder.append("\nor ");
-					}
-					index++;
-				}
-			} else {
-				descriptionBuilder.append(currentComposite
-						.getTimeString());
-			}
-
-			String currentTags = currentComposite.getTags();
-			ArrayList<String> newTags = executedCommand.getTags();
-			StringBuilder tagsBuilder = new StringBuilder();
-			tagsBuilder.append(currentTags);
-
-			for (String tag : newTags) {
-				tagsBuilder.append(tag);
-				tagsBuilder.append(" ");
-			}
-
-			if (tagsBuilder.length() > 0) {
-				if (!descriptionBuilder.toString().isEmpty()) {
-					descriptionBuilder.append("\n");
-				}
-				descriptionBuilder.append(tagsBuilder.toString());
-			}
-			if (!descriptionBuilder.toString().isEmpty()) {
-				currentComposite.setDescription(descriptionBuilder
-						.toString());
-			}
-
-			currentComposite.pack();
+			editTaskComposite(executedCommand, currentComposite);
 
 		}
 
+	}
+
+	private void editTaskComposite(Command executedCommand,
+			TaskComposite currentComposite) {
+		TaskType finalType = executedCommand.getTaskType();
+
+		if (!executedCommand.getDescription().isEmpty()) {
+			currentComposite.setTaskName(executedCommand
+					.getDescription());
+		}
+
+		StringBuilder descriptionBuilder = new StringBuilder();
+		if (finalType.equals(TaskType.DEADLINE)) {
+			descriptionBuilder.append("by "
+					+ Task.format(executedCommand.getDeadline()));
+		} else if (finalType.equals(TaskType.TIMED)) {
+			Interval taskInterval = executedCommand.getIntervals()
+					.get(0);
+			descriptionBuilder.append("from ");
+			descriptionBuilder.append(Task.intervalFormat(
+					taskInterval.getStartDateTime(),
+					taskInterval.getEndDateTime()));
+		} else if (finalType.equals(TaskType.TENTATIVE)) {
+			descriptionBuilder.append("on ");
+			ArrayList<Interval> possibleIntervals = executedCommand
+					.getIntervals();
+			int index = 1;
+			for (Interval slot : possibleIntervals) {
+				descriptionBuilder.append("(");
+				descriptionBuilder.append(index);
+				descriptionBuilder.append(") ");
+				descriptionBuilder.append(Task.intervalFormat(
+						slot.getStartDateTime(),
+						slot.getEndDateTime()));
+				if (index != possibleIntervals.size()) {
+					descriptionBuilder.append("\nor ");
+				}
+				index++;
+			}
+		} else {
+			descriptionBuilder.append(currentComposite
+					.getTimeString());
+		}
+
+		String currentTags = currentComposite.getTags();
+		ArrayList<String> newTags = executedCommand.getTags();
+		StringBuilder tagsBuilder = new StringBuilder();
+		tagsBuilder.append(currentTags);
+
+		for (String tag : newTags) {
+			tagsBuilder.append(tag);
+			tagsBuilder.append(" ");
+		}
+
+		if (tagsBuilder.length() > 0) {
+			if (!descriptionBuilder.toString().isEmpty()) {
+				descriptionBuilder.append("\n");
+			}
+			descriptionBuilder.append(tagsBuilder.toString());
+		}
+		if (!descriptionBuilder.toString().isEmpty()) {
+			currentComposite.setDescription(descriptionBuilder
+					.toString());
+		}
+
+		currentComposite.pack();
+	}
+
+	private void editTimeSlotOfTaskComposite(Command executedCommand,
+			TaskComposite currentComposite) {
+		if (executedCommand.getTimeslotIndex() > 0) {
+			int timeSlot = executedCommand.getTimeslotIndex();
+			ArrayList<Interval> possibleIntervals = executedCommand
+					.getIntervals();
+			if (!possibleIntervals.isEmpty()) {
+				Interval interval = possibleIntervals.get(0);
+				if (timeSlot == 1) {
+					String description = "on (1) "
+							+ Task.intervalFormat(
+									interval.getStartDateTime(),
+									interval.getEndDateTime());
+					;
+					currentComposite.setTentativeTaskAtLine(
+							description, timeSlot);
+				} else {
+					String description = "or ("
+							+ timeSlot
+							+ ") "
+							+ Task.intervalFormat(
+									interval.getStartDateTime(),
+									interval.getEndDateTime());
+					currentComposite.setTentativeTaskAtLine(
+							description, timeSlot);
+
+				}
+				currentComposite.highlightLine(timeSlot);
+			}
+		}
 	}
 
 	private void finaliseTaskFeedback(Command executedCommand,

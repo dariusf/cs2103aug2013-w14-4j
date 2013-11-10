@@ -266,7 +266,7 @@ public class Constants {
 	public static final String FORMATTING_REGEX_BOLD = "\\*(" + FORMATTING_ALLOWED_CHARACTERS + "+)\\*";
 	public static final String FORMATTING_REGEX_COLOUR1 = "&(" + FORMATTING_ALLOWED_CHARACTERS + "+)&";
 	public static final String[] FORMATTING_SUBSTITUTIONS = {
-		"- ", "• "
+		"- ", "ï¿½ "
 	};
 
     public static final String CONTEXTUAL_HELP_DESC = "<description>";
@@ -290,4 +290,5 @@ public class Constants {
     public static final String CONTEXTUAL_HELP_REDO = "Redo reverts the last undo.";
     public static final String CONTEXTUAL_HELP_EXIT = "Exit quits the application.";
     
+    public static final int INVALID_INDEX = -1;
 }

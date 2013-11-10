@@ -403,7 +403,7 @@ public class CommandLogic {
 			taskIndex = temporaryMapping.get(inputIndex);
 		}
 		
-		if (taskIndex <= storage.size()) {
+		if (taskIndex <= storage.size() && taskIndex > 0) {
 			storage.remove(taskIndex);
 			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
 			feedback.setTaskIndex(taskIndex);
