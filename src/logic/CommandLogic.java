@@ -733,6 +733,7 @@ public class CommandLogic {
 		return result;
 	}
 
+	// @author: A0097556M
 	public void notifyStorage() {
 		storage.fileWriteNotify();
 	}

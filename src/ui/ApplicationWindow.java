@@ -383,26 +383,6 @@ public class ApplicationWindow {
 					SWT.NORMAL);
 		}
 	}
-
-	public void defineTrayIcon() {
-		tray = shell.getDisplay().getSystemTray();
-		trayIcon = new TrayItem(tray, SWT.NONE);
-		trayIcon.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
-				"/image/basketIcon.gif"));
-
-		trayIcon.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				toggleMinimizeState();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				toggleMinimizeState();
-			}
-		});
-	}
 	
 	private void defineHelpDialog() {
 		helpDialog = new HelpDialog(shell);
@@ -494,7 +474,8 @@ public class ApplicationWindow {
 
 		displayTitle.setText(displayLogic.getDisplayWindowTitle());
 	}
-
+	
+	//@author A0101048X
 	public String displayWelcomeMessage() {
 		String welcomeMessage = Constants.MSG_AVAILABLE_COMMANDS;
 		return welcomeMessage;
@@ -585,6 +566,37 @@ public class ApplicationWindow {
 			}
 		});
 	}
+	
+	// @author: A0097556M
+	public void toggleMinimizeState() {
+		if (shell.getVisible()) {
+			shell.setVisible(false);
+			commandLogic.forceFileWrite();
+		} else {
+			shell.setVisible(true);
+			input.setFocus();
+		}
+	}
+	
+	public void defineTrayIcon() {
+		tray = shell.getDisplay().getSystemTray();
+		trayIcon = new TrayItem(tray, SWT.NONE);
+		trayIcon.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
+				"/image/basketIcon.gif"));
+
+		trayIcon.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				toggleMinimizeState();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				toggleMinimizeState();
+			}
+		});
+	}
 
 	public void enableNativeHook() {
 		class UiUpdater implements Runnable {
@@ -601,10 +613,12 @@ public class ApplicationWindow {
 				}
 			}
 
-			public void nativeKeyReleased(NativeKeyEvent e) { /* do nothing */
+			public void nativeKeyReleased(NativeKeyEvent e) {
+				// do nothing
 			}
 
-			public void nativeKeyTyped(NativeKeyEvent e) { /* do nothing */
+			public void nativeKeyTyped(NativeKeyEvent e) {
+				// do nothing
 			}
 		}
 
@@ -612,12 +626,13 @@ public class ApplicationWindow {
 			GlobalScreen.registerNativeHook();
 			GlobalScreen.getInstance().addNativeKeyListener(new NativeHook());
 		} catch (Exception e) {
-			System.err.println("Unable to initialise global hotkey!"
-					+ "Please check your system accessibility settings!"
-					+ "Basket will continue without hotkey.");
+			e.printStackTrace();
 		}
 	}
-
+	
+	// TODO whoever did this method please update!
+	// @author:
+	
 	/**
 	 * Execute the command which is entered
 	 */
@@ -637,11 +652,7 @@ public class ApplicationWindow {
 			String feedback = feedbackObj.toString();
 			setFeedbackColour(feedbackObj);
 			displayFeedback.setText(feedback);
-			if (feedbackObj.isErrorMessage()) {
-				getUpHistory();
-			} else {
-				input.setText("");
-			}
+			input.setText("");
 
 			displayLogic.processFeedback(feedbackObj);
 			
@@ -655,7 +666,8 @@ public class ApplicationWindow {
 			}
 		}
 	}
-
+	
+	// @author: A0097556M
 	/**
 	 * Helper methods
 	 */
@@ -728,6 +740,8 @@ public class ApplicationWindow {
 				|| command == CommandType.FINALISE || command == CommandType.SORT);
 	}
 	
+	// TODO whoever made the rest please comment!
+	// @author: 
 	/**
 	 * Methods required to align windows at the centre of the monitor display
 	 */
@@ -771,16 +785,6 @@ public class ApplicationWindow {
 
 	private int calculateHalfOfNumber(int difference) {
 		return difference / 2;
-	}
-	
-	public void toggleMinimizeState() {
-		if (shell.getVisible()) {
-			shell.setVisible(false);
-			commandLogic.forceFileWrite();
-		} else {
-			shell.setVisible(true);
-			input.setFocus();
-		}
 	}
 	
 	public boolean isKeyboardInput(int keyCode) {

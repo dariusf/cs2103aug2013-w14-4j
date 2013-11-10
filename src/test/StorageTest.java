@@ -169,7 +169,6 @@ public class StorageTest {
 		Storage testStorage = new Storage("newtest.txt");
 		testStorage.add(deadlineTask);
 		assertTrue(areTasksEqual(deadlineTask, testStorage.get(1)));
-//		testStorage.undo();
 		assertTrue(testStorage.isEmpty());
 		
 		testStorage.close();
@@ -177,29 +176,5 @@ public class StorageTest {
 		Files.delete(file.toPath());
 	}
 	
-	@Test
-	public void storageLinkedListTest () {
-		DoublyLinkedList<Integer> testList = new DoublyLinkedList<>();
-		
-		testList.pushHere(1);
-		assertTrue(testList.hasNext());
-		assertEquals((Integer)1, testList.next());
-		testList = new DoublyLinkedList<>();
-		
-		for (int i = 5; i > 0; i--) {
-			testList.push(i);
-		}
-		Integer counter = 1;
-		while (testList.hasNext()) {
-			assertEquals(counter++, testList.next());
-		}
-		
-		for (int i = 5; i > 0; i--) {
-			testList.pushHere(i);
-		}
-		counter = 1;
-		while (testList.hasNext()) {
-			assertEquals(counter++, testList.next());
-		}
-	}
+
 }
