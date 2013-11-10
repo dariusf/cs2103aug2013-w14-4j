@@ -1,3 +1,14 @@
+/**
+ * COMMAND LOGIC
+ * 
+ * This class processes the user's input after the hit "enter". It speaks to the storage of the application. Its main responsibilities are:
+ * 1) Call the parser to interpret the entered command
+ * 2) Maintain a mapping of index that maps the index which is currently displayed on the UI to the index in the storage
+ * 3) Modify the task storage based on input
+ * 4) Return display logic the tasks to be displayed based on the temporary mapping
+ * 
+ */
+
 package logic;
 
 import java.io.IOException;
@@ -36,36 +47,6 @@ public class CommandLogic {
 		storage = new Storage(Constants.DEFAULT_FILENAME);
 		this.executeCommand(Constants.COMMAND_DISPLAY);
 	}
-
-	public Command activeFeedback(String userInput) {
-		Command command = Parser.parse(userInput);
-		return command;
-	}
-
-	// private ActiveFeedback activeSearchTasks(Command command) {
-	// return new ActiveFeedback(command);
-	// }
-	//
-	// private ActiveFeedback activeFinalisaTask(Command command) {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-	//
-	// private ActiveFeedback activeMarkDone(Command command) {
-	// return new ActiveFeedback(command);
-	// }
-	//
-	// private ActiveFeedback activeDeleteTask(Command command) {
-	// return new ActiveFeedback(command);
-	// }
-	//
-	// private ActiveFeedback activeEditTask(Command command) {
-	// return new ActiveFeedback(command);
-	// }
-	//
-	// private ActiveFeedback activeAddTask(Command command) {
-	// return new ActiveFeedback(command);
-	// }
 
 	public Feedback executeCommand(String userCommand) {
 		Command command = Parser.parse(userCommand);
@@ -248,6 +229,340 @@ public class CommandLogic {
 		return feedback;
 	}
 
+	public Feedback displayTasks(Command command) {
+		DisplayMode displayMode = command.getDisplayMode();
+		Feedback feedback = null;
+	
+		ArrayList<Task> validTasks = new ArrayList<Task>();
+		ArrayList<Integer> validTasksAbsoluteIndices = new ArrayList<Integer>();
+		ArrayList<Task> allTasks = new ArrayList<Task>();
+		Iterator<Task> storageIterator = storage.iterator();
+		while (storageIterator.hasNext()) {
+			allTasks.add(storageIterator.next());
+		}
+		if (displayMode != DisplayMode.SEARCH) {
+			for (int i = 0; i < allTasks.size(); i++) {
+				Task currentTask = allTasks.get(i);
+	
+				if (displayCondition(command, currentTask)) {
+					validTasks.add(currentTask);
+					validTasksAbsoluteIndices.add(i + 1);
+				}
+			}
+	
+			temporaryMapping = new TreeMap<Integer, Integer>();
+			for (int i = 1; i <= validTasksAbsoluteIndices.size(); i++) {
+				temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
+			}
+			isDynamicIndex = true;
+	
+			if (validTasks.size() > 0) {
+				feedback = new Feedback(Constants.SC_SUCCESS,
+						CommandType.DISPLAY);
+	
+			} else {
+				feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
+						CommandType.DISPLAY);
+	
+			}
+		} else {
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY);
+		}
+	
+		feedback.setDisplayMode(displayMode);
+		if (displayMode == DisplayMode.DATE) {
+			feedback.setDisplayDate(command.getDisplayDateTime());
+		}
+		return feedback;
+	}
+
+	protected Feedback deleteTask(Command command) {
+		int inputIndex = command.getTaskIndex();
+		Feedback feedback = null;
+		
+		int taskIndex = inputIndex;
+	
+		if (taskIndex > storage.size()
+				|| (isDynamicIndex && !temporaryMapping.containsKey(taskIndex))) {
+			return new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
+					CommandType.DELETE);
+		} else if (isDynamicIndex && temporaryMapping.containsKey(taskIndex)) {
+			taskIndex = temporaryMapping.get(inputIndex);
+		}
+		
+		if (taskIndex <= storage.size() && taskIndex > 0) {
+			storage.remove(taskIndex);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
+			feedback.setTaskIndex(taskIndex);
+			isDynamicIndex = false;
+		} else {
+			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
+					CommandType.DELETE);
+		}
+	
+		return feedback;
+	}
+
+	protected Feedback clearTasks(Command command) {
+		Feedback feedback = null;
+		ClearMode clearMode = command.getClearMode();
+		DateTime now = new DateTime(); // or stub
+	
+		if (storage.size() > 0) {
+			if (clearMode == ClearMode.ALL) {
+				storage.clear();
+				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
+				isDynamicIndex = false;
+			} else {
+				Iterator<Task> tasksIterator = storage.iterator();
+				ArrayList<Task> doneTasks = new ArrayList<>();
+	
+				while (tasksIterator.hasNext()) {
+	
+					Task currentTask = tasksIterator.next();
+					boolean condition = false;
+	
+					switch (clearMode) {
+					case DEADLINE:
+						condition = currentTask.isDeadlineTask();
+						break;
+					case TIMED:
+						condition = currentTask.isTimedTask();
+						break;
+					case TENTATIVE:
+						condition = currentTask.isFloatingTask();
+						break;
+					case UNTIMED:
+						condition = currentTask.isUntimedTask();
+						break;
+					case OVERDUE:
+						condition = currentTask.isDeadlineTask()
+								&& currentTask.getDeadline().isBefore(now);
+						break;
+					case DATE:
+						condition = currentTask.isOnDate(command.getClearDateTime());
+						break;
+					case DONE:
+						condition = currentTask.isDone();
+						break;
+					case INVALID:
+						assert false : "Invalid clear mode, either an error in above or parser logic";
+					default:
+						assert false : "Error in clear mode logic";
+					}
+	
+					if (condition) {
+						doneTasks.add(currentTask);
+					}
+				}
+	
+				storage.removeSet(doneTasks);
+				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE,
+						CommandType.CLEAR);
+				isDynamicIndex = false;
+			}
+		} else {
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
+					CommandType.CLEAR);
+		}
+		return feedback;
+	}
+
+	protected Feedback finaliseTask(Command command) {
+		Feedback feedback = null;
+		int taskIndex = command.getTaskIndex();
+	
+		if (taskIndex > storage.size()
+				|| (isDynamicIndex && !temporaryMapping.containsKey(taskIndex))) {
+			return new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
+					CommandType.FINALISE);
+		}
+	
+		if (isDynamicIndex && temporaryMapping.containsKey(taskIndex)) {
+			taskIndex = temporaryMapping.get(taskIndex);
+		}
+	
+		Task taskToEdit = storage.get(taskIndex);
+		if (!taskToEdit.isFloatingTask()) {
+			return new Feedback(Constants.SC_FINALISE_TYPE_MISMATCH_ERROR,
+					CommandType.FINALISE);
+		}
+	
+		int taskSlotIndex = command.getTimeslotIndex();
+		List<Interval> oldIntervalList = taskToEdit.getPossibleTime();
+		if (taskSlotIndex > oldIntervalList.size()) {
+			return new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR,
+					CommandType.FINALISE);
+		}
+	
+		Interval newInterval = oldIntervalList.get(taskSlotIndex - 1);
+		taskToEdit.setType(TaskType.TIMED);
+		taskToEdit.setInterval(newInterval);
+	
+		storage.replace(taskIndex, taskToEdit);
+		isDynamicIndex = false;
+	
+		if (isTaskOver(taskToEdit)) {
+			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
+					CommandType.FINALISE);
+			feedback.setTaskIndex(taskIndex);
+		} else {
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.FINALISE);
+			feedback.setTaskIndex(taskIndex);
+		}
+	
+		return feedback;
+	}
+
+	protected Feedback gotoPage(Command command) {
+		Feedback feedback = null;
+		int pageIndex = command.getPageIndex();
+	
+		if (pageIndex > 0) {
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.GOTO);
+			feedback.setPageNumber(pageIndex);
+		} else {
+			feedback = new Feedback(Constants.SC_INVALID_PAGE_INDEX,
+					CommandType.GOTO);
+		}
+	
+		return feedback;
+	}
+
+	protected Feedback sortTask() {
+		Feedback feedback = null;
+		if (storage.size() > 0) {
+			storage.sort();
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SORT);
+		} else {
+			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
+					CommandType.SORT);
+		}
+		return feedback;
+	}
+
+	protected Feedback markDone(Command command) {
+		Feedback feedback = null;
+		int taskIndex = command.getTaskIndex();
+	
+		if ((isDynamicIndex && !temporaryMapping.containsKey(taskIndex))
+				|| taskIndex > storage.size()) {
+			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
+					CommandType.DONE);
+		} else {
+			if (isDynamicIndex) {
+				taskIndex = temporaryMapping.get(taskIndex);
+			}
+			Task doneTask = storage.get(taskIndex);
+			doneTask.markDone();
+			storage.replace(taskIndex, doneTask);
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DONE);
+			feedback.setTaskIndex(taskIndex);
+			isDynamicIndex = false;
+		}
+	
+		return feedback;
+	}
+
+	protected Feedback showHelp(Command command) {
+		Feedback feedback = null;
+		currentHelpCommand = command;
+		CommandType helpCommandType = currentHelpCommand.getHelpCommand();
+		isDisplayHelp = true;
+		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP);
+		feedback.setHelpCommandType(helpCommandType);
+		return feedback;
+	}
+
+	protected Feedback undoState() {
+		Feedback feedback = null;
+		try {
+			actionStack.flushCurrentActionSet();
+			actionStack.undo();
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.UNDO);
+		} catch (Exception e) {
+			feedback = new Feedback(Constants.SC_UNDO_NO_PRIOR_STATE_ERROR,
+					CommandType.UNDO);
+		}
+	
+		return feedback;
+	}
+
+	protected Feedback redoState() {
+		Feedback feedback = null;
+		try {
+			actionStack.flushCurrentActionSet();
+			actionStack.redo();
+			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.REDO);
+		} catch (Exception e) {
+			feedback = new Feedback(Constants.SC_REDO_NO_PRIOR_STATE_ERROR,
+					CommandType.REDO);
+		}
+	
+		return feedback;
+	}
+
+	protected Feedback searchTasks(Command command) {
+		Feedback feedback = null;
+	
+		ArrayList<String> searchTags = command.getTags();
+		ArrayList<String> searchTerms = command.getSearchTerms();
+	
+		ArrayList<Task> validTasks = new ArrayList<Task>();
+		ArrayList<Integer> validTasksAbsoluteIndices = new ArrayList<Integer>();
+	
+		Iterator<Task> storageIterator = storage.iterator();
+	
+		if (searchTags.size() > 0) {
+			boolean shouldAdd = true;
+			for (int i = 0; i < storage.size(); i++) {
+				Task currentTask = storageIterator.next();
+				for (String tag : searchTags) {
+					if (!isTagInTask(tag, currentTask)) {
+						shouldAdd = false;
+					}
+				}
+				if (shouldAdd) {
+					validTasks.add(currentTask);
+					validTasksAbsoluteIndices.add(i + 1);
+				}
+				shouldAdd = true;
+			}
+		} else {
+			for (int i = 0; i < storage.size(); i++) {
+				Task currentTask = storageIterator.next();
+				if (areAllWordsInString(searchTerms, currentTask.getName())) {
+					validTasks.add(currentTask);
+					validTasksAbsoluteIndices.add(i + 1);
+				}
+			}
+		}
+	
+		temporaryMapping = new TreeMap<Integer, Integer>();
+		for (int i = 1; i <= validTasksAbsoluteIndices.size(); i++) {
+			temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
+		}
+		isDynamicIndex = true;
+	
+		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH);
+	
+		// TODO: add in checks that correspond to errors in Feedback
+		feedback.setDisplayMode(DisplayMode.SEARCH);
+		return feedback;
+	}
+
+	protected Feedback exit() {
+		Feedback feedback = new Feedback(Constants.SC_SUCCESS, CommandType.EXIT);
+	
+		try {
+			storage.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return feedback;
+	}
+
 	public int getNumberOfTasks() {
 		if (isDynamicIndex) {
 			return temporaryMapping.keySet().size();
@@ -340,345 +655,6 @@ public class CommandLogic {
 		default:
 			return !task.isDone();
 		}
-	}
-
-	public Feedback displayTasks(Command command) {
-		DisplayMode displayMode = command.getDisplayMode();
-		Feedback feedback = null;
-
-		ArrayList<Task> validTasks = new ArrayList<Task>();
-		ArrayList<Integer> validTasksAbsoluteIndices = new ArrayList<Integer>();
-		ArrayList<Task> allTasks = new ArrayList<Task>();
-		Iterator<Task> storageIterator = storage.iterator();
-		while (storageIterator.hasNext()) {
-			allTasks.add(storageIterator.next());
-		}
-		if (displayMode != DisplayMode.SEARCH) {
-			for (int i = 0; i < allTasks.size(); i++) {
-				Task currentTask = allTasks.get(i);
-
-				if (displayCondition(command, currentTask)) {
-					validTasks.add(currentTask);
-					validTasksAbsoluteIndices.add(i + 1);
-				}
-			}
-
-			temporaryMapping = new TreeMap<Integer, Integer>();
-			for (int i = 1; i <= validTasksAbsoluteIndices.size(); i++) {
-				temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
-			}
-			isDynamicIndex = true;
-
-			if (validTasks.size() > 0) {
-				feedback = new Feedback(Constants.SC_SUCCESS,
-						CommandType.DISPLAY);
-
-			} else {
-				feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
-						CommandType.DISPLAY);
-
-			}
-		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DISPLAY);
-		}
-
-		feedback.setDisplayMode(displayMode);
-		if (displayMode == DisplayMode.DATE) {
-			feedback.setDisplayDate(command.getDisplayDateTime());
-		}
-		return feedback;
-	}
-
-	protected Feedback deleteTask(Command command) {
-		int inputIndex = command.getTaskIndex();
-		Feedback feedback = null;
-		
-		int taskIndex = inputIndex;
-
-		if (taskIndex > storage.size()
-				|| (isDynamicIndex && !temporaryMapping.containsKey(taskIndex))) {
-			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
-					CommandType.DELETE);
-		} else if (isDynamicIndex && temporaryMapping.containsKey(taskIndex)) {
-			taskIndex = temporaryMapping.get(inputIndex);
-		}
-		
-		if (taskIndex <= storage.size() && taskIndex > 0) {
-			storage.remove(taskIndex);
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DELETE);
-			feedback.setTaskIndex(taskIndex);
-			isDynamicIndex = false;
-		} else {
-			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
-					CommandType.DELETE);
-		}
-
-		return feedback;
-	}
-
-	protected Feedback clearTasks(Command command) {
-		Feedback feedback = null;
-		ClearMode clearMode = command.getClearMode();
-		DateTime now = new DateTime(); // or stub
-
-		if (storage.size() > 0) {
-			if (clearMode == ClearMode.ALL) {
-				storage.clear();
-				feedback = new Feedback(Constants.SC_SUCCESS, CommandType.CLEAR);
-				isDynamicIndex = false;
-			} else {
-				Iterator<Task> tasksIterator = storage.iterator();
-				ArrayList<Task> doneTasks = new ArrayList<>();
-
-				while (tasksIterator.hasNext()) {
-
-					Task currentTask = tasksIterator.next();
-					boolean condition = false;
-
-					switch (clearMode) {
-					case DEADLINE:
-						condition = currentTask.isDeadlineTask();
-						break;
-					case TIMED:
-						condition = currentTask.isTimedTask();
-						break;
-					case TENTATIVE:
-						condition = currentTask.isFloatingTask();
-						break;
-					case UNTIMED:
-						condition = currentTask.isUntimedTask();
-						break;
-					case OVERDUE:
-						condition = currentTask.isDeadlineTask()
-								&& currentTask.getDeadline().isBefore(now);
-						break;
-					case DATE:
-						if (currentTask.getStartTime() == null) {
-							condition = false;
-						} else {
-							condition = currentTask.getStartTime().dayOfYear()
-								.equals(command.getClearDateTime().dayOfYear());
-						}
-						break;
-					case DONE:
-						condition = currentTask.isDone();
-						break;
-					case INVALID:
-						assert false : "Invalid clear mode, either an error in above or parser logic";
-					default:
-						assert false : "Error in clear mode logic";
-					}
-
-					if (condition) {
-						doneTasks.add(currentTask);
-					}
-				}
-
-				storage.removeSet(doneTasks);
-				feedback = new Feedback(Constants.SC_SUCCESS_CLEAR_DONE,
-						CommandType.CLEAR);
-				isDynamicIndex = false;
-			}
-		} else {
-			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
-					CommandType.CLEAR);
-		}
-		return feedback;
-	}
-
-	protected Feedback finaliseTask(Command command) {
-		Feedback feedback = null;
-		int taskIndex = command.getTaskIndex();
-
-		if (taskIndex > storage.size()
-				|| (isDynamicIndex && !temporaryMapping.containsKey(taskIndex))) {
-			return new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
-					CommandType.FINALISE);
-		}
-
-		if (isDynamicIndex && temporaryMapping.containsKey(taskIndex)) {
-			taskIndex = temporaryMapping.get(taskIndex);
-		}
-
-		Task taskToEdit = storage.get(taskIndex);
-		if (!taskToEdit.isFloatingTask()) {
-			return new Feedback(Constants.SC_FINALISE_TYPE_MISMATCH_ERROR,
-					CommandType.FINALISE);
-		}
-
-		int taskSlotIndex = command.getTimeslotIndex();
-		List<Interval> oldIntervalList = taskToEdit.getPossibleTime();
-		if (taskSlotIndex > oldIntervalList.size()) {
-			return new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR,
-					CommandType.FINALISE);
-		}
-
-		Interval newInterval = oldIntervalList.get(taskSlotIndex - 1);
-		taskToEdit.setType(TaskType.TIMED);
-		taskToEdit.setInterval(newInterval);
-
-		storage.replace(taskIndex, taskToEdit);
-		isDynamicIndex = false;
-
-		if (isTaskOver(taskToEdit)) {
-			feedback = new Feedback(Constants.SC_SUCCESS_TASK_OVERDUE,
-					CommandType.FINALISE);
-			feedback.setTaskIndex(taskIndex);
-		} else {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.FINALISE);
-			feedback.setTaskIndex(taskIndex);
-		}
-
-		return feedback;
-	}
-
-	protected Feedback gotoPage(Command command) {
-		Feedback feedback = null;
-		int pageIndex = command.getPageIndex();
-
-		if (pageIndex > 0) {
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.GOTO);
-			feedback.setPageNumber(pageIndex);
-		} else {
-			feedback = new Feedback(Constants.SC_INVALID_PAGE_INDEX,
-					CommandType.GOTO);
-		}
-
-		return feedback;
-	}
-
-	protected Feedback sortTask() {
-		Feedback feedback = null;
-		if (storage.size() > 0) {
-			storage.sort();
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SORT);
-		} else {
-			feedback = new Feedback(Constants.SC_NO_TASK_ERROR,
-					CommandType.SORT);
-		}
-		return feedback;
-	}
-
-	protected Feedback markDone(Command command) {
-		Feedback feedback = null;
-		int taskIndex = command.getTaskIndex();
-
-		if ((isDynamicIndex && !temporaryMapping.containsKey(taskIndex))
-				|| taskIndex > storage.size()) {
-			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
-					CommandType.DONE);
-		} else {
-			if (isDynamicIndex) {
-				taskIndex = temporaryMapping.get(taskIndex);
-			}
-			Task doneTask = storage.get(taskIndex);
-			doneTask.markDone();
-			storage.replace(taskIndex, doneTask);
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.DONE);
-			feedback.setTaskIndex(taskIndex);
-			isDynamicIndex = false;
-		}
-
-		return feedback;
-	}
-
-	protected Feedback showHelp(Command command) {
-		Feedback feedback = null;
-		currentHelpCommand = command;
-		CommandType helpCommandType = currentHelpCommand.getHelpCommand();
-		isDisplayHelp = true;
-		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.HELP);
-		feedback.setHelpCommandType(helpCommandType);
-		return feedback;
-	}
-
-	protected Feedback undoState() {
-		Feedback feedback = null;
-		try {
-			actionStack.flushCurrentActionSet();
-			actionStack.undo();
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.UNDO);
-		} catch (Exception e) {
-			feedback = new Feedback(Constants.SC_UNDO_NO_PRIOR_STATE_ERROR,
-					CommandType.UNDO);
-		}
-
-		return feedback;
-	}
-
-	protected Feedback redoState() {
-		Feedback feedback = null;
-		try {
-			actionStack.flushCurrentActionSet();
-			actionStack.redo();
-			feedback = new Feedback(Constants.SC_SUCCESS, CommandType.REDO);
-		} catch (Exception e) {
-			feedback = new Feedback(Constants.SC_REDO_NO_PRIOR_STATE_ERROR,
-					CommandType.REDO);
-		}
-
-		return feedback;
-	}
-
-	protected Feedback searchTasks(Command command) {
-		Feedback feedback = null;
-
-		ArrayList<String> searchTags = command.getTags();
-		ArrayList<String> searchTerms = command.getSearchTerms();
-
-		ArrayList<Task> validTasks = new ArrayList<Task>();
-		ArrayList<Integer> validTasksAbsoluteIndices = new ArrayList<Integer>();
-
-		Iterator<Task> storageIterator = storage.iterator();
-
-		if (searchTags.size() > 0) {
-			boolean shouldAdd = true;
-			for (int i = 0; i < storage.size(); i++) {
-				Task currentTask = storageIterator.next();
-				for (String tag : searchTags) {
-					if (!isTagInTask(tag, currentTask)) {
-						shouldAdd = false;
-					}
-				}
-				if (shouldAdd) {
-					validTasks.add(currentTask);
-					validTasksAbsoluteIndices.add(i + 1);
-				}
-				shouldAdd = true;
-			}
-		} else {
-			for (int i = 0; i < storage.size(); i++) {
-				Task currentTask = storageIterator.next();
-				if (areAllWordsInString(searchTerms, currentTask.getName())) {
-					validTasks.add(currentTask);
-					validTasksAbsoluteIndices.add(i + 1);
-				}
-			}
-		}
-
-		temporaryMapping = new TreeMap<Integer, Integer>();
-		for (int i = 1; i <= validTasksAbsoluteIndices.size(); i++) {
-			temporaryMapping.put(i, validTasksAbsoluteIndices.get(i - 1));
-		}
-		isDynamicIndex = true;
-
-		feedback = new Feedback(Constants.SC_SUCCESS, CommandType.SEARCH);
-
-		// TODO: add in checks that correspond to errors in Feedback
-		feedback.setDisplayMode(DisplayMode.SEARCH);
-		return feedback;
-	}
-
-	protected Feedback exit() {
-		Feedback feedback = new Feedback(Constants.SC_SUCCESS, CommandType.EXIT);
-
-		try {
-			storage.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return feedback;
 	}
 
 	protected boolean isTaskOver(Task task) {
