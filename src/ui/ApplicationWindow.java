@@ -603,12 +603,8 @@ public class ApplicationWindow {
 					+ "Basket will continue without hotkey.");
 		}
 	}
-
-	/**
-	 * Execute the command which is entered
-	 */
-	public void executeUserInput(String userInput) {
-
+	
+	private void pushInitialDisplayModeIntoUndoStack() {
 		class StartDisplayAction implements Action {
 			DisplayMode mode;
 			int pageNumber;
@@ -627,7 +623,13 @@ public class ApplicationWindow {
 				// do nothing
 			}
 		}
-
+		
+		StartDisplayAction originalDisplayStateAction = new StartDisplayAction(
+				displayLogic.getDisplayMode(), displayLogic.getPageNumber());
+		ActionStack.getInstance().add(originalDisplayStateAction);
+	}
+	
+	private void pushFinalDisplayModeIntoUndoStack() {
 		class EndDisplayAction implements Action {
 			DisplayMode mode;
 			int pageNumber;
@@ -646,12 +648,37 @@ public class ApplicationWindow {
 				displayLogic.setPageNumber(pageNumber);
 			}
 		}
+		
+		EndDisplayAction currentDisplayStateAction = new EndDisplayAction(
+				displayLogic.getDisplayMode(),
+				displayLogic.getPageNumber());
+		ActionStack.getInstance().add(currentDisplayStateAction);
+	}
+	
+	private void finaliseThisAction (CommandType command) {
+		ActionStack actionStack = ActionStack.getInstance();
+		if (isStateChangingOperation(command)) {
+			actionStack.finaliseActions();
+			commandLogic.notifyStorage();
+		} else {
+			actionStack.flushCurrentActionSet();
+		}
+	}
+	
+	private boolean isStateChangingOperation(CommandType command) {
+		return (command == CommandType.ADD || command == CommandType.DELETE
+				|| command == CommandType.CLEAR || command == CommandType.DONE
+				|| command == CommandType.EDIT
+				|| command == CommandType.FINALISE || command == CommandType.SORT);
+	}
+
+	/**
+	 * Execute the command which is entered
+	 */
+	public void executeUserInput(String userInput) {
 
 		if (!userInput.isEmpty()) {
-			ActionStack actionStack = ActionStack.getInstance();
-			StartDisplayAction originalDisplayStateAction = new StartDisplayAction(
-					displayLogic.getDisplayMode(), displayLogic.getPageNumber());
-			actionStack.add(originalDisplayStateAction);
+			pushInitialDisplayModeIntoUndoStack ();
 			Feedback feedbackObj = commandLogic.executeCommand(userInput);
 
 			if (feedbackObj.getCommand() == CommandType.EXIT) {
@@ -659,33 +686,26 @@ public class ApplicationWindow {
 				trayIcon.dispose();
 				tray.dispose();
 				System.exit(0);
+			}
+			
+			String feedback = feedbackObj.toString();
+			setFeedbackColour(feedbackObj);
+			displayFeedback.setText(feedback);
+			if (feedbackObj.isErrorMessage()) {
+				getUpHistory();
 			} else {
-				String feedback = feedbackObj.toString();
-				setFeedbackColour(feedbackObj);
-				displayFeedback.setText(feedback);
-				if (feedbackObj.isErrorMessage()) {
-					getUpHistory();
-				} else {
-					input.setText("");
-				}
+				input.setText("");
+			}
 
-				displayLogic.processFeedback(feedbackObj, helpDialog);
-				EndDisplayAction currentDisplayStateAction = new EndDisplayAction(
-						displayLogic.getDisplayMode(),
-						displayLogic.getPageNumber());
-				actionStack.add(currentDisplayStateAction);
-				if (isStateChangingOperation(feedbackObj.getCommand())) {
-					actionStack.finaliseActions();
-					commandLogic.notifyStorage();
-				} else {
-					actionStack.flushCurrentActionSet();
-				}
+			displayLogic.processFeedback(feedbackObj, helpDialog);
+			
+			pushFinalDisplayModeIntoUndoStack ();
+			finaliseThisAction (feedbackObj.getCommand());
+			
+			updateTaskDisplay();
 
-				updateTaskDisplay();
-
-				if (testMode) {
-					logger.log(Level.INFO, generateLoggingString());
-				}
+			if (testMode) {
+				logger.log(Level.INFO, generateLoggingString());
 			}
 		}
 	}
@@ -770,13 +790,6 @@ public class ApplicationWindow {
 			input.setSelection(input.getText().length());
 			inputHistory.setIndex(currentIndex + 1);
 		}
-	}
-	
-	private boolean isStateChangingOperation(CommandType command) {
-		return (command == CommandType.ADD || command == CommandType.DELETE
-				|| command == CommandType.CLEAR || command == CommandType.DONE
-				|| command == CommandType.EDIT
-				|| command == CommandType.FINALISE || command == CommandType.SORT);
 	}
 
 	/**
