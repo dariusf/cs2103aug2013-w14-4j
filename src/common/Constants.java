@@ -12,7 +12,9 @@ public class Constants {
 	public static final String MSG_UNRECOGNISED_COMMAND = "Unrecognized command type";
 	public static final String MSG_WELCOME = "Welcome to " + APP_NAME + "! \nType 'help' if you are unsure of what to do.";
 	public static final String MSG_AVAILABLE_COMMANDS = "Commands available: add|edit|display|sort|search\nfinalise|help|goto|undo|redo|clear|done|exit";
-
+	public static final String MSG_SHOULD_NOT_HAPPEN = "%1$s error: Something has gone wrong; please contact the developers";
+	public static final String MSG_DEFAULT = "default";
+	
 	public static final String COMMAND_ADD = "add";
 	public static final String COMMAND_DELETE = "delete";
 	public static final String COMMAND_CLEAR = "clear";
@@ -27,6 +29,7 @@ public class Constants {
 	public static final String COMMAND_UNDO = "undo";
 	public static final String COMMAND_REDO = "redo";
 	public static final String COMMAND_DONE = "done";
+	public static final String COMMAND_INVALID = "invalid";
 
 	public static final String HELP_INSTRUCTIONS = "Refer to the help window.";
 	public static final String HELP_GENERAL = "_Hotkeys_\n"

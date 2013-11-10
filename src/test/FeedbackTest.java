@@ -52,8 +52,8 @@ public class FeedbackTest {
 		testFeedback.setCommand(CommandType.FINALISE);
 		assertEquals("Task finalised successfully!", testFeedback.toString());
 
-		/*testFeedback.setCommand(CommandType.HELP);
-		assertEquals("Help successful!", testFeedback.toString());*/
+		testFeedback.setCommand(CommandType.HELP);
+		assertEquals(Constants.HELP_INSTRUCTIONS, testFeedback.toString());
 
 		testFeedback.setCommand(CommandType.DONE);
 		assertEquals("Task marked as done!", testFeedback.toString());
