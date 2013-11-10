@@ -387,10 +387,32 @@ public class ApplicationWindow {
 		executeUserInput(Constants.WELCOME_PAGE_DISPLAY_COMMAND);
 	}
 
+	String userInput = "";
+	UserInputHistory inputHistory = new UserInputHistory();
+
+
+	private void getUpHistory() {
+		int currentIndex = inputHistory.getIndex();
+		if (currentIndex != -1) {
+			String commandField = inputHistory.getInput(currentIndex);
+			input.setText(commandField);
+			inputHistory.setIndex(currentIndex - 1);
+		}
+	}
+
+	private void getDownHistory() {
+		if (!inputHistory.isEndOfHistory()) {
+			int currentIndex = inputHistory.getIndex();
+			String commandField = inputHistory
+					.getInput(currentIndex + 1);
+			input.setText(commandField);
+			input.setSelection(input.getText().length());
+			inputHistory.setIndex(currentIndex + 1);
+		}
+	}
+	
 	public void enterDriverLoop() {
 		input.addKeyListener(new KeyListener() {
-			String userInput = "";
-			UserInputHistory inputHistory = new UserInputHistory();
 
 			@Override
 			public void keyReleased(KeyEvent arg0) {
@@ -406,23 +428,11 @@ public class ApplicationWindow {
 			public void keyPressed(KeyEvent arg0) {
 
 				// performTween();
+
 				if (arg0.keyCode == SWT.ARROW_DOWN) {
-					if (!inputHistory.isEndOfHistory()) {
-						int currentIndex = inputHistory.getIndex();
-						String commandField = inputHistory
-								.getInput(currentIndex + 1);
-						input.setText(commandField);
-						input.setSelection(input.getText().length());
-						inputHistory.setIndex(currentIndex + 1);
-					}
+					getDownHistory();
 				} else if (arg0.keyCode == SWT.ARROW_UP) {
-					int currentIndex = inputHistory.getIndex();
-					if (currentIndex != -1) {
-						String commandField = inputHistory
-								.getInput(currentIndex);
-						input.setText(commandField);
-						inputHistory.setIndex(currentIndex - 1);
-					}
+					getUpHistory();
 				} else if (arg0.character == SWT.CR) {
 					userInput = input.getText();
 					dummyCompositeIsCreated = false;
@@ -1048,7 +1058,12 @@ public class ApplicationWindow {
 				setFeedbackColour(feedbackObj);
 
 				displayFeedback.setText(feedback);
-				input.setText("");
+				if (feedbackObj.isErrorMessage()) {
+					getUpHistory();
+				}
+				else {
+					input.setText("");
+				}
 
 				displayLogic.processFeedback(feedbackObj, helpDialog);
 
