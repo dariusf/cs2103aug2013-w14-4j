@@ -401,7 +401,6 @@ public class Constants {
     public static final String PARSER_TIMESTRING = "%d:%s %s";
     
     public static final String PARSER_TOKEN_PREFIX_DATETOKEN = "Date ";
-    public static final String PARSER_TOKEN_PREFIX_KEYWORD = "Keyword ";
     public static final String PARSER_TOKEN_PREFIX_TAG = "Tag ";
     public static final String PARSER_TOKEN_PREFIX_TIME = "Time ";
     public static final String PARSER_TOKEN_PREFIX_WORD = "Word ";
