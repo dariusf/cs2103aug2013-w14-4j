@@ -24,7 +24,7 @@ public class Parser {
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 		
-		logger.setLevel(Level.OFF);
+		//logger.setLevel(Level.OFF);
 
 		// Mini REPL for testing
 		java.util.Scanner scanner = new java.util.Scanner(System.in);
@@ -84,20 +84,20 @@ public class Parser {
 
 			Token next;
 			if (Constants.PARSER_DEBUG_PRINT_LEXER_TOKENS) System.out.println(Constants.PARSER_LOG_LEXER_TOKENS);
-			logger.log(Level.INFO, Constants.PARSER_LOG_LEXER_TOKENS);
+		//	logger.log(Level.INFO, Constants.PARSER_LOG_LEXER_TOKENS);
 			
 			ArrayList<Token> tokens = new ArrayList<>();
 			while ((next = lexer.nextToken()) != null) {
 				tokens.add(next);
 				if (Constants.PARSER_DEBUG_PRINT_LEXER_TOKENS) System.out.println(next.toString());
-				logger.log(Level.INFO, next.toString());
+		//		logger.log(Level.INFO, next.toString());
 			}
 
 			this.tokens = new TokenCollection(tokens);
 
 		} catch (IOException e) {
 			System.out.println(Constants.PARSER_LOG_ERROR_GETTING_NEXT_TOKEN);
-			logger.log(Level.INFO, Constants.PARSER_LOG_ERROR_GETTING_NEXT_TOKEN);
+		//	logger.log(Level.INFO, Constants.PARSER_LOG_ERROR_GETTING_NEXT_TOKEN);
 			e.printStackTrace();
 		}
 	}
@@ -121,7 +121,7 @@ public class Parser {
 
 		String matchedCommandMessage = String.format(Constants.PARSER_LOG_MATCHED_COMMAND, (exactMatch ? Constants.PARSER_LOG_EXACT : Constants.PARSER_LOG_FUZZY), commandType);
 		if (Constants.PARSER_DEBUG_PRINT_MATCHED_COMMAND_TYPE) System.out.println(matchedCommandMessage);
-		logger.log(Level.INFO, matchedCommandMessage);
+	//	logger.log(Level.INFO, matchedCommandMessage);
 		
 		tokens.nextToken();
 

@@ -42,7 +42,7 @@ public class CommandLogic {
 	protected boolean isDisplayHelp = false;
 	protected Command currentHelpCommand = null;
 	protected ActionStack actionStack = ActionStack.getInstance();
-
+	
 	public CommandLogic() throws IOException {
 		storage = new Storage(Constants.DEFAULT_FILENAME);
 		this.executeCommand(Constants.COMMAND_DISPLAY);
@@ -165,8 +165,7 @@ public class CommandLogic {
 		Feedback feedback = null;
 		int taskIndex = command.getTaskIndex();
 
-		if ((isDynamicIndex && !temporaryMapping.containsKey(taskIndex))
-				|| taskIndex > storage.size() && taskIndex < 1) {
+		if (checkTaskIndexValidity(taskIndex)) {
 			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
 					CommandType.DONE);
 		} else {
@@ -242,12 +241,13 @@ public class CommandLogic {
 		return feedback;
 	}
 
+
+
 	protected Feedback deleteTask(Command command) {
 		Feedback feedback = null;
 		int taskIndex = command.getTaskIndex();
 
-		if ((isDynamicIndex && !temporaryMapping.containsKey(taskIndex))
-				|| taskIndex > storage.size() && taskIndex < 1) {
+		if (checkTaskIndexValidity(taskIndex)) {
 			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
 					CommandType.DONE);
 		} else {
@@ -267,8 +267,7 @@ public class CommandLogic {
 		Feedback feedback = null;
 		int taskIndex = command.getTaskIndex();
 
-		if ((isDynamicIndex && !temporaryMapping.containsKey(taskIndex))
-				|| taskIndex > storage.size()) {
+		if (checkTaskIndexValidity(taskIndex)) {
 			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
 					CommandType.DONE);
 		} else {
@@ -314,8 +313,7 @@ public class CommandLogic {
 		Feedback feedback = null;
 		int taskIndex = command.getTaskIndex();
 
-		if ((isDynamicIndex && !temporaryMapping.containsKey(taskIndex))
-				|| taskIndex > storage.size()) {
+		if (checkTaskIndexValidity(taskIndex)) {
 			feedback = new Feedback(Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR,
 					CommandType.DONE);
 		} else {
@@ -568,7 +566,6 @@ public class CommandLogic {
 		try {
 			storage.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return feedback;
@@ -675,6 +672,11 @@ public class CommandLogic {
 	/**
 	 * Helper methods
 	 */
+	private boolean checkTaskIndexValidity(int taskIndex) {
+		return (isDynamicIndex && !temporaryMapping.containsKey(taskIndex))
+				|| (taskIndex > storage.size() || taskIndex < 1);
+	}
+	
 	protected boolean isTaskOver(Task task) {
 		if (task.isDeadlineTask()) {
 			DateTime deadline = task.getDeadline();
@@ -738,7 +740,6 @@ public class CommandLogic {
 		try {
 			storage.writeToFile();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

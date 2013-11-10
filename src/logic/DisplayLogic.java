@@ -423,11 +423,6 @@ public class DisplayLogic {
 		this.displayMode = displayMode;
 	}
 
-//	private void setDisplayTask(Composite displayTask) {
-//		assert (displayTask != null);
-//		this.taskDisplay = displayTask;
-//	}
-
 	public void setDisplayDateTime(DateTime currentDisplayDateTime) {
 		assert (currentDisplayDateTime != null);
 		this.currentDisplayDateTime = currentDisplayDateTime;
