@@ -32,13 +32,27 @@ public class Parser {
 	}
 
 	private static void test(String input) {
-		Command command = new Parser().parse(input);
+		Command command = Parser.parse(input);
 		if (PRINT_PARSED_COMMAND) System.out.println(command.toString());
 	}
+
+	// Limit the exposed interface of the parser, to prevent users from getting
+	// an explicit reference to a Parser object:
+
+	private Parser() {}
+	
+	public static Command parse(String userInput) {
+		return new Parser().parseInput(userInput);
+	}
+
+	// This way fields of default visibility will not be accessible by anything
+	// other than implementations of State (which are passed an explicit reference
+	// to a Parser object).
 
 	StateStack parseStates = new StateStack();
 	TokenCollection tokens = null;
 
+	// Components of the command that will gradually be constructed
 	String description = "";
 	DateTime deadline = null;
 	ArrayList<Interval> intervals = new ArrayList<>();
@@ -46,7 +60,7 @@ public class Parser {
 	int taskIndex = -1;
 	int timeslotIndex = -1;
 
-	public Command parse(String userInput) {
+	private Command parseInput(String userInput) {
 
 		if (isEmpty(userInput)) {
 			return invalidCommand(InvalidCommandReason.EMPTY_COMMAND);
