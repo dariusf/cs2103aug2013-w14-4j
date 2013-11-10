@@ -34,7 +34,7 @@ public class Logic {
 	}
 
 	public ActiveFeedback activeFeedback(String userInput) {
-		Command command = new Parser().parse(userInput);
+		Command command = Parser.parse(userInput);
 		return new ActiveFeedback(command);
 	}
 
@@ -64,7 +64,7 @@ public class Logic {
 	// }
 
 	public Feedback executeCommand(String userCommand) {
-		Command command = new Parser().parse(userCommand);
+		Command command = Parser.parse(userCommand);
 		CommandType commandType = command.getCommandType();
 
 		switch (commandType) {
