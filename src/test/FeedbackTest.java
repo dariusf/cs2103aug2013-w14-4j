@@ -72,6 +72,9 @@ public class FeedbackTest {
 		testFeedback.setCommand(CommandType.EDIT);
 		assertEquals(Constants.FEEDBACK_SUCCESS_OVERDUE_EDIT, testFeedback.toString());
 		
+		testFeedback.setCommand(CommandType.FINALISE);
+		assertEquals(Constants.FEEDBACK_SUCCESS_OVERDUE_FINALISE, testFeedback.toString());
+		
 		testFeedback.setStatusCode(Constants.SC_SUCCESS_CLEAR_DONE);
 		testFeedback.setCommand(CommandType.CLEAR);
 		assertEquals(Constants.FEEDBACK_SUCCESS_CLEAR, testFeedback.toString());

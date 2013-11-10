@@ -128,8 +128,8 @@ public class Feedback {
 			statusMessage = Constants.FEEDBACK_SUCCESS_ADD;
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_OVERDUE_ADD;
-//		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
-//			statusMessage = "Error: No task description was given";
+		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
+			statusMessage = Constants.FEEDBACK_ERROR_EMPTY_DESCRIPTION;
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_ADD);
 		}
@@ -142,13 +142,13 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_OVERDUE_EDIT;
 		} else if (statusCode == Constants.SC_EMPTY_DESCRIPTION_ERROR) {
-			statusMessage = "Error: No task description was given!";
+			statusMessage = Constants.FEEDBACK_ERROR_EMPTY_DESCRIPTION;
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
-			statusMessage = "Error: That's not a valid task index!";
+			statusMessage = Constants.FEEDBACK_ERROR_INTEGER_OUT_OF_BOUNDS;
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR) {
-			statusMessage = "Error: That's not a valid timeslot index!";
+			statusMessage = Constants.FEEDBACK_ERROR_INTEGER_OUT_OF_BOUNDS_TIME;
 		}else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
-			statusMessage = "Error: You need to specify a task index!";
+			statusMessage = Constants.FEEDBACK_ERROR_NO_INDEX_INDICATED;
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_EDIT);
 		}
@@ -159,7 +159,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_DISPLAY;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
-			statusMessage = "You have no tasks!";
+			statusMessage = Constants.FEEDBACK_ERROR_NO_TASK_DISPLAY;
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_DISPLAY);
 		}
@@ -170,9 +170,9 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_DELETE;
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
-			statusMessage = "Error: That's not a valid task index!";
+			statusMessage = Constants.FEEDBACK_ERROR_INTEGER_OUT_OF_BOUNDS;
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
-			statusMessage = "Error: You need to specify a task index!";
+			statusMessage = Constants.FEEDBACK_ERROR_NO_INDEX_INDICATED;
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_DELETE);
 		}
@@ -185,7 +185,7 @@ public class Feedback {
 		} else if (statusCode == Constants.SC_SUCCESS_CLEAR_DONE) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_CLEAR;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
-			statusMessage = "Error: You have no tasks to clear!";
+			statusMessage = String.format(Constants.FEEDBACK_ERROR_NO_TASK, Constants.COMMAND_CLEAR);
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_CLEAR);
 		}
@@ -196,7 +196,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_SORT;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
-			statusMessage = "Error: You have no tasks to sort!";
+			statusMessage = String.format(Constants.FEEDBACK_ERROR_NO_TASK, Constants.COMMAND_SORT);
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_SORT);
 		}
@@ -207,9 +207,9 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_SEARCH;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
-			statusMessage = "Error: You have no tasks to search!";
+			statusMessage = String.format(Constants.FEEDBACK_ERROR_NO_TASK, Constants.COMMAND_SEARCH);
 		} else if (statusCode == Constants.SC_SEARCH_KEYWORD_MISSING_ERROR) {
-			statusMessage = "Error: No search description was given!";
+			statusMessage = Constants.FEEDBACK_ERROR_NO_KEYWORD_SEARCH;
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_SEARCH);
 		}
@@ -218,23 +218,23 @@ public class Feedback {
 
 	private String invalidFeedback() {
 		if (statusCode == Constants.SC_INVALID_COMMAND_ERROR) {
-			statusMessage = "Error: That's not valid command!";
+			statusMessage = Constants.FEEDBACK_ERROR_INVALID_COMMAND;
 		} else if (statusCode == Constants.SC_EMPTY_COMMAND_ERROR){
-			statusMessage = "Error: No command entered!";
+			statusMessage = Constants.FEEDBACK_ERROR_NO_COMMAND;
 		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX_ERROR){
-			statusMessage = "Error: That's not a vaild page index!";
+			statusMessage = Constants.FEEDBACK_ERROR_INVALID_PAGE_INDEX;
 		} else if (statusCode == Constants.SC_INVALID_DATE_ERROR){
-			statusMessage = "Error: That's not a valid date!";
+			statusMessage = Constants.FEEDBACK_ERROR_INVALID_DATE;
 		} else if (statusCode == Constants.SC_UNRECOGNIZED_COMMAND_ERROR){
-			statusMessage = "Error: Command is not recognised!";
+			statusMessage = Constants.FEEDBACK_ERROR_UNRECOGNISED_COMMAND;
 		} else if (statusCode == Constants.SC_TOO_FEW_ARGUMENTS_ERROR){
-			statusMessage = "Error: Command is not in the right format!";
+			statusMessage = Constants.FEEDBACK_ERROR_TOO_FEW_ARGUMENTS;
 		} else if (statusCode == Constants.SC_INVALID_TIMESLOT_INDEX_ERROR){
-			statusMessage = "Error: That's not a valid timeslot index!";
+			statusMessage = Constants.FEEDBACK_ERROR_INTEGER_OUT_OF_BOUNDS_TIME;
 		} else if (statusCode == Constants.SC_INVALID_SEARCH_PARAMETERS_ERROR){
-			statusMessage = "Error: Search parameters are invalid!";
+			statusMessage = Constants.FEEDBACK_ERROR_INVALID_SEARCH_PARAMETERS;
 		}  else if (statusCode == Constants.SC_INVALID_TASK_INDEX_ERROR){
-			statusMessage = "Error: Task index is invalid!";
+			statusMessage = Constants.FEEDBACK_ERROR_INTEGER_OUT_OF_BOUNDS;
 		}else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_INVALID);
 		}
@@ -245,7 +245,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_UNDO;
 		} else if (statusCode == Constants.SC_UNDO_NO_PRIOR_STATE_ERROR) {
-			statusMessage = "Error: There's nothing to undo!";
+			statusMessage = String.format(Constants.FEEDBACK_ERROR_NO_PRIOR_STATE, Constants.COMMAND_UNDO);
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_UNDO);
 		}
@@ -256,7 +256,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_REDO;
 		} else if (statusCode == Constants.SC_REDO_NO_PRIOR_STATE_ERROR) {
-			statusMessage = "Error: Nothing to redo!";
+			statusMessage = String.format(Constants.FEEDBACK_ERROR_NO_PRIOR_STATE, Constants.COMMAND_REDO);
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_REDO);
 		}
@@ -267,19 +267,19 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_FINALISE;
 		} else if (statusCode == Constants.SC_SUCCESS_TASK_OVERDUE) {
-			statusMessage = "Task finalised!\nIt's overdue, though.";
+			statusMessage = Constants.FEEDBACK_SUCCESS_OVERDUE_FINALISE;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
-			statusMessage = "Error: You have no tasks to finalise!";
+			statusMessage = String.format(Constants.FEEDBACK_ERROR_NO_TASK, Constants.COMMAND_FINALISE);
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
-			statusMessage = "Error: That's not a valid task index!";
+			statusMessage = Constants.FEEDBACK_ERROR_INTEGER_OUT_OF_BOUNDS;
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
-			statusMessage = "Error: That's not a valid task index!";
+			statusMessage = Constants.FEEDBACK_ERROR_NO_INDEX_INDICATED;
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR) {
-			statusMessage = "Error: That's not a valid timeslot index!";
+			statusMessage = Constants.FEEDBACK_ERROR_INTEGER_OUT_OF_BOUNDS_TIME;
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_TIME_ERROR) {
-			statusMessage = "Error: That's not a valid time!";
+			statusMessage = Constants.FEEDBACK_ERROR_NO_TIME_INDICATED;
 		} else if (statusCode == Constants.SC_FINALISE_TYPE_MISMATCH_ERROR) {
-			statusMessage = "Error: That's not a tentative task!";
+			statusMessage = Constants.FEEDBACK_ERROR_FINALISE_TYPE_MISMATCH;
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_FINALISE);
 		}
@@ -299,11 +299,11 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = Constants.FEEDBACK_SUCCESS_DONE;
 		} else if (statusCode == Constants.SC_NO_TASK_ERROR) {
-			statusMessage = "Error: You have no tasks to mark as done!";
+			statusMessage = String.format(Constants.FEEDBACK_ERROR_NO_TASK, Constants.MSG_MARK_AS_DONE);
 		} else if (statusCode == Constants.SC_INTEGER_OUT_OF_BOUNDS_ERROR) {
-			statusMessage = "Error: That's not a valid task index!";
+			statusMessage = Constants.FEEDBACK_ERROR_INTEGER_OUT_OF_BOUNDS;
 		} else if (statusCode == Constants.SC_NO_ID_INDICATED_ERROR) {
-			statusMessage = "Error: That's not a valid task index!";
+			statusMessage = Constants.FEEDBACK_ERROR_NO_INDEX_INDICATED;
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_DONE);
 		}
@@ -314,7 +314,7 @@ public class Feedback {
 		if (statusCode == Constants.SC_SUCCESS) {
 			statusMessage = String.format(Constants.FEEDBACK_SUCCESS_GOTO, pageNumber);
 		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX) {
-			statusMessage = "Error: " + pageNumber + " is not a valid page!";
+			statusMessage = String.format(Constants.FEEDBACK_ERROR_INVALID_PAGE_NUMBER, pageNumber);
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_GOTO);
 		}
