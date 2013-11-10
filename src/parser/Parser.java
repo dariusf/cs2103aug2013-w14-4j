@@ -3,6 +3,9 @@ package parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.joda.time.DateTime;
 
 import common.ClearMode;
@@ -19,9 +22,13 @@ public class Parser {
 	private static final boolean PRINT_LEXER_TOKENS = false;
 	private static final boolean PRINT_MATCHED_COMMAND_TYPE = false;
 	private static final boolean PRINT_PARSED_COMMAND = true;
+	
+	public static final Logger logger = Logger.getLogger(Parser.class.getName());
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
+		
+		logger.setLevel(Level.OFF);
 
 		// Mini REPL for testing
 		java.util.Scanner scanner = new java.util.Scanner(System.in);
@@ -34,6 +41,7 @@ public class Parser {
 	private static void test(String input) {
 		Command command = Parser.parse(input);
 		if (PRINT_PARSED_COMMAND) System.out.println(command.toString());
+		logger.log(Level.INFO, command.toString());
 	}
 
 	// Limit the exposed interface of the parser, to prevent users from getting
@@ -79,18 +87,21 @@ public class Parser {
 			Lexer lexer = new Lexer(new ByteArrayInputStream(userInput.getBytes("UTF-8")));
 
 			Token next;
-			if (PRINT_LEXER_TOKENS) System.out.println("\nTokens:");
+			if (PRINT_LEXER_TOKENS) System.out.println("\nLexer tokens:");
+			logger.log(Level.INFO, "\nLexer tokens:");
 			
 			ArrayList<Token> tokens = new ArrayList<>();
 			while ((next = lexer.nextToken()) != null) {
 				tokens.add(next);
 				if (PRINT_LEXER_TOKENS) System.out.println(next.toString());
+				logger.log(Level.INFO, next.toString());
 			}
 
 			this.tokens = new TokenCollection(tokens);
 
 		} catch (IOException e) {
 			System.out.println("Error getting next token!");
+			logger.log(Level.INFO, "Error getting next token!");
 			e.printStackTrace();
 		}
 	}
@@ -113,7 +124,8 @@ public class Parser {
 		}
 
 		if (PRINT_MATCHED_COMMAND_TYPE) System.out.println("Command (" + (exactMatch ? "exact" : "fuzzy") + "): " + commandType);
-
+		logger.log(Level.INFO, "Command (" + (exactMatch ? "exact" : "fuzzy") + "): " + commandType);
+		
 		tokens.nextToken();
 
 		switch (commandType) {
