@@ -3,9 +3,6 @@ package logic;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.widgets.*;
 
 import ui.ContextualHelp;
 import ui.TaskComposite;
@@ -117,8 +114,6 @@ public class ActiveFeedbackLogic {
 	}
 
 	private void searchTaskFeedback(String userInput, Command executedCommand) {
-		// TODO: This solution is too cheapskate, will think of a better
-		// solution
 		if (!executedCommand.getSearchTerms().isEmpty()
 				|| !executedCommand.getTags().isEmpty()) {
 			Feedback feedbackObj = commandLogic

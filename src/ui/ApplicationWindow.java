@@ -23,6 +23,8 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.joda.time.DateTime;
 
+import com.sun.org.apache.xml.internal.security.utils.HelperNodeList;
+
 import common.Command;
 import common.CommandType;
 import common.Constants;
@@ -58,6 +60,7 @@ public class ApplicationWindow {
 	public static HelpDialog helpDialog;
 	private static Tray tray;
 	private static TrayItem trayIcon;
+	String userInput = "";
 
 	// Colours
 	public Color green;
@@ -74,6 +77,7 @@ public class ApplicationWindow {
 	public Font descriptionFont; // accessed by task composite
 
 	// Others
+	UserInputHistory inputHistory = new UserInputHistory();
 	public boolean dummyCompositeIsCreated = false;
 	public static ApplicationWindow self;
 
@@ -441,50 +445,6 @@ public class ApplicationWindow {
 		displayLogic.setTaskCompositeIncrement(taskCompositeIncrement);
 	}
 
-	/**
-	 * Methods required to align windows at the centre of the monitor display
-	 */
-	private void centerShellWithRespectToScreen(Display display) {
-		Monitor primary = display.getPrimaryMonitor();
-
-		Rectangle monitorBounds = primary.getBounds();
-		Rectangle shellBounds = shell.getBounds();
-
-		int x = calculateXCoordinateForShellPosition(monitorBounds, shellBounds);
-		int y = calculateYCoordinateForShellPosition(monitorBounds, shellBounds);
-
-		shell.setLocation(x, y);
-	}
-
-	private int calculateYCoordinateForShellPosition(Rectangle monitorBounds,
-			Rectangle shellBounds) {
-		int difference = calculateDifferenceInHeight(monitorBounds, shellBounds);
-		int heightOffset = calculateHalfOfNumber(difference);
-		int yCoordinate = monitorBounds.y + heightOffset;
-		return yCoordinate;
-	}
-
-	private int calculateDifferenceInHeight(Rectangle monitorBounds,
-			Rectangle shellBounds) {
-		return monitorBounds.height - shellBounds.height;
-	}
-
-	private int calculateXCoordinateForShellPosition(Rectangle monitorBounds,
-			Rectangle shellBounds) {
-		int difference = calculateDifferenceInWidth(monitorBounds, shellBounds);
-		int widthOffset = calculateHalfOfNumber(difference);
-		int xCoordinate = monitorBounds.x + widthOffset;
-		return xCoordinate;
-	}
-
-	private int calculateDifferenceInWidth(Rectangle monitorBounds,
-			Rectangle shellBounds) {
-		return monitorBounds.width - shellBounds.width;
-	}
-
-	private int calculateHalfOfNumber(int difference) {
-		return difference / 2;
-	}
 
 	/**
 	 * Methods for updating the UI elements in Application Window
@@ -523,28 +483,6 @@ public class ApplicationWindow {
 		executeUserInput(Constants.WELCOME_PAGE_DISPLAY_COMMAND);
 	}
 
-	String userInput = "";
-	UserInputHistory inputHistory = new UserInputHistory();
-
-	private void getUpHistory() {
-		int currentIndex = inputHistory.getIndex();
-		if (currentIndex != -1) {
-			String commandField = inputHistory.getInput(currentIndex);
-			input.setText(commandField);
-			inputHistory.setIndex(currentIndex - 1);
-		}
-	}
-
-	private void getDownHistory() {
-		if (!inputHistory.isEndOfHistory()) {
-			int currentIndex = inputHistory.getIndex();
-			String commandField = inputHistory.getInput(currentIndex + 1);
-			input.setText(commandField);
-			input.setSelection(input.getText().length());
-			inputHistory.setIndex(currentIndex + 1);
-		}
-	}
-
 	protected void setFeedbackColour(Feedback feedbackObj) {
 		if (feedbackObj.isErrorMessage()) {
 			displayFeedback.setForeground(red);
@@ -553,6 +491,9 @@ public class ApplicationWindow {
 		}
 	}
 
+	/**
+	 * Methods for attaching listeners to keys
+	 */
 	public void enterDriverLoop() {
 		input.addKeyListener(new KeyListener() {
 
@@ -627,20 +568,6 @@ public class ApplicationWindow {
 		});
 	}
 
-	public boolean isKeyboardInput(int keyCode) {
-		return (keyCode < 127 && keyCode > 31) || keyCode == SWT.BS;
-	}
-
-	public void toggleMinimizeState() {
-		if (shell.getVisible()) {
-			shell.setVisible(false);
-			commandLogic.forceFileWrite();
-		} else {
-			shell.setVisible(true);
-			input.setFocus();
-		}
-	}
-
 	public void enableNativeHook() {
 		class UiUpdater implements Runnable {
 			public void run() {
@@ -673,6 +600,9 @@ public class ApplicationWindow {
 		}
 	}
 
+	/**
+	 * Execute the command which is entered
+	 */
 	public void executeUserInput(String userInput) {
 
 		class StartDisplayAction implements Action {
@@ -756,6 +686,88 @@ public class ApplicationWindow {
 		}
 	}
 
+	/**
+	 * Helper methods
+	 */
+	
+	/**
+	 * Methods required to align windows at the centre of the monitor display
+	 */
+	private void centerShellWithRespectToScreen(Display display) {
+		Monitor primary = display.getPrimaryMonitor();
+
+		Rectangle monitorBounds = primary.getBounds();
+		Rectangle shellBounds = shell.getBounds();
+
+		int x = calculateXCoordinateForShellPosition(monitorBounds, shellBounds);
+		int y = calculateYCoordinateForShellPosition(monitorBounds, shellBounds);
+
+		shell.setLocation(x, y);
+	}
+
+	private int calculateYCoordinateForShellPosition(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		int difference = calculateDifferenceInHeight(monitorBounds, shellBounds);
+		int heightOffset = calculateHalfOfNumber(difference);
+		int yCoordinate = monitorBounds.y + heightOffset;
+		return yCoordinate;
+	}
+
+	private int calculateDifferenceInHeight(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		return monitorBounds.height - shellBounds.height;
+	}
+
+	private int calculateXCoordinateForShellPosition(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		int difference = calculateDifferenceInWidth(monitorBounds, shellBounds);
+		int widthOffset = calculateHalfOfNumber(difference);
+		int xCoordinate = monitorBounds.x + widthOffset;
+		return xCoordinate;
+	}
+
+	private int calculateDifferenceInWidth(Rectangle monitorBounds,
+			Rectangle shellBounds) {
+		return monitorBounds.width - shellBounds.width;
+	}
+
+	private int calculateHalfOfNumber(int difference) {
+		return difference / 2;
+	}
+	
+	public void toggleMinimizeState() {
+		if (shell.getVisible()) {
+			shell.setVisible(false);
+			commandLogic.forceFileWrite();
+		} else {
+			shell.setVisible(true);
+			input.setFocus();
+		}
+	}
+	
+	public boolean isKeyboardInput(int keyCode) {
+		return (keyCode < 127 && keyCode > 31) || keyCode == SWT.BS;
+	}
+	
+	private void getUpHistory() {
+		int currentIndex = inputHistory.getIndex();
+		if (currentIndex != -1) {
+			String commandField = inputHistory.getInput(currentIndex);
+			input.setText(commandField);
+			inputHistory.setIndex(currentIndex - 1);
+		}
+	}
+
+	private void getDownHistory() {
+		if (!inputHistory.isEndOfHistory()) {
+			int currentIndex = inputHistory.getIndex();
+			String commandField = inputHistory.getInput(currentIndex + 1);
+			input.setText(commandField);
+			input.setSelection(input.getText().length());
+			inputHistory.setIndex(currentIndex + 1);
+		}
+	}
+	
 	private boolean isStateChangingOperation(CommandType command) {
 		return (command == CommandType.ADD || command == CommandType.DELETE
 				|| command == CommandType.CLEAR || command == CommandType.DONE
