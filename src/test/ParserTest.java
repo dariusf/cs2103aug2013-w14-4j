@@ -8,8 +8,10 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.junit.Test;
 
+import common.ClearMode;
 import common.Command;
 import common.CommandType;
+import common.DisplayMode;
 import common.Interval;
 import common.InvalidCommandReason;
 
@@ -23,17 +25,9 @@ public class ParserTest {
 //	public void assertEquals(Object one, Object two) {}
 	
 	@Test
-	public void addCommandTests() {
-
-		DateTime now = new DateTime(2013, 10, 5, 20, 0); // saturday 8pm 5/10/13
-		Interval.setNowStub(now);
-		DateToken.setNowStub(now);
-		StateDeadline.setNowStub(now);
-		
+	public void generalTests() {
 		Command expected, actual;
-		ArrayList<Interval> intervals;
-		DateTime start, end;
-		
+
 		// Invalid commands
 		// Empty string
 		expected = new Command(CommandType.INVALID);
@@ -53,12 +47,19 @@ public class ParserTest {
 		actual = Parser.parse("!@#$%^&*({}][]\\|';.,><;");
 		expected.setInvalidCommandReason(InvalidCommandReason.UNRECOGNIZED_COMMAND);
 		assertEquals(actual, expected);
-		// Invalid starting keyword
-		actual = Parser.parse("hjkhjs task at 10:00 pm");
-		assertEquals(actual, expected);
-		// Missing add keyword
-		actual = Parser.parse("task at 10:00 pm");
-		assertEquals(actual, expected);
+	}
+	
+	@Test
+	public void addCommandTests() {
+
+		DateTime now = new DateTime(2013, 10, 5, 20, 0); // saturday 8pm 5/10/13
+		Interval.setNowStub(now);
+		DateToken.setNowStub(now);
+		StateDeadline.setNowStub(now);
+		
+		Command expected, actual;
+		ArrayList<Interval> intervals;
+		DateTime start, end;
 
 		// Adding a bunch of symbols
 		actual = Parser.parse("add !@#$%^&*({}][]\\|';.,><;");
@@ -1015,13 +1016,6 @@ public class ParserTest {
 		actual = Parser.parse("edit 1 1 kajsld");
 		assertEquals(actual, expected);
 
-		// Empty timeslot
-		expected = new Command(CommandType.EDIT);
-		expected.setTaskIndex(1);
-		expected.setTimeslotIndex(1);
-		actual = Parser.parse("edit 1 1 kajsld");
-		assertEquals(actual, expected);
-
 		// Garbage before timeslot
 		expected = new Command(CommandType.EDIT);
 		expected.setTaskIndex(1);
@@ -1087,6 +1081,40 @@ public class ParserTest {
 		expected.setIntervals(intervals);
 		actual = Parser.parse("edit 1 1 1pm asda to jashdk 3pm !!! or asdn 2pm asjd to asdasd 4pm");
 		assertEquals(actual, expected);
+		
+		// Deadline
+		expected = new Command(CommandType.EDIT);
+		expected.setTaskIndex(1);
+		expected.setDeadline(now.withTime(22, 0, 0, 0));
+		actual = Parser.parse("edit 1 by 10pm");
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	public void doneCommandTests() {
+		Command expected, actual;
+		
+		// Correct format
+		expected = new Command(CommandType.DONE);
+		expected.setTaskIndex(1);
+		actual = Parser.parse("done 1");
+		assertEquals(actual, expected);
+
+		// Negative index
+		expected = new Command(CommandType.DONE);
+		expected.setTaskIndex(-2);
+		actual = Parser.parse("done -2");
+		assertEquals(actual, expected);
+
+		// Missing index
+		expected = new Command(CommandType.DONE);
+		actual = Parser.parse("done");
+		assertEquals(actual, expected);
+
+		// Invalid format
+		expected = new Command(CommandType.DONE);
+		actual = Parser.parse("done askldjas");
+		assertEquals(actual, expected);
 	}
 
 	@Test
@@ -1099,6 +1127,12 @@ public class ParserTest {
 		actual = Parser.parse("delete 1");
 		assertEquals(actual, expected);
 
+		// Negative index
+		expected = new Command(CommandType.DELETE);
+		expected.setTaskIndex(-2);
+		actual = Parser.parse("delete -2");
+		assertEquals(actual, expected);
+		
 		// Missing index
 		expected = new Command(CommandType.DELETE);
 		actual = Parser.parse("delete");
@@ -1253,5 +1287,381 @@ public class ParserTest {
 		assertEquals(Parser.parse("doone 1").getCommandType(), CommandType.DONE);
 		assertEquals(Parser.parse("doon 1").getCommandType(), CommandType.DONE);
 
+	}
+	
+	@Test
+	public void sortCommandTests() {
+		Command expected, actual;
+	
+	    // Proper command
+	    expected = new Command(CommandType.SORT);
+	    actual = Parser.parse("sort");
+	    assertEquals(actual, expected);
+	
+	    // Random index
+	    expected = new Command(CommandType.SORT);
+	    actual = Parser.parse("sort 1");
+	    assertEquals(actual, expected);
+	
+	    // Random symbols
+	    expected = new Command(CommandType.SORT);
+	    actual = Parser.parse("sort akjsdkljas!@#$%^&*()_+~{}|;'<>?;");
+	    assertEquals(actual, expected);
+	}
+
+	@Test
+	public void undoCommandTests() {
+		Command expected, actual;
+		
+		// Proper command
+		expected = new Command(CommandType.UNDO);
+		actual = Parser.parse("undo");
+		assertEquals(actual, expected);
+	
+		// Random index
+		expected = new Command(CommandType.UNDO);
+		actual = Parser.parse("undo 1");
+		assertEquals(actual, expected);
+	
+		// Random symbols
+		expected = new Command(CommandType.UNDO);
+		actual = Parser.parse("undo akjsdkljas!@#$%^&*()_+~{}|;'<>?;");
+		assertEquals(actual, expected);
+	}
+
+	@Test
+	public void redoCommandTests() {
+	    Command expected, actual;
+	    
+	    // Proper command
+	    expected = new Command(CommandType.REDO);
+	    actual = Parser.parse("redo");
+	    assertEquals(actual, expected);
+	
+	    // Random index
+	    expected = new Command(CommandType.REDO);
+	    actual = Parser.parse("redo 1");
+	    assertEquals(actual, expected);
+	
+	    // Random symbols
+	    expected = new Command(CommandType.REDO);
+	    actual = Parser.parse("redo akjsdkljas!@#$%^&*()_+~{}|;'<>?;");
+	    assertEquals(actual, expected);
+	}
+
+	@Test
+	public void exitCommandTests() {
+        Command expected, actual;
+        
+        // Proper command
+        expected = new Command(CommandType.EXIT);
+        actual = Parser.parse("exit");
+        assertEquals(actual, expected);
+    
+        // Random index
+        expected = new Command(CommandType.EXIT);
+        actual = Parser.parse("exit 1");
+        assertEquals(actual, expected);
+    
+        // Random symbols
+        expected = new Command(CommandType.EXIT);
+        actual = Parser.parse("exit akjsdkljas!@#$%^&*()_+~{}|;'<>?;");
+        assertEquals(actual, expected);
+    }
+
+	@Test
+	public void displayCommandTests() {
+		
+		DateTime now = new DateTime(2013, 10, 5, 20, 0); // saturday 8pm 5/10/13
+		Interval.setNowStub(now);
+		DateToken.setNowStub(now);
+		StateDeadline.setNowStub(now);
+
+        Command expected, actual;
+        
+        // Typos
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.TODO);
+        actual = Parser.parse("display untmed");
+        assertEquals(actual, expected);
+
+        // No mode
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.TODO);
+        actual = Parser.parse("display");
+        assertEquals(actual, expected);
+
+        // Proper commands
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.TODAY);
+        actual = Parser.parse("display today");
+        assertEquals(actual, expected);
+
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.TOMORROW);
+        actual = Parser.parse("display tomorrow");
+        assertEquals(actual, expected);
+
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.DEADLINE);
+        actual = Parser.parse("display deadline");
+        assertEquals(actual, expected);
+
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.TIMED);
+        actual = Parser.parse("display timed");
+        assertEquals(actual, expected);
+
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.TENTATIVE);
+        actual = Parser.parse("display tentative");
+        assertEquals(actual, expected);
+
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.UNTIMED);
+        actual = Parser.parse("display untimed");
+        assertEquals(actual, expected);
+
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.ALL);
+        actual = Parser.parse("display all");
+        assertEquals(actual, expected);
+
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.OVERDUE);
+        actual = Parser.parse("display overdue");
+        assertEquals(actual, expected);
+
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.TODO);
+        actual = Parser.parse("display todo");
+        assertEquals(actual, expected);
+
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.DONE);
+        actual = Parser.parse("display done");
+        assertEquals(actual, expected);
+        
+        // Display date
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.DATE);
+        expected.setDisplayDateTime(now.withTime(0, 0, 0, 0).withDate(2013, 11, 14));
+        actual = Parser.parse("display 14/11");
+        assertEquals(actual, expected);
+        
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.DATE);
+        expected.setDisplayDateTime(now.withTime(0, 0, 0, 0).plusDays(9));
+        actual = Parser.parse("display next monday");
+        assertEquals(actual, expected);
+
+        // Invalid display modes
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.TODO);
+        actual = Parser.parse("display search");
+        assertEquals(actual, expected);
+
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.TODO);
+        actual = Parser.parse("display invalid");
+        assertEquals(actual, expected);
+
+        // Random index
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.TODO);
+        actual = Parser.parse("display 1");
+        assertEquals(actual, expected);
+    
+        // Random symbols
+        expected = new Command(CommandType.DISPLAY);
+        expected.setDisplayMode(DisplayMode.TODO);
+        actual = Parser.parse("display akjsdkljas!@#$%^&*()_+~{}|;'<>?;");
+        assertEquals(actual, expected);
+	}
+	@Test
+	public void clearCommandTests() {
+
+        DateTime now = new DateTime(2013, 10, 5, 20, 0); // saturday 8pm 5/10/13
+        Interval.setNowStub(now);
+        DateToken.setNowStub(now);
+        StateDeadline.setNowStub(now);
+
+		Command expected, actual;
+		
+		// Typos
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.ALL);
+		actual = Parser.parse("clear untmed");
+		assertEquals(actual, expected);
+		
+		// No mode
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.ALL);
+		actual = Parser.parse("clear");
+		assertEquals(actual, expected);
+		
+		// Proper commands
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.DEADLINE);
+		actual = Parser.parse("clear deadline");
+		assertEquals(actual, expected);
+		
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.TIMED);
+		actual = Parser.parse("clear timed");
+		assertEquals(actual, expected);
+		
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.TENTATIVE);
+		actual = Parser.parse("clear tentative");
+		assertEquals(actual, expected);
+		
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.UNTIMED);
+		actual = Parser.parse("clear untimed");
+		assertEquals(actual, expected);
+		
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.ALL);
+		actual = Parser.parse("clear all");
+		assertEquals(actual, expected);
+		
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.OVERDUE);
+		actual = Parser.parse("clear overdue");
+		assertEquals(actual, expected);
+		
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.DONE);
+		actual = Parser.parse("clear done");
+		assertEquals(actual, expected);
+		
+		// Display date
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.DATE);
+		expected.setClearDateTime(now.withTime(0, 0, 0, 0).withDate(2013, 11, 14));
+		actual = Parser.parse("clear 14/11");
+		assertEquals(actual, expected);
+		
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.DATE);
+		expected.setClearDateTime(now.withTime(0, 0, 0, 0).plusDays(9));
+		actual = Parser.parse("clear next monday");
+		assertEquals(actual, expected);
+		
+		// Invalid clear modes
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.ALL);
+		actual = Parser.parse("clear invalid");
+		assertEquals(actual, expected);
+		
+		// Random index
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.ALL);
+		actual = Parser.parse("clear 1");
+		assertEquals(actual, expected);
+		
+		// Random symbols
+		expected = new Command(CommandType.CLEAR);
+		expected.setClearMode(ClearMode.ALL);
+		actual = Parser.parse("clear akjsdkljas!@#$%^&*()_+~{}|;'<>?;");
+		assertEquals(actual, expected);
+	}
+	@Test
+	public void helpCommandTests() {
+		Command expected, actual;
+		
+		// Invalid types
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.INVALID);
+		actual = Parser.parse("help invalid");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.INVALID);
+		actual = Parser.parse("help werwwqeeqweqweqweq");
+		assertEquals(actual, expected);
+
+		// Typo correction
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.ADD);
+		actual = Parser.parse("help aww");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.DELETE);
+		actual = Parser.parse("help del");
+		assertEquals(actual, expected);
+		
+		// Proper commands
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.ADD);
+		actual = Parser.parse("help add");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.EDIT);
+		actual = Parser.parse("help edit");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.DISPLAY);
+		actual = Parser.parse("help display");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.DELETE);
+		actual = Parser.parse("help delete");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.CLEAR);
+		actual = Parser.parse("help clear");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.EXIT);
+		actual = Parser.parse("help exit");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.GOTO);
+		actual = Parser.parse("help goto");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.SORT);
+		actual = Parser.parse("help sort");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.SEARCH);
+		actual = Parser.parse("help search");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.UNDO);
+		actual = Parser.parse("help undo");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.FINALISE);
+		actual = Parser.parse("help finalise");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.HELP);
+		actual = Parser.parse("help help");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.DONE);
+		actual = Parser.parse("help done");
+		assertEquals(actual, expected);
+
+		expected = new Command(CommandType.HELP);
+		expected.setHelpCommand(CommandType.REDO);
+		actual = Parser.parse("help redo");
+		assertEquals(actual, expected);
 	}
 }
