@@ -295,7 +295,7 @@ public class Constants {
 
     public static final boolean PARSER_DEBUG_PRINT_LEXER_TOKENS = false;
     public static final boolean PARSER_DEBUG_PRINT_MATCHED_COMMAND_TYPE = false;
-    public static final boolean PARSER_DEBUG_PRINT_PARSED_COMMAND = true;
+    public static final boolean PARSER_DEBUG_PRINT_PARSED_COMMAND = false;
     public static final int PARSER_FUZZY_MATCH_THRESHOLD = 3;
     
     public static final String PARSER_ASSERTION_ERROR_CANNOT_PARSE_DATE_STRING = "Cannot parse date string";
