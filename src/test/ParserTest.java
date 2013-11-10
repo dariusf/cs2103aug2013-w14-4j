@@ -376,7 +376,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("do schoolwork in school");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.MONDAY).withTime(13, 0, 0, 0);
+		start = now.plusDays(2).withTime(13, 0, 0, 0); // the coming monday
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -387,7 +387,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("do schoolwork or die");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.MONDAY).withTime(13, 0, 0, 0);
+		start = now.plusDays(2).withTime(13, 0, 0, 0); // the coming monday
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -546,54 +546,257 @@ public class ParserTest {
 		assertEquals(actual, expected);
 
 		// Days of the week
+		// (Note: it's Saturday today)
+		// (This) Sunday
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.TUESDAY).withTime(13, 0, 0, 0);
+		start = now.plusDays(1).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = Parser.parse("add go home at 13:00 on sunday");
+		assertEquals(actual, expected);
+		actual = Parser.parse("add go home at 13:00 this sunday");
+		assertEquals(actual, expected);
+		
+		// (This) Monday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusDays(2).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = Parser.parse("add go home at 13:00 on monday");
+		assertEquals(actual, expected);
+		actual = Parser.parse("add go home at 13:00 this monday");
+		assertEquals(actual, expected);
+
+		// (This) Tuesday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusDays(3).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
 		actual = Parser.parse("add go home at 13:00 on tuesday");
 		assertEquals(actual, expected);
-		
-		// this keyword
-		expected = new Command(CommandType.ADD);
-		expected.setDescription("go home");
-		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.TUESDAY).withTime(13, 0, 0, 0);
-		end = start.plusHours(1);
-		intervals.add(new Interval(start, end));
-		expected.setIntervals(intervals);
 		actual = Parser.parse("add go home at 13:00 this tuesday");
 		assertEquals(actual, expected);
-		
-		// last keyword
+
+		// (This) Wednesday
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.TUESDAY).withTime(13, 0, 0, 0).minusWeeks(1);
+		start = now.plusDays(4).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
-		actual = Parser.parse("add go home at 13:00 last tuesday");
+		actual = Parser.parse("add go home at 13:00 on wednesday");
+		assertEquals(actual, expected);
+		actual = Parser.parse("add go home at 13:00 this wednesday");
 		assertEquals(actual, expected);
 		
-		// next keyword
+		// (This) Thursday
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.MONDAY).withTime(13, 0, 0, 0).plusWeeks(1);
+		start = now.plusDays(5).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = Parser.parse("add go home at 13:00 on thursday");
+		assertEquals(actual, expected);
+		actual = Parser.parse("add go home at 13:00 this thursday");
+		assertEquals(actual, expected);
+		
+		// (This) Friday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusDays(6).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = Parser.parse("add go home at 13:00 on friday");
+		assertEquals(actual, expected);
+		actual = Parser.parse("add go home at 13:00 this friday");
+		assertEquals(actual, expected);
+		
+		// (This) Saturday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusDays(7).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = Parser.parse("add go home at 13:00 on saturday");
+		assertEquals(actual, expected);
+		actual = Parser.parse("add go home at 13:00 this saturday");
+		assertEquals(actual, expected);
+		
+		// Next Saturday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusDays(7).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = Parser.parse("add go home at 13:00 next saturday");
+		assertEquals(actual, expected);
+		
+		// Next Sunday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusDays(8).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = Parser.parse("add go home at 13:00 next sunday");
+		assertEquals(actual, expected);
+		
+		// Next Monday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusDays(9).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
 		actual = Parser.parse("add go home at 13:00 next monday");
 		assertEquals(actual, expected);
+		
+		// Next Tuesday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusDays(10).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = Parser.parse("add go home at 13:00 next tuesday");
+		assertEquals(actual, expected);
+		
+		// Next Wednesday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusDays(11).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = Parser.parse("add go home at 13:00 next wednesday");
+		assertEquals(actual, expected);
+		
+		// Next Thursday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusDays(12).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = Parser.parse("add go home at 13:00 next thursday");
+		assertEquals(actual, expected);
+		
+		// Next Friday
+		expected = new Command(CommandType.ADD);
+		expected.setDescription("go home");
+		intervals = new ArrayList<>();
+		start = now.plusDays(13).withTime(13, 0, 0, 0);
+		end = start.plusHours(1);
+		intervals.add(new Interval(start, end));
+		expected.setIntervals(intervals);
+		actual = Parser.parse("add go home at 13:00 next friday");
+		assertEquals(actual, expected);
 
-		// Wacky case
+        // Last Saturday
+        expected = new Command(CommandType.ADD);
+        expected.setDescription("go home");
+        intervals = new ArrayList<>();
+        start = now.minusDays(7).withTime(13, 0, 0, 0);
+        end = start.plusHours(1);
+        intervals.add(new Interval(start, end));
+        expected.setIntervals(intervals);
+        actual = Parser.parse("add go home at 13:00 last saturday");
+        assertEquals(actual, expected);
+        
+        // Last Sunday
+        expected = new Command(CommandType.ADD);
+        expected.setDescription("go home");
+        intervals = new ArrayList<>();
+        start = now.minusDays(6).withTime(13, 0, 0, 0);
+        end = start.plusHours(1);
+        intervals.add(new Interval(start, end));
+        expected.setIntervals(intervals);
+        actual = Parser.parse("add go home at 13:00 last sunday");
+        assertEquals(actual, expected);
+        
+        // Last Monday
+        expected = new Command(CommandType.ADD);
+        expected.setDescription("go home");
+        intervals = new ArrayList<>();
+        start = now.minusDays(5).withTime(13, 0, 0, 0);
+        end = start.plusHours(1);
+        intervals.add(new Interval(start, end));
+        expected.setIntervals(intervals);
+        actual = Parser.parse("add go home at 13:00 last monday");
+        assertEquals(actual, expected);
+        
+        // Last Tuesday
+        expected = new Command(CommandType.ADD);
+        expected.setDescription("go home");
+        intervals = new ArrayList<>();
+        start = now.minusDays(4).withTime(13, 0, 0, 0);
+        end = start.plusHours(1);
+        intervals.add(new Interval(start, end));
+        expected.setIntervals(intervals);
+        actual = Parser.parse("add go home at 13:00 last tuesday");
+        assertEquals(actual, expected);
+        
+        // Last Wednesday
+        expected = new Command(CommandType.ADD);
+        expected.setDescription("go home");
+        intervals = new ArrayList<>();
+        start = now.minusDays(3).withTime(13, 0, 0, 0);
+        end = start.plusHours(1);
+        intervals.add(new Interval(start, end));
+        expected.setIntervals(intervals);
+        actual = Parser.parse("add go home at 13:00 last wednesday");
+        assertEquals(actual, expected);
+        
+        // Last Thursday
+        expected = new Command(CommandType.ADD);
+        expected.setDescription("go home");
+        intervals = new ArrayList<>();
+        start = now.minusDays(2).withTime(13, 0, 0, 0);
+        end = start.plusHours(1);
+        intervals.add(new Interval(start, end));
+        expected.setIntervals(intervals);
+        actual = Parser.parse("add go home at 13:00 last thursday");
+        assertEquals(actual, expected);
+        
+        // Last Friday
+        expected = new Command(CommandType.ADD);
+        expected.setDescription("go home");
+        intervals = new ArrayList<>();
+        start = now.minusDays(1).withTime(13, 0, 0, 0);
+        end = start.plusHours(1);
+        intervals.add(new Interval(start, end));
+        expected.setIntervals(intervals);
+        actual = Parser.parse("add go home at 13:00 last friday");
+        assertEquals(actual, expected);
+
+		// Wacky capitalization
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("gO hOmE");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.THURSDAY).withTime(13, 0, 0, 0);
+		start = now.withDayOfWeek(DateTimeConstants.THURSDAY).plusWeeks(1).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -604,7 +807,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.THURSDAY).withTime(13, 0, 0, 0);
+		start = now.withDayOfWeek(DateTimeConstants.THURSDAY).plusWeeks(1).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
@@ -615,7 +818,7 @@ public class ParserTest {
 		expected = new Command(CommandType.ADD);
 		expected.setDescription("go home nes");
 		intervals = new ArrayList<>();
-		start = now.withDayOfWeek(DateTimeConstants.WEDNESDAY).withTime(13, 0, 0, 0);
+		start = now.withDayOfWeek(DateTimeConstants.WEDNESDAY).plusWeeks(1).withTime(13, 0, 0, 0);
 		end = start.plusHours(1);
 		intervals.add(new Interval(start, end));
 		expected.setIntervals(intervals);
