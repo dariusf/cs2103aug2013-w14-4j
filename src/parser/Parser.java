@@ -362,7 +362,7 @@ public class Parser {
             }
             else if (currentToken instanceof DateToken){
             	command.setClearMode(ClearMode.DATE);
-                command.setClearDateTime(((DateToken) currentToken).toDateTime());
+                command.setClearDateTime(((DateToken) currentToken).toDateTime().withTime(0, 0, 0, 0));
             } else {
                 command.setClearMode(ClearMode.ALL);
             }
@@ -387,7 +387,7 @@ public class Parser {
 			}
 			else if (currentToken instanceof DateToken){
 				command.setDisplayMode(DisplayMode.DATE);
-				command.setDisplayDateTime(((DateToken) currentToken).toDateTime());
+				command.setDisplayDateTime(((DateToken) currentToken).toDateTime().withTime(0, 0, 0, 0));
 			} else {
 				command.setDisplayMode(DisplayMode.TODO);
 			}
