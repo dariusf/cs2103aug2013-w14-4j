@@ -1,5 +1,6 @@
 package parser;
 
+import common.Constants;
 import common.Interval;
 
 //@author A0097282W
@@ -21,7 +22,7 @@ class StateDefault implements State {
 			// Do not advance
 		}
 		else if (t instanceof WordToken) {
-			if (t.contents.equals("by") || t.contents.equals("before")) {
+			if (t.contents.equals(Constants.PARSER_KEYWORD_BY) || t.contents.equals(Constants.PARSER_KEYWORD_BEFORE)) {
 				parser.parseStates.push(new StateDeadline(parser, this, t.contents));
 			}
 			else {

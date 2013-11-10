@@ -36,7 +36,7 @@ public class Parser {
 
 	private static void test(String input) {
 		Command command = Parser.parse(input);
-		if (Constants.PRINT_PARSED_COMMAND) System.out.println(command.toString());
+		if (Constants.PARSER_DEBUG_PRINT_PARSED_COMMAND) System.out.println(command.toString());
 		logger.log(Level.INFO, command.toString());
 	}
 
@@ -61,8 +61,8 @@ public class Parser {
 	DateTime deadline = null;
 	ArrayList<Interval> intervals = new ArrayList<>();
 	ArrayList<String> tags = new ArrayList<>();
-	int taskIndex = -1;
-	int timeslotIndex = -1;
+	int taskIndex = Constants.INVALID_INDEX;
+	int timeslotIndex = Constants.INVALID_INDEX;
 
 	private Command parseInput(String userInput) {
 
@@ -80,16 +80,16 @@ public class Parser {
 
 	private void tokenize(String userInput) throws IllegalDateException {
 		try {
-			Lexer lexer = new Lexer(new ByteArrayInputStream(userInput.getBytes("UTF-8")));
+			Lexer lexer = new Lexer(new ByteArrayInputStream(userInput.getBytes(Constants.PARSER_LEXER_INPUT_ENCODING)));
 
 			Token next;
-			if (Constants.PRINT_LEXER_TOKENS) System.out.println(Constants.PARSER_LOG_LEXER_TOKENS);
+			if (Constants.PARSER_DEBUG_PRINT_LEXER_TOKENS) System.out.println(Constants.PARSER_LOG_LEXER_TOKENS);
 			logger.log(Level.INFO, Constants.PARSER_LOG_LEXER_TOKENS);
 			
 			ArrayList<Token> tokens = new ArrayList<>();
 			while ((next = lexer.nextToken()) != null) {
 				tokens.add(next);
-				if (Constants.PRINT_LEXER_TOKENS) System.out.println(next.toString());
+				if (Constants.PARSER_DEBUG_PRINT_LEXER_TOKENS) System.out.println(next.toString());
 				logger.log(Level.INFO, next.toString());
 			}
 
@@ -120,7 +120,7 @@ public class Parser {
 		}
 
 		String matchedCommandMessage = String.format(Constants.PARSER_LOG_MATCHED_COMMAND, (exactMatch ? Constants.PARSER_LOG_EXACT : Constants.PARSER_LOG_FUZZY), commandType);
-		if (Constants.PRINT_MATCHED_COMMAND_TYPE) System.out.println(matchedCommandMessage);
+		if (Constants.PARSER_DEBUG_PRINT_MATCHED_COMMAND_TYPE) System.out.println(matchedCommandMessage);
 		logger.log(Level.INFO, matchedCommandMessage);
 		
 		tokens.nextToken();
@@ -207,7 +207,7 @@ public class Parser {
 		
 		int threshold = Constants.PARSER_FUZZY_MATCH_THRESHOLD;
 		int minimum = Integer.MAX_VALUE;
-		int minimumIndex = -1;
+		int minimumIndex = Constants.INVALID_INDEX;
 
 		// Find the smallest distance (for the best-matching keyword) while we're at it
 		
@@ -222,7 +222,7 @@ public class Parser {
 
 		CommandType commandType;
 
-		if (minimumIndex == -1) {
+		if (minimumIndex == Constants.INVALID_INDEX) {
 			commandType = CommandType.INVALID;
 		}
 		else {
@@ -232,7 +232,7 @@ public class Parser {
 	}
 		
 	private Command createFinaliseCommand() {
-		int whichTask = -1, whichSlot = -1;
+		int whichTask = Constants.INVALID_INDEX, whichSlot = Constants.INVALID_INDEX;
 		
 		Command command = new Command(CommandType.FINALISE);
 
