@@ -199,8 +199,9 @@ public class ActiveFeedbackLogic {
 	private void finaliseTaskFeedback(Command executedCommand,
 			int taskIndex) {
 		highlightTaskFeedback(taskIndex);
-		if (executedCommand.getTimeslotIndex() > 0) {
-			displayLogic.getCompositeGlobal(taskIndex).highlightLine(
+		TaskComposite currentComposite = displayLogic.getCompositeGlobal(taskIndex);
+		if (executedCommand.getTimeslotIndex() > 0 && currentComposite.isTentativeTaskComposite()) {
+			currentComposite.highlightLine(
 					executedCommand.getTimeslotIndex());
 		}
 	}
