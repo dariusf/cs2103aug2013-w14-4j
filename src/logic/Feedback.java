@@ -9,8 +9,8 @@ import common.DisplayMode;
 public class Feedback {
 	private CommandType feedbackCommand = null;
 	private int taskIndex = 0; 
-	private DisplayMode displayMode; 
-	private DateTime displayDate;
+	private DisplayMode displayMode = null; 
+	private DateTime displayDate = null;
 
 	private int statusCode = 0;
 	private String statusMessage = null;
@@ -54,7 +54,7 @@ public class Feedback {
 	}
 	
 	public void setHelpCommandType(CommandType command) {
-		// TODO check that it's a valid command here.
+		assert command != null;
 		helpCommandType = command;
 	}
 	
