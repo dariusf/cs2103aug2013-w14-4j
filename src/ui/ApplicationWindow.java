@@ -141,6 +141,7 @@ public class ApplicationWindow {
 		defineWindowButton();
 		enableNativeHook();
 		setWelcomePage();
+		setWelcomeFeedback();
 
 		helpDialog = new HelpDialog(shell);
 
@@ -193,8 +194,11 @@ public class ApplicationWindow {
 		displayFeedback.setEnabled(false);
 		displayFeedback.setBounds(35, 558, 412, 40);
 		displayFeedback.setFont(displayFeedbackFont);
-		displayFeedback.setText(displayWelcomeMessage());
+	}
+
+	private void setWelcomeFeedback() {
 		displayFeedback.setForeground(purple);
+		displayFeedback.setText(displayWelcomeMessage());
 	}
 
 	private void defineDisplayTitle() {
