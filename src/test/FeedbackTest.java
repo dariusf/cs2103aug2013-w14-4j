@@ -61,8 +61,8 @@ public class FeedbackTest {
 		
 		testFeedback.setCommand(CommandType.GOTO);
 		int expectedPageNumber = 2;
-		testFeedback.setGotoPage(expectedPageNumber);
-		assertEquals(expectedPageNumber, testFeedback.getGotoPage());
+		testFeedback.setPageNumber(expectedPageNumber);
+		assertEquals(expectedPageNumber, testFeedback.getPageNumber());
 		assertEquals(String.format(Constants.FEEDBACK_SUCCESS_GOTO, expectedPageNumber), testFeedback.toString());
 	}
 

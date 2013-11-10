@@ -15,7 +15,7 @@ public class Feedback {
 	private int statusCode = 0;
 	private String statusMessage = null;
 	private boolean isError = false;
-	private int gotoPage = 0;
+	private int pageNumber = 0;
 	private CommandType helpCommandType = null;
 	private Task addedTask = null;
 
@@ -54,7 +54,6 @@ public class Feedback {
 	}
 	
 	public void setHelpCommandType(CommandType command) {
-		assert command != null;
 		helpCommandType = command;
 	}
 	
@@ -313,9 +312,9 @@ public class Feedback {
 	
 	private String gotoFeedback() {
 		if (statusCode == Constants.SC_SUCCESS) {
-			statusMessage = String.format(Constants.FEEDBACK_SUCCESS_GOTO, gotoPage);
+			statusMessage = String.format(Constants.FEEDBACK_SUCCESS_GOTO, pageNumber);
 		} else if (statusCode == Constants.SC_INVALID_PAGE_INDEX) {
-			statusMessage = "Error: " + gotoPage + " is not a valid page!";
+			statusMessage = "Error: " + pageNumber + " is not a valid page!";
 		} else {
 			statusMessage = String.format(Constants.MSG_SHOULD_NOT_HAPPEN, Constants.COMMAND_GOTO);
 		}
@@ -339,12 +338,12 @@ public class Feedback {
 		this.displayDate = displayDate;
 	}
 
-	public int getGotoPage() {
-		return gotoPage;
+	public int getPageNumber() {
+		return pageNumber;
 	}
 
-	public void setGotoPage(int gotoPage) {
-		this.gotoPage = gotoPage;
+	public void setPageNumber(int pageNumber) {
+		this.pageNumber = pageNumber;
 	}
 
 	public Task getAddedTask() {
