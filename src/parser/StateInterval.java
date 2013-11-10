@@ -2,6 +2,7 @@ package parser;
 
 import java.util.ArrayList;
 
+import common.Constants;
 import common.Interval;
 
 
@@ -40,7 +41,7 @@ class StateInterval implements State {
 			this.parser.tokens.nextToken();
 		}
 		else if (t instanceof WordToken) {
-			if (t.contents.equalsIgnoreCase("or")) {
+			if (t.contents.equalsIgnoreCase(Constants.PARSER_KEYWORD_OR)) {
 				finaliseInterval();
 				foundDelimiter = false;
 				trailingOr = true;
@@ -62,12 +63,12 @@ class StateInterval implements State {
 		return !(token instanceof DateToken
 				|| token instanceof TimeToken
 				|| (token instanceof WordToken && tokenIsIntervalDelimiter(token))
-				|| (token instanceof WordToken && token.contents.equalsIgnoreCase("or")));
+				|| (token instanceof WordToken && token.contents.equalsIgnoreCase(Constants.PARSER_KEYWORD_OR)));
 	}
 		
 	public static boolean tokenIsIntervalDelimiter(Token token) {
 		String contents = token.contents;
-		return contents.equalsIgnoreCase("to") || contents.equalsIgnoreCase("till") || contents.equalsIgnoreCase("until");
+		return contents.equalsIgnoreCase(Constants.PARSER_KEYWORD_TO) || contents.equalsIgnoreCase(Constants.PARSER_KEYWORD_TILL) || contents.equalsIgnoreCase(Constants.PARSER_KEYWORD_UNTIL);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ class StateInterval implements State {
 		finaliseInterval();
 		if (parent != null) { // this state may be used standalone
 			if (trailingOr) {
-				parent.words.append("or ");
+				parent.words.append(Constants.PARSER_KEYWORD_OR + " ");
 			}
 			else if (trailingDelimiter) {
 				parent.words.append(delimiter + " ");
