@@ -12,7 +12,8 @@ import common.Constants;
 //@author A0097282W
 public class DateToken extends Token {
         
-        private static DateTime nowStub = null; // for testing purposes
+
+		private static DateTime nowStub = null; // for testing purposes
 
         private static Pattern standardDate = Pattern.compile(Constants.PARSER_REGEX_STANDARD_DATE, Pattern.CASE_INSENSITIVE);
         private static Pattern relativeDate = Pattern.compile(Constants.PARSER_REGEX_RELATIVE_DATE, Pattern.CASE_INSENSITIVE);
@@ -285,10 +286,10 @@ public class DateToken extends Token {
                         valid = day >= 1 && day <= 30;
                         break;
                 default:
-                        assert false : "Invalid month of year " + month;
+                        assert false : String.format(Constants.PARSER_ASSERTION_ERROR_INVALID_MONTH_OF_YEAR, month);
                 }
                 
-                if (!valid) throw new IllegalDateException("Invalid day " + day + " of month " + month);
+                if (!valid) throw new IllegalDateException(String.format(Constants.PARSER_EXCEPTION_INVALID_DAY_D_OF_MONTH, day, month));
                 
                 this.day = day;
                 this.month = month;
@@ -347,7 +348,7 @@ public class DateToken extends Token {
             return 12;
         default:
             assert false : Constants.PARSER_ASSERTION_ERROR_INVALID_MONTH;
-                return -1;
+            return Constants.INVALID_INDEX;
         }
     }
     

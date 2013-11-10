@@ -10,7 +10,9 @@ public class Constants {
 
 	public static final String WELCOME_PAGE_DISPLAY_COMMAND = "display";
 
-	public static final String MSG_AVAILABLE_COMMANDS = "Commands available: add|edit|display|sort|search\nfinalise|help|goto|undo|redo|clear|done|exit";
+    public static final int INVALID_INDEX = -1;
+
+    public static final String MSG_AVAILABLE_COMMANDS = "Commands available: add|edit|display|sort|search\nfinalise|help|goto|undo|redo|clear|done|exit";
 	public static final String MSG_SHOULD_NOT_HAPPEN = "%1$s error: Something has gone wrong; please contact the developers";
 	public static final String MSG_DEFAULT = "default";
 	public static final String MSG_MARK_AS_DONE = "mark as done";
@@ -290,89 +292,121 @@ public class Constants {
     public static final String CONTEXTUAL_HELP_UNDO = "Undo reverts the last operation on the task list.";
     public static final String CONTEXTUAL_HELP_REDO = "Redo reverts the last undo.";
     public static final String CONTEXTUAL_HELP_EXIT = "Exit quits the application.";
+
+    public static final boolean PARSER_DEBUG_PRINT_LEXER_TOKENS = false;
+    public static final boolean PARSER_DEBUG_PRINT_MATCHED_COMMAND_TYPE = false;
+    public static final boolean PARSER_DEBUG_PRINT_PARSED_COMMAND = true;
+    public static final int PARSER_FUZZY_MATCH_THRESHOLD = 3;
     
-    public static final int INVALID_INDEX = -1;
-	public static final String PARSER_ASSERTION_ERROR_NO_SUCH_COMMAND = "No such command type";
-	public static final String PARSER_LOG_FUZZY = "fuzzy";
-	public static final String PARSER_LOG_EXACT = "exact";
-	public static final String PARSER_LOG_MATCHED_COMMAND = "Command (%s): %s";
-	public static final String PARSER_LOG_ERROR_GETTING_NEXT_TOKEN = "Error getting next token!";
-	public static final String PARSER_LOG_LEXER_TOKENS = "\nLexer tokens:";
-	public static final boolean PRINT_LEXER_TOKENS = false;
-	public static final boolean PRINT_MATCHED_COMMAND_TYPE = false;
-	public static final boolean PRINT_PARSED_COMMAND = true;
-	public static final int PARSER_FUZZY_MATCH_THRESHOLD = 3;
-	public static final String PARSER_TOKEN_PREFIX_KEYWORD = "Keyword ";
     public static final String PARSER_ASSERTION_ERROR_CANNOT_PARSE_DATE_STRING = "Cannot parse date string";
-    public static final String PARSER_DATE_SUNDAY = "sunday";
-    public static final String PARSER_DATE_SUN = "sun";
-    public static final String PARSER_DATE_SATURDAY = "saturday";
-    public static final String PARSER_DATE_SAT = "sat";
-    public static final String PARSER_DATE_FRIDAY = "friday";
-    public static final String PARSER_DATE_FRI = "fri";
-    public static final String PARSER_DATE_THURSDAY = "thursday";
-    public static final String PARSER_DATE_THURS = "thurs";
-    public static final String PARSER_DATE_THU = "thu";
-    public static final String PARSER_DATE_WEDNESDAY = "wednesday";
-    public static final String PARSER_DATE_WED = "wed";
-    public static final String PARSER_DATE_TUESDAY = "tuesday";
-    public static final String PARSER_DATE_TUE = "tue";
-    public static final String PARSER_DATE_TUES = "tues";
-    public static final String PARSER_DATE_MONDAY = "monday";
-    public static final String PARSER_DATE_MON = "mon";
+    public static final String PARSER_ASSERTION_ERROR_DATE_TOKEN_CONTENTS_DID_NOT_MATCH = "Date token contents did not match anything; possibly a regex bug in either DateToken or lexer";
+    public static final String PARSER_ASSERTION_ERROR_DATETOKEN_LOGIC = "Error in DateToken logic";
+    public static final String PARSER_ASSERTION_ERROR_DAY_1_31 = "Day %d should be within [1, 31]";
+    public static final String PARSER_ASSERTION_ERROR_INVALID_DURATION = "Invalid duration %s; possibly a regex bug in either DateToken or lexer";
     public static final String PARSER_ASSERTION_ERROR_INVALID_MONTH = "Invalid month";
-    public static final String PARSER_DATE_DEC = "dec";
-    public static final String PARSER_DATE_DECEMBER = "december";
-    public static final String PARSER_DATE_NOV = "nov";
-    public static final String PARSER_DATE_NOVEMBER = "november";
-    public static final String PARSER_DATE_OCT = "oct";
-    public static final String PARSER_DATE_OCTOBER = "october";
-    public static final String PARSER_DATE_SEP = "sep";
-    public static final String PARSER_DATE_SEPTEMBER = "september";
+    public static final String PARSER_ASSERTION_ERROR_INVALID_MONTH_OF_YEAR = "Invalid month of year %d";
+    public static final String PARSER_ASSERTION_ERROR_MONTH_1_12 = "Month %d should be within [1, 12]";
+    public static final String PARSER_ASSERTION_ERROR_NO_SUCH_COMMAND = "No such command type";
+    public static final String PARSER_ASSERTION_ERROR_NO_TOKENS_REMAINING = "No tokens remaining";
+    public static final String PARSER_ASSERTION_ERROR_TIMETOKEN_CONTENTS_DID_NOT_MATCH_ANYTHING = "Time token contents did not match anything; possibly a regex bug in either DateToken or lexer";
+    public static final String PARSER_ASSERTION_ERROR_YEAR_4_DIGITS = "Year %d should only be 4 digits long";
+    
+    public static final String PARSER_DATE_APR = "apr";
+    public static final String PARSER_DATE_APRIL = "april";
     public static final String PARSER_DATE_AUG = "aug";
     public static final String PARSER_DATE_AUGUST = "august";
+    public static final String PARSER_DATE_CHRISTMAS = "christmas";
+    public static final String PARSER_DATE_DEC = "dec";
+    public static final String PARSER_DATE_DECEMBER = "december";
+    public static final String PARSER_DATE_FEB = "feb";
+    public static final String PARSER_DATE_FEBRUARY = "february";
+    public static final String PARSER_DATE_FORTNIGHT = "fortnight";
+    public static final String PARSER_DATE_FRI = "fri";
+    public static final String PARSER_DATE_FRIDAY = "friday";
+    public static final String PARSER_DATE_HALLOWEEN = "halloween";
+    public static final String PARSER_DATE_JAN = "jan";
+    public static final String PARSER_DATE_JANUARY = "january";
     public static final String PARSER_DATE_JUL = "jul";
     public static final String PARSER_DATE_JULY = "july";
     public static final String PARSER_DATE_JUN = "jun";
     public static final String PARSER_DATE_JUNE = "june";
-    public static final String PARSER_DATE_MAY = "may";
-    public static final String PARSER_DATE_APR = "apr";
-    public static final String PARSER_DATE_APRIL = "april";
     public static final String PARSER_DATE_MAR = "mar";
     public static final String PARSER_DATE_MARCH = "march";
-    public static final String PARSER_DATE_FEB = "feb";
-    public static final String PARSER_DATE_FEBRUARY = "february";
-    public static final String PARSER_DATE_JAN = "jan";
-    public static final String PARSER_DATE_JANUARY = "january";
-    public static final String PARSER_ASSERTION_ERROR_MONTH_1_12 = "Month %d should be within [1, 12]";
-    public static final String PARSER_ASSERTION_ERROR_DAY_1_31 = "Day %d should be within [1, 31]";
-    public static final String PARSER_ASSERTION_ERROR_YEAR_4_DIGITS = "Year %d should only be 4 digits long";
-    public static final String PARSER_TOKEN_PREFIX_DATETOKEN = "Date ";
-    public static final String PARSER_DATESTRING = "%d/%d/%s";
+    public static final String PARSER_DATE_MAY = "may";
+    public static final String PARSER_DATE_MON = "mon";
+    public static final String PARSER_DATE_MONDAY = "monday";
+    public static final String PARSER_DATE_MONTH = "month";
+    public static final String PARSER_DATE_NOV = "nov";
+    public static final String PARSER_DATE_NOVEMBER = "november";
+    public static final String PARSER_DATE_OCT = "oct";
+    public static final String PARSER_DATE_OCTOBER = "october";
     public static final String PARSER_DATE_QUALIFIER_LAST = "last";
     public static final String PARSER_DATE_QUALIFIER_NEXT = "next";
-    public static final String PARSER_ASSERTION_ERROR_DATETOKEN_LOGIC = "Error in DateToken logic";
-    public static final String PARSER_DATE_CHRISTMAS = "christmas";
-    public static final String PARSER_DATE_HALLOWEEN = "halloween";
-    public static final String PARSER_DATE_TMRW = "tmrw";
+    public static final String PARSER_DATE_SAT = "sat";
+    public static final String PARSER_DATE_SATURDAY = "saturday";
+    public static final String PARSER_DATE_SEP = "sep";
+    public static final String PARSER_DATE_SEPTEMBER = "september";
+    public static final String PARSER_DATE_SUN = "sun";
+    public static final String PARSER_DATE_SUNDAY = "sunday";
+    public static final String PARSER_DATE_THU = "thu";
+    public static final String PARSER_DATE_THURS = "thurs";
+    public static final String PARSER_DATE_THURSDAY = "thursday";
     public static final String PARSER_DATE_TMR = "tmr";
+    public static final String PARSER_DATE_TMRW = "tmrw";
+    public static final String PARSER_DATE_TODAY = "today";
     public static final String PARSER_DATE_TOMORROW = "tomorrow";
     public static final String PARSER_DATE_TONIGHT = "tonight";
-    public static final String PARSER_DATE_TODAY = "today";
-    public static final String PARSER_DATE_YESTERDAY = "yesterday";
-    public static final String PARSER_ASSERTION_ERROR_INVALID_DURATION = "Invalid duration %s; possibly a regex bug in either DateToken or lexer";
+    public static final String PARSER_DATE_TUE = "tue";
+    public static final String PARSER_DATE_TUES = "tues";
+    public static final String PARSER_DATE_TUESDAY = "tuesday";
+    public static final String PARSER_DATE_WED = "wed";
+    public static final String PARSER_DATE_WEDNESDAY = "wednesday";
     public static final String PARSER_DATE_WEEK = "week";
-    public static final String PARSER_DATE_FORTNIGHT = "fortnight";
-    public static final String PARSER_DATE_MONTH = "month";
     public static final String PARSER_DATE_YEAR = "year";
-    public static final String PARSER_ASSERTION_ERROR_DATE_TOKEN_CONTENTS_DID_NOT_MATCH = "Date token contents did not match anything; possibly a regex bug in either DateToken or lexer";
+    public static final String PARSER_DATE_YESTERDAY = "yesterday";
+    public static final String PARSER_DATESTRING = "%d/%d/%s";
+    
+    public static final String PARSER_EXCEPTION_INVALID_DAY_D_OF_MONTH = "Invalid day %d of month %d";
+    
+    public static final String PARSER_KEYWORD_BEFORE = "before";
+    public static final String PARSER_KEYWORD_BY = "by";
+    public static final String PARSER_KEYWORD_OR = "or";
+    public static final String PARSER_KEYWORD_TILL = "till";
+    public static final String PARSER_KEYWORD_TO = "to";
+    public static final String PARSER_KEYWORD_UNTIL = "until";
+    
+    public static final String PARSER_LEXER_INPUT_ENCODING = "UTF-8";
+    
+    public static final String PARSER_LOG_ERROR_GETTING_NEXT_TOKEN = "Error getting next token!";
+    public static final String PARSER_LOG_EXACT = "exact";
+    public static final String PARSER_LOG_FUZZY = "fuzzy";
+    public static final String PARSER_LOG_LEXER_TOKENS = "\nLexer tokens:";
+    public static final String PARSER_LOG_MATCHED_COMMAND = "Command (%s): %s";
+    
+    public static final String PARSER_REGEX_ALIAS_DATE = "(yesterday|today|tonight|tomorrow|tmrw|tmr|halloween|christmas)";
+    public static final String PARSER_REGEX_ALIAS_TIME = "(midnight|noon|morning|afternoon|evening)";
+    public static final String PARSER_REGEX_MIXED_DATE = "((0?[1-9]|[12][0-9]|3[01])[ ]*(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)[ ]*((19|20)?[0-9][0-9])?)";
+    public static final String PARSER_REGEX_RELATIVE_DATE = "(next[ ]+)(week|year|month|fortnight)";
+    public static final String PARSER_REGEX_RELATIVE_DAY_DATE = "((this|next|last)[ ]+)?(((mon|tues|wednes|thurs|fri|satur|sun)day)|mon|tues|tue|wed|thurs|thu|fri|sat|sun)";
+    public static final String PARSER_REGEX_STANDARD_DATE = "(0?[1-9]|[12][0-9]|3[01])[-/](1[012]|0?[1-9])([-/]((19|20)?[0-9][0-9]))?";
+    public static final String PARSER_REGEX_TIME = "(((1[012]|[1-9])([:.]([0-5][0-9]))?[ ]*(am|pm))|((2[0-3]|[01]?[0-9])[:.]?([0-5][0-9])))";
+    
+    public static final String PARSER_TIME_AFTERNOON = "afternoon";
+    public static final String PARSER_TIME_EVENING = "evening";
+    public static final String PARSER_TIME_MIDNIGHT = "midnight";
+    public static final String PARSER_TIME_MORNING = "morning";
+    public static final String PARSER_TIME_NOON = "noon";
+    public static final String PARSER_TIME_PERIOD_AM = "am";
+    public static final String PARSER_TIME_PERIOD_PM = "pm";
+    public static final String PARSER_TIMESTRING = "%d:%s %s";
+    
+    public static final String PARSER_TOKEN_PREFIX_DATETOKEN = "Date ";
+    public static final String PARSER_TOKEN_PREFIX_KEYWORD = "Keyword ";
+    public static final String PARSER_TOKEN_PREFIX_TAG = "Tag ";
+    public static final String PARSER_TOKEN_PREFIX_TIME = "Time ";
+    public static final String PARSER_TOKEN_PREFIX_WORD = "Word ";
 
-	public static final String PARSER_REGEX_STANDARD_DATE = "(0?[1-9]|[12][0-9]|3[01])[-/](1[012]|0?[1-9])([-/]((19|20)?[0-9][0-9]))?";
-	public static final String PARSER_REGEX_RELATIVE_DATE = "(next[ ]+)(week|year|month|fortnight)";
-	public static final String PARSER_REGEX_RELATIVE_DAY_DATE = "((this|next|last)[ ]+)?(((mon|tues|wednes|thurs|fri|satur|sun)day)|mon|tues|tue|wed|thurs|thu|fri|sat|sun)";
-	public static final String PARSER_REGEX_MIXED_DATE = "((0?[1-9]|[12][0-9]|3[01])[ ]*(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)[ ]*((19|20)?[0-9][0-9])?)";
-	public static final String PARSER_REGEX_ALIAS_DATE = "(yesterday|today|tonight|tomorrow|tmrw|tmr|halloween|christmas)";
-
+	// Prevents this class from being instantiated
 	private Constants() {}
 
 }

@@ -2,6 +2,8 @@ package parser;
 
 import java.util.ArrayList;
 
+import common.Constants;
+
 //@author A0097282W
 public class TokenCollection {
 	private ArrayList<Token> tokens = new ArrayList<>();
@@ -23,7 +25,7 @@ public class TokenCollection {
 	}
 
 	Token getCurrentToken() {
-		assert tokenPointer < tokenCount : "No tokens remaining";
+		assert tokenPointer < tokenCount : Constants.PARSER_ASSERTION_ERROR_NO_TOKENS_REMAINING;
 		return tokens.get(tokenPointer);
 	}
 
