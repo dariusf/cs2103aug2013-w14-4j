@@ -1,5 +1,7 @@
 package parser;
 
+import common.Constants;
+
 //@author A0097282W
 class KeywordToken extends Token {
 
@@ -8,6 +10,6 @@ class KeywordToken extends Token {
 	}
 
 	public String toString() {
-		return "Keyword " + super.toString();
+		return Constants.PARSER_TOKEN_PREFIX_KEYWORD + super.toString();
 	}
 }
