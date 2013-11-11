@@ -18,6 +18,7 @@ import common.Feedback;
 import common.Task;
 import common.TaskComposite;
 
+//@author A0102332A
 public class DisplayLogic {
 
 	private CommandLogic commandLogic;
@@ -290,7 +291,6 @@ public class DisplayLogic {
 	
 	public ArrayList<Integer> getNumberOfTasksPerPage() {
 		determineNumberOfTasksForEachPage(displayMode);
-		// TODO ^ don't have to do that calculation if it hasn't changed
 		return numberOfTasksOnEachPage;
 	}
 	
@@ -381,10 +381,9 @@ public class DisplayLogic {
 	}
 	
 	public void setPageNumber(int pageNumber) {
-//		assert (pageNumber > 0 && pageNumber <= numberOfTasksOnEachPage.size()) : "Invalid page number " + pageNumber;
 		if (this.pageNumber != pageNumber) {
 			recreateTaskComposites = true;
-			this.pageNumber = pageNumber;//Math.max(1, Math.min(pageNumber, numberOfTasksOnEachPage.size()));;
+			this.pageNumber = pageNumber;
 		}
 	}
 	
