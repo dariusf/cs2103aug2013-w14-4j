@@ -418,5 +418,52 @@ public class LogicTest {
 				.getTasksToDisplay())));
 		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
 		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Search in name
+		logic.executeCommand("add haha 1");
+		logic.executeCommand("add haha 2");
+		logic.executeCommand("add haha 3");
+		logic.executeCommand("add haha 4");
+		logic.executeCommand("search haha");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"haha 1\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [],\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"haha 2\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [],\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"haha 3\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [],\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"haha 4\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Search in tags
+		logic.executeCommand("add haha 1 #homework");
+		logic.executeCommand("add haha 2 #homework");
+		logic.executeCommand("add haha 3 #homework");
+		logic.executeCommand("add haha 4 #homework");
+		logic.executeCommand("search #homework");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"haha 1\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#homework\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"haha 2\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#homework\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"haha 3\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#homework\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"haha 4\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#homework\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Search no results
+		logic.executeCommand("search muahaha");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Search no results (tags)
+		logic.executeCommand("search muahaha #random");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Search multiple tags
+		logic.executeCommand("add new task 1 #tag1 #tag2");
+		logic.executeCommand("add new task 2 #tag1 #tag2");
+		logic.executeCommand("search #tag1 #tag2");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task 1\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag1\",\n      \"#tag2\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task 2\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag1\",\n      \"#tag2\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+
 	}
 }
