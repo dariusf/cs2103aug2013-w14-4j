@@ -11,12 +11,12 @@ import org.joda.time.DateTime;
 
 import ui.ApplicationWindow;
 import ui.HelpDialog;
-import ui.TaskComposite;
 
 import common.Constants;
 import common.DisplayMode;
 import common.Feedback;
 import common.Task;
+import common.TaskComposite;
 
 public class DisplayLogic {
 
@@ -104,16 +104,21 @@ public class DisplayLogic {
  		}
 
 		ArrayList<Task> taskList = commandLogic.getTasksToDisplay(displayMode, currentDisplayDateTime);
-		taskComposites = new TaskComposite[numberOfTasksOnEachPage.get(pageNumber - 1)];
-
-		for (int i = 0; i < taskComposites.length; i++) {
-			taskComposites[i] = new TaskComposite(taskDisplay, taskList.get(startingIndex + i), startingIndex + i + 1);
-		}
+		createTaskComposites(startingIndex, taskList);
 
 		taskDisplay.pack();
 
 		// Display highlighted tasks on composite creation
 		highlightTasks(true);
+	}
+
+	private void createTaskComposites(int startingIndex,
+			ArrayList<Task> taskList) {
+		taskComposites = new TaskComposite[numberOfTasksOnEachPage.get(pageNumber - 1)];
+
+		for (int i = 0; i < taskComposites.length; i++) {
+			taskComposites[i] = new TaskComposite(taskDisplay, taskList.get(startingIndex + i), startingIndex + i + 1);
+		}
 	}
 	
 	public void createNewPage() {
