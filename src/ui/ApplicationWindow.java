@@ -617,10 +617,12 @@ public class ApplicationWindow {
 				}
 			}
 
-			public void nativeKeyReleased(NativeKeyEvent e) { /* do nothing */
+			public void nativeKeyReleased(NativeKeyEvent e) {
+				// do nothing
 			}
 
-			public void nativeKeyTyped(NativeKeyEvent e) { /* do nothing */
+			public void nativeKeyTyped(NativeKeyEvent e) {
+				// do nothing
 			}
 		}
 
@@ -628,9 +630,7 @@ public class ApplicationWindow {
 			GlobalScreen.registerNativeHook();
 			GlobalScreen.getInstance().addNativeKeyListener(new NativeHook());
 		} catch (Exception e) {
-			System.err.println("Unable to initialise global hotkey!"
-					+ "Please check your system accessibility settings!"
-					+ "Basket will continue without hotkey.");
+			e.printStackTrace();
 		}
 	}
 	

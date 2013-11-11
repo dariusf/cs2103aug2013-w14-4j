@@ -62,7 +62,7 @@ public class Json {
 	private static class IntervalDeserializer implements JsonDeserializer<Interval> {
 		public Interval deserialize(JsonElement json, Type typeOfT,
 				JsonDeserializationContext context) throws JsonParseException {
-			String[] dates = json.getAsString().split(" to ");
+			String[] dates = json.getAsString().split(Constants.DATE_INTERVAL_DELIMITER);
 			return new Interval(dateTimeFormatter.parseDateTime(dates[0]),
 					dateTimeFormatter.parseDateTime(dates[1]));
 		}
@@ -157,4 +157,7 @@ public class Json {
 		}
 		return result;
 	}
+	
+	//private constructor to prevent initialisation
+	private Json (){};
 }
