@@ -1,5 +1,5 @@
 /**
- * To conduct this test, set the system clock to 11/11/2013. We compare the tasks which are returned by command logic to be displayed by UI with the expected tasks. To do so, we convert the tasks to JSON and compare the strings.
+ * To conduct this test, set the system clock to 11/11/2013 1am. We compare the tasks which are returned by command logic to be displayed by UI with the expected tasks. To do so, we convert the tasks to JSON and compare the strings.
  */
 
 package test;
@@ -289,7 +289,7 @@ public class LogicTest {
 				.getTasksToDisplay())));
 		expected = "[\n  {\n    \"name\": \"another new name\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [\n      \"#newtag1\",\n      \"#newtag2\"\n    ],\n    \"interval\": \"11/11/13 6:00 PM to 11/11/13 7:00 PM\",\n    \"deadline\": \"11/11/13 10:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"10/11/13 12:00 AM to 10/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n      \"12/11/13 3:00 PM to 12/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"11/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
 		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
-		
+
 		// Edit in different display mode
 		logic.executeCommand("display today");
 		logic.executeCommand("edit 1 yet another new name by 10pm");
@@ -297,7 +297,7 @@ public class LogicTest {
 				.getTasksToDisplay())));
 		expected = "[\n  {\n    \"name\": \"yet another new name\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [\n      \"#newtag1\",\n      \"#newtag2\"\n    ],\n    \"deadline\": \"11/11/13 10:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"11/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
 		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
-		
+
 		// Delete
 		logic.executeCommand("display all");
 		logic.executeCommand("delete 1");
@@ -305,12 +305,118 @@ public class LogicTest {
 				.getTasksToDisplay())));
 		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"10/11/13 12:00 AM to 10/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n      \"12/11/13 3:00 PM to 12/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"11/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
 		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
-		
+
 		// Delete (small number)
 		logic.executeCommand("delete 0");
 		System.out.println(formatString(jsonFormatter.toJson(logic
 				.getTasksToDisplay())));
 		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"10/11/13 12:00 AM to 10/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n      \"12/11/13 3:00 PM to 12/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"11/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Delete (large number)
+		logic.executeCommand("delete 10");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"10/11/13 12:00 AM to 10/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n      \"12/11/13 3:00 PM to 12/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"11/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Delete (different display mode)
+		logic.executeCommand("display today");
+		logic.executeCommand("delete 1");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"10/11/13 12:00 AM to 10/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n      \"12/11/13 3:00 PM to 12/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"11/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Finalise
+		logic.executeCommand("display tentative");
+		logic.executeCommand("finalise 1 1");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"10/11/13 12:00 AM to 10/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [\n      \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n      \"12/11/13 3:00 PM to 12/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"11/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Finalise time slot overflow
+		logic.executeCommand("display tentative");
+		logic.executeCommand("finalise 1 3");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Finalise time slot underflow
+		logic.executeCommand("display tentative");
+		logic.executeCommand("finalise 1 0");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Done task
+		logic.executeCommand("display all");
+		logic.executeCommand("done 1");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"10/11/13 12:00 AM to 10/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": true\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [\n      \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n      \"12/11/13 3:00 PM to 12/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"11/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Done task overflow
+		logic.executeCommand("done 10");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"10/11/13 12:00 AM to 10/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": true\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [\n      \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n      \"12/11/13 3:00 PM to 12/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"11/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Done task underflow
+		logic.executeCommand("done 0");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"10/11/13 12:00 AM to 10/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": true\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [\n      \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n      \"12/11/13 3:00 PM to 12/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"11/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Display done task
+		logic.executeCommand("display done");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"10/11/13 12:00 AM to 10/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": true\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Clear done
+		logic.executeCommand("clear done");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [\n      \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n      \"12/11/13 3:00 PM to 12/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TENTATIVE\",\n    \"tags\": [],\n    \"possibleIntervals\": [\n      \"11/11/13 1:00 PM to 11/11/13 2:00 PM\",\n      \"11/11/13 3:00 PM to 11/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"11/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Clear today
+		logic.executeCommand("undo");
+		logic.executeCommand("clear today");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"TIMED\",\n    \"tags\": [],\n    \"interval\": \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n    \"possibleIntervals\": [\n      \"12/11/13 1:00 PM to 12/11/13 2:00 PM\",\n      \"12/11/13 3:00 PM to 12/11/13 4:00 PM\"\n    ],\n    \"done\": false\n  },\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Clear timed task
+		logic.executeCommand("undo");
+		logic.executeCommand("clear timed");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Clear overdue
+		logic.executeCommand("add demo task on 11/11/2012");
+		logic.executeCommand("clear overdue");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
+		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
+
+		// Sort
+		logic.executeCommand("sort");
+		System.out.println(formatString(jsonFormatter.toJson(logic
+				.getTasksToDisplay())));
+		expected = "[\n  {\n    \"name\": \"new task\",\n    \"type\": \"DEADLINE\",\n    \"tags\": [],\n    \"deadline\": \"12/11/13 11:59 PM\",\n    \"possibleIntervals\": [],\n    \"done\": false\n  },\n  {\n    \"name\": \"a new task\",\n    \"type\": \"UNTIMED\",\n    \"tags\": [\n      \"#tag\",\n      \"#newtag\"\n    ],\n    \"possibleIntervals\": [],\n    \"done\": false\n  }\n]";
 		assertEquals(expected, jsonFormatter.toJson(logic.getTasksToDisplay()));
 	}
 }

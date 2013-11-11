@@ -282,7 +282,7 @@ public class CommandLogic {
 
 			int taskSlotIndex = command.getTimeslotIndex();
 			List<Interval> oldIntervalList = taskToEdit.getPossibleTime();
-			if (taskSlotIndex > oldIntervalList.size()) {
+			if (taskSlotIndex > oldIntervalList.size() || taskSlotIndex < 1) {
 				return new Feedback(
 						Constants.SC_INTEGER_OUT_OF_BOUNDS_TIME_ERROR,
 						CommandType.FINALISE);
@@ -368,8 +368,7 @@ public class CommandLogic {
 						condition = currentTask.isUntimedTask();
 						break;
 					case OVERDUE:
-						condition = currentTask.isDeadlineTask()
-								&& currentTask.getDeadline().isBefore(now);
+						condition = currentTask.isOverdue();
 						break;
 					case DATE:
 						condition = currentTask.isOnDate(command
