@@ -93,7 +93,6 @@ public class Storage implements Closeable, Iterable<Task> {
 	}
 	
 	public void add(Task task) {
-		assert(task != null);
 		taskStorage.insert(taskStorage.size(), task);
 		hasEditSwitch.turnOn();
 	}
