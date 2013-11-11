@@ -35,8 +35,8 @@ public class TaskComposite extends Composite {
 		taskIndex = new StyledText(this, SWT.WRAP | SWT.READ_ONLY);
 		taskIndex.setEnabled(false);
 		taskIndex.setText(String.valueOf(index));
-		taskIndex.setFont(ApplicationWindow.self.indexFont);
-		taskIndex.setForeground(new Color(ApplicationWindow.self.shell
+		taskIndex.setFont(ApplicationWindow.getInstance().indexFont);
+		taskIndex.setForeground(new Color(ApplicationWindow.getInstance().shell
 				.getDisplay(), 0x99, 0, 0));
 		taskIndex.setLineAlignment(0, 1, SWT.RIGHT);
 		taskIndex.setLayoutData(taskIndexLayoutData);
@@ -51,14 +51,14 @@ public class TaskComposite extends Composite {
 		taskName = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
 		taskName.setEnabled(false);
 		taskName.setLayoutData(new GridData(340, SWT.DEFAULT));
-		taskName.setFont(ApplicationWindow.self.titleFont);
+		taskName.setFont(ApplicationWindow.getInstance().titleFont);
 		this.setTaskName(task.getName());
 
 		taskDescription = new StyledText(taskDetailsComposite, SWT.READ_ONLY);
 		taskDescription.setEnabled(false);
 		taskDescription.setText(task.getInfoString());
 		taskDescription.setLayoutData(new GridData(340, SWT.DEFAULT));
-		taskDescription.setFont(ApplicationWindow.self.descriptionFont);
+		taskDescription.setFont(ApplicationWindow.getInstance().descriptionFont);
 
 		if (task.isDone()) {
 			StyleRange style1 = new StyleRange();
@@ -67,7 +67,7 @@ public class TaskComposite extends Composite {
 			style1.strikeout = true;
 			taskName.setStyleRange(style1);
 		} else if (task.isOverdue()) {
-			taskName.setForeground(new Color(ApplicationWindow.self.shell
+			taskName.setForeground(new Color(ApplicationWindow.getInstance().shell
 					.getDisplay(), 0x99, 0, 0));
 		}
 
@@ -164,7 +164,7 @@ public class TaskComposite extends Composite {
 
 	public void setHighlighted(boolean highlighted) {
 		if (highlighted) {
-			setBackground(new Color(ApplicationWindow.self.shell.getDisplay(),
+			setBackground(new Color(ApplicationWindow.getInstance().shell.getDisplay(),
 					0xdd, 0xdd, 0xdd));
 		} else {
 			setBackground(null);
@@ -179,7 +179,7 @@ public class TaskComposite extends Composite {
 		}
 		if (line > 0 && line <= numberOfLines && !taskDescription.getText().isEmpty()) {
 			taskDescription.setLineBackground(line - 1, 1,
-					new Color(ApplicationWindow.self.shell.getDisplay(), 0x00,
+					new Color(ApplicationWindow.getInstance().shell.getDisplay(), 0x00,
 							0xdd, 0x00));
 		}
 	}
