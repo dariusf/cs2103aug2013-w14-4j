@@ -476,7 +476,8 @@ public class ApplicationWindow {
 
 		displayTitle.setText(displayLogic.getDisplayWindowTitle());
 	}
-
+	
+	//@author A0101048X
 	public String displayWelcomeMessage() {
 		String welcomeMessage = Constants.MSG_AVAILABLE_COMMANDS;
 		return welcomeMessage;

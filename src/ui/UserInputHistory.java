@@ -3,6 +3,7 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
+//@author A0101048X
 public class UserInputHistory {
 
 	int index = -1;
@@ -12,25 +13,25 @@ public class UserInputHistory {
 		 userInput = new ArrayList<String>();
 	}
 	
-	protected void addInput(String input) {
+	public void addInput(String input) {
 		userInput.add(input);
 		index = userInput.size() - 1;
 	}
 	
-	protected String getInput(int index) {
+	public String getInput(int index) {
 		String pastInput = userInput.get(index);
 		return pastInput;
 	}
 	
-	protected void setIndex(int newIndex) {
+	public void setIndex(int newIndex) {
 		index = newIndex;
 	}
 
-	protected int getIndex() {
+	public int getIndex() {
 		return index;
 	}
 	
-	protected boolean isEndOfHistory() {
+	public boolean isEndOfHistory() {
 		if (userInput.size() == index + 1) {
 			return true;
 		} else {
