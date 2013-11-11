@@ -80,7 +80,7 @@ public class TextFormatter {
 				sr.fontStyle = SWT.BOLD;
 				break;
 			default:
-				assert false : "Unrecognized formatting enumeration " + formatType;
+				assert false : String.format(Constants.FORMATTING_ASSERTION_ERROR_UNRECOGNIZED_FORMATTING_ENUMERATION, formatType);;
 			}
 			
 			styledText.setStyleRange(sr);
@@ -90,7 +90,7 @@ public class TextFormatter {
 
 	private static ArrayList<FormatRange> getFormatRanges(String text) {
 		
-		Pattern pattern = Pattern.compile(Constants.FORMATTING_REGEX_UNDERLINE + "|" + Constants.FORMATTING_REGEX_BOLD + "|" + Constants.FORMATTING_REGEX_COLOUR1);
+		Pattern pattern = Pattern.compile(Constants.FORMATTING_REGEX_UNDERLINE + Constants.FORMATTING_REGEX_BAR + Constants.FORMATTING_REGEX_BOLD + Constants.FORMATTING_REGEX_BAR + Constants.FORMATTING_REGEX_COLOUR1);
 		Matcher matcher = pattern.matcher(text);
 
 		ArrayList<FormatRange> result = new ArrayList<FormatRange>();
