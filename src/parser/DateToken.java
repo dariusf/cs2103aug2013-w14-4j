@@ -112,11 +112,6 @@ public class DateToken extends Token {
                 int day = 0, month = 0, year = 0;
                 
                 switch (dateString) {
-                case Constants.PARSER_DATE_YESTERDAY:
-                        day = now.minusDays(1).getDayOfMonth();
-                        month = now.getMonthOfYear();
-                        year = now.getYear();
-                        break;
                 case Constants.PARSER_DATE_TODAY:
                 case Constants.PARSER_DATE_TONIGHT:
                         day = now.getDayOfMonth();

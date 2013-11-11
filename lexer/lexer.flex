@@ -31,7 +31,7 @@ StandardDate = (0?[1-9]|[12][0-9]|3[01])[-/](1[012]|0?[1-9])([-/]((19|20)?[0-9][
 RelativeDate = (next[ ]+)(week|year|month|fortnight)
 RelativeDayDate = ((this|next|last)[ ]+)?(((mon|tues|wednes|thurs|fri|satur|sun)day)|mon|tues|tue|wed|thurs|thu|fri|sat|sun)
 MixedDate = ((0?[1-9]|[12][0-9]|3[01])[ ]*(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)[ ]*((19|20)?[0-9][0-9])?)
-AliasDate = (yesterday|today|tonight|tomorrow|tmrw|tmr|halloween|christmas)
+AliasDate = (today|tonight|tomorrow|tmrw|tmr|halloween|christmas)
 
 AliasTime = (midnight|noon|morning|afternoon|evening)
 StandardTime = (((1[012]|[1-9])([:.]([0-5][0-9]))?[ ]*(am|pm))|((2[0-3]|[01]?[0-9])[:.]?([0-5][0-9])))

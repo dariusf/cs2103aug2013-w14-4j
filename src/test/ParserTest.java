@@ -318,14 +318,9 @@ public class ParserTest {
 		actual = Parser.parse("add event today");
 		assertEquals(actual, expected);
 		
-		// yesterday
+		// yesterday (no longer a keyword)
 		expected = new Command(CommandType.ADD);
-		expected.setDescription("event");
-		intervals = new ArrayList<>();
-		start = now.minusDays(1).withTime(0, 0, 0, 0);
-		end = start.withTime(23, 59, 0, 0);
-		intervals.add(new Interval(start, end));
-		expected.setIntervals(intervals);
+		expected.setDescription("event yesterday");
 		actual = Parser.parse("add event yesterday");
 		assertEquals(actual, expected);
 
