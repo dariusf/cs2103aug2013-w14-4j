@@ -33,9 +33,6 @@ public class HelpDialog extends Dialog {
 	}
 
 	public void open(Feedback feedbackObj) {
-		if(dialog != null) {
-			return;
-		}
 		Shell parent = getParent();
 		dialog = new Shell(parent, SWT.NO_TRIM);
 		display = parent.getDisplay();
