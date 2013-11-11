@@ -657,11 +657,7 @@ public class ApplicationWindow {
 			String feedback = feedbackObj.toString();
 			setFeedbackColour(feedbackObj);
 			displayFeedback.setText(feedback);
-			if (feedbackObj.isErrorMessage()) {
-				getUpHistory();
-			} else {
-				input.setText("");
-			}
+			input.setText("");
 
 			displayLogic.processFeedback(feedbackObj);
 			
