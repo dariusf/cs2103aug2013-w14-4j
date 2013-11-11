@@ -26,8 +26,6 @@ public class HelpDialog extends Dialog {
 	StyledText helpText;
 	private Shell dialog;
 	final private int padding = 6;
-
-	private int increase = 45; // TODO remove this
 	
 	// @author A0102332
 	public HelpDialog(Shell parent) {
@@ -120,7 +118,7 @@ public class HelpDialog extends Dialog {
 		dialog.setLocation(x, y);
 
 		final Button closeButton = new Button(dialog, SWT.NONE);
-		closeButton.setBounds(148, 477+increase, 118, 25);
+		closeButton.setBounds(148, 522, 118, 25);
 		closeButton.setText("Got it!");
 
 		helpText = new StyledText(dialog, SWT.READ_ONLY | SWT.WRAP);
@@ -133,7 +131,7 @@ public class HelpDialog extends Dialog {
 			helpText.setFont(SWTResourceManager.getFont("Calibri", 16,
 					SWT.NORMAL));
 		}
-		helpText.setBounds(18, 18, 380, 461+increase);
+		helpText.setBounds(18, 18, 380, 506);
 		helpText.setEnabled(false);
 
 		String helpString = getHelpText(feedbackObj.getHelpCommandType());
