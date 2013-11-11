@@ -269,7 +269,7 @@ public class Constants {
 	public static final String FORMATTING_REGEX_BOLD = "\\*(" + FORMATTING_ALLOWED_CHARACTERS + "+)\\*";
 	public static final String FORMATTING_REGEX_COLOUR1 = "&(" + FORMATTING_ALLOWED_CHARACTERS + "+)&";
 	public static final String[] FORMATTING_SUBSTITUTIONS = {
-		"- ", "� "
+		"- ", "* "
 	};
 
     public static final String CONTEXTUAL_HELP_DESC = "<description>";
