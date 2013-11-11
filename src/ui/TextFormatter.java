@@ -74,7 +74,7 @@ public class TextFormatter {
 				sr.underline = true;
 				break;
 			case COLOUR1:
-				sr.foreground = ApplicationWindow.self.red;
+				sr.foreground = ApplicationWindow.getInstance().red;
 				break;
 			case BOLD:
 				sr.fontStyle = SWT.BOLD;
