@@ -363,7 +363,6 @@ public class Constants {
     public static final String PARSER_DATE_WEDNESDAY = "wednesday";
     public static final String PARSER_DATE_WEEK = "week";
     public static final String PARSER_DATE_YEAR = "year";
-    public static final String PARSER_DATE_YESTERDAY = "yesterday";
     public static final String PARSER_DATESTRING = "%d/%d/%s";
     
     public static final String PARSER_EXCEPTION_INVALID_DAY_D_OF_MONTH = "Invalid day %d of month %d";
@@ -383,7 +382,7 @@ public class Constants {
     public static final String PARSER_LOG_LEXER_TOKENS = "\nLexer tokens:";
     public static final String PARSER_LOG_MATCHED_COMMAND = "Command (%s): %s";
     
-    public static final String PARSER_REGEX_ALIAS_DATE = "(yesterday|today|tonight|tomorrow|tmrw|tmr|halloween|christmas)";
+    public static final String PARSER_REGEX_ALIAS_DATE = "(today|tonight|tomorrow|tmrw|tmr|halloween|christmas)";
     public static final String PARSER_REGEX_ALIAS_TIME = "(midnight|noon|morning|afternoon|evening)";
     public static final String PARSER_REGEX_MIXED_DATE = "((0?[1-9]|[12][0-9]|3[01])[ ]*(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)[ ]*((19|20)?[0-9][0-9])?)";
     public static final String PARSER_REGEX_RELATIVE_DATE = "(next[ ]+)(week|year|month|fortnight)";
