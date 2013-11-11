@@ -10,6 +10,7 @@ import common.Interval;
 import parser.DateToken;
 import parser.TimeToken;
 
+//@author A0097282W
 public class IntervalTest {
 
 	@Test

@@ -34,6 +34,8 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.joda.time.DateTime;
 
+import parser.Parser;
+
 import common.Command;
 import common.CommandType;
 import common.Constants;
@@ -101,7 +103,7 @@ public class ApplicationWindow {
 	 */
 	public static void main(String[] args) {
 		try {
-			logger.setLevel(Level.OFF);
+			logger.setLevel(Constants.LOGGING_LEVEL);
 			commandLogic = new CommandLogic();
 			ApplicationWindow window = new ApplicationWindow();
 			self = window;
