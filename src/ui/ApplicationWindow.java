@@ -46,10 +46,7 @@ import common.TaskType;
 import common.undo.Action;
 import common.undo.ActionStack;
 
-/**
- * @author macbook
- *
- */
+//@author A0102332A
 public class ApplicationWindow {
 	// Logging
 	public static boolean testMode = false;

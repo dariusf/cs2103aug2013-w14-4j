@@ -9,6 +9,7 @@
  * 
  */
 
+//@author A0102332A
 package logic;
 
 import java.io.IOException;
@@ -36,6 +37,8 @@ import storage.Storage;
 
 public class CommandLogic {
 
+	private final int FINALISE_INDEX_OFFSET = 1;
+	
 	protected Storage storage = null;
 	protected TreeMap<Integer, Integer> temporaryMapping = new TreeMap<Integer, Integer>();
 	protected boolean isDynamicIndex = false;
@@ -187,8 +190,8 @@ public class CommandLogic {
 					feedback = new Feedback(Constants.SC_EMPTY_DESCRIPTION_ERROR,
 							CommandType.EDIT);
 				} else {
-					possibleIntervals.remove(finaliseIndex - 1);
-					possibleIntervals.add(finaliseIndex - 1, command.getIntervals()
+					possibleIntervals.remove(finaliseIndex - FINALISE_INDEX_OFFSET);
+					possibleIntervals.add(finaliseIndex - FINALISE_INDEX_OFFSET, command.getIntervals()
 							.get(0));
 					taskToEdit.setPossibleTime(possibleIntervals);
 					storage.replace(taskIndex, taskToEdit);
@@ -338,7 +341,6 @@ public class CommandLogic {
 	protected Feedback clearTasks(Command command) {
 		Feedback feedback = null;
 		ClearMode clearMode = command.getClearMode();
-		DateTime now = new DateTime(); // or stub
 
 		if (storage.size() > 0) {
 			if (clearMode == ClearMode.ALL) {
@@ -458,7 +460,7 @@ public class CommandLogic {
 	
 		Iterator<Task> storageIterator = storage.iterator();
 	
-		if (searchTags.size() > 0) {
+		if (!searchTags.isEmpty()) {
 			boolean shouldAdd = true;
 			for (int i = 0; i < storage.size(); i++) {
 				Task currentTask = storageIterator.next();

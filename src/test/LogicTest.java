@@ -1,7 +1,7 @@
 /**
  * To conduct this test, set the system clock to 11/11/2013 1am. We compare the tasks which are returned by command logic to be displayed by UI with the expected tasks. To do so, we convert the tasks to JSON and compare the strings.
  */
-
+//@author A0102332A
 package test;
 
 import static org.junit.Assert.assertEquals;
