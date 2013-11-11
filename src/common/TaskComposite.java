@@ -1,3 +1,5 @@
+//@author A0102332A
+
 package common;
 
 import org.eclipse.swt.SWT;
