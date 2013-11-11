@@ -275,6 +275,8 @@ public class Constants {
 		"Why did the integer drown?\nBecause it couldn't float!"
 		};
 
+	public static final String FORMATTING_REGEX_BAR = "|";
+	public static final String FORMATTING_ASSERTION_ERROR_UNRECOGNIZED_FORMATTING_ENUMERATION = "Unrecognized formatting enumeration %d";
 	public static final String FORMATTING_ALLOWED_CHARACTERS = "[a-z0-9}{A-Z+><.|# ]";
 	public static final String FORMATTING_REGEX_UNDERLINE = "_(" + FORMATTING_ALLOWED_CHARACTERS + "+)_";
 	public static final String FORMATTING_REGEX_BOLD = "\\*(" + FORMATTING_ALLOWED_CHARACTERS + "+)\\*";
