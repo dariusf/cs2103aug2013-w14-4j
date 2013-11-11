@@ -1,8 +1,5 @@
 package ui;
 
-import java.util.Arrays;
-
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -13,7 +10,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.joda.time.DateTime;
 
 import common.Task;
 
@@ -29,8 +25,6 @@ public class TaskComposite extends Composite {
 	public TaskComposite(Composite parent, Task task, int index) {
 		super(parent, SWT.NONE);
 
-		// 340 is the fixed width and 69 is the fixed height. use SWT.default if
-		// you do not want to fix the lengths.
 		this.setLayoutData(new RowData(425, SWT.DEFAULT));
 		this.setLayout(innerRowLayout);
 
