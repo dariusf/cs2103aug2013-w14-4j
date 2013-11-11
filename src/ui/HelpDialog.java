@@ -161,7 +161,7 @@ public class HelpDialog extends Dialog {
 	
 	// @author: A0097556M
 	public void close () {
-		if (!dialog.isDisposed()) {
+		if (dialog != null && !dialog.isDisposed()) {
 			dialog.close();
 		}
 	}
