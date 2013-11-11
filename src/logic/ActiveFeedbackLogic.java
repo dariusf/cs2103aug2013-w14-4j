@@ -129,7 +129,7 @@ public class ActiveFeedbackLogic {
 			String feedback = feedbackObj.toString();
 			setFeedbackColour(feedbackObj);
 			window.displayFeedback.setText(feedback);
-			displayLogic.processFeedback(feedbackObj, window.helpDialog);
+			displayLogic.processFeedback(feedbackObj);
 			window.updateTaskDisplay();
 		}
 	}

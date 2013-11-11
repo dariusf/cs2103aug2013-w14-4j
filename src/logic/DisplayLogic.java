@@ -36,15 +36,17 @@ public class DisplayLogic {
 
 	private int taskCompositeHeightForThreeLines = 0;
 	private TaskComposite[] taskComposites = null;
+	private HelpDialog helpDialog;
 	// A list of global indices of tasks that should be highlighted on next display draw
 	private ArrayList<Integer> highlightedTasks = new ArrayList<Integer>();
 	
 	private boolean recreateTaskComposites = false;
 
-	public DisplayLogic(CommandLogic logic, DisplayMode displayMode, int pageNumber) {
+	public DisplayLogic(CommandLogic logic, HelpDialog helpDialog, DisplayMode displayMode, int pageNumber) {
 		setLogic(logic);
 		setDisplayMode(displayMode);
 		taskDisplay = new Composite(ApplicationWindow.shell, SWT.NONE);
+		this.helpDialog = helpDialog;
 
 		determineNumberOfTasksForEachPage(displayMode);
 		setPageNumber(pageNumber);
@@ -119,7 +121,7 @@ public class DisplayLogic {
 		taskDisplay.pack();
 	}
 	
-	public void processFeedback(Feedback feedback, HelpDialog helpDialog) {
+	public void processFeedback(Feedback feedback) {
 		switch (feedback.getCommand()) {
 		case ADD:
 			Task task = feedback.getAddedTask();

@@ -144,9 +144,9 @@ public class ApplicationWindow {
 		defineRemainingTaskCount();
 		defineTodayTaskCount();
 		
+		defineHelpDialog();
 		defineDisplayLogic();
 		defineActiveFeedbackLogic();
-		defineHelpDialog();
 		
 		defineDisplayTitle();
 		defineTaskCompositeHeight();
@@ -193,7 +193,7 @@ public class ApplicationWindow {
 	}
 
 	private void defineDisplayLogic() {
-		displayLogic = new DisplayLogic(commandLogic, DisplayMode.TODO,
+		displayLogic = new DisplayLogic(commandLogic, helpDialog, DisplayMode.TODO,
 				Constants.DEFAULT_PAGE_NUMBER);
 		displayLogic.initialiseTaskDisplay();
 	}
@@ -648,7 +648,7 @@ public class ApplicationWindow {
 				input.setText("");
 			}
 
-			displayLogic.processFeedback(feedbackObj, helpDialog);
+			displayLogic.processFeedback(feedbackObj);
 			
 			pushFinalDisplayModeIntoUndoStack ();
 			finaliseThisAction (feedbackObj.getCommand());
