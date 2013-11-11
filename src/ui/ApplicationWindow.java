@@ -33,7 +33,6 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.joda.time.DateTime;
-
 import common.Command;
 import common.CommandType;
 import common.Constants;
@@ -90,8 +89,16 @@ public class ApplicationWindow {
 	// Others
 	UserInputHistory inputHistory = new UserInputHistory();
 	public boolean dummyCompositeIsCreated = false;
-	public static ApplicationWindow self;
-
+	
+	// Singleton pattern
+	private static ApplicationWindow instance = null;
+	public static ApplicationWindow getInstance() {
+		if (instance == null) {
+			instance = new ApplicationWindow();
+		}
+		return instance;
+	}
+	
 	/**
 	 * Launch the application.
 	 * 
@@ -99,10 +106,9 @@ public class ApplicationWindow {
 	 */
 	public static void main(String[] args) {
 		try {
-			logger.setLevel(Level.OFF);
+			logger.setLevel(Constants.LOGGING_LEVEL);
 			commandLogic = new CommandLogic();
-			ApplicationWindow window = new ApplicationWindow();
-			self = window;
+			ApplicationWindow window = ApplicationWindow.getInstance();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -198,7 +204,7 @@ public class ApplicationWindow {
 
 	private void defineActiveFeedbackLogic() {
 		activeFeedbackLogic = new ActiveFeedbackLogic(commandLogic,
-				displayLogic, self);
+				displayLogic, ApplicationWindow.getInstance());
 	}
 
 	private void defineFeedbackWindow() {
@@ -388,8 +394,10 @@ public class ApplicationWindow {
 		helpDialog = new HelpDialog(shell);
 	}
 
-	// Used to determine the height of a task composite by creating several
-	// dummy task composites
+	/**
+	 * Function is used to determine the height of a task composite by creating
+	 * several dummy task composites
+	 */
 	public void defineTaskCompositeHeight() {
 		Command command1 = new Command(CommandType.ADD);
 		command1.setDescription("haha");
@@ -630,8 +638,7 @@ public class ApplicationWindow {
 		}
 	}
 	
-	// TODO whoever did this method please update!
-	// @author:
+	// @author: A0101048X
 	
 	/**
 	 * Execute the command which is entered
@@ -740,8 +747,7 @@ public class ApplicationWindow {
 				|| command == CommandType.FINALISE || command == CommandType.SORT);
 	}
 	
-	// TODO whoever made the rest please comment!
-	// @author: 
+	// @author: A0101048X
 	/**
 	 * Methods required to align windows at the centre of the monitor display
 	 */
@@ -810,10 +816,11 @@ public class ApplicationWindow {
 		}
 	}
 
+	// @author: A0102332A
 	/**
 	 * Test methods
 	 */
-
+	@SuppressWarnings("resource")
 	private void runTest(Display display) {
 		try {
 			Scanner scanner = new Scanner(new File("testCommands.txt"));
