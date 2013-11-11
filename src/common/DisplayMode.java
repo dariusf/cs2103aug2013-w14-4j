@@ -1,5 +1,7 @@
 package common;
 
+//@author A0102332A
+
 public enum DisplayMode {
 	TODAY, TOMORROW, DEADLINE, TIMED, TENTATIVE, UNTIMED, ALL, SEARCH, OVERDUE, DATE, INVALID, TODO, DONE;
 	

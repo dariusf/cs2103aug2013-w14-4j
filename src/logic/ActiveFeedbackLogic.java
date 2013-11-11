@@ -1,3 +1,4 @@
+//@author A0097282W
 package logic;
 
 import java.util.ArrayList;
@@ -7,7 +8,6 @@ import org.eclipse.swt.SWT;
 import parser.Parser;
 
 import ui.ContextualHelp;
-import ui.TaskComposite;
 import ui.TextFormatter;
 import ui.ApplicationWindow;
 
@@ -17,6 +17,7 @@ import common.Constants;
 import common.Feedback;
 import common.Interval;
 import common.Task;
+import common.TaskComposite;
 import common.TaskType;
 
 public class ActiveFeedbackLogic {
@@ -36,8 +37,8 @@ public class ActiveFeedbackLogic {
 		return command;
 	}
 	
-	public void processActiveFeedback(String userInput, Command executedCommand) {
-
+	public void processActiveFeedback(String userInput) {
+		Command executedCommand = getActiveFeedback(userInput);
 		if (executedCommand == null) {
 			displayLogic.clearHighlightedTasks();
 			return;

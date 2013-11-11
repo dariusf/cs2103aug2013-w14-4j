@@ -1,5 +1,7 @@
 package common;
 
+//@author A0102332A
+
 public enum CommandType {
 	INVALID,
 	ADD, EDIT, DISPLAY, DELETE, CLEAR, EXIT, GOTO,
