@@ -627,7 +627,7 @@ public class CommandLogic {
 			DateTime dateTime) {
 		Command displayCommand = new Command(CommandType.DISPLAY);
 		displayCommand.setDisplayMode(displayMode);
-		if (displayMode == displayMode.DATE) {
+		if (displayMode == DisplayMode.DATE) {
 			displayCommand.setDisplayDateTime(dateTime);
 		}
 		displayTasks(displayCommand);
