@@ -410,6 +410,9 @@ public class Constants {
     public static final String PARSER_TOKEN_PREFIX_TAG = "Tag ";
     public static final String PARSER_TOKEN_PREFIX_TIME = "Time ";
     public static final String PARSER_TOKEN_PREFIX_WORD = "Word ";
+    
+	public static int WRITE_TO_FILE_DELAY = 30000;
+	public static int WRITE_TO_FILE_PERIOD = 30000;
 
 	// Prevents this class from being instantiated
 	private Constants() {}

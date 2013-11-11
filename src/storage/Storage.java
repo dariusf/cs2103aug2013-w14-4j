@@ -11,12 +11,10 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import common.Constants;
 import common.Task;
 
 public class Storage implements Closeable, Iterable<Task> {
-	
-	private static int WRITE_TO_FILE_DELAY = 30000;
-	private static int WRITE_TO_FILE_PERIOD = 30000;
 	
 	class Switch {
 		boolean switchState = false;
@@ -87,7 +85,7 @@ public class Storage implements Closeable, Iterable<Task> {
 					}
 				}
 			}
-		}, WRITE_TO_FILE_DELAY, WRITE_TO_FILE_PERIOD);
+		}, Constants.WRITE_TO_FILE_DELAY, Constants.WRITE_TO_FILE_PERIOD);
 	}
 	
 	public void sort() {
@@ -111,7 +109,6 @@ public class Storage implements Closeable, Iterable<Task> {
 	}
 
 	public void replace(int index, Task task) {
-		assert(task != null);
 		index--;
 		taskStorage.remove(index);
 		taskStorage.insert(index, task);
