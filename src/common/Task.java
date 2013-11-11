@@ -554,10 +554,10 @@ public class Task implements Comparable<Task>, Cloneable {
 		if (start.dayOfYear().equals(end.dayOfYear())) {
 			DateTimeFormatter startTimeFormatter = pickTimeFormatter(start);
 			DateTimeFormatter endTimeFormatter = pickTimeFormatter(end);
-			return startTimeFormatter.print(start) + " to " + endTimeFormatter.print(end) + formatDateHalf(start);
+			return startTimeFormatter.print(start) + Constants.DATE_INTERVAL_DELIMITER + endTimeFormatter.print(end) + formatDateHalf(start);
 		}
 		else {
-			return format(start) + " to " + format(end);
+			return format(start) + Constants.DATE_INTERVAL_DELIMITER + format(end);
 		}
 	}
 }
