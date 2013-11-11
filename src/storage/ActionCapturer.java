@@ -83,7 +83,10 @@ public class ActionCapturer<E extends Comparable<E>, T extends StorageBase<E>> i
 	}
 
 	@Override
-	public void insert(int index, E item) {
+	public void insert(int index, E item) throws IllegalArgumentException {
+		if(item == null) {
+			throw new IllegalArgumentException();
+		}
 		InsertAction thisAction = new InsertAction(index, item);
 		realStorage.insert(index, item);
 		actionStack.add(thisAction);
@@ -99,7 +102,9 @@ public class ActionCapturer<E extends Comparable<E>, T extends StorageBase<E>> i
 
 	@Override
 	public void remove(E item) {
-		// TODO make sure to catch when the item does not exist
+		if(item == null) {
+			return;
+		}
 		int index = realStorage.getIndex(item);
 		RemoveAction thisAction = new RemoveAction(index, item);
 		realStorage.remove(item);

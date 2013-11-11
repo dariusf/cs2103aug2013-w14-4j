@@ -5,7 +5,7 @@ package storage;
 import java.util.Iterator;
 import java.util.List;
 
-public interface StorageBase<E extends Comparable<E>>{
+public interface StorageBase<E extends Comparable<E>> extends Iterable<E>{
 	
 	public void insert (int index, E item) throws ArrayIndexOutOfBoundsException;
 	public void remove (int index) throws ArrayIndexOutOfBoundsException;

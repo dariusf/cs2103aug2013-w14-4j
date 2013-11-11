@@ -92,6 +92,10 @@ public class ActionStack {
 		currentActionSet = new ActionSet();
 	}
 	
+	public static void resetActionStack () { // should only be used for debugging purposes
+		instance = new ActionStack();
+	}
+	
 	public static synchronized ActionStack getInstance() {
 		return instance;
 	}

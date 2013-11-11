@@ -2,34 +2,31 @@ package test;
 
 import static org.junit.Assert.*;
 
-import java.awt.List;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.swing.text.StyledEditorKit.ForegroundAction;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
-import org.joda.time.format.DateTimeParser;
 import org.junit.Test;
 
 import common.Constants;
 import common.Interval;
 import common.Task;
 import common.TaskType;
-import common.undo.DoublyLinkedList;
+import common.undo.ActionStack;
 
-
-import storage.Json;
+import storage.ActionCapturer;
+import storage.Cloner;
+import storage.RealStorage;
 import storage.Storage;
 
 public class StorageTest {
 	
-	private static String dateFormatString = "dd/MM/yy hh:mm a";
+	private static String dateFormatString = Constants.DATE_TIME_FORMAT;
 	
 	static DateTimeFormatter dateTimeParser = new DateTimeFormatterBuilder().
 			appendPattern(dateFormatString).toFormatter();	
@@ -80,7 +77,7 @@ public class StorageTest {
 	
 	private static Task untimedTaskCreator() {
 		Task result = new Task();
-		result.setName("timedTask");
+		result.setName("untimedTask");
 		result.setType(TaskType.UNTIMED);
 		
 		return result;
@@ -88,7 +85,7 @@ public class StorageTest {
 	
 	private static Task taggedTaskCreator() {
 		Task result = new Task();
-		result.setName("timedTask");
+		result.setName("taggedTask");
 		result.setType(TaskType.UNTIMED);
 		result.setTags(tags);
 		
@@ -131,44 +128,198 @@ public class StorageTest {
 	private static Task untimedTask = untimedTaskCreator();
 	private static Task floatingTask = floatingTaskCreator();
 	
+	//====================
+	// RealStorage Tests
+	//====================
+	
+	@Test
+	public void test_RealStorage () {
+		RealStorage<Integer> testStorage = new RealStorage<>();
+		assertEquals(0, testStorage.size());
+		ArrayList<Integer> testList = new ArrayList<>();
+		for(int i = 0; i < 10; i++) {
+			testList.add(i);
+		}
+		testStorage.setState(testList);
+		Iterator<Integer> storageIterator = testStorage.iterator();
+		Iterator<Integer> listIterator = testList.iterator();
+		while(storageIterator.hasNext() && listIterator.hasNext()) {
+			assertEquals(listIterator.next(), storageIterator.next());
+		}
+		testStorage.remove(0);
+		assertEquals((Integer) 1, testStorage.get(0));
+		testStorage.insert(0, 0);
+		storageIterator = testStorage.iterator();
+		listIterator = testList.iterator();
+		while(storageIterator.hasNext() && listIterator.hasNext()) {
+			assertEquals(listIterator.next(), storageIterator.next());
+		}
+	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void pastArrayBoundsTest_emptyList_RealStorage () {
+		RealStorage<Integer> testStorage = new RealStorage<>();
+		testStorage.get(0);
+	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void pastArrayBoundsTest_nonEmptyList_RealStorage () {
+		RealStorage<Integer> testStorage = new RealStorage<>();
+		testStorage.insert(0, 7);
+		testStorage.get(2);
+	}
+	
+	@Test
+	public void nullInsertionTest_RealStorage () {
+		RealStorage<Integer> testStorage = new RealStorage<>();
+		testStorage.insert(0, null);
+		assertEquals(null, testStorage.get(0));
+	}
+	
+	@Test
+	public void nullSetStateTest_RealStorage () {
+		RealStorage<Integer> testStorage = new RealStorage<>();
+		testStorage.setState(null);
+		assertEquals(0, testStorage.size());
+	}
+	
+	//========================
+	// RealStorage Tests Done
+	//========================
+	
+	//======================
+	// ActionCapturer Tests
+	//======================
+	
+	class IntegerCloner implements Cloner<Integer> {
 
-	@Test
-	public void stringOutputTest() throws IOException {
-		ArrayList<Task> taskList = new ArrayList<>();
-		taskList.add(deadlineTask);
-		taskList.add(timedTask);
-		System.out.println(Json.writeToString(taskList));
+		@Override
+		public Integer clone(Integer originalItem) {
+			return (Integer) originalItem.intValue();
+		}
+		
+	}
+	
+	class StorageCloner implements Cloner<RealStorage<Integer>> {
+
+		@Override
+		public RealStorage<Integer> clone(RealStorage<Integer> originalItem) {
+			return new RealStorage<>(originalItem);
+		}
+		
 	}
 	
 	@Test
-	public void stringInputTest() throws IOException {
-		ArrayList<Task> testList = Json.readFromString("[\r\n  {\r\n    \"name\": \"deadlineTask\",\r\n    \"type\": \"deadline\",\r\n    \"location\": \"home\",\r\n    \"tags\": [],\r\n    \"deadline\": \"23/04/13 10:00 PM\",\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  },\r\n  {\r\n    \"name\": \"timedTask\",\r\n    \"type\": \"timed\",\r\n    \"location\": \"office\",\r\n    \"tags\": [],\r\n    \"interval\": \"10/01/13 09:00 AM to 10/01/13 06:00 PM\",\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  }\r\n]\r\n");
-		for(Task task : testList) {
-			System.out.println(task.toString());
+	public void test_ActionCapturer () throws Exception {
+		ActionStack.resetActionStack();
+		ActionStack testStack = ActionStack.getInstance();
+		testStack.flushCurrentActionSet();
+		ActionCapturer<Integer, RealStorage<Integer>> testStorage =
+				new ActionCapturer<Integer, RealStorage<Integer>>(new RealStorage<Integer>(), new IntegerCloner(), new StorageCloner());
+		assertEquals(0, testStorage.size());
+		
+		ArrayList<Integer> testList = new ArrayList<>();
+		for(int i = 0; i < 10; i++) {
+			testList.add(i);
+		}
+		testStorage.setState(testList);
+		testStack.finaliseActions();
+		
+		Iterator<Integer> storageIterator = testStorage.iterator();
+		Iterator<Integer> listIterator = testList.iterator();
+		while(storageIterator.hasNext() && listIterator.hasNext()) {
+			assertEquals(listIterator.next(), storageIterator.next());
+		}
+		testStack.undo();
+		assertEquals(0, testStorage.size());
+		testStack.redo();
+		storageIterator = testStorage.iterator();
+		listIterator = testList.iterator();
+		while(storageIterator.hasNext() && listIterator.hasNext()) {
+			assertEquals(listIterator.next(), storageIterator.next());
+		}
+		
+		testStorage.remove(0);
+		testStack.finaliseActions();
+		assertEquals((Integer) 1, testStorage.get(0));
+		testStorage.insert(0, 0);
+		testStack.finaliseActions();
+		storageIterator = testStorage.iterator();
+		listIterator = testList.iterator();
+		while(storageIterator.hasNext() && listIterator.hasNext()) {
+			assertEquals(listIterator.next(), storageIterator.next());
+		}
+		testStack.undo();
+		assertEquals((Integer) 1, testStorage.get(0));
+		testStack.undo();
+		storageIterator = testStorage.iterator();
+		listIterator = testList.iterator();
+		while(storageIterator.hasNext() && listIterator.hasNext()) {
+			assertEquals(listIterator.next(), storageIterator.next());
 		}
 	}
 	
-	@Test
-	public void taggedTaskTest() throws IOException {
-		ArrayList<Task> taskList = new ArrayList<>();
-		taskList.add(deadlineTask);
-		taskList.add(taggedTask);
-		System.out.println(Json.writeToString(taskList));
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void pastArrayBoundsTest_emptyList_ActionCapturer () {
+		ActionCapturer<Integer, RealStorage<Integer>> testStorage =
+				new ActionCapturer<Integer, RealStorage<Integer>>(new RealStorage<Integer>(), new IntegerCloner(), new StorageCloner());
+		testStorage.get(0);
 	}
 	
-	@Test
-	public void stringInput_taggedTaskTest() throws IOException {
-		ArrayList<Task> testList = Json.readFromString("[\r\n  {\r\n    \"name\": \"deadlineTask\",\r\n    \"type\": \"deadline\",\r\n    \"location\": \"home\",\r\n    \"tags\": [],\r\n    \"deadline\": \"23/04/13 10:00 PM\",\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  },\r\n  {\r\n    \"name\": \"timedTask\",\r\n    \"type\": \"untimed\",\r\n    \"location\": \"office\",\r\n    \"tags\": [\r\n      \"blah1\",\r\n      \"blah2\",\r\n      \"blah3\"\r\n    ],\r\n    \"possibleIntervals\": [],\r\n    \"done\": false\r\n  }\r\n]\r\n");
-		for(Task task : testList) {
-			System.out.println(task.toString());
-		}
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void pastArrayBoundsTest_nonEmptyList_ActionCapturer () {
+		ActionCapturer<Integer, RealStorage<Integer>> testStorage =
+				new ActionCapturer<Integer, RealStorage<Integer>>(new RealStorage<Integer>(), new IntegerCloner(), new StorageCloner());
+		testStorage.insert(0, 7);
+		testStorage.get(2);
 	}
 	
+	@Test (expected = IllegalArgumentException.class)
+	public void nullInsertionTest_ActionCapturer () {
+		ActionCapturer<Integer, RealStorage<Integer>> testStorage =
+				new ActionCapturer<Integer, RealStorage<Integer>>(new RealStorage<Integer>(), new IntegerCloner(), new StorageCloner());
+		testStorage.insert(0, null);
+	}
+	
+	//==========================
+	// ActionCapturer Tests Done
+	//==========================
+	
+	//===============
+	// Storage Tests
+	//===============
+	
 	@Test
-	public void storageAddTest() throws Exception {
+	public void test_Storage() throws Exception {
+		ActionStack.resetActionStack();
+		ActionStack testStack = ActionStack.getInstance();
+		testStack.flushCurrentActionSet();
+		
 		Storage testStorage = new Storage("newtest.txt");
+		
 		testStorage.add(deadlineTask);
+		testStack.finaliseActions();
 		assertTrue(areTasksEqual(deadlineTask, testStorage.get(1)));
+		
+		testStorage.remove(1);
+		testStack.finaliseActions();
+		assertTrue(testStorage.isEmpty());
+		testStack.undo();
+		assertTrue(areTasksEqual(deadlineTask, testStorage.get(1)));
+		
+		testStorage.add(timedTask);
+		testStorage.add(taggedTask);
+		testStack.finaliseActions();
+		assertTrue(areTasksEqual(timedTask, testStorage.get(2)));
+		
+		testStack.undo();
+		assertEquals(1, testStorage.size());
+		
+		testStack.redo();
+		assertEquals(3, testStorage.size());
+		
+		testStorage.clear();
+		testStack.finaliseActions();
 		assertTrue(testStorage.isEmpty());
 		
 		testStorage.close();
@@ -176,5 +327,27 @@ public class StorageTest {
 		Files.delete(file.toPath());
 	}
 	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void pastArrayBoundsTest_emptyList_Storage () throws IOException {
+		Storage testStorage = new Storage("newtest.txt");
+		testStorage.get(0);
+	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void pastArrayBoundsTest_nonEmptyList_Storage () throws IOException {
+		Storage testStorage = new Storage("newtest.txt");
+		testStorage.add(deadlineTask);
+		testStorage.get(2);
+	}
+	
+	@Test (expected = IllegalArgumentException.class)
+	public void nullInsertionTest_Storage () throws IOException {
+		Storage testStorage = new Storage("newtest.txt");
+		testStorage.add(null);
+	}
+	
+	//==========================
+	// Storage Tests Done
+	//==========================
 
 }

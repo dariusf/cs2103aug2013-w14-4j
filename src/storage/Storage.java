@@ -21,12 +21,24 @@ public class Storage implements Closeable, Iterable<Task> {
 	class Switch {
 		boolean switchState = false;
 		
-		synchronized void turnOn () { switchState = true; }
-		synchronized void turnOff () { switchState = false; }
-		synchronized void flip () { switchState = switchState & false; }
-		boolean isOn() { return (switchState == true); }
-		boolean isOff() { return (switchState == false); }
-		boolean getState() { return switchState; }
+		synchronized void turnOn () {
+			switchState = true;
+		}
+		synchronized void turnOff () {
+			switchState = false;
+		}
+		synchronized void flip () {
+			switchState = switchState & false;
+		}
+		boolean isOn() {
+			return (switchState == true);
+		}
+		boolean isOff() {
+			return (switchState == false);
+		}
+		boolean getState() {
+			return switchState;
+		}
 	}
 	
 	private ActionCapturer<Task, RealStorage<Task>> taskStorage;
@@ -83,6 +95,7 @@ public class Storage implements Closeable, Iterable<Task> {
 	}
 	
 	public void add(Task task) {
+		assert(task != null);
 		taskStorage.insert(taskStorage.size(), task);
 		hasEditSwitch.turnOn();
 	}
@@ -98,6 +111,7 @@ public class Storage implements Closeable, Iterable<Task> {
 	}
 
 	public void replace(int index, Task task) {
+		assert(task != null);
 		index--;
 		taskStorage.remove(index);
 		taskStorage.insert(index, task);
