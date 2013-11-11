@@ -1,3 +1,5 @@
+// @author: A0097556M
+
 package common.undo;
 
 import java.util.ListIterator;
@@ -56,7 +58,9 @@ public class DoublyLinkedList<E> implements ListIterator<E> {
 	
 	@Override
 	public E next() {
-		if(!hasNext()){ throw new NoSuchElementException(); }
+		if(!hasNext()){
+			throw new NoSuchElementException();
+		}
 		
 		previousNode = previousNode.nextNode;
 		index++;
@@ -70,7 +74,9 @@ public class DoublyLinkedList<E> implements ListIterator<E> {
 
 	@Override
 	public E previous() {
-		if(!hasPrevious()){ throw new NoSuchElementException(); }
+		if(!hasPrevious()){
+			throw new NoSuchElementException();
+		}
 
 		E result = previousNode.item;
 		previousNode = previousNode.prevNode;
