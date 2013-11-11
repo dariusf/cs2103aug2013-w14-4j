@@ -136,27 +136,29 @@ public class ApplicationWindow {
 	 */
 	protected void createContents() {
 		defineShell();
-		// TODO Please change this value to 1 when you compile for use on your
-		// computers.
+		
 		defineFont(1);
 		defineColours();
+		
 		defineDisplayPageNumber();
 		defineRemainingTaskCount();
 		defineTodayTaskCount();
+		
 		defineDisplayLogic();
 		defineActiveFeedbackLogic();
+		defineHelpDialog();
+		
 		defineDisplayTitle();
 		defineTaskCompositeHeight();
 		defineFeedbackWindow();
 		defineInputField();
 		defineTrayIcon();
-		// Tween.registerAccessor(Text.class, new InputAccessor());
 		defineWindowButton();
+		
 		enableNativeHook();
+		
 		setWelcomePage();
 		setWelcomeFeedback();
-
-		helpDialog = new HelpDialog(shell);
 
 		enterDriverLoop();
 
@@ -402,6 +404,10 @@ public class ApplicationWindow {
 				toggleMinimizeState();
 			}
 		});
+	}
+	
+	private void defineHelpDialog() {
+		helpDialog = new HelpDialog(shell);
 	}
 
 	// Used to determine the height of a task composite by creating several
