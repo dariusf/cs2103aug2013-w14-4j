@@ -20,6 +20,7 @@ import common.CommandType;
 import common.Constants;
 import common.Feedback;
 
+//@author A0102332A
 public class HelpDialog extends Dialog {
 
 	Display display;
@@ -27,7 +28,6 @@ public class HelpDialog extends Dialog {
 	private Shell dialog;
 	final private int padding = 6;
 	
-	// @author A0102332
 	public HelpDialog(Shell parent) {
 		super(parent);
 	}

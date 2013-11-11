@@ -394,8 +394,10 @@ public class ApplicationWindow {
 		helpDialog = new HelpDialog(shell);
 	}
 
-	// Used to determine the height of a task composite by creating several
-	// dummy task composites
+	/**
+	 * Function is used to determine the height of a task composite by creating
+	 * several dummy task composites
+	 */
 	public void defineTaskCompositeHeight() {
 		Command command1 = new Command(CommandType.ADD);
 		command1.setDescription("haha");
@@ -636,8 +638,7 @@ public class ApplicationWindow {
 		}
 	}
 	
-	// TODO whoever did this method please update!
-	// @author:
+	// @author: A0101048X
 	
 	/**
 	 * Execute the command which is entered
@@ -746,8 +747,7 @@ public class ApplicationWindow {
 				|| command == CommandType.FINALISE || command == CommandType.SORT);
 	}
 	
-	// TODO whoever made the rest please comment!
-	// @author: 
+	// @author: A0101048X
 	/**
 	 * Methods required to align windows at the centre of the monitor display
 	 */
@@ -816,10 +816,10 @@ public class ApplicationWindow {
 		}
 	}
 
+	// @author: A0102332A
 	/**
 	 * Test methods
 	 */
-
 	@SuppressWarnings("resource")
 	private void runTest(Display display) {
 		try {

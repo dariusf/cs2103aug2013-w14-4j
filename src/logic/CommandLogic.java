@@ -35,6 +35,7 @@ import common.undo.ActionStack;
 import parser.Parser;
 import storage.Storage;
 
+//@author A0102332A
 public class CommandLogic {
 
 	private final int FINALISE_INDEX_OFFSET = 1;

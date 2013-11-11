@@ -78,10 +78,6 @@ public class ActiveFeedbackLogic {
 			}
 			break;
 		case EDIT:
-			// TODO timeslot index has to be checked lower down,
-			// inside
-			// edit and finalise
-
 			if (taskIndex > 0
 					&& taskIndex <= commandLogic.getNumberOfTasks()) {
 				editTaskFeedback(executedCommand, taskIndex);

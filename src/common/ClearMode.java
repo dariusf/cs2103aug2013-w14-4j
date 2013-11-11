@@ -1,5 +1,6 @@
 package common;
 
+//@author A0097282W
 public enum ClearMode {
 	DEADLINE, TIMED, TENTATIVE, UNTIMED, ALL, OVERDUE, DATE, INVALID, DONE;
 	
