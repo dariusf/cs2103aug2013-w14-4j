@@ -385,26 +385,6 @@ public class ApplicationWindow {
 					SWT.NORMAL);
 		}
 	}
-
-	public void defineTrayIcon() {
-		tray = shell.getDisplay().getSystemTray();
-		trayIcon = new TrayItem(tray, SWT.NONE);
-		trayIcon.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
-				"/image/basketIcon.gif"));
-
-		trayIcon.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				toggleMinimizeState();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				toggleMinimizeState();
-			}
-		});
-	}
 	
 	private void defineHelpDialog() {
 		helpDialog = new HelpDialog(shell);
@@ -590,6 +570,37 @@ public class ApplicationWindow {
 			}
 		});
 	}
+	
+	// @author: A0097556M
+	public void toggleMinimizeState() {
+		if (shell.getVisible()) {
+			shell.setVisible(false);
+			commandLogic.forceFileWrite();
+		} else {
+			shell.setVisible(true);
+			input.setFocus();
+		}
+	}
+	
+	public void defineTrayIcon() {
+		tray = shell.getDisplay().getSystemTray();
+		trayIcon = new TrayItem(tray, SWT.NONE);
+		trayIcon.setImage(SWTResourceManager.getImage(ApplicationWindow.class,
+				"/image/basketIcon.gif"));
+
+		trayIcon.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				toggleMinimizeState();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				toggleMinimizeState();
+			}
+		});
+	}
 
 	public void enableNativeHook() {
 		class UiUpdater implements Runnable {
@@ -622,7 +633,10 @@ public class ApplicationWindow {
 					+ "Basket will continue without hotkey.");
 		}
 	}
-
+	
+	// TODO whoever did this method please update!
+	// @author:
+	
 	/**
 	 * Execute the command which is entered
 	 */
@@ -660,7 +674,8 @@ public class ApplicationWindow {
 			}
 		}
 	}
-
+	
+	// @author: A0097556M
 	/**
 	 * Helper methods
 	 */
@@ -733,6 +748,8 @@ public class ApplicationWindow {
 				|| command == CommandType.FINALISE || command == CommandType.SORT);
 	}
 	
+	// TODO whoever made the rest please comment!
+	// @author: 
 	/**
 	 * Methods required to align windows at the centre of the monitor display
 	 */
@@ -776,16 +793,6 @@ public class ApplicationWindow {
 
 	private int calculateHalfOfNumber(int difference) {
 		return difference / 2;
-	}
-	
-	public void toggleMinimizeState() {
-		if (shell.getVisible()) {
-			shell.setVisible(false);
-			commandLogic.forceFileWrite();
-		} else {
-			shell.setVisible(true);
-			input.setFocus();
-		}
 	}
 	
 	public boolean isKeyboardInput(int keyCode) {
