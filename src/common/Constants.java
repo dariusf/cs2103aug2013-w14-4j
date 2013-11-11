@@ -1,5 +1,7 @@
 package common;
 
+import java.util.logging.Level;
+
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -9,6 +11,8 @@ public class Constants {
 	public static final String DEFAULT_FILENAME = "default.txt";
 
 	public static final String WELCOME_PAGE_DISPLAY_COMMAND = "display";
+
+    public static final Level LOGGING_LEVEL = Level.OFF;
 
     public static final int INVALID_INDEX = -1;
 
