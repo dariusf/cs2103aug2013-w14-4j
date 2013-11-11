@@ -33,9 +33,6 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.joda.time.DateTime;
-
-import parser.Parser;
-
 import common.Command;
 import common.CommandType;
 import common.Constants;
@@ -823,6 +820,7 @@ public class ApplicationWindow {
 	 * Test methods
 	 */
 
+	@SuppressWarnings("resource")
 	private void runTest(Display display) {
 		try {
 			Scanner scanner = new Scanner(new File("testCommands.txt"));

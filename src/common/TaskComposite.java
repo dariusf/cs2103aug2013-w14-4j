@@ -39,7 +39,7 @@ public class TaskComposite extends Composite {
 		taskIndex.setEnabled(false);
 		taskIndex.setText(String.valueOf(index));
 		taskIndex.setFont(ApplicationWindow.getInstance().indexFont);
-		taskIndex.setForeground(new Color(ApplicationWindow.getInstance().shell
+		taskIndex.setForeground(new Color(ApplicationWindow.shell
 				.getDisplay(), 0x99, 0, 0));
 		taskIndex.setLineAlignment(0, 1, SWT.RIGHT);
 		taskIndex.setLayoutData(taskIndexLayoutData);
@@ -70,7 +70,7 @@ public class TaskComposite extends Composite {
 			style1.strikeout = true;
 			taskName.setStyleRange(style1);
 		} else if (task.isOverdue()) {
-			taskName.setForeground(new Color(ApplicationWindow.getInstance().shell
+			taskName.setForeground(new Color(ApplicationWindow.shell
 					.getDisplay(), 0x99, 0, 0));
 		}
 
@@ -167,7 +167,7 @@ public class TaskComposite extends Composite {
 
 	public void setHighlighted(boolean highlighted) {
 		if (highlighted) {
-			setBackground(new Color(ApplicationWindow.getInstance().shell.getDisplay(),
+			setBackground(new Color(ApplicationWindow.shell.getDisplay(),
 					0xdd, 0xdd, 0xdd));
 		} else {
 			setBackground(null);
@@ -182,7 +182,7 @@ public class TaskComposite extends Composite {
 		}
 		if (line > 0 && line <= numberOfLines && !taskDescription.getText().isEmpty()) {
 			taskDescription.setLineBackground(line - 1, 1,
-					new Color(ApplicationWindow.getInstance().shell.getDisplay(), 0x00,
+					new Color(ApplicationWindow.shell.getDisplay(), 0x00,
 							0xdd, 0x00));
 		}
 	}
