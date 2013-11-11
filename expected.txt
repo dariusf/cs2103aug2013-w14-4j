@@ -1,0 +1,706 @@
+Oct 29, 2013 7:33:18 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 0
+Remaining: 16
+1 this is awesome
+
+2 this is awesome
+
+3 this is awesome
+
+4 whee
+
+5 this is great
+
+Page 1 of 4
+Here are your tasks.
+
+Oct 29, 2013 7:33:19 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 0
+Remaining: 16
+1 this is awesome
+
+2 this is awesome
+
+3 this is awesome
+
+4 whee
+
+5 this is great
+
+Page 1 of 4
+Error: Invalid command!
+
+Oct 29, 2013 7:33:19 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 0
+Remaining: 16
+1 this is awesome
+
+2 this is awesome
+
+3 this is awesome
+
+4 whee
+
+5 this is great
+
+Page 1 of 4
+Error: Nothing to undo!
+
+Oct 29, 2013 7:33:19 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 0
+Remaining: 0
+Page 1 of 1
+All tasks cleared!
+
+Oct 29, 2013 7:33:19 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 0
+Remaining: 1
+1 new task 1
+
+Page 1 of 1
+Task added successfully!
+
+Oct 29, 2013 7:33:19 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 1
+Remaining: 2
+1 new task 1
+
+2 new task 2
+from 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+Page 1 of 1
+Task added successfully!
+
+Oct 29, 2013 7:33:19 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 2
+Remaining: 3
+1 new task 1
+
+2 new task 2
+from 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+3 new task 3
+by 12:00 PM on Tue, 29/10/13
+Page 1 of 1
+Task added successfully! 
+Task is overdue
+
+Oct 29, 2013 7:33:19 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 2
+Remaining: 4
+1 new task 1
+
+2 new task 2
+from 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+3 new task 3
+by 12:00 PM on Tue, 29/10/13
+4 new task 4
+by 11:59 PM on Sat, 26/10/13
+Page 1 of 1
+Task added successfully! 
+Task is overdue
+
+Oct 29, 2013 7:33:19 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 2
+Remaining: 4
+1 new task 1
+
+2 new task 2
+from 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+3 new task 3
+by 12:00 PM on Tue, 29/10/13
+4 editing task 4
+by 11:59 PM on Sat, 26/10/13
+Page 1 of 1
+Task edited successfully! 
+Task is overdue
+
+Oct 29, 2013 7:33:19 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 2
+Remaining: 5
+1 new task 1
+
+2 new task 2
+from 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+3 new task 3
+by 12:00 PM on Tue, 29/10/13
+4 editing task 4
+by 11:59 PM on Sat, 26/10/13
+5 new task 5
+on (1) 10:00 AM on Sun, 10/11/13 to 11:00 AM on Sun, 10/11/13
+or (2) 11:00 PM on Sat, 9/11/13 to 12:00 AM on Sun, 10/11/13
+Page 1 of 1
+Task added successfully!
+
+Oct 29, 2013 7:33:19 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 6
+6 new task 6
+on (1) 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+or (2) 11:00 PM on Tue, 29/10/13 to 12:00 AM on Wed, 30/10/13
+or (3) 12:00 PM on Wed, 30/10/13 to 1:00 PM on Wed, 30/10/13
+Page 2 of 2
+Task added successfully!
+
+Oct 29, 2013 7:33:20 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 7
+6 new task 6
+on (1) 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+or (2) 11:00 PM on Tue, 29/10/13 to 12:00 AM on Wed, 30/10/13
+or (3) 12:00 PM on Wed, 30/10/13 to 1:00 PM on Wed, 30/10/13
+7 new task 7
+
+Page 2 of 2
+Task added successfully!
+
+Oct 29, 2013 7:33:20 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 7
+1 new task 1
+
+2 new task 2
+from 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+3 new task 3
+by 12:00 PM on Tue, 29/10/13
+4 editing task 4
+by 11:59 PM on Sat, 26/10/13
+5 new task 5
+on (1) 10:00 AM on Sun, 10/11/13 to 11:00 AM on Sun, 10/11/13
+or (2) 11:00 PM on Sat, 9/11/13 to 12:00 AM on Sun, 10/11/13
+Page 1 of 2
+Page 1
+
+Oct 29, 2013 7:33:20 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 7
+6 new task 6
+on (1) 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+or (2) 11:00 PM on Tue, 29/10/13 to 12:00 AM on Wed, 30/10/13
+or (3) 12:00 PM on Wed, 30/10/13 to 1:00 PM on Wed, 30/10/13
+7 new task 7
+
+Page 2 of 2
+Page 2
+
+Oct 29, 2013 7:33:20 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 8
+6 new task 6
+on (1) 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+or (2) 11:00 PM on Tue, 29/10/13 to 12:00 AM on Wed, 30/10/13
+or (3) 12:00 PM on Wed, 30/10/13 to 1:00 PM on Wed, 30/10/13
+7 new task 7
+
+8 new task 8
+by 11:59 PM on Sun, 20/10/13
+Page 2 of 2
+Task added successfully! 
+Task is overdue
+
+Oct 29, 2013 7:33:20 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 9
+6 new task 6
+on (1) 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+or (2) 11:00 PM on Tue, 29/10/13 to 12:00 AM on Wed, 30/10/13
+or (3) 12:00 PM on Wed, 30/10/13 to 1:00 PM on Wed, 30/10/13
+7 new task 7
+
+8 new task 8
+by 11:59 PM on Sun, 20/10/13
+9 new task 9
+from 11:00 AM on Thu, 31/10/13 to 12:00 PM on Thu, 31/10/13
+Page 2 of 2
+Task added successfully!
+
+Oct 29, 2013 7:33:20 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 10
+6 new task 6
+on (1) 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+or (2) 11:00 PM on Tue, 29/10/13 to 12:00 AM on Wed, 30/10/13
+or (3) 12:00 PM on Wed, 30/10/13 to 1:00 PM on Wed, 30/10/13
+7 new task 7
+
+8 new task 8
+by 11:59 PM on Sun, 20/10/13
+9 new task 9
+from 11:00 AM on Thu, 31/10/13 to 12:00 PM on Thu, 31/10/13
+10 new task 10
+on (1) 12:00 AM on Fri, 1/11/13 to 11:59 PM on Fri, 1/11/13
+or (2) 12:00 AM on Sat, 2/11/13 to 11:59 PM on Sat, 2/11/13
+Page 2 of 2
+Task added successfully!
+
+Oct 29, 2013 7:33:20 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 4
+Remaining: 10
+6 new task 6
+on (1) 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+or (2) 11:00 PM on Tue, 29/10/13 to 12:00 AM on Wed, 30/10/13
+or (3) 12:00 PM on Wed, 30/10/13 to 1:00 PM on Wed, 30/10/13
+7 new task 7
+by 10:00 AM on Tue, 29/10/13
+8 new task 8
+by 11:59 PM on Sun, 20/10/13
+9 new task 9
+from 11:00 AM on Thu, 31/10/13 to 12:00 PM on Thu, 31/10/13
+10 new task 10
+on (1) 12:00 AM on Fri, 1/11/13 to 11:59 PM on Fri, 1/11/13
+or (2) 12:00 AM on Sat, 2/11/13 to 11:59 PM on Sat, 2/11/13
+Page 2 of 2
+Task edited successfully! 
+Task is overdue
+
+Oct 29, 2013 7:33:20 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 10
+6 new task 6
+on (1) 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+or (2) 11:00 PM on Tue, 29/10/13 to 12:00 AM on Wed, 30/10/13
+or (3) 12:00 PM on Wed, 30/10/13 to 1:00 PM on Wed, 30/10/13
+7 new task 7
+from 2:00 PM on Wed, 30/10/13 to 3:00 PM on Wed, 30/10/13
+8 new task 8
+by 11:59 PM on Sun, 20/10/13
+9 new task 9
+from 11:00 AM on Thu, 31/10/13 to 12:00 PM on Thu, 31/10/13
+10 new task 10
+on (1) 12:00 AM on Fri, 1/11/13 to 11:59 PM on Fri, 1/11/13
+or (2) 12:00 AM on Sat, 2/11/13 to 11:59 PM on Sat, 2/11/13
+Page 2 of 2
+Task edited successfully!
+
+Oct 29, 2013 7:33:21 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 11
+11 new task 11
+from 12:00 PM on Wed, 30/10/13 to 3:00 PM on Wed, 30/10/13
+#yay 
+Page 3 of 3
+Task added successfully!
+
+Oct 29, 2013 7:33:21 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 12
+11 new task 11
+from 12:00 PM on Wed, 30/10/13 to 3:00 PM on Wed, 30/10/13
+#yay 
+12 new task 12
+#homework 
+Page 3 of 3
+Task added successfully!
+
+Oct 29, 2013 7:33:21 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 12
+11 new task 11
+on (1) 1:00 PM on Wed, 30/10/13 to 2:00 PM on Wed, 30/10/13
+or (2) 3:00 PM on Wed, 30/10/13 to 4:00 PM on Wed, 30/10/13
+#yay 
+12 new task 12
+#homework 
+Page 3 of 3
+Task edited successfully!
+
+Oct 29, 2013 7:33:21 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 13
+11 new task 11
+on (1) 1:00 PM on Wed, 30/10/13 to 2:00 PM on Wed, 30/10/13
+or (2) 3:00 PM on Wed, 30/10/13 to 4:00 PM on Wed, 30/10/13
+#yay 
+12 new task 12
+#homework 
+13 new task 13
+#homework #yay 
+Page 3 of 3
+Task added successfully!
+
+Oct 29, 2013 7:33:21 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 12
+11 new task 12
+#homework 
+12 new task 13
+#homework #yay 
+Page 3 of 3
+Task deleted successfully!
+
+Oct 29, 2013 7:33:21 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 13
+11 new task 11
+on (1) 1:00 PM on Wed, 30/10/13 to 2:00 PM on Wed, 30/10/13
+or (2) 3:00 PM on Wed, 30/10/13 to 4:00 PM on Wed, 30/10/13
+#yay 
+12 new task 12
+#homework 
+13 new task 13
+#homework #yay 
+Page 3 of 3
+Undo successful!
+
+Oct 29, 2013 7:33:21 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 12
+11 new task 11
+on (1) 1:00 PM on Wed, 30/10/13 to 2:00 PM on Wed, 30/10/13
+or (2) 3:00 PM on Wed, 30/10/13 to 4:00 PM on Wed, 30/10/13
+#yay 
+12 new task 12
+#homework 
+Page 3 of 3
+Undo successful!
+
+Oct 29, 2013 7:33:21 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 13
+11 new task 11
+on (1) 1:00 PM on Wed, 30/10/13 to 2:00 PM on Wed, 30/10/13
+or (2) 3:00 PM on Wed, 30/10/13 to 4:00 PM on Wed, 30/10/13
+#yay 
+12 new task 12
+#homework 
+13 new task 13
+#homework #yay 
+Page 3 of 3
+Redo successful!
+
+Oct 29, 2013 7:33:21 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 13
+11 new task 11
+from 3:00 PM on Wed, 30/10/13 to 4:00 PM on Wed, 30/10/13
+#yay 
+12 new task 12
+#homework 
+13 new task 13
+#homework #yay 
+Page 3 of 3
+Task finalised successfully!
+
+Oct 29, 2013 7:33:23 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 13
+11 new task 11
+from 3:00 PM on Wed, 30/10/13 to 4:00 PM on Wed, 30/10/13
+#yay 
+12 new task 12
+#homework 
+13 new task 13
+#homework #yay 
+Page 3 of 3
+Refer to the help window.
+
+Oct 29, 2013 7:33:23 PM ui.ApplicationWindow executeUserInput
+INFO: Search Result
+Today: 3
+Remaining: 13
+1 new task 12
+#homework 
+2 new task 13
+#homework #yay 
+Page 1 of 1
+Here are your search results.
+
+Oct 29, 2013 7:33:23 PM ui.ApplicationWindow executeUserInput
+INFO: Search Result
+Today: 3
+Remaining: 13
+1 new task 11
+from 3:00 PM on Wed, 30/10/13 to 4:00 PM on Wed, 30/10/13
+#yay 
+2 new task 13
+#homework #yay 
+Page 1 of 1
+Here are your search results.
+
+Oct 29, 2013 7:33:23 PM ui.ApplicationWindow executeUserInput
+INFO: Search Result
+Today: 3
+Remaining: 13
+1 editing task 4
+by 11:59 PM on Sat, 26/10/13
+Page 1 of 1
+Here are your search results.
+
+Oct 29, 2013 7:33:23 PM ui.ApplicationWindow executeUserInput
+INFO: Search Result
+Today: 3
+Remaining: 13
+1 new task 8
+by 11:59 PM on Sun, 20/10/13
+Page 1 of 1
+All tasks sorted!
+
+Oct 29, 2013 7:33:23 PM ui.ApplicationWindow executeUserInput
+INFO: Search Result
+Today: 3
+Remaining: 13
+1 editing task 4
+by 11:59 PM on Sat, 26/10/13
+Page 1 of 1
+Undo successful!
+
+Oct 29, 2013 7:33:24 PM ui.ApplicationWindow executeUserInput
+INFO: Search Result
+Today: 3
+Remaining: 13
+1 new task 8
+by 11:59 PM on Sun, 20/10/13
+Page 1 of 1
+Redo successful!
+
+Oct 29, 2013 7:33:24 PM ui.ApplicationWindow executeUserInput
+INFO: Search Result
+Today: 3
+Remaining: 13
+1 new task 8
+by 11:59 PM on Sun, 20/10/13
+Page 1 of 1
+Error: ID is not valid
+
+Oct 29, 2013 7:33:24 PM ui.ApplicationWindow executeUserInput
+INFO: Search Result
+Today: 3
+Remaining: 13
+1 new task 8
+by 11:59 PM on Sun, 20/10/13
+Page 1 of 1
+Error: ID is not valid
+
+Oct 29, 2013 7:33:24 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 13
+1 new task 13
+#homework #yay 
+2 new task 12
+#homework 
+3 new task 1
+
+4 new task 8
+by 11:59 PM on Sun, 20/10/13
+5 editing task 4
+by 11:59 PM on Sat, 26/10/13
+Page 1 of 3
+All done tasks cleared!
+
+Oct 29, 2013 7:33:24 PM ui.ApplicationWindow executeUserInput
+INFO: Today
+Today: 3
+Remaining: 13
+1 new task 3
+by 12:00 PM on Tue, 29/10/13
+2 new task 2
+from 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+3 new task 6
+on (1) 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+or (2) 11:00 PM on Tue, 29/10/13 to 12:00 AM on Wed, 30/10/13
+or (3) 12:00 PM on Wed, 30/10/13 to 1:00 PM on Wed, 30/10/13
+Page 1 of 1
+Here are your tasks.
+
+Oct 29, 2013 7:33:24 PM ui.ApplicationWindow executeUserInput
+INFO: Tomorrow
+Today: 3
+Remaining: 13
+1 new task 11
+from 3:00 PM on Wed, 30/10/13 to 4:00 PM on Wed, 30/10/13
+#yay 
+2 new task 6
+on (1) 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+or (2) 11:00 PM on Tue, 29/10/13 to 12:00 AM on Wed, 30/10/13
+or (3) 12:00 PM on Wed, 30/10/13 to 1:00 PM on Wed, 30/10/13
+3 new task 7
+from 2:00 PM on Wed, 30/10/13 to 3:00 PM on Wed, 30/10/13
+Page 1 of 1
+Here are your tasks.
+
+Oct 29, 2013 7:33:24 PM ui.ApplicationWindow executeUserInput
+INFO: Todo
+Today: 3
+Remaining: 13
+1 new task 13
+#homework #yay 
+2 new task 12
+#homework 
+3 new task 1
+
+4 new task 8
+by 11:59 PM on Sun, 20/10/13
+5 editing task 4
+by 11:59 PM on Sat, 26/10/13
+Page 1 of 3
+Here are your tasks.
+
+Oct 29, 2013 7:33:24 PM ui.ApplicationWindow executeUserInput
+INFO: All Tasks
+Today: 3
+Remaining: 13
+1 new task 13
+#homework #yay 
+2 new task 12
+#homework 
+3 new task 1
+
+4 new task 8
+by 11:59 PM on Sun, 20/10/13
+5 editing task 4
+by 11:59 PM on Sat, 26/10/13
+Page 1 of 3
+Here are your tasks.
+
+Oct 29, 2013 7:33:24 PM ui.ApplicationWindow executeUserInput
+INFO: 13 Oct, Sun
+Today: 3
+Remaining: 13
+Page 1 of 1
+You have no tasks :)
+
+Oct 29, 2013 7:33:24 PM ui.ApplicationWindow executeUserInput
+INFO: Untimed Tasks
+Today: 3
+Remaining: 13
+1 new task 13
+#homework #yay 
+2 new task 12
+#homework 
+3 new task 1
+
+Page 1 of 1
+Here are your tasks.
+
+Oct 29, 2013 7:33:25 PM ui.ApplicationWindow executeUserInput
+INFO: Timed Tasks
+Today: 3
+Remaining: 13
+1 new task 2
+from 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+2 new task 11
+from 3:00 PM on Wed, 30/10/13 to 4:00 PM on Wed, 30/10/13
+#yay 
+3 new task 7
+from 2:00 PM on Wed, 30/10/13 to 3:00 PM on Wed, 30/10/13
+4 new task 9
+from 11:00 AM on Thu, 31/10/13 to 12:00 PM on Thu, 31/10/13
+Page 1 of 1
+Here are your tasks.
+
+Oct 29, 2013 7:33:25 PM ui.ApplicationWindow executeUserInput
+INFO: Deadlines
+Today: 3
+Remaining: 13
+1 new task 8
+by 11:59 PM on Sun, 20/10/13
+2 editing task 4
+by 11:59 PM on Sat, 26/10/13
+3 new task 3
+by 12:00 PM on Tue, 29/10/13
+Page 1 of 1
+Here are your tasks.
+
+Oct 29, 2013 7:33:25 PM ui.ApplicationWindow executeUserInput
+INFO: Floating Tasks
+Today: 3
+Remaining: 13
+1 new task 5
+on (1) 10:00 AM on Sun, 10/11/13 to 11:00 AM on Sun, 10/11/13
+or (2) 11:00 PM on Sat, 9/11/13 to 12:00 AM on Sun, 10/11/13
+2 new task 6
+on (1) 10:00 PM on Tue, 29/10/13 to 11:00 PM on Tue, 29/10/13
+or (2) 11:00 PM on Tue, 29/10/13 to 12:00 AM on Wed, 30/10/13
+or (3) 12:00 PM on Wed, 30/10/13 to 1:00 PM on Wed, 30/10/13
+3 new task 10
+on (1) 12:00 AM on Fri, 1/11/13 to 11:59 PM on Fri, 1/11/13
+or (2) 12:00 AM on Sat, 2/11/13 to 11:59 PM on Sat, 2/11/13
+Page 1 of 1
+Here are your tasks.
+
+Oct 29, 2013 7:33:25 PM ui.ApplicationWindow executeUserInput
+INFO: Overdue Tasks
+Today: 3
+Remaining: 13
+1 new task 8
+by 11:59 PM on Sun, 20/10/13
+2 editing task 4
+by 11:59 PM on Sat, 26/10/13
+3 new task 3
+by 12:00 PM on Tue, 29/10/13
+Page 1 of 1
+Here are your tasks.
+
+Oct 29, 2013 7:33:25 PM ui.ApplicationWindow executeUserInput
+INFO: Overdue Tasks
+Today: 3
+Remaining: 13
+1 new task 8
+by 11:59 PM on Sun, 20/10/13
+2 editing task 4
+by 11:59 PM on Sat, 26/10/13
+3 new task 3
+by 12:00 PM on Tue, 29/10/13
+Page 1 of 1
+Error: ID is not valid
+
+Oct 29, 2013 7:33:25 PM ui.ApplicationWindow executeUserInput
+INFO: Overdue Tasks
+Today: 3
+Remaining: 13
+1 new task 8
+by 11:59 PM on Sun, 20/10/13
+2 editing task 4
+by 11:59 PM on Sat, 26/10/13
+3 new task 3
+by 12:00 PM on Tue, 29/10/13
+Page 1 of 1
+Error: ID is not valid
+
+Oct 29, 2013 7:33:25 PM ui.ApplicationWindow executeUserInput
+INFO: Overdue Tasks
+Today: 3
+Remaining: 13
+1 new task 8
+by 11:59 PM on Sun, 20/10/13
+2 editing task 4
+by 11:59 PM on Sat, 26/10/13
+3 new task 3
+by 12:00 PM on Tue, 29/10/13
+Page 1 of 1
+Error: ID is not valid
+
+Oct 29, 2013 7:33:25 PM ui.ApplicationWindow executeUserInput
+INFO: Completed Tasks
+Today: 3
+Remaining: 13
+Page 1 of 1
+You have no tasks :)
