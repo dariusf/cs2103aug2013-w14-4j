@@ -1,5 +1,7 @@
 package common;
 
+import java.util.logging.Level;
+
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -9,6 +11,8 @@ public class Constants {
 	public static final String DEFAULT_FILENAME = "default.txt";
 
 	public static final String WELCOME_PAGE_DISPLAY_COMMAND = "display";
+
+    public static final Level LOGGING_LEVEL = Level.OFF;
 
     public static final int INVALID_INDEX = -1;
 
@@ -271,6 +275,8 @@ public class Constants {
 		"Why did the integer drown?\nBecause it couldn't float!"
 		};
 
+	public static final String FORMATTING_REGEX_BAR = "|";
+	public static final String FORMATTING_ASSERTION_ERROR_UNRECOGNIZED_FORMATTING_ENUMERATION = "Unrecognized formatting enumeration %d";
 	public static final String FORMATTING_ALLOWED_CHARACTERS = "[a-z0-9}{A-Z+><.|# ]";
 	public static final String FORMATTING_REGEX_UNDERLINE = "_(" + FORMATTING_ALLOWED_CHARACTERS + "+)_";
 	public static final String FORMATTING_REGEX_BOLD = "\\*(" + FORMATTING_ALLOWED_CHARACTERS + "+)\\*";

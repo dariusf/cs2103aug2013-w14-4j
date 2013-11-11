@@ -22,8 +22,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import common.Constants;
 import common.Interval;
 
