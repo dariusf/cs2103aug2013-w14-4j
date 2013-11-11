@@ -94,8 +94,16 @@ public class ApplicationWindow {
 	// Others
 	UserInputHistory inputHistory = new UserInputHistory();
 	public boolean dummyCompositeIsCreated = false;
-	public static ApplicationWindow self;
-
+	
+	// Singleton pattern
+	private static ApplicationWindow instance = null;
+	public static ApplicationWindow getInstance() {
+		if (instance == null) {
+			instance = new ApplicationWindow();
+		}
+		return instance;
+	}
+	
 	/**
 	 * Launch the application.
 	 * 
@@ -105,8 +113,7 @@ public class ApplicationWindow {
 		try {
 			logger.setLevel(Constants.LOGGING_LEVEL);
 			commandLogic = new CommandLogic();
-			ApplicationWindow window = new ApplicationWindow();
-			self = window;
+			ApplicationWindow window = ApplicationWindow.getInstance();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -202,7 +209,7 @@ public class ApplicationWindow {
 
 	private void defineActiveFeedbackLogic() {
 		activeFeedbackLogic = new ActiveFeedbackLogic(commandLogic,
-				displayLogic, self);
+				displayLogic, ApplicationWindow.getInstance());
 	}
 
 	private void defineFeedbackWindow() {
