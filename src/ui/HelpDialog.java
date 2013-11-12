@@ -33,7 +33,7 @@ public class HelpDialog extends Dialog {
 	}
 
 	public void open(Feedback feedbackObj) {
-		if(dialog != null) {
+		if (dialog != null) {
 			if(!dialog.isDisposed()) {
 				return;
 			}
