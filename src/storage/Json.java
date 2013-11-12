@@ -37,7 +37,6 @@ import common.Task;
 /**
  * Contains two static methods, one for creating a JSON document out of a list of objects
  * and another for creating a list of objects out of a JSON document.
- * @author Matthew
  *
  */
 public class Json {

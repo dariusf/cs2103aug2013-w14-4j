@@ -9,7 +9,6 @@ import java.util.List;
 
 /**
  * An implementation of the abstract class StorageBase. Stores data in an ArrayList
- * @author Matt-Laptop
  *
  * @param <E>
  */
