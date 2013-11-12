@@ -27,6 +27,7 @@ import common.Interval;
 
 import logic.CommandLogic;
 
+//@author A0102332A
 public class LogicTest {
 	
 	public static class SysTime {
