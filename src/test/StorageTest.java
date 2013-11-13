@@ -24,7 +24,7 @@ import storage.Cloner;
 import storage.RealStorage;
 import storage.Storage;
 
-//@author: A0097556M
+//@author A0097556M
 public class StorageTest {
 	
 	private static String dateFormatString = Constants.DATE_TIME_FORMAT;
