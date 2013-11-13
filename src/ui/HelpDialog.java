@@ -162,14 +162,14 @@ public class HelpDialog extends Dialog {
 		}
 	}
 	
-	// @author: A0097556M
+	//@author: A0097556M
 	public void close () {
 		if (dialog != null && !dialog.isDisposed()) {
 			dialog.close();
 		}
 	}
 	
-	// @author A0101048X
+	//@author A0101048X
 	private int calculateYCoordinateForShellPosition(
 			Rectangle parentShellBounds) {
 		int parentYCoordinate = parentShellBounds.y;
