@@ -8,7 +8,7 @@ import common.undo.Action;
 import common.undo.ActionStack;
 import common.undo.DoublyLinkedList;
 
-//@author: A0097556M
+//@author A0097556M
 public class ActionStackTest {
 	
 	int actionCounter = 0;

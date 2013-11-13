@@ -1,4 +1,4 @@
-// @author: A0097556M
+//@author A0097556M
 
 package storage;
 
