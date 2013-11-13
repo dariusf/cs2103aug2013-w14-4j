@@ -575,7 +575,7 @@ public class ApplicationWindow {
 		});
 	}
 	
-	// @author: A0097556M
+	//@author: A0097556M
 	public void toggleMinimizeState() {
 		if (shell.getVisible()) {
 			shell.setVisible(false);
@@ -638,7 +638,7 @@ public class ApplicationWindow {
 		}
 	}
 	
-	// @author: A0101048X
+	//@author: A0101048X
 	
 	/**
 	 * Execute the command which is entered
@@ -674,7 +674,7 @@ public class ApplicationWindow {
 		}
 	}
 	
-	// @author: A0097556M
+	//@author: A0097556M
 	/**
 	 * Helper methods
 	 */
@@ -747,7 +747,7 @@ public class ApplicationWindow {
 				|| command == CommandType.FINALISE || command == CommandType.SORT);
 	}
 	
-	// @author: A0101048X
+	//@author: A0101048X
 	/**
 	 * Methods required to align windows at the centre of the monitor display
 	 */
@@ -816,7 +816,7 @@ public class ApplicationWindow {
 		}
 	}
 
-	// @author: A0102332A
+	//@author: A0102332A
 	/**
 	 * Test methods
 	 */
